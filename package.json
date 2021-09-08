@@ -1,0 +1,21 @@
+{
+  "name": "root",
+  "private": true,
+  "description": "mono repo with personal projects",
+  "scripts": {
+    "setup": "npm install && lerna bootstrap"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dezkareid/dezkareid.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dezkareid/dezkareid/issues"
+  },
+  "homepage": "https://github.com/dezkareid/dezkareid#readme",
+  "devDependencies": {
+    "lerna": "^3.22.1"
+  }
+}
