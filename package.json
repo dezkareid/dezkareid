@@ -3,7 +3,8 @@
   "private": true,
   "description": "mono repo with personal projects",
   "scripts": {
-    "setup": "npm install && lerna bootstrap"
+    "setup": "npm install && lerna bootstrap",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -16,6 +17,9 @@
   },
   "homepage": "https://github.com/dezkareid/dezkareid#readme",
   "devDependencies": {
+    "@commitlint/cli": "^13.1.0",
+    "@commitlint/config-conventional": "^13.1.0",
+    "husky": "^7.0.2",
     "lerna": "^3.22.1"
   }
 }
