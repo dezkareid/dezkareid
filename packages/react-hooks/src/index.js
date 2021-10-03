@@ -1,2 +1,3 @@
-// eslint-disable-next-line import/prefer-default-export
+export { default as useEventListener } from './useEventListener';
+
 export { default as useLocalStorage } from './useLocalStorage';
