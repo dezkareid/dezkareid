@@ -1,3 +1,10 @@
+# [@dezkareid/react-hooks-v1.1.1](https://github.com/dezkareid/dezkareid/compare/react-hooks-1.1.0...react-hooks-1.1.1) (2021-10-03)
+
+
+### Performance Improvements
+
+* **react-hooks:** add useEventListener to tree-shaking ([7cd1ff7](https://github.com/dezkareid/dezkareid/commit/7cd1ff7bdc4472427d4cfd01f331190d5146fe13))
+
 # [@dezkareid/react-hooks-v1.1.0](https://github.com/dezkareid/dezkareid/compare/react-hooks-1.0.0...react-hooks-1.1.0) (2021-10-03)
 
 
