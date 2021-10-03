@@ -23,3 +23,4 @@ yarn add @dezkareid/react-hooks
 ## List of hooks
 
 * [useLocalStorage](src/useLocalStorage/README.md)
+* [useEventListener](src/useEventListener/README.md)
