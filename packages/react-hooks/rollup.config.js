@@ -1,8 +1,8 @@
 import { babel } from '@rollup/plugin-babel';
 import cleaner from 'rollup-plugin-cleaner';
 import commonjs from '@rollup/plugin-commonjs';
-import resolve from "@rollup/plugin-node-resolve";
-import { terser } from "rollup-plugin-terser";
+import resolve from '@rollup/plugin-node-resolve';
+import { terser } from 'rollup-plugin-terser';
 import pkg from './package.json';
 
 const config = {
@@ -20,9 +20,7 @@ const config = {
   external: Object.keys(pkg.peerDependencies),
   plugins: [
     cleaner({
-      targets: [
-        './dist/'
-      ]
+      targets: ['./dist/']
     }),
     resolve(),
     commonjs(),
@@ -33,15 +31,15 @@ const config = {
         [
           '@babel/preset-env',
           {
-            modules: false,
-          },
-        ],
+            modules: false
+          }
+        ]
       ],
       plugins: [
         '@babel/plugin-proposal-export-default-from',
         '@babel/plugin-transform-runtime'
       ],
-      babelHelpers: 'runtime',
+      babelHelpers: 'runtime'
     }),
     terser()
   ]
