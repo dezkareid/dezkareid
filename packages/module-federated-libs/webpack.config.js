@@ -7,6 +7,7 @@ const name = camelCase(pkg.name);
 
 const exposes = {
   './google-maps': './src/gm.js',
+  './google-maps-loader': './src/gm-loader.js'
 };
 
 const asyncExternals = {
