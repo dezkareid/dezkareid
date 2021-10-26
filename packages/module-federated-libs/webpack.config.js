@@ -2,13 +2,11 @@ const path = require('path');
 const { camelCase } = require('camel-case');
 const webpack = require('webpack');
 const { ModuleFederationPlugin } = webpack.container;
-const { merge } = require('webpack-merge');
 const pkg = require('./package.json');
 const name = camelCase(pkg.name);
 
 const exposes = {
   './google-maps': './src/gm.js',
-  './google-maps-loader': './src/gm-loader.js',
 };
 
 const asyncExternals = {
