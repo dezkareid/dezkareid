@@ -1,0 +1,28 @@
+{
+  "name": "@dezkareid/module-federated-libs",
+  "version": "1.0.0",
+  "description": "sample exposed modules",
+  "main": "dist/browser",
+  "unpkg": "dist/browser",
+  "browser": "dist/browser",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "webpack"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.15.8",
+    "@semantic-release/changelog": "^6.0.0",
+    "@semantic-release/git": "^10.0.0",
+    "babel-loader": "^8.2.3",
+    "camel-case": "^4.1.2",
+    "semantic-release": "^18.0.0",
+    "semantic-release-monorepo": "^7.0.5",
+    "webpack": "^5.60.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-merge": "^5.8.0"
+  }
+}

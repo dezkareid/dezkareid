@@ -1,0 +1,23 @@
+{
+  "branches": ["main", "next"],
+  "tagFormat": "module-federated-libs-${version}",
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG.md"
+      }
+    ],
+    "@semantic-release/npm",
+    [
+      "@semantic-release/git",
+      {
+        "assets": ["CHANGELOG.md"]
+      }
+    ],
+    "@semantic-release/github"
+  ],
+  "extends": "semantic-release-monorepo"
+}
