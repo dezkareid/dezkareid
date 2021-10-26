@@ -12,7 +12,13 @@
     "build": "webpack",
     "semantic-release": "npx semantic-release"
   },
-  "author": "",
+  "engines": {
+    "node": ">=14.17"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Joel Humberto Gomez Paredes <elmaildeldezkareid@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.15.8",
