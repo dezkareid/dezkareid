@@ -9,7 +9,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "semantic-release": "npx semantic-release"
   },
   "author": "",
   "license": "ISC",
