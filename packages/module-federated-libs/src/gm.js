@@ -1,3 +1,3 @@
-const gm = require('google-maps')
+import gm from 'google-maps';
 
-module.exports = gm
+export default gm;
