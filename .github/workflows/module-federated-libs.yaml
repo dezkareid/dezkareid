@@ -16,7 +16,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: packages/react-hooks
+        working-directory: packages/module-federated-libs
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v2.3.1
