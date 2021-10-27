@@ -1,3 +1,11 @@
+# [@dezkareid/react-hooks-v1.2.0](https://github.com/dezkareid/dezkareid/compare/react-hooks-1.1.1...react-hooks-1.2.0) (2021-10-27)
+
+
+### Features
+
+* **react-hooks:** add module federation ([cf26c75](https://github.com/dezkareid/dezkareid/commit/cf26c758b719bd3df39563f24fe0df16d4e9092d))
+* **react-hooks:** hook to get google maps api ([da356fd](https://github.com/dezkareid/dezkareid/commit/da356fd22c714cf4206da6eb09fdca71e192d2fc))
+
 # [@dezkareid/react-hooks-v1.1.1](https://github.com/dezkareid/dezkareid/compare/react-hooks-1.1.0...react-hooks-1.1.1) (2021-10-03)
 
 
