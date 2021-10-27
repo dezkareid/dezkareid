@@ -8,7 +8,9 @@
   },
   "plugins": ["react", "react-hooks", "prettier"],
   "parserOptions": {
-    "sourceType": "module"
+    "sourceType": "module",
+    "requireConfigFile": false,
+    "presets": ["@babel/preset-react"]
   },
   "rules": {
     "complexity": ["error", 12],
