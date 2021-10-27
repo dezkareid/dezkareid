@@ -10,7 +10,7 @@
   "parserOptions": {
     "sourceType": "module",
     "requireConfigFile": false,
-    "presets": ["@babel/preset-react"]
+    "presets": ["@babel/preset-env", "@babel/preset-react"]
   },
   "rules": {
     "complexity": ["error", 12],
