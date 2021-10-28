@@ -27,7 +27,7 @@ const config = {
     ]
   },
   output: {
-    path: path.resolve('../dist/browser')
+    path: path.resolve('dist/browser')
   },
   plugins: [
     new ModuleFederationPlugin({

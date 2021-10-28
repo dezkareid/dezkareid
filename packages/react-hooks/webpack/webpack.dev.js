@@ -5,7 +5,7 @@ const commonConfig = require('./webpack.common');
 const config = {
   devServer: {
     static: {
-      directory: path.resolve('../dist/browser')
+      directory: path.resolve('dist/browser')
     },
     port: 5000
   },
