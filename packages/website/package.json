@@ -9,7 +9,7 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "build": "GOOGLE_MAPS_KEY=252525 webpack --config webpack/webpack.config.js",
+    "build": "webpack --config webpack/webpack.config.js",
     "start": "webpack serve --node-env development --config webpack/webpack.dev.js",
     "lint": "eslint ./src",
     "lint:fix": "npm run lint -- --fix",
