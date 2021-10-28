@@ -4,8 +4,8 @@ import GoogleMaps from '@dezkareid/react-components/GoogleMaps';
 
 const zoom = 8;
 const center = {
-  lat: -25.344,
-  lng: 131.036
+  lat: 20.646052379584862,
+  lng: -103.41286996931315
 };
 const mapOptions = {
   center,
