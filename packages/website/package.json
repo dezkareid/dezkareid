@@ -1,0 +1,66 @@
+{
+  "name": "@dezkareid/website",
+  "version": "0.0.0-semantic-release",
+  "description": "website for dezka",
+  "keywords": [
+    "dezkareid"
+  ],
+  "author": "Joel Humberto Gomez Paredes <elmaildeldezkareid@gmail.com>",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "build": "GOOGLE_MAPS_KEY=252525 webpack --config webpack/webpack.config.js",
+    "start": "webpack serve --node-env development --config webpack/webpack.dev.js",
+    "lint": "eslint ./src",
+    "lint:fix": "npm run lint -- --fix",
+    "semantic-release": "npx semantic-release",
+    "test": "jest",
+    "test:watch": "npm run test -- --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dezkareid/dezkareid.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dezkareid/dezkareid/issues"
+  },
+  "engines": {
+    "node": ">=14.17"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "@babel/preset-react": "^7.14.5",
+    "@semantic-release/changelog": "^6.0.0",
+    "@semantic-release/git": "^10.0.0",
+    "@testing-library/dom": "^8.10.1",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/react-hooks": "^7.0.2",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.2.3",
+    "camel-case": "^4.1.2",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.26.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "html-webpack-plugin": "^5.4.0",
+    "jest": "^27.3.1",
+    "prettier": "^2.4.1",
+    "react-test-renderer": "^17.0.2",
+    "semantic-release": "^18.0.0",
+    "semantic-release-monorepo": "^7.0.5",
+    "webpack": "^5.59.1",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.3.1",
+    "webpack-merge": "^5.8.0"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  }
+}
