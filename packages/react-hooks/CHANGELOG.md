@@ -1,3 +1,10 @@
+# [@dezkareid/react-hooks-v1.2.1](https://github.com/dezkareid/dezkareid/compare/react-hooks-1.2.0...react-hooks-1.2.1) (2021-10-28)
+
+
+### Bug Fixes
+
+* **react-hook:** path to generate module federated files ([058f626](https://github.com/dezkareid/dezkareid/commit/058f626b787ceb7ec41df228354e599e731c7b71))
+
 # [@dezkareid/react-hooks-v1.2.0](https://github.com/dezkareid/dezkareid/compare/react-hooks-1.1.1...react-hooks-1.2.0) (2021-10-27)
 
 
