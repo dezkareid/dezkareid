@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useGoogleMaps } from '@dezkareid/react-hooks';
+import mapStyles from './mapStyles';
 
 function GoogleMaps({ mapKey, mapOptions, className, children }) {
   const google = useGoogleMaps({ key: mapKey });
@@ -8,7 +9,10 @@ function GoogleMaps({ mapKey, mapOptions, className, children }) {
   const mapRef = useRef();
   useEffect(() => {
     if (google) {
-      const mapInstance = new google.maps.Map(mapRef.current, mapOptions);
+      const mapInstance = new google.maps.Map(mapRef.current, {
+        ...mapOptions,
+        styles: mapStyles
+      });
       setMap(mapInstance);
     }
   }, [google, mapOptions]);
