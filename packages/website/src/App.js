@@ -1,6 +1,7 @@
 import React from 'react';
 // eslint-disable-next-line import/no-unresolved
 import GoogleMaps from '@dezkareid/react-components/GoogleMaps';
+import DMarker from './components/DMarker';
 
 const zoom = 8;
 const center = {
@@ -14,7 +15,9 @@ const mapOptions = {
 
 const key = process.env.GOOGLE_MAPS_KEY;
 const App = () => (
-  <GoogleMaps mapKey={key} mapOptions={mapOptions} className="App__Map" />
+  <GoogleMaps mapKey={key} mapOptions={mapOptions} className="App__Map">
+    <DMarker position={center} />
+  </GoogleMaps>
 );
 
 export default App;
