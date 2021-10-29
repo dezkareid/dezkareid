@@ -15,7 +15,7 @@ const exposes = {
 const remoteReactComponentsURL =
   process.env.NODE_ENV === 'development'
     ? 'http://localhost:5001'
-    : 'https://unpkg.com/@dezkareid/react-components@1.0.0/dist/browser';
+    : 'https://unpkg.com/@dezkareid/react-components/dist/browser';
 
 const remotes = {
   '@dezkareid/react-components': `dezkareidReactComponents@${remoteReactComponentsURL}/remote-entry.js`
