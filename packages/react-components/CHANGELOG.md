@@ -1,3 +1,11 @@
+# [@dezkareid/react-components-v1.1.1](https://github.com/dezkareid/dezkareid/compare/react-components-1.1.0...react-components-1.1.1) (2021-11-13)
+
+
+### Bug Fixes
+
+* **react-components:** remove map styles ([a861b06](https://github.com/dezkareid/dezkareid/commit/a861b0665e5cb3b88eb0d2693d92278cc3faf82c))
+* **react-components:** restore component ([3edf5a2](https://github.com/dezkareid/dezkareid/commit/3edf5a2d749d14a1b1c61a6b85fb8ab424735325))
+
 # [@dezkareid/react-components-v1.1.0](https://github.com/dezkareid/dezkareid/compare/react-components-1.0.0...react-components-1.1.0) (2021-10-29)
 
 
