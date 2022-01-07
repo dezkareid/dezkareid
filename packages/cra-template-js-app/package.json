@@ -16,7 +16,8 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dezkareid/dezkareid.git"
+    "url": "git+https://github.com/dezkareid/dezkareid.git",
+    "directory": "packages/cra-template-js-app"
   },
   "bugs": {
     "url": "https://github.com/dezkareid/dezkareid/issues"
