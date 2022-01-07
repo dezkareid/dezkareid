@@ -1,0 +1,38 @@
+{
+  "name": "@dezkareid/cra-template-js-app",
+  "version": "0.0.0-semantic-release",
+  "description": "template based on create react app to generate scaffolding with love and tacos",
+  "author": "Joel Humberto Gomez Paredes <elmaildeldezkareid@gmail.com>",
+  "scripts": {
+    "semantic-release": "npx semantic-release"
+  },
+  "files": [
+    "template",
+    "template.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dezkareid/dezkareid.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dezkareid/dezkareid/issues"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "keywords": [
+    "react",
+    "create-react-app",
+    "template"
+  ],
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "semantic-release": "^18.0.1",
+    "semantic-release-monorepo": "^7.0.5"
+  }
+}
