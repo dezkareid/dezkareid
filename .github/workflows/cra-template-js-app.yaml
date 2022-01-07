@@ -20,13 +20,6 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v2.3.1
-      - name: Install
-        run: npm ci
-        env:
-          CI: true
-      - name: Build package
-        if: ${{ github.event_name == 'push' }}
-        run: npm run build
       - name: Create a release
         if: ${{ github.event_name == 'push' }}
         run: npm run semantic-release
