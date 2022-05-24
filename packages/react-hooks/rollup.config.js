@@ -6,7 +6,11 @@ import { terser } from 'rollup-plugin-terser';
 import pkg from './package.json';
 
 const config = {
-  input: ['src/index.js', 'src/useLocalStorage', 'src/useEventListener'],
+  input: {
+    index: 'src/index.js',
+    useLocalStorage: 'src/useLocalStorage',
+    useEventListener: 'src/useEventListener'
+  },
   output: [
     {
       dir: 'dist/es',
