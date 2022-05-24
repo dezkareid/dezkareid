@@ -1,3 +1,10 @@
+# [@dezkareid/react-hooks-v1.3.0](https://github.com/dezkareid/dezkareid/compare/react-hooks-1.2.1...react-hooks-1.3.0) (2022-05-24)
+
+
+### Features
+
+* subpath import ([c85ba5f](https://github.com/dezkareid/dezkareid/commit/c85ba5fb08d4237e75c39b800e73eb2e724c3292))
+
 # [@dezkareid/react-hooks-v1.2.1](https://github.com/dezkareid/dezkareid/compare/react-hooks-1.2.0...react-hooks-1.2.1) (2021-10-28)
 
 
