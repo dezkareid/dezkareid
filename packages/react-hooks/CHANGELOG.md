@@ -1,3 +1,10 @@
+# [@dezkareid/react-hooks-v1.3.1](https://github.com/dezkareid/dezkareid/compare/react-hooks-1.3.0...react-hooks-1.3.1) (2022-05-27)
+
+
+### Bug Fixes
+
+* test for j4g ([863dae8](https://github.com/dezkareid/dezkareid/commit/863dae8f696aeadb6936502f87c20f6a850a60fe))
+
 # [@dezkareid/react-hooks-v1.3.0](https://github.com/dezkareid/dezkareid/compare/react-hooks-1.2.1...react-hooks-1.3.0) (2022-05-24)
 
 
