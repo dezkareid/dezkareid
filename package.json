@@ -7,7 +7,7 @@
     "configs/*"
   ],
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "is-ci || husky install",
     "build": "turbo run build",
     "test": "turbo run test",
     "lint": "turbo run lint",
@@ -27,6 +27,7 @@
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
     "husky": "^8.0.3",
+    "is-ci": "^3.0.1",
     "turbo": "^1.8.1"
   }
 }
