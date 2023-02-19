@@ -22,7 +22,7 @@
     "start": "webpack serve --config webpack/webpack.dev.js",
     "lint": "eslint ./src",
     "lint:fix": "npm run lint -- --fix",
-    "semantic-release": "npx semantic-release",
+    "semantic-release": "semantic-release",
     "test": "jest",
     "test:watch": "npm run test -- --watch"
   },

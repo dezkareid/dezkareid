@@ -1,0 +1,11 @@
+name: Setup JS
+description: Configure JS environment and dependencies
+runs:
+  using: "composite"
+  steps:
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: Install dependencies
+      uses: bahmutov/npm-install@v1

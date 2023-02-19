@@ -2,12 +2,12 @@ name: Personal website
 on:
   pull_request:
     paths:
-    - 'packages/website/**'
+      - "packages/website/**"
     branches:
       - main
   push:
     paths:
-    - 'packages/website/**'
+      - "packages/website/**"
     branches:
       - main
 jobs:
@@ -16,25 +16,16 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: packages/website
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v2.3.1
-      - name: Install
-        run: npm ci
-        env:
-          CI: true
-      - name: Build website
+        uses: actions/checkout@v3
+      - name: Setup env js
+        uses: ./.github/actions/setup-js
+      - name: Build
         if: ${{ github.event_name == 'push' }}
-        run: npm run build
+        run: yarn build --filter=@dezkareid/website
         env:
           GOOGLE_MAPS_KEY: ${{ secrets.GOOGLE_MAPS_KEY }}
-      - name: Create a release
-        if: ${{ github.event_name == 'push' }}
-        run: npm run semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Deploy 🚀
         if: ${{ github.event_name == 'push' }}
         uses: JamesIves/github-pages-deploy-action@4.0.0
