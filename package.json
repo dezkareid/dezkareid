@@ -2,9 +2,15 @@
   "name": "root",
   "private": true,
   "description": "mono repo with personal projects",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "setup": "npm install && lerna bootstrap",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "release": "turbo run release"
   },
   "repository": {
     "type": "git",
@@ -17,9 +23,9 @@
   },
   "homepage": "https://github.com/dezkareid/dezkareid#readme",
   "devDependencies": {
-    "@commitlint/cli": "^13.1.0",
-    "@commitlint/config-conventional": "^13.1.0",
-    "husky": "^7.0.2",
-    "lerna": "^3.22.1"
+    "@commitlint/cli": "^17.4.2",
+    "@commitlint/config-conventional": "^17.4.2",
+    "husky": "^8.0.3",
+    "turbo": "^1.8.1"
   }
 }
