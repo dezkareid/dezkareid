@@ -1,0 +1,56 @@
+{
+  "name": "@dezkareid/eslint-config-js-base",
+  "version": "0.0.0",
+  "main": "./index.js",
+  "exports": "./index.js",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dezkareid/dezkareid.git",
+    "directory": "configs/eslint-config-js-base"
+  },
+  "bugs": {
+    "url": "https://github.com/dezkareid/dezkareid/issues"
+  },
+  "engines": {
+    "node": ">=14.17"
+  },
+  "keywords": [
+    "eslint",
+    "eslintconfig",
+    "config",
+    "airbnb",
+    "javascript",
+    "styleguide"
+  ],
+  "scripts": {
+    "test:pass": "eslint --no-eslintrc -c index.js ./tests/pass",
+    "test:fail": "if eslint --no-eslintrc -c index.js ./tests/fail; then exit 1; else exit 0; fi",
+    "test": "yarn test:pass && yarn test:fail",
+    "release": "semantic-release"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.2",
+    "@semantic-release/git": "^10.0.1",
+    "eslint": "8.34.0",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-config-prettier": "8.6.0",
+    "eslint-plugin-import": "2.27.5",
+    "eslint-plugin-prettier": "4.2.1",
+    "prettier": "2.8.4",
+    "semantic-release": "^20.1.0",
+    "semantic-release-monorepo": "^7.0.5"
+  },
+  "peerDependencies": {
+    "eslint": "^8.34.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.4"
+  }
+}
