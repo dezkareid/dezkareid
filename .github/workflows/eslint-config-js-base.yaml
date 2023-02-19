@@ -24,10 +24,10 @@ jobs:
       - name: Setup env js
         uses: ./.github/actions/setup-js
       - name: Testing library
-        run: yarn test --filter=@dezkareid/eslint-config-js
+        run: yarn test --filter=@dezkareid/eslint-config-js-base
       - name: Create a release
         if: ${{ github.event_name == 'push' }}
-        run: yarn release --filter=@dezkareid/eslint-config-js
+        run: yarn release --filter=@dezkareid/eslint-config-js-base
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
