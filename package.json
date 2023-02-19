@@ -3,7 +3,8 @@
   "private": true,
   "description": "mono repo with personal projects",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "configs/*"
   ],
   "scripts": {
     "prepare": "husky install",
