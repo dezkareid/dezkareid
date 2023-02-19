@@ -2,12 +2,12 @@ name: Module Federated Libs
 on:
   pull_request:
     paths:
-    - 'packages/module-federated-libs/**'
+      - "packages/module-federated-libs/**"
     branches:
       - main
   push:
     paths:
-    - 'packages/module-federated-libs/**'
+      - "packages/module-federated-libs/**"
     branches:
       - main
 jobs:
@@ -19,7 +19,7 @@ jobs:
         working-directory: packages/module-federated-libs
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v2.3.1
+        uses: actions/checkout@v3
       - name: Install
         run: npm ci
         env:

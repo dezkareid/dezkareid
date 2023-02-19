@@ -2,12 +2,12 @@ name: Create react app template package
 on:
   pull_request:
     paths:
-    - 'packages/cra-template-js-app/**'
+      - "packages/cra-template-js-app/**"
     branches:
       - main
   push:
     paths:
-    - 'packages/cra-template-js-app/**'
+      - "packages/cra-template-js-app/**"
     branches:
       - main
 jobs:
@@ -19,7 +19,7 @@ jobs:
         working-directory: packages/cra-template-js-app
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v2.3.1
+        uses: actions/checkout@v3
       - name: Install
         run: npm ci
         env:
