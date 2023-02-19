@@ -16,22 +16,16 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: packages/react-hooks
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
-      - name: Install
-        run: npm ci
-        env:
-          CI: true
+      - name: Setup env js
+        uses: ./.github/actions/setup-js
       - name: Testing library
-        run: npm run test
-      - name: Build library
-        if: ${{ github.event_name == 'push' }}
-        run: npm run build
+        run: yarn test --filter=@dezkareid/react-hooks
       - name: Create a release
         if: ${{ github.event_name == 'push' }}
-        run: npm run semantic-release
+        run: yarn release --filter=@dezkareid/react-hooks
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

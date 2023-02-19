@@ -16,20 +16,14 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: packages/module-federated-libs
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
-      - name: Install
-        run: npm ci
-        env:
-          CI: true
-      - name: Build library
-        if: ${{ github.event_name == 'push' }}
-        run: npm run build
+      - name: Setup env js
+        uses: ./.github/actions/setup-js
       - name: Create a release
         if: ${{ github.event_name == 'push' }}
-        run: npm run semantic-release
+        run: yarn release --filter=@dezkareid/module-federated-libs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
