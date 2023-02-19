@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "build": "webpack",
-    "semantic-release": "npx semantic-release"
+    "semantic-release": "semantic-release"
   },
   "engines": {
     "node": ">=14.17"
