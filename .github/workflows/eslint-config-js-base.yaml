@@ -2,14 +2,14 @@ name: ESLint config JS base
 on:
   pull_request:
     paths:
-      - "configs/eslint-config-js/**"
-      - "!configs/eslint-config-js/**/*.md"
+      - "configs/eslint-config-js-base/**"
+      - "!configs/eslint-config-js-base/**/*.md"
     branches:
       - main
   push:
     paths:
-      - "configs/eslint-config-js/**"
-      - "!configs/eslint-config-js/**/*.md"
+      - "configs/eslint-config-js-base/**"
+      - "!configs/eslint-config-js-base/**/*.md"
     branches:
       - main
 jobs:
