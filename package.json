@@ -4,7 +4,8 @@
   "description": "mono repo with personal projects",
   "workspaces": [
     "packages/*",
-    "configs/*"
+    "configs/*",
+    "linters/*"
   ],
   "scripts": {
     "prepare": "is-ci || husky install",
