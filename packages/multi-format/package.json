@@ -13,6 +13,7 @@
   },
   "main": "./dist/multi-format.cjs.js",
   "module": "./dist/multi-format.es.js",
+  "unpkg": "./dist/multi-format.umd.js",
   "type": "module",
   "files": [
     "dist",
