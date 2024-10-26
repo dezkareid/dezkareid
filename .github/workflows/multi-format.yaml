@@ -1,0 +1,53 @@
+name: Multi-format library
+on:
+  pull_request:
+    paths:
+      - "packages/multi-format/**"
+    branches:
+      - main
+  push:
+    paths:
+      - "packages/multi-format/**"
+    branches:
+      - main
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+      - name: Setup env js
+        uses: ./.github/actions/setup-js
+      - name: Build package
+        if: ${{ github.event_name == 'push' }}
+        run: yarn build --filter=@dezkareid/multi-format
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Release
+        uses: cycjimmy/semantic-release-action@v3
+        with:
+          semantic_version: 19.0.3
+          branches: |
+            [
+              '+([0-9])?(.{+([0-9]),x}).x',
+              'main',
+              'next',
+              {name: 'beta', prerelease: true},
+              {name: 'alpha', prerelease: true},
+            ]
+          extends: |
+            semantic-release-monorepo@7.0.5
+          extra_plugins: |
+              @semantic-release/changelog@6.0.0
+              @semantic-release/git@10.0.0
+          working_directory: ./packages/multi-format
+          tag_format: multi-format-v${version}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
