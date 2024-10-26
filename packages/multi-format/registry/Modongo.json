@@ -1,0 +1,14 @@
+{
+  "name": "Mondongo",
+  "type": "registry:ui",
+  "registryDependencies": [],
+  "dependencies": ["react", "react-dom"],
+  "devDependencies": [],
+  "files": [
+    {
+      "path": "Mondongo.jsx",
+      "content": "export const Mondongo = () => {\n  return <div>Mondongo</div>;\n};\n",
+      "type": "registry:ui"
+    }
+  ]
+}
