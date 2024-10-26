@@ -24,10 +24,6 @@ jobs:
       - name: Build package
         if: ${{ github.event_name == 'push' }}
         run: yarn build --filter=@dezkareid/multi-format
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Release
         uses: cycjimmy/semantic-release-action@v3
         with:
