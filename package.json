@@ -2,11 +2,6 @@
   "name": "root",
   "private": true,
   "description": "mono repo with personal projects",
-  "workspaces": [
-    "packages/*",
-    "configs/*",
-    "linters/*"
-  ],
   "scripts": {
     "prepare": "is-ci || husky install",
     "build": "turbo run build",
@@ -25,10 +20,10 @@
   },
   "homepage": "https://github.com/dezkareid/dezkareid#readme",
   "devDependencies": {
-    "@commitlint/cli": "^17.4.2",
-    "@commitlint/config-conventional": "^17.4.2",
-    "husky": "^8.0.3",
-    "is-ci": "^3.0.1",
-    "turbo": "1.13.2"
+    "@commitlint/cli": "19.8.1",
+    "@commitlint/config-conventional": "19.8.1",
+    "husky": "9.1.7",
+    "is-ci": "4.1.0",
+    "turbo": "2.5.8"
   }
 }
