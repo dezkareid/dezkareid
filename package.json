@@ -2,8 +2,9 @@
   "name": "root",
   "private": true,
   "description": "mono repo with personal projects",
+  "packageManager": "pnpm@10.7.1",
   "scripts": {
-    "prepare": "is-ci || husky install",
+    "prepare": "is-ci || husky init",
     "build": "turbo run build",
     "test": "turbo run test",
     "lint": "turbo run lint",
