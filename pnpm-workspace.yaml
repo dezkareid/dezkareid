@@ -1,4 +1,4 @@
-workspaces:
-  - packages/*
-  - configs/*
-  - linters/*
+packages:
+  - "packages/*"
+  - "configs/*"
+  - "linters/*"
