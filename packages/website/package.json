@@ -8,14 +8,7 @@
   "author": "Joel Humberto Gomez Paredes <elmaildeldezkareid@gmail.com>",
   "license": "MIT",
   "main": "index.js",
-  "scripts": {
-    "build": "webpack --config webpack/webpack.config.js",
-    "start": "webpack serve --node-env development --config webpack/webpack.dev.js",
-    "lint": "eslint ./src",
-    "lint:fix": "npm run lint -- --fix",
-    "test": "jest",
-    "test:watch": "npm run test -- --watch"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dezkareid/dezkareid.git"

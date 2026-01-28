@@ -8,10 +8,10 @@
     "eslintplugin"
   ],
   "license": "MIT",
-  "files": ["src"],
-  "scripts": {
-    "test": "jest"
-  },
+  "files": [
+    "src"
+  ],
+  "scripts": {},
   "peerDependencies": {
     "eslint": "^8.0.0"
   },

@@ -8,19 +8,21 @@ const { ModuleFederationPlugin } = webpack.container;
 const name = camelCase(pkg.name);
 
 const exposes = {
-  './GoogleMaps': './src/GoogleMaps/index.tsx'
+  './useEventListener': './src/useEventListener',
+  './useGoogleMaps': './src/useGoogleMaps',
+  './useLocalStorage': './src/useLocalStorage'
 };
 
 const config = {
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx']
+    extensions: ['.ts', '.tsx', '.js', '.jsx']
   },
   module: {
     rules: [
       {
-        test: /\.(js|jsx|ts|tsx)$/,
+        test: /\.(ts|tsx|js|jsx)$/,
         loader: 'ts-loader',
-        exclude: /node_modules/,
+        exclude: /node_modules/
       }
     ]
   },

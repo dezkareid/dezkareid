@@ -8,10 +8,7 @@
   "files": [
     "dist"
   ],
-  "scripts": {
-    "build": "webpack",
-    "semantic-release": "semantic-release"
-  },
+  "scripts": {},
   "engines": {
     "node": ">=14.17"
   },
