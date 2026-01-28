@@ -24,6 +24,7 @@
     "lint": "eslint -c eslint.config.mjs .",
     "lint:fix": "npm run lint -- --fix",
     "semantic-release": "semantic-release",
+    "release": "semantic-release",
     "test": "vitest --run"
   },
   "repository": {
