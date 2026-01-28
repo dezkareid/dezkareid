@@ -27,8 +27,7 @@ jobs:
       - name: Setup JS
         uses: ./.github/actions/setup-js
 
-      - name: Testing library (PR)
-        if: github.event_name == 'pull_request'
+      - name: Testing library
         run: pnpm run test
 
       - name: Create a release
