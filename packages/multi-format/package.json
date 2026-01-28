@@ -26,9 +26,7 @@
     }
   },
   "sideEffects": false,
-  "scripts": {
-    "build": "vite build"
-  },
+  "scripts": {},
   "peerDependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
