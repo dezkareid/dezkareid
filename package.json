@@ -6,9 +6,9 @@
   "scripts": {
     "prepare": "husky",
     "build": "turbo run build",
-    "lint": "turbo run lint",
+    "lint": "pnpm -r lint",
     "lint:local": "pnpm --filter=\"...[main]\" lint",
-    "test": "turbo run test",
+    "test": "pnpm -r test",
     "test:local": "pnpm --filter=\"...[main]\" test",
     "release": "turbo run release"
   },
