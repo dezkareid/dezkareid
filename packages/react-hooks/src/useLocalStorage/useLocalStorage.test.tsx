@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react';
 import useLocalStorage from '.';
 
 describe('Test suite useLocalStorage Hook - returns and save a value in local storage', () => {

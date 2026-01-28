@@ -14,15 +14,15 @@ const exposes = {
 };
 
 const config = {
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx']
+  },
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/,
-        options: {
-          presets: ['@babel/preset-env']
-        }
+        test: /\.(ts|tsx|js|jsx)$/,
+        loader: 'ts-loader',
+        exclude: /node_modules/
       }
     ]
   },
