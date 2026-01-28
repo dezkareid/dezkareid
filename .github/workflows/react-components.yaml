@@ -23,15 +23,8 @@ jobs:
           fetch-depth: 0
       - name: Retrieve main branch
         run: git branch -f main origin/main
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-      - name: Setup node
-        uses: actions/setup-node@v5
-        with:
-          node-version: 22
-          cache: "pnpm"
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Setup JS
+        uses: ./.github/actions/setup-js
       - name: Testing library
         run: pnpm test
       - name: Create a release
