@@ -19,15 +19,8 @@ const config = {
     rules: [
       {
         test: /\.(js|jsx|ts|tsx)$/,
-        loader: 'babel-loader',
+        loader: 'ts-loader',
         exclude: /node_modules/,
-        options: {
-          presets: [
-            '@babel/preset-env',
-            '@babel/preset-react',
-            '@babel/preset-typescript'
-          ]
-        }
       }
     ]
   },

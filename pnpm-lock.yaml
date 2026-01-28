@@ -280,33 +280,9 @@ importers:
         specifier: ^1.2.0
         version: 1.3.1(react@19.2.4)
     devDependencies:
-      '@babel/cli':
-        specifier: ^7.15.4
-        version: 7.28.6(@babel/core@7.28.6)
-      '@babel/core':
-        specifier: ^7.15.5
-        version: 7.28.6
-      '@babel/plugin-proposal-export-default-from':
-        specifier: ^7.14.5
-        version: 7.27.1(@babel/core@7.28.6)
-      '@babel/plugin-transform-runtime':
-        specifier: ^7.15.0
-        version: 7.28.5(@babel/core@7.28.6)
-      '@babel/preset-env':
-        specifier: ^7.15.4
-        version: 7.28.6(@babel/core@7.28.6)
-      '@babel/preset-react':
-        specifier: ^7.14.5
-        version: 7.28.5(@babel/core@7.28.6)
-      '@babel/preset-typescript':
-        specifier: 7.28.5
-        version: 7.28.5(@babel/core@7.28.6)
       '@eslint/js':
         specifier: 9.13.0
         version: 9.13.0
-      '@rollup/plugin-babel':
-        specifier: 6.1.0
-        version: 6.1.0(@babel/core@7.28.6)(@types/babel__core@7.20.5)(rollup@4.56.0)
       '@rollup/plugin-commonjs':
         specifier: 29.0.0
         version: 29.0.0(rollup@4.56.0)
@@ -355,9 +331,6 @@ importers:
       '@vitest/ui':
         specifier: 4.0.18
         version: 4.0.18(vitest@4.0.18)
-      babel-loader:
-        specifier: ^8.2.2
-        version: 8.4.1(@babel/core@7.28.6)(webpack@5.104.1)
       camel-case:
         specifier: 5.0.0
         version: 5.0.0
@@ -409,6 +382,9 @@ importers:
       semantic-release-monorepo:
         specifier: 8.0.2
         version: 8.0.2(semantic-release@25.0.2(typescript@5.9.3))
+      ts-loader:
+        specifier: 9.5.1
+        version: 9.5.1(typescript@5.9.3)(webpack@5.104.1)
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -867,12 +843,6 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0
 
-  '@babel/plugin-proposal-export-default-from@7.27.1':
-    resolution: {integrity: sha512-hjlsMBl1aJc5lp8MoCDEZCiYzlgdRAShOjAfRw6X+GlpLpUPU7c3XNLsKFZbQk/1cRzBlJ7CXg3xJAJMrFa1Uw==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-
   '@babel/plugin-proposal-private-property-in-object@7.21.0-placeholder-for-preset-env.2':
     resolution: {integrity: sha512-SOSkfJDddaM7mak6cPEpswyTRnuRltl429hMraQEglW+OkovnCzsiszTmsrlY//qLFjCpQDFRvjdm2wA5pPm9w==}
     engines: {node: '>=6.9.0'}
@@ -1266,12 +1236,6 @@ packages:
 
   '@babel/plugin-transform-reserved-words@7.27.1':
     resolution: {integrity: sha512-V2ABPHIJX4kC7HegLkYoDpfg9PVmuWy/i6vUM5eGK22bx4YVFD3M5F0QQnWQoDs6AGsUWTVOopBiMFQgHaSkVw==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-
-  '@babel/plugin-transform-runtime@7.28.5':
-    resolution: {integrity: sha512-20NUVgOrinudkIBzQ2bNxP08YpKprUkRTiRSd2/Z5GOdPImJGkoN4Z7IQe1T5AdyKI1i5L6RBmluqdSzvaq9/w==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
@@ -8029,6 +7993,13 @@ packages:
   ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
 
+  ts-loader@9.5.1:
+    resolution: {integrity: sha512-rNH3sK9kGZcH9dYzC7CewQm4NtxJTjSEVRJ2DyBZR7f8/wcta+iV44UPCXc5+nzDzivKtlzV6c9P4e+oFhDLYg==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      typescript: '*'
+      webpack: ^5.0.0
+
   ts-loader@9.5.4:
     resolution: {integrity: sha512-nCz0rEwunlTZiy6rXFByQU1kVVpCIgUpc/psFiKVrUwrizdnIbRFu8w7bxhUF0X613DYwT4XzrZHpVyMe758hQ==}
     engines: {node: '>=12.0.0'}
@@ -9009,11 +8980,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/plugin-proposal-export-default-from@7.27.1(@babel/core@7.28.6)':
-    dependencies:
-      '@babel/core': 7.28.6
-      '@babel/helper-plugin-utils': 7.28.6
-
   '@babel/plugin-proposal-private-property-in-object@7.21.0-placeholder-for-preset-env.2(@babel/core@7.28.6)':
     dependencies:
       '@babel/core': 7.28.6
@@ -9434,18 +9400,6 @@ snapshots:
     dependencies:
       '@babel/core': 7.28.6
       '@babel/helper-plugin-utils': 7.28.6
-
-  '@babel/plugin-transform-runtime@7.28.5(@babel/core@7.28.6)':
-    dependencies:
-      '@babel/core': 7.28.6
-      '@babel/helper-module-imports': 7.28.6
-      '@babel/helper-plugin-utils': 7.28.6
-      babel-plugin-polyfill-corejs2: 0.4.15(@babel/core@7.28.6)
-      babel-plugin-polyfill-corejs3: 0.13.0(@babel/core@7.28.6)
-      babel-plugin-polyfill-regenerator: 0.6.6(@babel/core@7.28.6)
-      semver: 6.3.1
-    transitivePeerDependencies:
-      - supports-color
 
   '@babel/plugin-transform-shorthand-properties@7.27.1(@babel/core@7.28.6)':
     dependencies:
@@ -12242,7 +12196,7 @@ snapshots:
       loader-utils: 2.0.4
       make-dir: 3.1.0
       schema-utils: 2.7.1
-      webpack: 5.104.1(webpack-cli@6.0.1)
+      webpack: 5.104.1(webpack-cli@4.10.0)
 
   babel-plugin-istanbul@6.1.1:
     dependencies:
@@ -17709,7 +17663,7 @@ snapshots:
       schema-utils: 4.3.3
       serialize-javascript: 6.0.2
       terser: 5.46.0
-      webpack: 5.104.1(webpack-cli@6.0.1)
+      webpack: 5.104.1(webpack-cli@4.10.0)
 
   terser@5.46.0:
     dependencies:
@@ -17828,6 +17782,16 @@ snapshots:
       typescript: 5.9.3
 
   ts-interface-checker@0.1.13: {}
+
+  ts-loader@9.5.1(typescript@5.9.3)(webpack@5.104.1):
+    dependencies:
+      chalk: 4.1.2
+      enhanced-resolve: 5.18.4
+      micromatch: 4.0.8
+      semver: 7.7.3
+      source-map: 0.7.6
+      typescript: 5.9.3
+      webpack: 5.104.1(webpack-cli@6.0.1)
 
   ts-loader@9.5.4(typescript@5.9.3)(webpack@5.104.1):
     dependencies:

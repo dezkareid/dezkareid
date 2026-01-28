@@ -1,4 +1,3 @@
-import { babel } from '@rollup/plugin-babel';
 import cleaner from 'rollup-plugin-cleaner';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
@@ -16,27 +15,6 @@ const commonPlugins = [
     extensions: ['.js', '.jsx', '.ts', '.tsx']
   }),
   commonjs(),
-  babel({
-    babelrc: false,
-    configFile: false,
-    exclude: ['**/node_modules/**'],
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    presets: [
-      [
-        '@babel/preset-env',
-        {
-          modules: false
-        }
-      ],
-      '@babel/preset-react',
-      '@babel/preset-typescript'
-    ],
-    plugins: [
-      '@babel/plugin-proposal-export-default-from',
-      '@babel/plugin-transform-runtime'
-    ],
-    babelHelpers: 'runtime'
-  }),
   terser()
 ];
 
