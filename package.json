@@ -7,9 +7,9 @@
     "prepare": "husky",
     "build": "turbo run build",
     "lint": "turbo run lint",
-    "lint:local": "pnpm --filter=\"...[main]\" lint",
+    "lint:local": "turbo run lint --filter=\"[main]\"",
     "test": "turbo run test",
-    "test:local": "pnpm --filter=\"...[main]\" test",
+    "test:local": "turbo run test --filter=\"[main]\"",
     "release": "turbo run release"
   },
   "repository": {
