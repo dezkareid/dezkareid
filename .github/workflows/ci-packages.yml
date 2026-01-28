@@ -33,15 +33,15 @@ jobs:
 
       - name: Testing library (PR)
         if: github.event_name == 'pull_request'
-        run: pnpm test --filter="...[origin/main]"
+        run: pnpm --filter="...[origin/main]" test
 
       - name: Testing library (Push)
         if: github.event_name == 'push'
-        run: pnpm test --filter="...[HEAD^1]"
+        run: pnpm --filter="...[HEAD^1]" test
 
       - name: Create a release
         if: github.event_name == 'push'
-        run: pnpm release --filter="...[HEAD^1]"
+        run: pnpm --filter="...[HEAD^1]" release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
