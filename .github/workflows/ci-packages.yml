@@ -4,11 +4,13 @@ on:
     types: [opened, synchronize, reopened]
     paths:
       - "packages/**"
+      - "configs/**"
     branches:
       - main
   push:
     paths:
       - "packages/**"
+      - "configs/**"
     branches:
       - main
 
