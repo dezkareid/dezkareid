@@ -24,24 +24,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Retrieve main branch
-        if: github.event_name == 'pull_request'
-        run: git branch -f main origin/main
-
       - name: Setup JS
         uses: ./.github/actions/setup-js
 
       - name: Testing library (PR)
         if: github.event_name == 'pull_request'
-        run: pnpm --filter="...[origin/main]" test
-
-      - name: Testing library (Push)
-        if: github.event_name == 'push'
-        run: pnpm --filter="...[HEAD^1]" test
+        run: pnpm run test
 
       - name: Create a release
         if: github.event_name == 'push'
-        run: pnpm --filter="...[HEAD^1]" release
+        run: pnpm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
