@@ -3,9 +3,7 @@
   "version": "0.0.0-semantic-release",
   "description": "template based on create react app to generate scaffolding with love and tacos",
   "author": "Joel Humberto Gomez Paredes <elmaildeldezkareid@gmail.com>",
-  "scripts": {
-    "semantic-release": "semantic-release"
-  },
+  "scripts": {},
   "files": [
     "template",
     "template.json"

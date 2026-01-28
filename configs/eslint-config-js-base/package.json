@@ -29,8 +29,7 @@
   ],
   "scripts": {
     "test:pass": "eslint --no-eslintrc -c index.js ./tests/pass",
-    "test:fail": "if eslint --no-eslintrc -c index.js ./tests/fail; then exit 1; else exit 0; fi",
-    "release": "semantic-release"
+    "test:fail": "if eslint --no-eslintrc -c index.js ./tests/fail; then exit 1; else exit 0; fi"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.2",
