@@ -5,12 +5,10 @@
   "packageManager": "pnpm@10.7.1",
   "scripts": {
     "prepare": "husky",
-    "build": "turbo run build",
-    "lint": "turbo run lint",
-    "lint:local": "turbo run lint --filter=\"[main]\"",
-    "test": "turbo run test",
-    "test:local": "turbo run test --filter=\"[main]\"",
-    "release": "turbo run release"
+    "build": "turbo run build --affected",
+    "lint": "turbo run lint --affected",
+    "test": "turbo run test --affected",
+    "release": "turbo run release --affected"
   },
   "repository": {
     "type": "git",
@@ -26,6 +24,6 @@
     "@commitlint/cli": "19.8.1",
     "@commitlint/config-conventional": "19.8.1",
     "husky": "9.1.7",
-    "turbo": "2.5.8"
+    "turbo": "2.8.0"
   }
 }
