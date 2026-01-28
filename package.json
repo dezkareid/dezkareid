@@ -6,10 +6,10 @@
   "scripts": {
     "prepare": "husky",
     "build": "turbo run build",
-    "test": "pnpm --filter=\"...[main]\" test",
-    "lint": "pnpm --filter=\"...[main]\" lint",
-    "test:all": "turbo run test",
-    "lint:all": "turbo run lint",
+    "lint": "turbo run lint",
+    "lint:local": "pnpm --filter=\"...[main]\" lint",
+    "test": "turbo run test",
+    "test:local": "pnpm --filter=\"...[main]\" test",
     "release": "turbo run release"
   },
   "repository": {
