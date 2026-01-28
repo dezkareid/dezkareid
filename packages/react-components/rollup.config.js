@@ -1,50 +1,58 @@
-import { babel } from '@rollup/plugin-babel';
 import cleaner from 'rollup-plugin-cleaner';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
-import { terser } from 'rollup-plugin-terser';
-import pkg from './package.json';
+import terser from '@rollup/plugin-terser';
+import typescript from '@rollup/plugin-typescript';
+import { createRequire } from 'module';
 
-const config = {
-  input: ['src/index.js', 'src/GoogleMaps'],
-  output: [
-    {
+const require = createRequire(import.meta.url);
+const pkg = require('./package.json');
+
+const external = Object.keys(pkg.peerDependencies || {});
+
+const commonPlugins = [
+  resolve({
+    extensions: ['.js', '.jsx', '.ts', '.tsx']
+  }),
+  commonjs(),
+  terser()
+];
+
+export default [
+  {
+    input: ['src/index.ts', 'src/GoogleMaps/index.tsx'],
+    output: {
       dir: 'dist/es',
       format: 'es'
     },
-    {
+    external,
+    plugins: [
+      cleaner({
+        targets: ['./dist/']
+      }),
+      typescript({
+        tsconfig: './tsconfig.json',
+        outDir: 'dist/es',
+        declaration: true,
+        declarationDir: 'dist/es'
+      }),
+      ...commonPlugins
+    ]
+  },
+  {
+    input: ['src/index.ts', 'src/GoogleMaps/index.tsx'],
+    output: {
       dir: 'dist/cjs',
       format: 'cjs'
-    }
-  ],
-  external: Object.keys(pkg.peerDependencies),
-  plugins: [
-    cleaner({
-      targets: ['./dist/']
-    }),
-    resolve(),
-    babel({
-      babelrc: false,
-      configFile: false,
-      exclude: ['**/node_modules/**'],
-      presets: [
-        [
-          '@babel/preset-env',
-          {
-            modules: false
-          }
-        ],
-        '@babel/preset-react'
-      ],
-      plugins: [
-        '@babel/plugin-proposal-export-default-from',
-        '@babel/plugin-transform-runtime'
-      ],
-      babelHelpers: 'runtime'
-    }),
-    commonjs(),
-    terser()
-  ]
-};
-
-export default config;
+    },
+    external,
+    plugins: [
+      typescript({
+        tsconfig: './tsconfig.json',
+        outDir: 'dist/cjs',
+        declaration: false
+      }),
+      ...commonPlugins
+    ]
+  }
+];

@@ -19,11 +19,17 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
-      - name: Setup env js
+        with:
+          fetch-depth: 0
+      - name: Retrieve main branch
+        run: git branch -f main origin/main
+      - name: Setup JS
         uses: ./.github/actions/setup-js
+      - name: Testing library
+        run: pnpm test
       - name: Create a release
         if: ${{ github.event_name == 'push' }}
-        run: yarn release --filter=@dezkareid/react-components
+        run: pnpm release --filter=@dezkareid/react-components
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
