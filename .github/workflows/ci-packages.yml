@@ -1,15 +1,17 @@
-name: React hooks library
+name: CI Packages
 on:
   pull_request:
+    types: [opened, synchronize, reopened]
     paths:
-      - "packages/react-hooks/**"
+      - "packages/**"
     branches:
       - main
   push:
     paths:
-      - "packages/react-hooks/**"
+      - "packages/**"
     branches:
       - main
+
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
@@ -21,16 +23,25 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
       - name: Retrieve main branch
         if: github.event_name == 'pull_request'
         run: git branch -f main origin/main
+
       - name: Setup JS
         uses: ./.github/actions/setup-js
-      - name: Testing library
-        run: pnpm test
+
+      - name: Testing library (PR)
+        if: github.event_name == 'pull_request'
+        run: turbo run test --filter="...[origin/main]"
+
+      - name: Testing library (Push)
+        if: github.event_name == 'push'
+        run: turbo run test --filter="...[HEAD^1]"
+
       - name: Create a release
-        if: ${{ github.event_name == 'push' }}
-        run: pnpm release --filter=@dezkareid/react-hooks
+        if: github.event_name == 'push'
+        run: turbo run release --filter="...[HEAD^1]"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
