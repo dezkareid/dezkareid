@@ -22,10 +22,10 @@ jobs:
       - name: Setup env js
         uses: ./.github/actions/setup-js
       - name: Testing library
-        run: yarn test --filter=@dezkareid/react-hooks
+        run: pnpm test --filter=@dezkareid/react-hooks
       - name: Create a release
         if: ${{ github.event_name == 'push' }}
-        run: yarn release --filter=@dezkareid/react-hooks
+        run: pnpm release --filter=@dezkareid/react-hooks
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

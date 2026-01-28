@@ -4,7 +4,7 @@
   "description": "mono repo with personal projects",
   "packageManager": "pnpm@10.7.1",
   "scripts": {
-    "prepare": "is-ci || husky init",
+    "prepare": "husky",
     "build": "turbo run build",
     "test": "turbo run test",
     "lint": "turbo run lint",
@@ -24,7 +24,6 @@
     "@commitlint/cli": "19.8.1",
     "@commitlint/config-conventional": "19.8.1",
     "husky": "9.1.7",
-    "is-ci": "4.1.0",
     "turbo": "2.5.8"
   }
 }
