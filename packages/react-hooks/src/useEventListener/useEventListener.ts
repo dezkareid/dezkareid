@@ -1,6 +1,12 @@
 import { useEffect } from 'react';
 
-function useEventListener({ element, event, callback }) {
+interface UseEventListenerParams {
+  element: EventTarget;
+  event: string;
+  callback: EventListener;
+}
+
+function useEventListener({ element, event, callback }: UseEventListenerParams) {
   useEffect(() => {
     element.addEventListener(event, callback);
     return () => {

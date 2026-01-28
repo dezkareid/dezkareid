@@ -19,13 +19,24 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
-      - name: Setup env js
-        uses: ./.github/actions/setup-js
+        with:
+          fetch-depth: 0
+      - name: Retrieve main branch
+        run: git branch -f main origin/main
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      - name: Setup node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
       - name: Testing library
-        run: yarn test --filter=@dezkareid/react-hooks
+        run: pnpm test
       - name: Create a release
         if: ${{ github.event_name == 'push' }}
-        run: yarn release --filter=@dezkareid/react-hooks
+        run: pnpm release --filter=@dezkareid/react-hooks
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
