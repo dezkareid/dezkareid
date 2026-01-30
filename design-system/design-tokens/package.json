@@ -1,0 +1,8 @@
+{
+  "name": "@dezkareid/design-tokens",
+  "version": "0.0.0",
+  "description": "Design tokens for dezkareid design system",
+  "main": "index.js",
+  "license": "ISC",
+  "scripts": {}
+}
