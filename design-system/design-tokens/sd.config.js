@@ -89,8 +89,38 @@ module.exports = {
             finalParts = [theme, ...filteredParts];
           }
 
-          const name = finalParts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join('');
+          const name = finalParts.map(p => p.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('')).join('');
           lines.push(`export const ${name} = ${JSON.stringify(token.value)};`);
+        });
+
+        return lines.join('\n');
+      },
+      'typescript/custom-declarations': ({ dictionary }) => {
+        const lines = [
+          `/**`,
+          ` * Do not edit directly, this file was auto-generated.`, 
+          ` */`, 
+          ``
+        ];
+
+        dictionary.allTokens.forEach(token => {
+          const parts = token.path.map(part => /^\d/.test(part) ? `val${part}` : part);
+          
+          let finalParts = parts;
+          if (isThemed(token)) {
+            const theme = isLight(token) ? 'light' : 'dark';
+            const filteredParts = parts.filter(p => 
+              p.toLowerCase() !== 'light' && 
+              p.toLowerCase() !== 'dark' && 
+              p.toLowerCase() !== 'semantic' &&
+              p.toLowerCase() !== 'vallight' &&
+              p.toLowerCase() !== 'valdark'
+            );
+            finalParts = [theme, ...filteredParts];
+          }
+
+          const name = finalParts.map(p => p.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('')).join('');
+          lines.push(`export const ${name}: string;`);
         });
 
         return lines.join('\n');
@@ -129,6 +159,10 @@ module.exports = {
         {
           destination: 'tokens.mjs',
           format: 'js/custom-module'
+        },
+        {
+          destination: 'tokens.d.ts',
+          format: 'typescript/custom-declarations'
         }
       ]
     }
