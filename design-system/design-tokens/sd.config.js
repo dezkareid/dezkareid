@@ -41,8 +41,8 @@ module.exports = {
 
         const lines = [
           `/**`,
-          ` * Do not edit directly, this file was auto-generated.`, 
-          ` */`, 
+          ` * Do not edit directly, this file was auto-generated.`,
+          ` */`,
           ``,
           `:root {`,
           `  color-scheme: light dark;`
@@ -57,7 +57,7 @@ module.exports = {
         lightTokens.forEach(lightToken => {
           // Construct core name (e.g., color-primary)
           const corePath = lightToken.path.filter(p => p !== 'light' && p !== 'semantic');
-          const coreName = corePath.join('-'); 
+          const coreName = corePath.join('-');
 
           const lightName = `light-${coreName}`;
           const darkName = `dark-${coreName}`;
@@ -66,7 +66,7 @@ module.exports = {
           const darkToken = darkTokensMap.get(lookupKey);
 
           lines.push(`  --${lightName}: ${formatValue(lightToken)};`);
-          
+
           if (darkToken) {
             lines.push(`  --${darkName}: ${formatValue(darkToken)};`);
             lines.push(`  --${coreName}: light-dark(var(--${lightName}), var(--${darkName}));`);
@@ -100,21 +100,21 @@ module.exports = {
       'js/custom-module': ({ dictionary }) => {
         const lines = [
           `/**`,
-          ` * Do not edit directly, this file was auto-generated.`, 
-          ` */`, 
+          ` * Do not edit directly, this file was auto-generated.`,
+          ` */`,
           ``
         ];
 
         dictionary.allTokens.forEach(token => {
           // Generate a safe JS identifier
           const parts = token.path.map(part => /^\d/.test(part) ? `val${part}` : part);
-          
+
           let finalParts = parts;
           if (isThemed(token)) {
             const theme = isLight(token) ? 'light' : 'dark';
-            const filteredParts = parts.filter(p => 
-              p.toLowerCase() !== 'light' && 
-              p.toLowerCase() !== 'dark' && 
+            const filteredParts = parts.filter(p =>
+              p.toLowerCase() !== 'light' &&
+              p.toLowerCase() !== 'dark' &&
               p.toLowerCase() !== 'semantic' &&
               p.toLowerCase() !== 'vallight' &&
               p.toLowerCase() !== 'valdark'
@@ -131,20 +131,20 @@ module.exports = {
       'typescript/custom-declarations': ({ dictionary }) => {
         const lines = [
           `/**`,
-          ` * Do not edit directly, this file was auto-generated.`, 
-          ` */`, 
+          ` * Do not edit directly, this file was auto-generated.`,
+          ` */`,
           ``
         ];
 
         dictionary.allTokens.forEach(token => {
           const parts = token.path.map(part => /^\d/.test(part) ? `val${part}` : part);
-          
+
           let finalParts = parts;
           if (isThemed(token)) {
             const theme = isLight(token) ? 'light' : 'dark';
-            const filteredParts = parts.filter(p => 
-              p.toLowerCase() !== 'light' && 
-              p.toLowerCase() !== 'dark' && 
+            const filteredParts = parts.filter(p =>
+              p.toLowerCase() !== 'light' &&
+              p.toLowerCase() !== 'dark' &&
               p.toLowerCase() !== 'semantic' &&
               p.toLowerCase() !== 'vallight' &&
               p.toLowerCase() !== 'valdark'
@@ -168,7 +168,7 @@ module.exports = {
         {
           destination: 'variables.css',
           format: 'css/variables-light-dark'
-        }
+        },
       ]
     },
     scss: {
