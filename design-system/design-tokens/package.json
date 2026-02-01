@@ -2,7 +2,44 @@
   "name": "@dezkareid/design-tokens",
   "version": "0.0.0",
   "description": "Design tokens for dezkareid design system",
-  "main": "index.js",
+  "main": "dist/js/tokens.js",
+  "module": "dist/js/tokens.mjs",
+  "types": "dist/js/tokens.d.ts",
+  "sideEffects": [
+    "*.css",
+    "*.scss"
+  ],
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dezkareid/dezkareid.git",
+    "directory": "design-system/design-tokens"
+  },
+  "keywords": [
+    "design-tokens",
+    "style-dictionary",
+    "design-system"
+  ],
+  "author": "Joel Humberto Gomez Paredes <elmaildeldezkareid@gmail.com>",
   "license": "ISC",
-  "scripts": {}
+  "bugs": {
+    "url": "https://github.com/dezkareid/dezkareid/issues"
+  },
+  "homepage": "https://github.com/dezkareid/dezkareid/tree/main/projects/dezkareid/design-system/design-tokens#readme",
+  "scripts": {
+    "build": "style-dictionary build --config sd.config.js",
+    "release": "semantic-release"
+  },
+  "devDependencies": {
+    "style-dictionary": "5.2.0",
+    "@semantic-release/changelog": "6.0.3",
+    "@semantic-release/git": "10.0.1",
+    "semantic-release": "25.0.2",
+    "semantic-release-monorepo": "8.0.2"
+  }
 }

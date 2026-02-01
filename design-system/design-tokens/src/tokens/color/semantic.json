@@ -1,0 +1,30 @@
+{
+  "color": {
+    "semantic": {
+      "light": {
+        "primary": { "value": "{color.base.blue.500}" },
+        "success": { "value": "{color.base.green.500}" },
+        "background": {
+          "primary": { "value": "{color.base.white}" },
+          "secondary": { "value": "{color.base.gray.100}" }
+        },
+        "text": {
+          "primary": { "value": "{color.base.gray.900}" },
+          "inverse": { "value": "{color.base.white}" }
+        }
+      },
+      "dark": {
+        "primary": { "value": "{color.base.blue.100}" },
+        "success": { "value": "{color.base.green.900}" },
+        "background": {
+          "primary": { "value": "{color.base.gray.900}" },
+          "secondary": { "value": "{color.base.gray.500}" }
+        },
+        "text": {
+          "primary": { "value": "{color.base.white}" },
+          "inverse": { "value": "{color.base.gray.900}" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+schema: spec-driven
+
+context: |
+  NPM package with design tokens for web applications, libraries, and packages
+  We use conventional commits
+  The output has multiple formats, css, js, json, scss, less, etc
+  The output has multiple themes, light, dark, high-contrast, etc
