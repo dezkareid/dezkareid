@@ -5,10 +5,9 @@
   "packageManager": "pnpm@10.7.1",
   "scripts": {
     "prepare": "husky",
-    "build": "turbo run build --affected",
+    "build": "turbo run build",
     "lint": "turbo run lint --affected",
-    "test": "turbo run test --affected",
-    "release": "turbo run release --affected"
+    "test": "turbo run test --affected"
   },
   "repository": {
     "type": "git",

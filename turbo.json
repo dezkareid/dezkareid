@@ -38,13 +38,6 @@
         "src/**/*.jsx",
         "src/**/*.js"
       ]
-    },
-    "release": {
-      "dependsOn": [
-        "build"
-      ],
-      "cache": false,
-      "outputs": []
     }
   }
 }
