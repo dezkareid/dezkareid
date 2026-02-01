@@ -10,7 +10,8 @@
     "*.scss"
   ],
   "files": [
-    "dist"
+    "dist",
+    "AGENTS.md"
   ],
   "publishConfig": {
     "access": "public",
