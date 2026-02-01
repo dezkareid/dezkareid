@@ -2,11 +2,23 @@
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
     "build": {
+      "inputs": [
+        "src/**/*.tsx",
+        "src/**/*.ts",
+        "src/**/*.jsx",
+        "src/**/*.js",
+        "src/**/*.json",
+        "src/**/*.css",
+        "src/**/*.scss"
+      ],
       "dependsOn": [
         "^build"
       ],
       "outputs": [
         "dist/**"
+      ],
+      "env": [
+        "NODE_ENV"
       ]
     },
     "test": {
@@ -31,7 +43,7 @@
       "dependsOn": [
         "build"
       ],
-      "envMode": "loose",
+      "cache": false,
       "outputs": []
     }
   }

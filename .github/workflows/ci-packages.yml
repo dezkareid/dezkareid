@@ -5,23 +5,22 @@ on:
     paths:
       - "packages/**"
       - "configs/**"
+      - "linters/**"
+      - "design-system/**"
     branches:
       - main
   push:
     paths:
       - "packages/**"
       - "configs/**"
+      - "linters/**"
+      - "design-system/**"
     branches:
       - main
 
 jobs:
-  build-deploy:
+  test:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      issues: write
-      pull-requests: write
-      id-token: write
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
@@ -30,7 +29,7 @@ jobs:
         shell: bash
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -40,10 +39,79 @@ jobs:
       - name: Testing library
         run: pnpm run test
 
-      - name: Create a release
-        if: github.event_name == 'push'
-        run: pnpm run release
+  check-changes:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.filter.outputs.changes }}
+      configuration: ${{ toJson(steps.filter.outputs) }}
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Paths Filter
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          list-files: json
+          filters: .github/packages.yml
+
+  release:
+    needs: [test, check-changes]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+    strategy:
+      matrix:
+        package: ${{ fromJson(needs.check-changes.outputs.packages) }}
+      fail-fast: false
+    env:
+      PACKAGE_NAME: ${{ matrix.package }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup JS
+        uses: ./.github/actions/setup-js
+
+      - name: Get package information
+        run: |
+          export JSON_DATA='${{ needs.check-changes.outputs.configuration }}'
+          PACKAGE_FILES="${PACKAGE_NAME}_files"
+          PACKAGE_PATH_DATA=$(echo $JSON_DATA | jq -r ".[\"${PACKAGE_FILES}\"] | fromjson[0]")
+          PACKAGE_PATH=$(echo $PACKAGE_PATH_DATA | cut -d'/' -f1-2)
+          echo "PACKAGE_PATH=$PACKAGE_PATH" >> $GITHUB_ENV
+          echo "PACKAGE_NAME: $PACKAGE_NAME"
+          echo "PACKAGE_PATH: $PACKAGE_PATH"
+
+      - name: Get package name
+        run: |
+          cd ./${{env.PACKAGE_PATH}}
+          PACKAGE_NAME=$(node -e "console.log(require('./package.json').name)")
+          echo "PACKAGE_NAME: $PACKAGE_NAME"
+          echo "PACKAGE_NAME=$PACKAGE_NAME" >> $GITHUB_ENV
+
+      - name: Build
+        if: ${{ github.event_name == 'push' }}
+        run: pnpm build --filter=${{ env.PACKAGE_NAME }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_ENV: production
+
+      - name: Create a release
+        if: ${{ github.event_name == 'push' }}
+        uses: ./.github/actions/semantic-release
+        with:
+          working-directory: ./${{ env.PACKAGE_PATH }}
+          tag-format: ${{ env.PACKAGE_NAME }}-v${version}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
