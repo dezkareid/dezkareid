@@ -38,6 +38,14 @@ jobs:
       - name: Testing library
         run: pnpm run test
 
+      - name: Verify npm authentication
+        if: github.event_name == 'push'
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+          npm whoami
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Create a release
         if: github.event_name == 'push'
         run: pnpm run release
