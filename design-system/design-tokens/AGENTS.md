@@ -48,7 +48,55 @@ This project uses the **OpenSpec (opsx)** workflow for all changes. Do not modif
 
 ## Build Configuration
 - `sd.config.js`: Controls the build process.
-- **Formats**:
-    - `css/variables-light-dark`: Generates CSS Custom Properties with `light-dark()` support.
-    - `scss/simple`: SCSS variables.
-    - `js/custom-module`: ESM/CJS exports.
+- **Formats & Outputs**:
+    - **CSS**: `dist/css/variables.css` (`css/variables-light-dark`) - CSS Custom Properties with `light-dark()` support.
+        - *Patterns*:
+            - `--color-base-{blue,green,red,gray}-{100,500,900}`
+            - `--color-base-{white,black}`
+            - `--spacing-{0,4,8,12,16,24,32,48,64}`
+            - `--font-family-{base,mono}`
+            - `--font-size-{100-900}`
+            - `--font-weight-{light,regular,medium,bold}`
+            - `--font-line-height-{none,tight,normal,relaxed}`
+            - `--{light,dark}-color-{primary,success,background-primary,background-secondary,text-primary,text-inverse}`
+            - `--color-{primary,success,background-primary,background-secondary,text-primary,text-inverse}`
+        - *Example*:
+            ```css
+            :root {
+              --color-base-blue-500: #3b82f6;
+              --spacing-16: 1rem;
+            }
+            ```
+    - **SCSS**: `dist/scss/_variables.scss` (`scss/simple`) - Simple SCSS variables.
+        - *Patterns*:
+            - `$color-base-{blue,green,red,gray}-{100,500,900}`
+            - `$color-base-{white,black}`
+            - `$color-semantic-{light,dark}-{primary,success,background-primary,background-secondary,text-primary,text-inverse}`
+            - `$spacing-{0,4,8,12,16,24,32,48,64}`
+            - `$font-family-{base,mono}`
+            - `$font-size-{100-900}`
+            - `$font-weight-{light,regular,medium,bold}`
+            - `$font-line-height-{none,tight,normal,relaxed}`
+        - *Example*:
+            ```scss
+            $color-base-blue-500: #3b82f6;
+            $spacing-16: 1rem;
+            ```
+    - **JS**:
+        - `dist/js/tokens.js` (`js/custom-module`) - CommonJS/ESM hybrid.
+        - `dist/js/tokens.mjs` (`js/custom-module`) - ESM.
+        - `dist/js/tokens.d.ts` (`typescript/custom-declarations`) - TypeScript declarations.
+        - *Patterns*:
+            - `ColorBase{Blue,Green,Red,Gray}Val{100,500,900}`
+            - `ColorBase{White,Black}`
+            - `{Light,Dark}Color{Primary,Success,BackgroundPrimary,BackgroundSecondary,TextPrimary,TextInverse}`
+            - `SpacingVal{0,4,8,12,16,24,32,48,64}`
+            - `FontFamily{Base,Mono}`
+            - `FontSizeVal{100-900}`
+            - `FontWeight{Light,Regular,Medium,Bold}`
+            - `FontLineHeight{None,Tight,Normal,Relaxed}`
+        - *Example*:
+            ```javascript
+            export const ColorBaseBlueVal500 = "#3b82f6";
+            export const SpacingVal16 = "1rem";
+            ```
