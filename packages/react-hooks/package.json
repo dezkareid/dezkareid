@@ -82,7 +82,7 @@
     "rollup-plugin-bundle-size": "1.0.3",
     "rollup-plugin-cleaner": "1.0.0",
     "rollup-plugin-dts": "6.3.0",
-    "semantic-release": "25.0.2",
+    "semantic-release": "25.0.3",
     "semantic-release-monorepo": "8.0.2",
     "ts-loader": "9.5.4",
     "typescript": "5.9.3",
