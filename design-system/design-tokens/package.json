@@ -1,6 +1,6 @@
 {
   "name": "@dezkareid/design-tokens",
-  "version": "0.0.0",
+  "version": "0.0.0-semantic-release",
   "description": "Design tokens for dezkareid design system",
   "main": "dist/js/tokens.js",
   "module": "dist/js/tokens.mjs",
