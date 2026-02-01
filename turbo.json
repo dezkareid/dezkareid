@@ -31,6 +31,11 @@
       "dependsOn": [
         "build"
       ],
+      "env": [
+        "NPM_TOKEN",
+        "GITHUB_TOKEN",
+        "GH_TOKEN"
+      ],
       "outputs": []
     }
   }
