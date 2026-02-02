@@ -39,3 +39,4 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
         GH_TOKEN: ${{ inputs.github-token }}
+        NPM_CONFIG_PROVENANCE: true
