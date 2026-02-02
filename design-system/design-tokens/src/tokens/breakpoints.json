@@ -1,0 +1,20 @@
+{
+  "breakpoint": {
+    "small": {
+      "min": { "value": "0" },
+      "max": { "value": "37.49rem" }
+    },
+    "medium": {
+      "min": { "value": "37.5rem" },
+      "max": { "value": "59.99rem" }
+    },
+    "large": {
+      "min": { "value": "60rem" },
+      "max": { "value": "89.99rem" }
+    },
+    "extra-large": {
+      "min": { "value": "90rem" },
+      "max": { "value": "9999rem" }
+    }
+  }
+}
