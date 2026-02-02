@@ -85,5 +85,3 @@ if (window.matchMedia(`(min-width: ${BreakpointMediumMin})`).matches) {
   // logic for medium screens and up
 }
 ```
-
-
