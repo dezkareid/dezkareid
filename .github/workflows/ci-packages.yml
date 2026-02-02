@@ -72,6 +72,7 @@ jobs:
       fail-fast: false
     env:
       PACKAGE_NAME: ${{ matrix.package }}
+      NPM_CONFIG_PROVENANCE: true
     defaults:
       run:
         shell: bash
