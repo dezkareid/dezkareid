@@ -58,6 +58,7 @@ This project uses the **OpenSpec (opsx)** workflow for all changes. Do not modif
             - `--font-size-{100-900}`
             - `--font-weight-{light,regular,medium,bold}`
             - `--font-line-height-{none,tight,normal,relaxed}`
+            - `--breakpoint-{small,medium,large,extra-large}-{min,max}`
             - `--{light,dark}-color-{primary,success,background-primary,background-secondary,text-primary,text-inverse}`
             - `--color-{primary,success,background-primary,background-secondary,text-primary,text-inverse}`
         - *Example*:
@@ -65,6 +66,7 @@ This project uses the **OpenSpec (opsx)** workflow for all changes. Do not modif
             :root {
               --color-base-blue-500: #3b82f6;
               --spacing-16: 1rem;
+              --breakpoint-medium-min: 37.5rem;
             }
             ```
     - **SCSS**: `dist/scss/_variables.scss` (`scss/simple`) - Simple SCSS variables.
@@ -77,10 +79,12 @@ This project uses the **OpenSpec (opsx)** workflow for all changes. Do not modif
             - `$font-size-{100-900}`
             - `$font-weight-{light,regular,medium,bold}`
             - `$font-line-height-{none,tight,normal,relaxed}`
+            - `$breakpoint-{small,medium,large,extra-large}-{min,max}`
         - *Example*:
             ```scss
             $color-base-blue-500: #3b82f6;
             $spacing-16: 1rem;
+            $breakpoint-medium-min: 37.5rem;
             ```
     - **JS**:
         - `dist/js/tokens.js` (`js/custom-module`) - CommonJS/ESM hybrid.
@@ -95,8 +99,10 @@ This project uses the **OpenSpec (opsx)** workflow for all changes. Do not modif
             - `FontSizeVal{100-900}`
             - `FontWeight{Light,Regular,Medium,Bold}`
             - `FontLineHeight{None,Tight,Normal,Relaxed}`
+            - `Breakpoint{Small,Medium,Large,ExtraLarge}{Min,Max}`
         - *Example*:
             ```javascript
             export const ColorBaseBlueVal500 = "#3b82f6";
             export const SpacingVal16 = "1rem";
+            export const BreakpointMediumMin = "37.5rem";
             ```
