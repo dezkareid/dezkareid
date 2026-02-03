@@ -112,6 +112,6 @@ jobs:
       - name: Create a release
         if: ${{ github.event_name == 'push' }}
         working-directory: ./${{ env.PACKAGE_PATH }}
-        run: pnpm run release
+        run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
