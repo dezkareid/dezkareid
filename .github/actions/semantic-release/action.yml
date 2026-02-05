@@ -32,11 +32,10 @@ runs:
         extends: |
           semantic-release-monorepo@8.0.2
         extra_plugins: |
+          @anolilab/semantic-release-pnpm@5.0.0
           @semantic-release/changelog@6.0.3
           @semantic-release/git@10.0.1
         working_directory: ${{ inputs.working-directory }}
         tag_format: ${{ inputs.tag-format }}
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
-        GH_TOKEN: ${{ inputs.github-token }}
-        NPM_CONFIG_PROVENANCE: true
