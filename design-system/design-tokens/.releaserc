@@ -1,9 +1,4 @@
 {
-  "branches": [
-    "main",
-    "next"
-  ],
-  "tagFormat": "design-tokens-v${version}",
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
@@ -14,7 +9,7 @@
       }
     ],
     [
-      "@semantic-release/npm",
+      "@anolilab/semantic-release-pnpm",
       {
         "provenance": true
       }
