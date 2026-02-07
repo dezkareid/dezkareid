@@ -2,18 +2,8 @@
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
-    [
-      "@semantic-release/changelog",
-      {
-        "changelogFile": "CHANGELOG.md"
-      }
-    ],
-    [
-      "@anolilab/semantic-release-pnpm",
-      {
-        "provenance": true
-      }
-    ],
+    "@semantic-release/changelog",
+    "@anolilab/semantic-release-pnpm",
     [
       "@semantic-release/git",
       {
