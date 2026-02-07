@@ -109,6 +109,10 @@ jobs:
         env:
           NODE_ENV: production
 
+      - name: Create .releaserc from template
+        if: ${{ github.event_name == 'push' }}
+        run: cp .github/workflows/releaserc-template.json ./${{ env.PACKAGE_PATH }}/.releaserc
+
       - name: Create a release
         if: ${{ github.event_name == 'push' }}
         uses: ./.github/actions/semantic-release
