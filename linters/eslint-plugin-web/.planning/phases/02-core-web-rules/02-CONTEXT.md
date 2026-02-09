@@ -1,27 +1,27 @@
-# Phase 2 Context: Core Web Rules Implementation
+# Phase 2 Context: Core Web Rules Implementation (Final)
 
 ## 1. System Architecture Decisions
 - **Module System:** The package MUST NOT be a module. Output must be **CommonJS (CJS)**.
-- **TypeScript Config:** Revert `module` and `moduleResolution` in `tsconfig.json` to support CJS output (e.g., `Node10` or `CommonJS`).
-- **Dependencies:** Explicitly recommend/require `@html-eslint/parser` for `.html` file support.
+- **Entry Point:** The `main` attribute in `package.json` MUST point to `dist/index.js`.
+- **Build Tooling:** Standard `tsc` build. No `prepublishOnly` script required for now.
+- **TypeScript Config:** Revert `module` and `moduleResolution` in `tsconfig.json` to support CJS output.
+- **Dependencies:** Pin `@html-eslint/eslint-plugin` and `@html-eslint/parser` to their recent stable versions.
 
 ## 2. Rule Implementations
+- **NO NEW RULES:** This phase focuses on **configurations only**.
 - **Severity Defaults:** 
-  - `recommended` preset: All rules set to `"warn"`.
-  - `strict` preset: All rules set to `"error"`.
-- **Coverage Scope:**
-  - Files: `.html`, `.jsx`, `.tsx`.
-  - Targeted Elements: Standard HTML tags only. Custom JSX components are EXCLUDED for this phase.
-- **Specific Rule Logic:**
-  - **Alt Text:** `alt=""` and `aria-hidden="true"` MUST still trigger a warning. Accessibility must be explicit.
-  - **Deprecated Elements:** Focus on modern web deprecations (`<center>`, `<font>`, etc.).
+  - `recommended` preset: Rules from external plugins set to `"warn"`.
+  - `strict` preset: Rules from external plugins set to `"error"`.
 
 ## 3. Bundled Configurations
 - **Preset Name:** `recommended`.
-- **Integration:** Include rules from `@eslint/css` baseline config within our `recommended` preset.
-- **File Patterns:** Define default glob patterns for HTML and JSX files within the presets so users get "out of the box" support.
+- **Export Format:** Use a **flat object** for configuration exports.
+- **Integration:** 
+  - Use `@html-eslint/eslint-plugin` for HTML rules.
+  - Include rules from `@eslint/css` baseline config.
+- **File Patterns:** Define default glob patterns for HTML and CSS files within the presets.
 
 ## 4. Deferred Ideas
-- Auto-fixing logic for all rules.
-- Support for custom JSX image components (e.g., `<NextImage>`).
-- Framework-specific presets (Vue, Svelte).
+- Auto-fixing logic.
+- Custom rule implementations.
+- Framework-specific presets.

@@ -14,4 +14,11 @@ const plugin = {
   }
 };
 
-module.exports = plugin;
+// Flatten configs for easier access in CJS
+module.exports = {
+  ...plugin,
+  configs: {
+    recommended,
+    strict
+  }
+};

@@ -33,8 +33,10 @@
 - [Quick 1]: Adopted ESLint 9 Flat Config for compatibility with @eslint/css.
 - [Quick 2]: Used `NodeNext` for module resolution in `tsconfig.json` to support modern ESM.
 - [Phase 02]: Reverted to CJS for ESLint 9 compatibility.
+- [Phase 02]: Pointed main field to dist/index.js.
+- [Phase 02]: Configured presets as flat objects for easier CJS consumption.
 
 ## Session
 
-**Last Date:** 2026-02-09T22:20:20.549Z
-**Stopped At:** Completed Phase 02 with configuration-only strategy.
+**Last Date:** 2026-02-09
+**Stopped At:** Finalized Phase 02 architecture and configs.
