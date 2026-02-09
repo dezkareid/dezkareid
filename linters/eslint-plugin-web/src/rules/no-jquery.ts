@@ -1,4 +1,6 @@
-module.exports = {
+import { Rule } from "eslint";
+
+const rule: Rule.RuleModule = {
   meta: {
     type: "problem"
   },
@@ -7,11 +9,13 @@ module.exports = {
       ImportDeclaration(node) {
         if (node.source.value === "jquery") {
           context.report({
-            node: node,
+            node,
             message: "jquery should not be used ever again"
           });
         }
       }
     };
   }
-}
+};
+
+export default rule;
