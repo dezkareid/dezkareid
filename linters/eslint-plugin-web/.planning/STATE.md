@@ -35,8 +35,9 @@
 - [Phase 02]: Reverted to CJS for ESLint 9 compatibility.
 - [Phase 02]: Pointed main field to dist/index.js.
 - [Phase 02]: Configured presets as flat objects for easier CJS consumption.
+- [Phase 02]: Reviewed linting problems and improved ESLint configuration with typescript-eslint and globals.
 
 ## Session
 
 **Last Date:** 2026-02-09
-**Stopped At:** Finalized Phase 02 architecture and configs.
+**Stopped At:** Reviewed linting and finalized Phase 02.

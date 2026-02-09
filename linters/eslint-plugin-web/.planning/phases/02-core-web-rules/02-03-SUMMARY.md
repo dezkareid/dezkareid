@@ -31,11 +31,15 @@ completed: 2026-02-09
 - Integrated `@eslint/css` baseline rules into both presets.
 - Defined default file targets (`.html`, `.jsx`, `.tsx`) in configs.
 - Exported all configurations from the plugin entry point.
+- Fixed systemic linting issues by configuring `typescript-eslint` and Node.js globals.
+- Improved project ignore patterns in `eslint.config.js`.
 
 ## Task Commits
 - `feat(02-03): create configuration presets` (Manual execution)
+- `chore: fix linting configuration and Node.js globals` (Manual execution)
 
 ## Self-Check: PASSED
 - `src/configs/recommended.ts` exists.
 - `src/configs/strict.ts` exists.
 - `index.ts` exports `configs`.
+- `pnpm lint` passes without errors.
