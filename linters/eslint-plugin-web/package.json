@@ -14,21 +14,25 @@
   ],
   "scripts": {
     "test": "vitest run",
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "eslint ."
   },
   "peerDependencies": {
     "eslint": "^9.0.0"
   },
   "dependencies": {
-    "eslint": "9.39.2",
-    "@eslint/css": "latest"
+    "@eslint/css": "latest",
+    "eslint": "9.39.2"
   },
   "devDependencies": {
-    "vitest": "4.0.18",
-    "typescript": "5.9.3",
-    "@types/node": "latest",
-    "@types/eslint": "latest",
+    "@eslint/js": "^10.0.1",
+    "@html-eslint/eslint-plugin": "0.33.0",
     "@html-eslint/parser": "0.33.0",
-    "@html-eslint/eslint-plugin": "0.33.0"
+    "@types/eslint": "latest",
+    "@types/node": "latest",
+    "globals": "^17.3.0",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.44.1",
+    "vitest": "4.0.18"
   }
 }
