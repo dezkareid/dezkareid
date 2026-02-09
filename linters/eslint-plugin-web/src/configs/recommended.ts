@@ -1,28 +1,21 @@
 import css from "@eslint/css";
 import * as htmlParser from "@html-eslint/parser";
+import htmlPlugin from "@html-eslint/eslint-plugin";
 
 const recommended = [
   {
     name: "web/recommended-html",
     files: ["**/*.html"],
+    plugins: {
+      html: htmlPlugin,
+    },
     languageOptions: {
       parser: htmlParser,
     },
     rules: {
-      "web/no-deprecated-html": "warn",
-      "web/require-img-alt": "warn",
-      "web/no-inline-event-handlers": "warn",
-    },
-  },
-  {
-    name: "web/recommended-jsx",
-    files: ["**/*.jsx", "**/*.tsx"],
-    rules: {
-      "web/no-deprecated-html": "warn",
-      "web/require-img-alt": "warn",
-      "web/no-inline-event-handlers": "warn",
-      "web/no-jquery": "warn",
-      "web/no-allowed-packages": "warn",
+      "html/no-obsolete-tags": "warn",
+      "html/require-img-alt": "warn",
+      "html/no-inline-styles": "warn",
     },
   },
   {
