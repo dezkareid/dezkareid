@@ -18,6 +18,10 @@ const rule: Rule.RuleModule = {
           const altAttr = node.attributes.find(
             (attr: any) => attr.type === "JSXAttribute" && attr.name.name === "alt"
           );
+          const ariaHiddenAttr = node.attributes.find(
+            (attr: any) => attr.type === "JSXAttribute" && attr.name.name === "aria-hidden"
+          );
+
           if (!altAttr) {
             context.report({
               node,
@@ -28,10 +32,21 @@ const rule: Rule.RuleModule = {
             altAttr.value.type === "Literal" &&
             altAttr.value.value === ""
           ) {
-            // Per CONTEXT: alt="" MUST still trigger a warning
             context.report({
               node: altAttr,
-              message: "Decorative images (alt="") should still be explicitly described or verified.",
+              message: "Decorative images (alt=\"\") should still be explicitly described or verified.",
+            });
+          }
+
+          if (
+            ariaHiddenAttr &&
+            ariaHiddenAttr.value &&
+            ariaHiddenAttr.value.type === "Literal" &&
+            ariaHiddenAttr.value.value === "true"
+          ) {
+            context.report({
+              node: ariaHiddenAttr,
+              message: "Images with aria-hidden=\"true\" should still have an alt attribute for accessibility fallback.",
             });
           }
         }
@@ -40,6 +55,8 @@ const rule: Rule.RuleModule = {
       Tag(node: any) {
         if (node.name.toLowerCase() === "img") {
           const altAttr = node.attributes.find((attr: any) => attr.name.toLowerCase() === "alt");
+          const ariaHiddenAttr = node.attributes.find((attr: any) => attr.name.toLowerCase() === "aria-hidden");
+
           if (!altAttr) {
             context.report({
               node,
@@ -48,7 +65,14 @@ const rule: Rule.RuleModule = {
           } else if (altAttr.value === "") {
             context.report({
               node: altAttr,
-              message: "Decorative images (alt="") should still be explicitly described or verified.",
+              message: "Decorative images (alt=\"\") should still be explicitly described or verified.",
+            });
+          }
+
+          if (ariaHiddenAttr && ariaHiddenAttr.value === "true") {
+            context.report({
+              node: ariaHiddenAttr,
+              message: "Images with aria-hidden=\"true\" should still have an alt attribute for accessibility fallback.",
             });
           }
         }
