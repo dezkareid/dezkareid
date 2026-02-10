@@ -1,0 +1,54 @@
+{
+  "name": "@dezkareid/ai-context-sync",
+  "version": "0.0.0",
+  "description": "CLI utility to synchronize AI agent context files from AGENTS.md",
+  "main": "dist/index.js",
+  "bin": {
+    "ai-context-sync": "./dist/index.js"
+  },
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dezkareid/dezkareid.git",
+    "directory": "packages/ai-context-sync"
+  },
+  "keywords": [
+    "ai",
+    "context",
+    "sync",
+    "claude",
+    "gemini",
+    "agents"
+  ],
+  "author": "Joel Humberto Gomez Paredes <elmaildeldezkareid@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dezkareid/dezkareid/issues"
+  },
+  "homepage": "https://github.com/dezkareid/dezkareid/tree/main/projects/dezkareid/packages/ai-context-sync#readme",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc -w",
+    "test": "vitest run --coverage"
+  },
+  "dependencies": {
+    "commander": "12.0.0",
+    "fs-extra": "11.2.0",
+    "globby": "14.0.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "11.0.4",
+    "@types/node": "25.0.10",
+    "@vitest/coverage-v8": "4.0.18",
+    "typescript": "5.9.3",
+    "vitest": "4.0.18"
+  }
+}
