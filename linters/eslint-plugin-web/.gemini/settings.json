@@ -1,0 +1,21 @@
+{
+  "experimental": {
+    "enableAgents": true
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .gemini/hooks/gsd-check-update.js"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "node .gemini/hooks/gsd-statusline.js"
+  }
+}

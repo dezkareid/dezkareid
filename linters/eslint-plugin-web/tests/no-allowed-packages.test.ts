@@ -1,6 +1,5 @@
 import { RuleTester } from "eslint";
 import rule from "../src/rules/no-allowed-packages";
-import { describe, it } from "vitest";
 
 const ruleTester = new RuleTester({
   languageOptions: {
@@ -9,40 +8,36 @@ const ruleTester = new RuleTester({
   },
 });
 
-describe("no-allowed-packages", () => {
-  it("should report forbidden package imports", () => {
-    ruleTester.run("no-allowed-packages", rule, {
-      valid: [
+ruleTester.run("no-allowed-packages", rule, {
+  valid: [
+    {
+      code: "import react from 'react';",
+    },
+    {
+      code: "import vue from 'vue';",
+      options: []
+    },
+  ],
+  invalid: [
+    {
+      code: "import moment from 'moment';",
+      options: ["moment"],
+      errors: [
         {
-          code: "import react from 'react';",
-        },
-        {
-          code: "import vue from 'vue';",
-          options: []
-        },
-      ],
-      invalid: [
-        {
-          code: "import moment from 'moment';",
-          options: ["moment"],
-          errors: [
-            {
-              message: "moment should not be used ever again",
-              type: "ImportDeclaration",
-            },
-          ],
-        },
-        {
-          code: "import moment from 'moment'; ",
-          options: ["bower", "moment", "jquery"],
-          errors: [
-            {
-              message: "moment should not be used ever again",
-              type: "ImportDeclaration",
-            },
-          ],
+          message: "moment should not be used ever again",
+          type: "ImportDeclaration",
         },
       ],
-    });
-  });
+    },
+    {
+      code: "import moment from 'moment'; ",
+      options: ["bower", "moment", "jquery"],
+      errors: [
+        {
+          message: "moment should not be used ever again",
+          type: "ImportDeclaration",
+        },
+      ],
+    },
+  ],
 });
