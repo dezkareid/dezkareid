@@ -11,9 +11,3 @@
 - [x] Integrate @eslint/css baseline
 - [x] Create recommended and strict configuration presets
 - [x] Revert to CommonJS for plugin compatibility
-
-## Phase 3: Advanced Performance and Security
-**Goal:** Add rules for performance optimization and security best practices.
-- [ ] Rule: Prefetch/Preconnect validation
-- [ ] Rule: Content Security Policy (CSP) alignment
-- [ ] Rule: Third-party script loading optimization
