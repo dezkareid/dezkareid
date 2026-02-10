@@ -23,13 +23,13 @@ pnpm install @dezkareid/ai-context-sync
 Run the sync command in your project root (where `AGENTS.md` is located):
 
 ```bash
-npx ai-context-sync sync
+npx @dezkareid/ai-context-sync sync
 ```
 
 Or specify a directory:
 
 ```bash
-npx ai-context-sync sync --dir ./my-package
+npx @dezkareid/ai-context-sync sync --dir ./my-package
 ```
 
 ## How it works
