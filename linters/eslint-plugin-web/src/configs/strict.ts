@@ -26,7 +26,7 @@ const strict = [
     },
     language: "css/css",
     rules: {
-      ...css.configs.baseline.rules,
+      ...css.configs.recommended.rules,
     },
   }
 ];
