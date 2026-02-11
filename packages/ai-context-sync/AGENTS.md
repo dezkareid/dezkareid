@@ -14,6 +14,9 @@ This package is a CLI utility designed to synchronize AI agent context files (li
 - **Install**: `pnpm install`
 - **Build**: `pnpm build`
 - **Run**: `pnpm start sync` or `node dist/index.js sync`
+- **Options**:
+  - `-s, --strategy`: Select specific strategies (e.g., `claude`, `gemini`, `all`, or `"claude, gemini"`).
+  - If no strategy is provided, an interactive checkbox menu is displayed.
 
 ## Adding a New Strategy
 1. Create a new class in `src/strategies/` implementing the `SyncStrategy` interface.

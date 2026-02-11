@@ -40,4 +40,62 @@ describe('SyncEngine', () => {
     const settings = await fs.readJson(settingsPath);
     expect(settings.context.fileName).toContain(AGENTS_FILENAME);
   });
+
+  it('should run only Claude strategy when selected', async () => {
+    const engine = new SyncEngine();
+    const agentsPath = path.join(tempDir, AGENTS_FILENAME);
+    await fs.writeFile(agentsPath, '# Agent Context');
+
+    await engine.sync(tempDir, 'claude');
+
+    const claudePath = path.join(tempDir, 'CLAUDE.md');
+    expect(await fs.pathExists(claudePath)).toBe(true);
+
+    const geminiDir = path.join(tempDir, '.gemini');
+    expect(await fs.pathExists(geminiDir)).toBe(false);
+  });
+
+  it('should run only Gemini strategy when selected', async () => {
+    const engine = new SyncEngine();
+    const agentsPath = path.join(tempDir, AGENTS_FILENAME);
+    await fs.writeFile(agentsPath, '# Agent Context');
+
+    await engine.sync(tempDir, 'gemini');
+
+    const claudePath = path.join(tempDir, 'CLAUDE.md');
+    expect(await fs.pathExists(claudePath)).toBe(false);
+
+    const settingsPath = path.join(tempDir, '.gemini', 'settings.json');
+    expect(await fs.pathExists(settingsPath)).toBe(true);
+  });
+
+  it('should run multiple selected strategies from array', async () => {
+    const engine = new SyncEngine();
+    const agentsPath = path.join(tempDir, AGENTS_FILENAME);
+    await fs.writeFile(agentsPath, '# Agent Context');
+
+    await engine.sync(tempDir, ['claude', 'gemini']);
+
+    expect(await fs.pathExists(path.join(tempDir, 'CLAUDE.md'))).toBe(true);
+    expect(await fs.pathExists(path.join(tempDir, '.gemini', 'settings.json'))).toBe(true);
+  });
+
+  it('should run all strategies when "all" is selected', async () => {
+    const engine = new SyncEngine();
+    const agentsPath = path.join(tempDir, AGENTS_FILENAME);
+    await fs.writeFile(agentsPath, '# Agent Context');
+
+    await engine.sync(tempDir, 'all');
+
+    expect(await fs.pathExists(path.join(tempDir, 'CLAUDE.md'))).toBe(true);
+    expect(await fs.pathExists(path.join(tempDir, '.gemini', 'settings.json'))).toBe(true);
+  });
+
+  it('should throw error for invalid strategy', async () => {
+    const engine = new SyncEngine();
+    const agentsPath = path.join(tempDir, AGENTS_FILENAME);
+    await fs.writeFile(agentsPath, '# Agent Context');
+
+    await expect(engine.sync(tempDir, 'invalid')).rejects.toThrow('No valid strategies found for: invalid');
+  });
 });

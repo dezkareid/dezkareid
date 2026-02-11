@@ -26,6 +26,17 @@ Run the sync command in your project root (where `AGENTS.md` is located):
 npx @dezkareid/ai-context-sync sync
 ```
 
+You can select the strategy using the `--strategy` (or `-s`) option:
+
+```bash
+npx @dezkareid/ai-context-sync sync --strategy claude
+npx @dezkareid/ai-context-sync sync --strategy gemini
+npx @dezkareid/ai-context-sync sync --strategy all
+npx @dezkareid/ai-context-sync sync --strategy "claude, gemini"
+```
+
+If no strategy is provided, an interactive checkbox menu will appear to let you toggle which strategies to run.
+
 Or specify a directory:
 
 ```bash
