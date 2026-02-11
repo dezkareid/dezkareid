@@ -8,6 +8,7 @@ A CLI utility to synchronize AI agent context files across different providers, 
 - **Multi-provider support**:
   - **Claude**: Generates/updates `CLAUDE.md`.
   - **Gemini**: Configures `.gemini/settings.json` to use `AGENTS.md`.
+  - **Gemini Markdown**: Generates/updates `GEMINI.md`.
 - **Plugin Architecture**: Easily extendable to support other AI agents.
 
 ## Installation
@@ -26,11 +27,28 @@ Run the sync command in your project root (where `AGENTS.md` is located):
 npx @dezkareid/ai-context-sync sync
 ```
 
-Or specify a directory:
+You can select the strategy using the `--strategy` (or `-s`) option:
 
 ```bash
-npx @dezkareid/ai-context-sync sync --dir ./my-package
+npx @dezkareid/ai-context-sync sync --strategy claude
+npx @dezkareid/ai-context-sync sync --strategy gemini
+npx @dezkareid/ai-context-sync sync --strategy all
+npx @dezkareid/ai-context-sync sync --strategy "claude, gemini"
 ```
+
+If no strategy is provided, an interactive checkbox menu will appear to let you toggle which strategies to run.
+
+### Configuration
+
+The tool can save your selected strategies in a `.ai-context-configrc` file in the project root. This avoids being prompted every time you run the command.
+
+To bypass reading or creating this configuration file, use the `--skip-config` flag:
+
+```bash
+npx @dezkareid/ai-context-sync sync --skip-config
+```
+
+### Directory option
 
 ## How it works
 

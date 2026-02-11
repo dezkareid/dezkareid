@@ -4,16 +4,16 @@ import { AGENTS_FILENAME } from './constants.js';
 import { SyncStrategy } from './strategies/index.js';
 import { ClaudeStrategy } from './strategies/claude.js';
 import { GeminiStrategy } from './strategies/gemini.js';
+import { GeminiMdStrategy } from './strategies/gemini-md.js';
 
 export class SyncEngine {
-  private strategies: SyncStrategy[] = [];
+  private allStrategies: SyncStrategy[] = [
+    new ClaudeStrategy(),
+    new GeminiStrategy(),
+    new GeminiMdStrategy()
+  ];
 
-  constructor() {
-    this.strategies.push(new ClaudeStrategy());
-    this.strategies.push(new GeminiStrategy());
-  }
-
-  async sync(projectRoot: string): Promise<void> {
+  async sync(projectRoot: string, selectedStrategies?: string | string[]): Promise<void> {
     const agentsPath = path.join(projectRoot, AGENTS_FILENAME);
 
     if (!(await fs.pathExists(agentsPath))) {
@@ -22,7 +22,29 @@ export class SyncEngine {
 
     const context = await fs.readFile(agentsPath, 'utf-8');
 
-    for (const strategy of this.strategies) {
+    let strategiesToRun: SyncStrategy[];
+
+    if (!selectedStrategies || (Array.isArray(selectedStrategies) && selectedStrategies.length === 0)) {
+      strategiesToRun = this.allStrategies;
+    } else {
+      const selectedList = Array.isArray(selectedStrategies) ? selectedStrategies : [selectedStrategies];
+      const normalizedList = selectedList.map(s => s.toLowerCase());
+      
+      if (normalizedList.includes('all') || normalizedList.includes('both')) {
+        strategiesToRun = this.allStrategies;
+      } else {
+        strategiesToRun = this.allStrategies.filter(s => 
+          normalizedList.includes(s.name.toLowerCase())
+        );
+      }
+    }
+
+    const availableNames = this.allStrategies.map(s => s.name).join(', ');
+    if (strategiesToRun.length === 0 && selectedStrategies) {
+      throw new Error(`No valid strategies found for: ${selectedStrategies}. Available strategies: ${availableNames}`);
+    }
+
+    for (const strategy of strategiesToRun) {
       console.log(`Syncing for ${strategy.name}...`);
       await strategy.sync(context, projectRoot);
     }

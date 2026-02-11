@@ -98,6 +98,25 @@ describe('GeminiStrategy', () => {
     expect(mtimeAfter).toBe(mtimeBefore);
   });
 
+  it('should not write to settings.json if fileName is already AGENTS.md as a string', async () => {
+    const strategy = new GeminiStrategy();
+    const settingsPath = path.join(tempDir, '.gemini', 'settings.json');
+    await fs.ensureDir(path.dirname(settingsPath));
+    await fs.writeJson(settingsPath, {
+      context: {
+        fileName: AGENTS_FILENAME
+      }
+    });
+
+    const mtimeBefore = (await fs.stat(settingsPath)).mtimeMs;
+    await new Promise(resolve => setTimeout(resolve, 10));
+    
+    await strategy.sync('context', tempDir);
+    
+    const mtimeAfter = (await fs.stat(settingsPath)).mtimeMs;
+    expect(mtimeAfter).toBe(mtimeBefore);
+  });
+
   it('should handle invalid JSON in settings.json by starting fresh', async () => {
     const strategy = new GeminiStrategy();
     const settingsPath = path.join(tempDir, '.gemini', 'settings.json');

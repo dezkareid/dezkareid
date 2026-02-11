@@ -9,11 +9,17 @@ This package is a CLI utility designed to synchronize AI agent context files (li
 - **Strategies**:
   - `claude`: Manages `CLAUDE.md` as a symbolic link to `AGENTS.md`.
   - `gemini`: Configures `.gemini/settings.json` to include `AGENTS.md` as a context file.
+  - `gemini-md`: Manages `GEMINI.md` as a symbolic link to `AGENTS.md`.
 
 ## Development Workflow
 - **Install**: `pnpm install`
 - **Build**: `pnpm build`
 - **Run**: `pnpm start sync` or `node dist/index.js sync`
+- **Options**:
+  - `-s, --strategy`: Select specific strategies (e.g., `claude`, `gemini`, `all`, or `"claude, gemini"`).
+  - `--skip-config`: Avoid reading/creating the `.ai-context-configrc` file.
+  - If no strategy is provided, the tool checks for a `.ai-context-configrc` file.
+  - If no config is found, an interactive checkbox menu is displayed.
 
 ## Adding a New Strategy
 1. Create a new class in `src/strategies/` implementing the `SyncStrategy` interface.
