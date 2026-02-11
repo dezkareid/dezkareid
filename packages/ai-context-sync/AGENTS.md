@@ -9,6 +9,7 @@ This package is a CLI utility designed to synchronize AI agent context files (li
 - **Strategies**:
   - `claude`: Manages `CLAUDE.md` as a symbolic link to `AGENTS.md`.
   - `gemini`: Configures `.gemini/settings.json` to include `AGENTS.md` as a context file.
+  - `gemini-md`: Manages `GEMINI.md` as a symbolic link to `AGENTS.md`.
 
 ## Development Workflow
 - **Install**: `pnpm install`

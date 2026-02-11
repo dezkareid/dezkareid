@@ -69,6 +69,19 @@ describe('SyncEngine', () => {
     expect(await fs.pathExists(settingsPath)).toBe(true);
   });
 
+  it('should run Gemini Markdown strategy when selected', async () => {
+    const engine = new SyncEngine();
+    const agentsPath = path.join(tempDir, AGENTS_FILENAME);
+    await fs.writeFile(agentsPath, '# Agent Context');
+
+    await engine.sync(tempDir, 'gemini-md');
+
+    const geminiMdPath = path.join(tempDir, 'GEMINI.md');
+    expect(await fs.pathExists(geminiMdPath)).toBe(true);
+    const stats = await fs.lstat(geminiMdPath);
+    expect(stats.isSymbolicLink()).toBe(true);
+  });
+
   it('should run multiple selected strategies from array', async () => {
     const engine = new SyncEngine();
     const agentsPath = path.join(tempDir, AGENTS_FILENAME);
@@ -96,6 +109,6 @@ describe('SyncEngine', () => {
     const agentsPath = path.join(tempDir, AGENTS_FILENAME);
     await fs.writeFile(agentsPath, '# Agent Context');
 
-    await expect(engine.sync(tempDir, 'invalid')).rejects.toThrow('No valid strategies found for: invalid');
+    await expect(engine.sync(tempDir, 'invalid')).rejects.toThrow('No valid strategies found for: invalid. Available strategies: claude, gemini, gemini-md');
   });
 });

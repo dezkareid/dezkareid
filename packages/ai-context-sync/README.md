@@ -8,6 +8,7 @@ A CLI utility to synchronize AI agent context files across different providers, 
 - **Multi-provider support**:
   - **Claude**: Generates/updates `CLAUDE.md`.
   - **Gemini**: Configures `.gemini/settings.json` to use `AGENTS.md`.
+  - **Gemini Markdown**: Generates/updates `GEMINI.md`.
 - **Plugin Architecture**: Easily extendable to support other AI agents.
 
 ## Installation

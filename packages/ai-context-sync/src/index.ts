@@ -28,7 +28,8 @@ program
             message: 'Select the AI context files to sync:',
             choices: [
               { name: 'Claude (CLAUDE.md)', value: 'claude', checked: true },
-              { name: 'Gemini (.gemini/settings.json)', value: 'gemini', checked: true }
+              { name: 'Gemini (.gemini/settings.json)', value: 'gemini', checked: true },
+              { name: 'Gemini Markdown (GEMINI.md)', value: 'gemini-md', checked: true }
             ],
             validate: (answer) => {
               if (answer.length < 1) {
