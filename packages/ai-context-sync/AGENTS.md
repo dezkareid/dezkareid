@@ -17,7 +17,9 @@ This package is a CLI utility designed to synchronize AI agent context files (li
 - **Run**: `pnpm start sync` or `node dist/index.js sync`
 - **Options**:
   - `-s, --strategy`: Select specific strategies (e.g., `claude`, `gemini`, `all`, or `"claude, gemini"`).
-  - If no strategy is provided, an interactive checkbox menu is displayed.
+  - `--skip-config`: Avoid reading/creating the `.ai-context-configrc` file.
+  - If no strategy is provided, the tool checks for a `.ai-context-configrc` file.
+  - If no config is found, an interactive checkbox menu is displayed.
 
 ## Adding a New Strategy
 1. Create a new class in `src/strategies/` implementing the `SyncStrategy` interface.

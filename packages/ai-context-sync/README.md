@@ -38,11 +38,17 @@ npx @dezkareid/ai-context-sync sync --strategy "claude, gemini"
 
 If no strategy is provided, an interactive checkbox menu will appear to let you toggle which strategies to run.
 
-Or specify a directory:
+### Configuration
+
+The tool can save your selected strategies in a `.ai-context-configrc` file in the project root. This avoids being prompted every time you run the command.
+
+To bypass reading or creating this configuration file, use the `--skip-config` flag:
 
 ```bash
-npx @dezkareid/ai-context-sync sync --dir ./my-package
+npx @dezkareid/ai-context-sync sync --skip-config
 ```
+
+### Directory option
 
 ## How it works
 
