@@ -43,6 +43,8 @@ The following versions are established across the project's packages and should 
 - **Monorepo Management**: Uses `turbo` for task orchestration and `pnpm workspaces`.
 - **Naming Convention**: Packages are scoped under `@dezkareid/` (e.g., `@dezkareid/react-hooks`).
 
+## Design System & Tokens
+When selecting colors, breakpoints, or spacing, you MUST refer to the tokens defined in the `design-system/design-tokens` package. See `@/design-system/design-tokens/AGENTS.md` for detailed token architecture and usage patterns.
+
 ## Relevant Agent Files
 - `@/packages/ai-context-sync/AGENTS.md`: Specific instructions for the AI context synchronization utility.
-- `@/design-system/design-tokens/AGENTS.md`: Detailed workflow for design tokens and Style Dictionary.
