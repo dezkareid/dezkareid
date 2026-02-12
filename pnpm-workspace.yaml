@@ -3,3 +3,4 @@ packages:
   - "configs/*"
   - "linters/*"
   - "design-system/*"
+  - "apps/*"
