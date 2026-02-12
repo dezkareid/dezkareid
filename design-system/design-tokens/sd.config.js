@@ -7,6 +7,23 @@ module.exports = {
   hooks: {
     formats: {
       'css/variables-light-dark': ({ dictionary }) => {
+        const tokenPathMap = new Map();
+        dictionary.allTokens.forEach(t => tokenPathMap.set(t.path.join('.'), t));
+
+        const formatValue = (token) => {
+          if (typeof token.original.value === 'string') {
+            const match = token.original.value.match(/^\{([^}]+)\}$/);
+            if (match) {
+              const refPath = match[1];
+              const refToken = tokenPathMap.get(refPath);
+              if (refToken) {
+                return `var(--${refToken.path.join('-')})`;
+              }
+            }
+          }
+          return token.value;
+        };
+
         const lightTokens = [];
         const darkTokensMap = new Map();
         const otherTokens = [];
@@ -24,8 +41,8 @@ module.exports = {
 
         const lines = [
           `/**`,
-          ` * Do not edit directly, this file was auto-generated.`, 
-          ` */`, 
+          ` * Do not edit directly, this file was auto-generated.`,
+          ` */`,
           ``,
           `:root {`,
           `  color-scheme: light dark;`
@@ -34,13 +51,13 @@ module.exports = {
         otherTokens.forEach(token => {
           // Join path with hyphens for standard tokens
           const name = token.path.join('-');
-          lines.push(`  --${name}: ${token.value};`);
+          lines.push(`  --${name}: ${formatValue(token)};`);
         });
 
         lightTokens.forEach(lightToken => {
           // Construct core name (e.g., color-primary)
           const corePath = lightToken.path.filter(p => p !== 'light' && p !== 'semantic');
-          const coreName = corePath.join('-'); 
+          const coreName = corePath.join('-');
 
           const lightName = `light-${coreName}`;
           const darkName = `dark-${coreName}`;
@@ -48,10 +65,10 @@ module.exports = {
           const lookupKey = lightToken.path.filter(p => p !== 'light').join('.');
           const darkToken = darkTokensMap.get(lookupKey);
 
-          lines.push(`  --${lightName}: ${lightToken.value};`);
-          
+          lines.push(`  --${lightName}: ${formatValue(lightToken)};`);
+
           if (darkToken) {
-            lines.push(`  --${darkName}: ${darkToken.value};`);
+            lines.push(`  --${darkName}: ${formatValue(darkToken)};`);
             lines.push(`  --${coreName}: light-dark(var(--${lightName}), var(--${darkName}));`);
           } else {
             lines.push(`  --${coreName}: var(--${lightName});`);
@@ -62,26 +79,42 @@ module.exports = {
         return lines.join('\n');
       },
       'scss/simple': ({ dictionary }) => {
-        return dictionary.allTokens.map(token => `$${token.path.join('-')}: ${token.value};`).join('\n');
+        const tokenPathMap = new Map();
+        dictionary.allTokens.forEach(t => tokenPathMap.set(t.path.join('.'), t));
+
+        return dictionary.allTokens.map(token => {
+          let value = token.value;
+          if (typeof token.original.value === 'string') {
+            const match = token.original.value.match(/^\{([^}]+)\}$/);
+            if (match) {
+              const refPath = match[1];
+              const refToken = tokenPathMap.get(refPath);
+              if (refToken) {
+                value = `$${refToken.path.join('-')}`;
+              }
+            }
+          }
+          return `$${token.path.join('-')}: ${value};`;
+        }).join('\n');
       },
       'js/custom-module': ({ dictionary }) => {
         const lines = [
           `/**`,
-          ` * Do not edit directly, this file was auto-generated.`, 
-          ` */`, 
+          ` * Do not edit directly, this file was auto-generated.`,
+          ` */`,
           ``
         ];
 
         dictionary.allTokens.forEach(token => {
           // Generate a safe JS identifier
           const parts = token.path.map(part => /^\d/.test(part) ? `val${part}` : part);
-          
+
           let finalParts = parts;
           if (isThemed(token)) {
             const theme = isLight(token) ? 'light' : 'dark';
-            const filteredParts = parts.filter(p => 
-              p.toLowerCase() !== 'light' && 
-              p.toLowerCase() !== 'dark' && 
+            const filteredParts = parts.filter(p =>
+              p.toLowerCase() !== 'light' &&
+              p.toLowerCase() !== 'dark' &&
               p.toLowerCase() !== 'semantic' &&
               p.toLowerCase() !== 'vallight' &&
               p.toLowerCase() !== 'valdark'
@@ -98,20 +131,20 @@ module.exports = {
       'typescript/custom-declarations': ({ dictionary }) => {
         const lines = [
           `/**`,
-          ` * Do not edit directly, this file was auto-generated.`, 
-          ` */`, 
+          ` * Do not edit directly, this file was auto-generated.`,
+          ` */`,
           ``
         ];
 
         dictionary.allTokens.forEach(token => {
           const parts = token.path.map(part => /^\d/.test(part) ? `val${part}` : part);
-          
+
           let finalParts = parts;
           if (isThemed(token)) {
             const theme = isLight(token) ? 'light' : 'dark';
-            const filteredParts = parts.filter(p => 
-              p.toLowerCase() !== 'light' && 
-              p.toLowerCase() !== 'dark' && 
+            const filteredParts = parts.filter(p =>
+              p.toLowerCase() !== 'light' &&
+              p.toLowerCase() !== 'dark' &&
               p.toLowerCase() !== 'semantic' &&
               p.toLowerCase() !== 'vallight' &&
               p.toLowerCase() !== 'valdark'
@@ -135,7 +168,7 @@ module.exports = {
         {
           destination: 'variables.css',
           format: 'css/variables-light-dark'
-        }
+        },
       ]
     },
     scss: {

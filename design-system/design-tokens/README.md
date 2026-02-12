@@ -51,3 +51,37 @@ const styles = {
   padding: SpacingVal16
 };
 ```
+
+## Breakpoints
+
+The design system provides breakpoint tokens for responsive design.
+
+### CSS
+
+```css
+@media (min-width: var(--breakpoint-medium-min)) {
+  .my-container {
+    width: 100%;
+  }
+}
+```
+
+### SCSS
+
+```scss
+@media (min-width: $breakpoint-medium-min) {
+  .my-container {
+    width: 100%;
+  }
+}
+```
+
+### JavaScript / TypeScript
+
+```javascript
+import { BreakpointMediumMin } from '@dezkareid/design-tokens';
+
+if (window.matchMedia(`(min-width: ${BreakpointMediumMin})`).matches) {
+  // logic for medium screens and up
+}
+```

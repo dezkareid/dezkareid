@@ -10,10 +10,12 @@
     "*.scss"
   ],
   "files": [
-    "dist"
+    "dist",
+    "AGENTS.md"
   ],
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "repository": {
     "type": "git",
@@ -32,14 +34,9 @@
   },
   "homepage": "https://github.com/dezkareid/dezkareid/tree/main/projects/dezkareid/design-system/design-tokens#readme",
   "scripts": {
-    "build": "style-dictionary build --config sd.config.js",
-    "release": "semantic-release"
+    "build": "style-dictionary build --config sd.config.js"
   },
   "devDependencies": {
-    "style-dictionary": "5.2.0",
-    "@semantic-release/changelog": "6.0.3",
-    "@semantic-release/git": "10.0.1",
-    "semantic-release": "25.0.2",
-    "semantic-release-monorepo": "8.0.2"
+    "style-dictionary": "5.2.0"
   }
 }

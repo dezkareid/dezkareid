@@ -1,0 +1,18 @@
+{
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    "@anolilab/semantic-release-pnpm",
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "CHANGELOG.md"
+        ]
+      }
+    ],
+    "@semantic-release/github"
+  ],
+  "extends": "semantic-release-monorepo"
+}
