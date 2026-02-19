@@ -1,3 +1,10 @@
+# [@dezkareid/ai-context-sync-v1.2.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/ai-context-sync-v1.1.0...@dezkareid/ai-context-sync-v1.2.0) (2026-02-19)
+
+
+### Features
+
+* **ai-context-sync:** add --target-dir option to sync command ([a35a02c](https://github.com/dezkareid/dezkareid/commit/a35a02cb35aa7f9e3b9ca4a36279a8cfbe96d62c))
+
 # [@dezkareid/ai-context-sync-v1.1.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/ai-context-sync-v1.0.0...@dezkareid/ai-context-sync-v1.1.0) (2026-02-11)
 
 
