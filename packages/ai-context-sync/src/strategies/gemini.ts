@@ -5,9 +5,14 @@ import path from 'path';
 export class GeminiStrategy implements SyncStrategy {
   name = 'gemini';
 
-  async sync(_context: string, projectRoot: string): Promise<void> {
-    const geminiDir = path.join(projectRoot, '.gemini');
+  async sync(_context: string, projectRoot: string, targetDir?: string): Promise<void> {
+    const outputDir = targetDir ?? projectRoot;
+    const geminiDir = path.join(outputDir, '.gemini');
     const settingsPath = path.join(geminiDir, 'settings.json');
+
+    // Compute the path to AGENTS.md relative to the target .gemini directory
+    const agentsAbsPath = path.join(projectRoot, AGENTS_FILE);
+    const agentsRelativePath = path.relative(outputDir, agentsAbsPath);
 
     await fs.ensureDir(geminiDir);
 
@@ -30,17 +35,17 @@ export class GeminiStrategy implements SyncStrategy {
     let modified = false;
 
     if (Array.isArray(currentFiles)) {
-      if (!currentFiles.includes(AGENTS_FILE)) {
-        settings.context.fileName = [...currentFiles, AGENTS_FILE];
+      if (!currentFiles.includes(agentsRelativePath)) {
+        settings.context.fileName = [...currentFiles, agentsRelativePath];
         modified = true;
       }
     } else if (typeof currentFiles === 'string') {
-      if (currentFiles !== AGENTS_FILE) {
-        settings.context.fileName = [currentFiles, AGENTS_FILE];
+      if (currentFiles !== agentsRelativePath) {
+        settings.context.fileName = [currentFiles, agentsRelativePath];
         modified = true;
       }
     } else {
-      settings.context.fileName = [AGENTS_FILE];
+      settings.context.fileName = [agentsRelativePath];
       modified = true;
     }
 

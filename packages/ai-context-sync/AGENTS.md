@@ -16,6 +16,8 @@ This package is a CLI utility designed to synchronize AI agent context files (li
 - **Build**: `pnpm build`
 - **Run**: `pnpm start sync` or `node dist/index.js sync`
 - **Options**:
+  - `-d, --dir <path>`: Source directory where `AGENTS.md` lives (defaults to `cwd`).
+  - `-t, --target-dir <path>`: Target directory where synced files are written (defaults to `--dir`). Use this to sync an `AGENTS.md` from one project into a different project directory.
   - `-s, --strategy`: Select specific strategies (e.g., `claude`, `gemini`, `all`, or `"claude, gemini"`).
   - `--skip-config`: Avoid reading/creating the `.ai-context-configrc` file.
   - If no strategy is provided, the tool checks for a `.ai-context-configrc` file.

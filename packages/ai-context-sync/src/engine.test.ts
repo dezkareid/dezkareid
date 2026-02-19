@@ -111,4 +111,81 @@ describe('SyncEngine', () => {
 
     await expect(engine.sync(tempDir, 'invalid')).rejects.toThrow('No valid strategies found for: invalid. Available strategies: claude, gemini, gemini-md');
   });
+
+  describe('targetDir option', () => {
+    let targetDir: string;
+
+    beforeEach(async () => {
+      targetDir = await fs.mkdtemp(path.join(os.tmpdir(), 'sync-engine-target-'));
+    });
+
+    afterEach(async () => {
+      await fs.remove(targetDir);
+    });
+
+    it('should write synced files to targetDir instead of projectRoot', async () => {
+      const engine = new SyncEngine();
+      const agentsPath = path.join(tempDir, AGENTS_FILENAME);
+      await fs.writeFile(agentsPath, '# Agent Context');
+
+      await engine.sync(tempDir, 'claude', targetDir);
+
+      // File should be in targetDir
+      const claudeInTarget = path.join(targetDir, 'CLAUDE.md');
+      expect(await fs.pathExists(claudeInTarget)).toBe(true);
+
+      // File should NOT be in projectRoot (tempDir)
+      const claudeInSource = path.join(tempDir, 'CLAUDE.md');
+      expect(await fs.pathExists(claudeInSource)).toBe(false);
+    });
+
+    it('should create symlink in targetDir pointing back to projectRoot AGENTS.md', async () => {
+      const engine = new SyncEngine();
+      const agentsPath = path.join(tempDir, AGENTS_FILENAME);
+      await fs.writeFile(agentsPath, '# Agent Context');
+
+      await engine.sync(tempDir, 'claude', targetDir);
+
+      const claudePath = path.join(targetDir, 'CLAUDE.md');
+      const stats = await fs.lstat(claudePath);
+      expect(stats.isSymbolicLink()).toBe(true);
+
+      // The symlink should resolve to the AGENTS.md in projectRoot
+      const resolvedPath = await fs.realpath(claudePath);
+      const expectedPath = await fs.realpath(agentsPath);
+      expect(resolvedPath).toBe(expectedPath);
+    });
+
+    it('should write .gemini/settings.json to targetDir when targetDir is specified', async () => {
+      const engine = new SyncEngine();
+      const agentsPath = path.join(tempDir, AGENTS_FILENAME);
+      await fs.writeFile(agentsPath, '# Agent Context');
+
+      await engine.sync(tempDir, 'gemini', targetDir);
+
+      // Settings should be in targetDir
+      const settingsInTarget = path.join(targetDir, '.gemini', 'settings.json');
+      expect(await fs.pathExists(settingsInTarget)).toBe(true);
+
+      // Settings should NOT be in projectRoot
+      const settingsInSource = path.join(tempDir, '.gemini', 'settings.json');
+      expect(await fs.pathExists(settingsInSource)).toBe(false);
+
+      // The stored path should be relative from targetDir to AGENTS.md
+      const settings = await fs.readJson(settingsInTarget);
+      const expectedRelPath = path.relative(targetDir, agentsPath);
+      expect(settings.context.fileName).toContain(expectedRelPath);
+    });
+
+    it('should use projectRoot as targetDir when targetDir is not specified', async () => {
+      const engine = new SyncEngine();
+      const agentsPath = path.join(tempDir, AGENTS_FILENAME);
+      await fs.writeFile(agentsPath, '# Agent Context');
+
+      await engine.sync(tempDir, 'claude');
+
+      const claudeInSource = path.join(tempDir, 'CLAUDE.md');
+      expect(await fs.pathExists(claudeInSource)).toBe(true);
+    });
+  });
 });
