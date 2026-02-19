@@ -6,16 +6,21 @@ export abstract class SymlinkStrategy implements SyncStrategy {
   abstract name: string;
   abstract targetFilename: string;
 
-  async sync(_context: string, projectRoot: string): Promise<void> {
-    const targetPath = path.join(projectRoot, this.targetFilename);
-    
+  async sync(_context: string, projectRoot: string, targetDir?: string): Promise<void> {
+    const outputDir = targetDir ?? projectRoot;
+    const targetPath = path.join(outputDir, this.targetFilename);
+
+    // Compute the symlink value: relative path from outputDir to the AGENTS.md in projectRoot
+    const agentsAbsPath = path.join(projectRoot, AGENTS_FILE);
+    const symlinkTarget = path.relative(outputDir, agentsAbsPath);
+
     // Check if it exists and what type it is
     if (await fs.pathExists(targetPath)) {
       const stats = await fs.lstat(targetPath);
       if (stats.isSymbolicLink()) {
-        const target = await fs.readlink(targetPath);
-        if (target === AGENTS_FILE) {
-          // Already points to AGENTS.md, nothing to do
+        const existingTarget = await fs.readlink(targetPath);
+        if (existingTarget === symlinkTarget) {
+          // Already points to the correct location, nothing to do
           return;
         }
       }
@@ -23,7 +28,7 @@ export abstract class SymlinkStrategy implements SyncStrategy {
       await fs.remove(targetPath);
     }
 
-    // Create relative symlink
-    await fs.ensureSymlink(AGENTS_FILE, targetPath);
+    // Create symlink pointing to AGENTS.md
+    await fs.ensureSymlink(symlinkTarget, targetPath);
   }
 }

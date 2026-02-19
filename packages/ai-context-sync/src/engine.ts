@@ -13,8 +13,9 @@ export class SyncEngine {
     new GeminiMdStrategy()
   ];
 
-  async sync(projectRoot: string, selectedStrategies?: string | string[]): Promise<void> {
+  async sync(projectRoot: string, selectedStrategies?: string | string[], targetDir?: string): Promise<void> {
     const agentsPath = path.join(projectRoot, AGENTS_FILENAME);
+    const outputDir = targetDir ?? projectRoot;
 
     if (!(await fs.pathExists(agentsPath))) {
       throw new Error(`${AGENTS_FILENAME} not found in ${projectRoot}`);
@@ -29,11 +30,11 @@ export class SyncEngine {
     } else {
       const selectedList = Array.isArray(selectedStrategies) ? selectedStrategies : [selectedStrategies];
       const normalizedList = selectedList.map(s => s.toLowerCase());
-      
+
       if (normalizedList.includes('all') || normalizedList.includes('both')) {
         strategiesToRun = this.allStrategies;
       } else {
-        strategiesToRun = this.allStrategies.filter(s => 
+        strategiesToRun = this.allStrategies.filter(s =>
           normalizedList.includes(s.name.toLowerCase())
         );
       }
@@ -46,7 +47,7 @@ export class SyncEngine {
 
     for (const strategy of strategiesToRun) {
       console.log(`Syncing for ${strategy.name}...`);
-      await strategy.sync(context, projectRoot);
+      await strategy.sync(context, projectRoot, outputDir);
     }
   }
 }

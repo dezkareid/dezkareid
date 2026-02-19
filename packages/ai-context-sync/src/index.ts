@@ -16,12 +16,14 @@ program
 program
   .command('sync')
   .description('Synchronize context files from AGENTS.md')
-  .option('-d, --dir <path>', 'Project directory', process.cwd())
+  .option('-d, --dir <path>', 'Project directory (where AGENTS.md lives)', process.cwd())
+  .option('-t, --target-dir <path>', 'Target directory where synced files will be written (defaults to --dir)')
   .option('-s, --strategy <strategy>', 'Sync strategy (claude, gemini, all, or comma-separated list)')
   .option('--skip-config', 'Avoid reading/creating the config file', false)
   .action(async (options) => {
     try {
       const projectRoot = path.resolve(options.dir);
+      const targetDir = options.targetDir ? path.resolve(options.targetDir) : projectRoot;
       const configPath = path.join(projectRoot, CONFIG_FILENAME);
       let strategy = options.strategy;
 
@@ -70,7 +72,7 @@ program
       }
 
       const engine = new SyncEngine();
-      await engine.sync(projectRoot, strategy);
+      await engine.sync(projectRoot, strategy, targetDir);
 
       const strategyMsg = Array.isArray(strategy) ? strategy.join(', ') : strategy;
       console.log(`Successfully synchronized context files using "${strategyMsg}"!`);

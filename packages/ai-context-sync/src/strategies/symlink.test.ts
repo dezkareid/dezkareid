@@ -67,13 +67,62 @@ describe('SymlinkStrategy', () => {
   it('should replace existing file with a symlink', async () => {
     const targetPath = path.join(tempDir, 'TEST.md');
     await fs.writeFile(targetPath, 'existing file');
-    
+
     await strategy.sync('', tempDir);
-    
+
     const stats = await fs.lstat(targetPath);
     expect(stats.isSymbolicLink()).toBe(true);
-    
+
     const target = await fs.readlink(targetPath);
     expect(target).toBe(AGENTS_FILE);
+  });
+
+  describe('targetDir option', () => {
+    let targetDir: string;
+
+    beforeEach(async () => {
+      targetDir = await fs.mkdtemp(path.join(os.tmpdir(), 'symlink-strategy-target-'));
+    });
+
+    afterEach(async () => {
+      await fs.remove(targetDir);
+    });
+
+    it('should create symlink in targetDir pointing to AGENTS.md in projectRoot', async () => {
+      await strategy.sync('', tempDir, targetDir);
+
+      const targetPath = path.join(targetDir, 'TEST.md');
+      const stats = await fs.lstat(targetPath);
+      expect(stats.isSymbolicLink()).toBe(true);
+
+      // Symlink should resolve to the actual AGENTS.md in projectRoot
+      const resolvedPath = await fs.realpath(targetPath);
+      const expectedPath = await fs.realpath(path.join(tempDir, AGENTS_FILE));
+      expect(resolvedPath).toBe(expectedPath);
+    });
+
+    it('should not recreate symlink if it already points to the correct location', async () => {
+      const targetPath = path.join(targetDir, 'TEST.md');
+      const agentsAbsPath = path.join(tempDir, AGENTS_FILE);
+      const symlinkTarget = path.relative(targetDir, agentsAbsPath);
+      await fs.ensureSymlink(symlinkTarget, targetPath);
+
+      const initialStats = await fs.lstat(targetPath);
+
+      await strategy.sync('', tempDir, targetDir);
+
+      const finalStats = await fs.lstat(targetPath);
+      expect(finalStats.mtimeMs).toBe(initialStats.mtimeMs);
+    });
+
+    it('should write to projectRoot when targetDir is not provided', async () => {
+      await strategy.sync('', tempDir);
+
+      const targetPath = path.join(tempDir, 'TEST.md');
+      expect(await fs.pathExists(targetPath)).toBe(true);
+
+      const targetPathInTargetDir = path.join(targetDir, 'TEST.md');
+      expect(await fs.pathExists(targetPathInTargetDir)).toBe(false);
+    });
   });
 });
