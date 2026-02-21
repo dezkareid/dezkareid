@@ -1,0 +1,65 @@
+---
+interface Props {
+	github?: string;
+	linkedin?: string;
+	twitter?: string;
+	email?: string;
+}
+
+const { 
+	github = "https://github.com/dezkareid", 
+	linkedin = "#", 
+	twitter = "#",
+	email = "mailto:example@example.com"
+} = Astro.props;
+---
+
+<div class="social-links">
+	<a href={github} target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+		<span class="icon">GH</span> GitHub
+	</a>
+	<a href={linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+		<span class="icon">LI</span> LinkedIn
+	</a>
+	<a href={twitter} target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+		<span class="icon">TW</span> Twitter
+	</a>
+	<a href={email} aria-label="Email">
+		<span class="icon">✉️</span> Email
+	</a>
+</div>
+
+<style>
+	.social-links {
+		display: flex;
+		gap: var(--spacing-24);
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+
+	.social-links a {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--spacing-8);
+		font-weight: var(--font-weight-medium);
+		color: var(--color-text-primary);
+		transition: color 0.2s ease;
+	}
+
+	.social-links a:hover {
+		color: var(--color-primary);
+		text-decoration: none;
+	}
+
+	.icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		background-color: var(--color-background-secondary);
+		border-radius: 50%;
+		font-size: var(--font-size-200);
+		font-weight: var(--font-weight-bold);
+	}
+</style>

@@ -23,6 +23,9 @@ importers:
 
   apps/main-website:
     dependencies:
+      '@dezkareid/design-tokens':
+        specifier: workspace:*
+        version: link:../../design-system/design-tokens
       astro:
         specifier: 5.17.1
         version: 5.17.1(@types/node@25.0.10)(jiti@2.6.0)(rollup@4.56.0)(terser@5.46.0)(typescript@5.9.3)

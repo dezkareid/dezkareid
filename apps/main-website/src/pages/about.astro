@@ -1,0 +1,124 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Section from '../components/Section.astro';
+import SkillsList from '../components/SkillsList.astro';
+
+---
+
+<Layout title="About Me | Frontend Developer Portfolio">
+	<Section>
+		<div class="container">
+			<h1 class="page-title">About Me</h1>
+			<div class="about-content">
+				<div class="about-text">
+					<p>Hello! I'm a passionate Frontend Developer with a focus on building high-performance, accessible, and user-centric web applications. With years of experience in the React ecosystem, I enjoy solving complex problems and creating seamless digital experiences.</p>
+					
+					<p>My approach to development is grounded in clean code, robust architecture, and a deep understanding of web standards. I believe that a great website is not just about how it looks, but how it feels and performs for every user.</p>
+
+					<p>When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or sharing my knowledge with the developer community.</p>
+				</div>
+				<div class="about-image-placeholder">
+					<!-- Replace with real image in the future -->
+					<div class="placeholder-circle">JD</div>
+				</div>
+			</div>
+		</div>
+	</Section>
+
+	<Section class="bg-alt">
+		<div class="container">
+			<h2 class="section-title">My Technical Expertise</h2>
+			<SkillsList />
+		</div>
+	</Section>
+
+	<Section>
+		<div class="container text-center">
+			<h2 class="section-title">Let's Connect</h2>
+			<p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions.</p>
+			<div class="contact-links">
+				<a href="mailto:example@example.com" class="contact-link">Email Me</a>
+				<a href="https://linkedin.com" class="contact-link">LinkedIn</a>
+			</div>
+		</div>
+	</Section>
+</Layout>
+
+<style>
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+
+	.page-title {
+		font-size: var(--font-size-800);
+		margin-bottom: var(--spacing-48);
+		text-align: center;
+	}
+
+	.about-content {
+		display: grid;
+		grid-template-columns: 1fr 300px;
+		gap: var(--spacing-64);
+		align-items: center;
+	}
+
+	.about-text p {
+		font-size: var(--font-size-400);
+		line-height: var(--font-line-height-relaxed);
+		margin-bottom: var(--spacing-24);
+		color: var(--color-base-gray-500);
+	}
+
+	.placeholder-circle {
+		width: 250px;
+		height: 250px;
+		background-color: var(--color-primary);
+		color: var(--color-text-inverse);
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: var(--font-size-900);
+		font-weight: var(--font-weight-bold);
+		margin: 0 auto;
+	}
+
+	.bg-alt {
+		background-color: var(--color-background-secondary);
+	}
+
+	.section-title {
+		font-size: var(--font-size-700);
+		margin-bottom: var(--spacing-48);
+		text-align: center;
+	}
+
+	.text-center {
+		text-align: center;
+	}
+
+	.contact-links {
+		display: flex;
+		gap: var(--spacing-24);
+		justify-content: center;
+		margin-top: var(--spacing-32);
+	}
+
+	.contact-link {
+		color: var(--color-primary);
+		font-weight: var(--font-weight-bold);
+		font-size: var(--font-size-400);
+	}
+
+	@media (max-width: 800px) {
+		.about-content {
+			grid-template-columns: 1fr;
+			text-align: center;
+		}
+		
+		.about-image-placeholder {
+			order: -1;
+		}
+	}
+</style>

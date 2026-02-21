@@ -1,0 +1,58 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Section from '../../components/Section.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+const allProjects = (await getCollection('projects'))
+	.sort((a, b) => a.data.order - b.data.order);
+---
+
+<Layout title="Projects | Frontend Developer Portfolio">
+	<Section>
+		<div class="container">
+			<h1 class="page-title">My Projects</h1>
+			<p class="page-description">A collection of my recent work, ranging from design systems to performance audits.</p>
+			
+			<div class="grid">
+				{allProjects.map((project) => (
+					<ProjectCard project={project} />
+				))}
+			</div>
+		</div>
+	</Section>
+</Layout>
+
+<style>
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+
+	.page-title {
+		font-size: var(--font-size-800);
+		margin-bottom: var(--spacing-16);
+		text-align: center;
+	}
+
+	.page-description {
+		font-size: var(--font-size-400);
+		color: var(--color-base-gray-500);
+		text-align: center;
+		margin-bottom: var(--spacing-64);
+		max-width: 800px;
+		margin-inline: auto;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+		gap: var(--spacing-32);
+	}
+
+	@media (max-width: 600px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

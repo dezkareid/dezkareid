@@ -1,0 +1,75 @@
+---
+import Section from "./Section.astro";
+import Button from "./Button.astro";
+
+interface Props {
+	title?: string;
+	subtitle?: string;
+	ctaText?: string;
+	ctaHref?: string;
+}
+
+const { 
+	title = "Empowering Modern Web Development", 
+	subtitle = "Building high-performance, accessible, and beautiful frontend experiences with cutting-edge technology.",
+	ctaText = "View Projects",
+	ctaHref = "/projects"
+} = Astro.props;
+---
+
+<Section paddingBlock="large" class="hero">
+	<div class="hero-container">
+		<div class="hero-content">
+			<h1 class="hero-title">{title}</h1>
+			<p class="hero-subtitle">{subtitle}</p>
+			<div class="hero-actions">
+				<Button href={ctaHref} size="large">{ctaText}</Button>
+				<Button href="/services" variant="outline" size="large">My Services</Button>
+			</div>
+		</div>
+	</div>
+</Section>
+
+<style>
+	.hero-container {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		min-height: 40vh;
+	}
+
+	.hero-content {
+		max-width: 800px;
+	}
+
+	.hero-title {
+		font-size: var(--font-size-900);
+		margin-bottom: var(--spacing-24);
+		color: var(--color-text-primary);
+	}
+
+	.hero-subtitle {
+		font-size: var(--font-size-500);
+		margin-bottom: var(--spacing-48);
+		color: var(--color-base-gray-500);
+		line-height: var(--font-line-height-relaxed);
+	}
+
+	.hero-actions {
+		display: flex;
+		gap: var(--spacing-16);
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+
+	@media (max-width: 600px) {
+		.hero-title {
+			font-size: var(--font-size-700);
+		}
+		
+		.hero-subtitle {
+			font-size: var(--font-size-400);
+		}
+	}
+</style>

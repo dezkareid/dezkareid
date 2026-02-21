@@ -1,0 +1,35 @@
+---
+interface Props {
+	paddingBlock?: "none" | "small" | "medium" | "large";
+	as?: "section" | "div";
+}
+
+const { paddingBlock = "medium", as: Tag = "section" } = Astro.props;
+---
+
+<Tag class={`section padding-block-${paddingBlock}`}>
+	<slot />
+</Tag>
+
+<style>
+	.section {
+		display: block;
+		width: 100%;
+	}
+
+	.padding-block-none {
+		padding-block: 0;
+	}
+
+	.padding-block-small {
+		padding-block: var(--spacing-24);
+	}
+
+	.padding-block-medium {
+		padding-block: var(--spacing-48);
+	}
+
+	.padding-block-large {
+		padding-block: var(--spacing-64);
+	}
+</style>

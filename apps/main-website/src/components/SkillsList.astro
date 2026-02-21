@@ -1,0 +1,69 @@
+---
+import Card from "./Card.astro";
+
+interface Skill {
+	name: string;
+	category: "frontend" | "backend" | "tooling" | "other";
+}
+
+interface Props {
+	skills?: Skill[];
+}
+
+const defaultSkills: Skill[] = [
+	{ name: "React", category: "frontend" },
+	{ name: "Astro", category: "frontend" },
+	{ name: "TypeScript", category: "frontend" },
+	{ name: "CSS/Vanilla CSS", category: "frontend" },
+	{ name: "Node.js", category: "backend" },
+	{ name: "Express", category: "backend" },
+	{ name: "Vite", category: "tooling" },
+	{ name: "Turbo", category: "tooling" },
+	{ name: "Git", category: "tooling" },
+	{ name: "Accessibility (a11y)", category: "other" },
+	{ name: "Responsive Design", category: "other" },
+];
+
+const { skills = defaultSkills } = Astro.props;
+---
+
+<div class="skills-grid">
+	{skills.map((skill) => (
+		<Card class={`skill-card category-${skill.category}`}>
+			<span class="skill-name">{skill.name}</span>
+		</Card>
+	))}
+</div>
+
+<style>
+	.skills-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+		gap: var(--spacing-16);
+	}
+
+	.skill-card {
+		padding: var(--spacing-12) var(--spacing-16);
+		text-align: center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-weight: var(--font-weight-medium);
+	}
+
+	.skill-name {
+		font-size: var(--font-size-300);
+	}
+
+	.category-frontend {
+		border-left: 4px solid var(--color-primary);
+	}
+
+	.category-backend {
+		border-left: 4px solid var(--color-base-green-500);
+	}
+
+	.category-tooling {
+		border-left: 4px solid var(--color-base-gray-500);
+	}
+</style>
