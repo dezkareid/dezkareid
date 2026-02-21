@@ -1,3 +1,17 @@
+---
+import "../styles/global.css";
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const { 
+	title = "Frontend Developer Portfolio", 
+	description = "A professional portfolio showcasing frontend engineering skills, projects, and services." 
+} = Astro.props;
+---
+
 <!doctype html>
 <html lang="en">
 	<head>
@@ -6,18 +20,133 @@
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		
+		<title>{title}</title>
+		<meta name="description" content={description} />
+
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+
+		<!-- Twitter -->
+		<meta property="twitter:card" content="summary_large_image" />
+		<meta property="twitter:title" content={title} />
+		<meta property="twitter:description" content={description} />
 	</head>
 	<body>
-		<slot />
+		<header class="site-header">
+			<nav class="nav-container">
+				<a href="/" class="logo">JD.DEV</a>
+				<div class="nav-links">
+					<a href="/">Home</a>
+					<a href="/projects">Projects</a>
+					<a href="/services">Services</a>
+					<a href="/about">About</a>
+				</div>
+			</nav>
+		</header>
+		<main>
+			<slot />
+		</main>
+		<footer class="site-footer">
+			<div class="footer-container">
+				<div class="footer-info">
+					<p>&copy; {new Date().getFullYear()} Frontend Developer. Built with Astro and Design Tokens.</p>
+				</div>
+				<nav class="footer-nav">
+					<a href="/">Home</a>
+					<a href="/projects">Projects</a>
+					<a href="/services">Services</a>
+					<a href="/about">About</a>
+				</nav>
+			</div>
+		</footer>
 	</body>
 </html>
 
 <style>
-	html,
-	body {
-		margin: 0;
+	.site-header {
+		padding: var(--spacing-16) var(--spacing-24);
+		background-color: var(--color-background-primary);
+		border-bottom: 1px solid var(--color-base-gray-100);
+		position: sticky;
+		top: 0;
+		z-index: 100;
+	}
+
+	.nav-container {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+
+	.logo {
+		font-size: var(--font-size-500);
+		font-weight: var(--font-weight-bold);
+		color: var(--color-primary);
+		text-decoration: none;
+	}
+
+	.nav-links {
+		display: flex;
+		gap: var(--spacing-24);
+	}
+
+	.nav-links a {
+		color: var(--color-text-primary);
+		font-weight: var(--font-weight-medium);
+		text-decoration: none;
+		transition: color 0.2s ease;
+	}
+
+	.nav-links a:hover {
+		color: var(--color-primary);
+	}
+
+	main {
+		flex: 1;
 		width: 100%;
-		height: 100%;
+	}
+
+	.site-footer {
+		padding: var(--spacing-48) var(--spacing-24);
+		background-color: var(--color-background-secondary);
+		border-top: 1px solid var(--color-base-gray-100);
+		margin-top: auto;
+	}
+
+	.footer-container {
+		max-width: 1200px;
+		margin: 0 auto;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: var(--spacing-24);
+	}
+
+	.footer-nav {
+		display: flex;
+		gap: var(--spacing-24);
+	}
+
+	.footer-nav a {
+		color: var(--color-base-gray-500);
+		font-size: var(--font-size-200);
+		text-decoration: none;
+	}
+
+	.footer-nav a:hover {
+		color: var(--color-primary);
+	}
+
+	@media (max-width: 600px) {
+		.footer-container {
+			flex-direction: column;
+			text-align: center;
+		}
 	}
 </style>

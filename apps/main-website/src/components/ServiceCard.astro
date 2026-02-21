@@ -1,0 +1,62 @@
+---
+import Card from "./Card.astro";
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+	service: CollectionEntry<'services'>;
+}
+
+const { service } = Astro.props;
+const { title, description, icon } = service.data;
+---
+
+<Card class="service-card">
+	<div class="service-icon" aria-hidden="true">
+		{icon || "⚙️"}
+	</div>
+	<h3 class="service-title">{title}</h3>
+	<p class="service-description">{description}</p>
+	<div class="service-footer">
+		<a href={`/services/${service.slug}`} class="learn-more">Learn about {title} →</a>
+	</div>
+</Card>
+
+<style>
+	.service-card {
+		text-align: center;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.service-icon {
+		font-size: var(--font-size-800);
+		margin-bottom: var(--spacing-16);
+	}
+
+	.service-title {
+		font-size: var(--font-size-500);
+		margin-bottom: var(--spacing-12);
+		color: var(--color-text-primary);
+	}
+
+	.service-description {
+		font-size: var(--font-size-300);
+		color: var(--color-base-gray-500);
+		margin-bottom: var(--spacing-24);
+		flex: 1;
+		line-height: var(--font-line-height-normal);
+	}
+
+	.learn-more {
+		color: var(--color-primary);
+		font-weight: var(--font-weight-medium);
+		font-size: var(--font-size-200);
+		text-decoration: none;
+	}
+
+	.learn-more:hover {
+		text-decoration: underline;
+	}
+</style>

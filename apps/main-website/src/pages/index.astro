@@ -1,11 +1,119 @@
 ---
-import Welcome from '../components/Welcome.astro';
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import Section from '../components/Section.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import SkillsList from '../components/SkillsList.astro';
+import SocialLinks from '../components/SocialLinks.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const featuredProjects = (await getCollection('projects', ({ data }) => {
+	return data.featured === true;
+})).sort((a, b) => a.data.order - b.data.order).slice(0, 3);
+
+const services = (await getCollection('services'))
+	.sort((a, b) => a.data.order - b.data.order)
+	.slice(0, 3);
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Frontend Developer | UI/UX & React Expert">
+	<Hero />
+
+	<Section id="projects">
+		<div class="container">
+			<h2 class="section-title">Featured Projects</h2>
+			<div class="grid">
+				{featuredProjects.map((project) => (
+					<ProjectCard project={project} />
+				))}
+			</div>
+			<div class="section-actions">
+				<a href="/projects" class="view-all">View All Projects →</a>
+			</div>
+		</div>
+	</Section>
+
+	<Section id="services" class="bg-alt">
+		<div class="container">
+			<h2 class="section-title">Services</h2>
+			<div class="grid">
+				{services.map((service) => (
+					<ServiceCard service={service} />
+				))}
+			</div>
+		</div>
+	</Section>
+
+	<Section id="skills">
+		<div class="container">
+			<h2 class="section-title">Skills & Technologies</h2>
+			<SkillsList />
+		</div>
+	</Section>
+
+	<Section id="contact" class="bg-alt">
+		<div class="container text-center">
+			<h2 class="section-title">Get In Touch</h2>
+			<p class="contact-text">Interested in working together? Reach out on social media or send me an email.</p>
+			<SocialLinks />
+		</div>
+	</Section>
 </Layout>
+
+<style>
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+
+	.section-title {
+		font-size: var(--font-size-700);
+		margin-bottom: var(--spacing-48);
+		text-align: center;
+		position: relative;
+	}
+
+	.section-title::after {
+		content: "";
+		display: block;
+		width: 60px;
+		height: 4px;
+		background-color: var(--color-primary);
+		margin: var(--spacing-16) auto 0;
+		border-radius: var(--spacing-4);
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: var(--spacing-32);
+	}
+
+	.section-actions {
+		margin-top: var(--spacing-48);
+		text-align: center;
+	}
+
+	.view-all {
+		color: var(--color-primary);
+		font-weight: var(--font-weight-bold);
+		font-size: var(--font-size-400);
+	}
+
+	.bg-alt {
+		background-color: var(--color-background-secondary);
+	}
+
+	.text-center {
+		text-align: center;
+	}
+
+	.contact-text {
+		font-size: var(--font-size-400);
+		color: var(--color-base-gray-500);
+		margin-bottom: var(--spacing-48);
+		max-width: 600px;
+		margin-inline: auto;
+	}
+</style>

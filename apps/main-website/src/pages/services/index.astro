@@ -1,0 +1,94 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Section from '../../components/Section.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+
+const allServices = (await getCollection('services'))
+	.sort((a, b) => a.data.order - b.data.order);
+---
+
+<Layout title="Services | Frontend Developer Portfolio">
+	<Section>
+		<div class="container">
+			<h1 class="page-title">Professional Services</h1>
+			<p class="page-description">I offer a variety of frontend-focused services to help businesses build better web experiences.</p>
+			
+			<div class="grid">
+				{allServices.map((service) => (
+					<ServiceCard service={service} />
+				))}
+			</div>
+		</div>
+	</Section>
+
+	<Section class="bg-alt">
+		<div class="container text-center">
+			<h2 class="cta-title">Ready to start a project?</h2>
+			<p class="cta-text">I'm currently accepting new freelance projects and consulting engagements.</p>
+			<a href="mailto:example@example.com" class="cta-button">Get a Quote</a>
+		</div>
+	</Section>
+</Layout>
+
+<style>
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+
+	.page-title {
+		font-size: var(--font-size-800);
+		margin-bottom: var(--spacing-16);
+		text-align: center;
+	}
+
+	.page-description {
+		font-size: var(--font-size-400);
+		color: var(--color-base-gray-500);
+		text-align: center;
+		margin-bottom: var(--spacing-64);
+		max-width: 800px;
+		margin-inline: auto;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: var(--spacing-32);
+	}
+
+	.bg-alt {
+		background-color: var(--color-background-secondary);
+	}
+
+	.text-center {
+		text-align: center;
+	}
+
+	.cta-title {
+		font-size: var(--font-size-700);
+		margin-bottom: var(--spacing-16);
+	}
+
+	.cta-text {
+		font-size: var(--font-size-400);
+		color: var(--color-base-gray-500);
+		margin-bottom: var(--spacing-32);
+	}
+
+	.cta-button {
+		display: inline-block;
+		background-color: var(--color-primary);
+		color: var(--color-text-inverse);
+		padding: var(--spacing-12) var(--spacing-32);
+		border-radius: var(--spacing-4);
+		font-weight: var(--font-weight-bold);
+		text-decoration: none;
+	}
+
+	.cta-button:hover {
+		opacity: 0.9;
+		text-decoration: none;
+	}
+</style>
