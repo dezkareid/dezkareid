@@ -21,6 +21,11 @@
         "NODE_ENV"
       ]
     },
+    "dev": {
+      "cache": false,
+      "persistent": true,
+      "outputs": []
+    },
     "test": {
       "outputs": [],
       "inputs": [
