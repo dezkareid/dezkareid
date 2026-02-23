@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^12.6.12",
     "@dezkareid/design-tokens": "workspace:*",
     "astro": "5.17.1"
   }
