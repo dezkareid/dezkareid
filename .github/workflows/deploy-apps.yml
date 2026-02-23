@@ -81,7 +81,7 @@ jobs:
           export JSON_DATA='${{ needs.check-changes.outputs.configuration }}'
           APP_FILES="${APP_KEY}_files"
           # Get the first file from the filter to derive the app path
-          APP_PATH_DATA=$(echo $JSON_DATA | jq -r ".["${APP_FILES}"] | fromjson[0]")
+          APP_PATH_DATA=$(echo $JSON_DATA | jq -r --arg key "$APP_FILES" '.[$key] | fromjson[0]')
           APP_PATH=$(echo $APP_PATH_DATA | cut -d'/' -f1-2)
           echo "APP_PATH=$APP_PATH" >> $GITHUB_ENV
           
