@@ -106,4 +106,4 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           # Determine branch for preview/production
           # For PRs use head_ref, for pushes use ref_name
-          command: pages deploy ${{ env.APP_PATH }}/dist --project-name=${{ env.CLOUDFLARE_PROJECT }} --branch=${{ github.head_ref || github.ref_name }}
+          command: pages deploy ${{ env.APP_PATH }}/dist --project-name=${{ env.CLOUDFLARE_PROJECT }} --branch=${{ github.head_ref || github.ref_name }} --create-if-missing
