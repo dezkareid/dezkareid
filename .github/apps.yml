@@ -1,1 +1,6 @@
-main-website: "apps/main-website/**"
+main-website:
+  - "apps/main-website/src/**"
+  - "apps/main-website/public/**"
+  - "apps/main-website/package.json"
+  - "apps/main-website/astro.config.mjs"
+  - "apps/main-website/tsconfig.json"
