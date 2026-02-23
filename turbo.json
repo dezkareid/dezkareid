@@ -7,9 +7,11 @@
         "src/**/*.ts",
         "src/**/*.jsx",
         "src/**/*.js",
+        "src/**/*.astro",
         "src/**/*.json",
         "src/**/*.css",
-        "src/**/*.scss"
+        "src/**/*.scss",
+        "public/**"
       ],
       "dependsOn": [
         "^build"
