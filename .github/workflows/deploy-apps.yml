@@ -100,7 +100,7 @@ jobs:
           NODE_ENV: production
 
       - name: Deploy to Cloudflare Pages
-        run: npx wrangler@4.67.0 pages deploy ${{ env.APP_PATH }}/dist --project-name=${{ env.CLOUDFLARE_PROJECT }} --branch=${{ github.head_ref || github.ref_name }} --create-if-missing
+        run: npx wrangler@4.67.0 pages deploy ${{ env.APP_PATH }}/dist --project-name=${{ env.CLOUDFLARE_PROJECT }} --branch=${{ github.head_ref || github.ref_name }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
