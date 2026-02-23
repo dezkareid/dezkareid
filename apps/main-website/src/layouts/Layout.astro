@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import ThemeToggle from "../components/ThemeToggle.astro";
 
 interface Props {
 	title?: string;
@@ -33,6 +34,20 @@ const {
 		<meta property="twitter:card" content="summary_large_image" />
 		<meta property="twitter:title" content={title} />
 		<meta property="twitter:description" content={description} />
+
+		<!-- Theme FOUC guard: apply stored preference before first paint.
+		     Only overrides colorScheme for explicit choices (light/dark).
+		     Absent key = system default; token stylesheet's color-scheme governs. -->
+		<script is:inline>
+			(function () {
+				try {
+					var t = localStorage.getItem('theme');
+					if (t === 'light' || t === 'dark') {
+						document.documentElement.style.colorScheme = t;
+					}
+				} catch (_) {}
+			})();
+		</script>
 	</head>
 	<body>
 		<header class="site-header">
@@ -44,6 +59,7 @@ const {
 					<a href="/services">Services</a>
 					<a href="/about">About</a>
 				</div>
+				<ThemeToggle />
 			</nav>
 		</header>
 		<main>

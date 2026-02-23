@@ -1,1 +1,1 @@
-main-website: "apps/main-website/**"
+main-website: "./apps/main-website/**"

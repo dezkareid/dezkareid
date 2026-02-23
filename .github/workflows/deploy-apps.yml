@@ -81,7 +81,7 @@ jobs:
           export JSON_DATA='${{ needs.check-changes.outputs.configuration }}'
           APP_FILES="${APP_KEY}_files"
           # Get the first file from the filter to derive the app path
-          APP_PATH_DATA=$(echo $JSON_DATA | jq -r ".["${APP_FILES}"] | fromjson[0]")
+          APP_PATH_DATA=$(echo $JSON_DATA | jq -r --arg key "$APP_FILES" '.[$key] | fromjson[0]')
           APP_PATH=$(echo $APP_PATH_DATA | cut -d'/' -f1-2)
           echo "APP_PATH=$APP_PATH" >> $GITHUB_ENV
           
@@ -100,10 +100,7 @@ jobs:
           NODE_ENV: production
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          # Determine branch for preview/production
-          # For PRs use head_ref, for pushes use ref_name
-          command: pages deploy ${{ env.APP_PATH }}/dist --project-name=${{ env.CLOUDFLARE_PROJECT }} --branch=${{ github.head_ref || github.ref_name }}
+        run: npx wrangler@4.67.0 pages deploy ${{ env.APP_PATH }}/dist --project-name=${{ env.CLOUDFLARE_PROJECT }} --branch=${{ github.head_ref || github.ref_name }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
