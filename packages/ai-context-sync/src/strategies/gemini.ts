@@ -5,13 +5,19 @@ import path from 'path';
 export class GeminiStrategy implements SyncStrategy {
   name = 'gemini';
 
+  private fromFile: string;
+
+  constructor(fromFile: string = AGENTS_FILE) {
+    this.fromFile = fromFile;
+  }
+
   async sync(_context: string, projectRoot: string, targetDir?: string): Promise<void> {
     const outputDir = targetDir ?? projectRoot;
     const geminiDir = path.join(outputDir, '.gemini');
     const settingsPath = path.join(geminiDir, 'settings.json');
 
-    // Compute the path to AGENTS.md relative to the target .gemini directory
-    const agentsAbsPath = path.join(projectRoot, AGENTS_FILE);
+    // Compute the path to the source file relative to the target .gemini directory
+    const agentsAbsPath = path.join(projectRoot, this.fromFile);
     const agentsRelativePath = path.relative(outputDir, agentsAbsPath);
 
     await fs.ensureDir(geminiDir);
