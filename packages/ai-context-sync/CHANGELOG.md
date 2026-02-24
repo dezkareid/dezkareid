@@ -1,3 +1,10 @@
+# [@dezkareid/ai-context-sync-v1.3.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/ai-context-sync-v1.2.0...@dezkareid/ai-context-sync-v1.3.0) (2026-02-24)
+
+
+### Features
+
+* **ai-context-sync:** add OtherStrategy and --from/--files CLI options ([1b2233b](https://github.com/dezkareid/dezkareid/commit/1b2233bfa7d110dae355ecb791349f27fd45eb8e))
+
 # [@dezkareid/ai-context-sync-v1.2.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/ai-context-sync-v1.1.0...@dezkareid/ai-context-sync-v1.2.0) (2026-02-19)
 
 
