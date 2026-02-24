@@ -2,9 +2,11 @@
 
 This file provides critical context and dependency information for AI agents working on the `dezkareid` monorepo.
 
-## Commit Message Format
+### Commit Rules
 
 Always use Conventional Commits format for commit messages. If the files changed are from a project include the project in the scope. Example: `feat(main-website): [description]` or `feat(design-system): [description]`
+
+Never commit directly to `main` or `master`. If the current branch is one of them, propose creating a new branch before committing.
 
 ## Critical Dependency Versions
 
