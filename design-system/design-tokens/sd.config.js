@@ -1,6 +1,5 @@
-const isThemed = (token) => token.path.includes('semantic') && (token.path.includes('light') || token.path.includes('dark'));
-const isLight = (token) => token.path.includes('semantic') && token.path.includes('light');
-const isDark = (token) => token.path.includes('semantic') && token.path.includes('dark');
+const { isThemed, isLight, isDark, getCssName, getScssName, getJsName } = require('./src/utils/token-naming');
+const { generateCatalog } = require('./src/utils/catalog-generator');
 
 module.exports = {
   source: ['src/tokens/**/*.json'],
@@ -17,7 +16,7 @@ module.exports = {
               const refPath = match[1];
               const refToken = tokenPathMap.get(refPath);
               if (refToken) {
-                return `var(--${refToken.path.join('-')})`;
+                return `var(--${getCssName(refToken)})`;
               }
             }
           }
@@ -49,25 +48,21 @@ module.exports = {
         ];
 
         otherTokens.forEach(token => {
-          // Join path with hyphens for standard tokens
-          const name = token.path.join('-');
-          lines.push(`  --${name}: ${formatValue(token)};`);
+          lines.push(`  --${getCssName(token)}: ${formatValue(token)};`);
         });
 
         lightTokens.forEach(lightToken => {
-          // Construct core name (e.g., color-primary)
           const corePath = lightToken.path.filter(p => p !== 'light' && p !== 'semantic');
           const coreName = corePath.join('-');
 
-          const lightName = `light-${coreName}`;
-          const darkName = `dark-${coreName}`;
-
+          const lightName = getCssName(lightToken);
           const lookupKey = lightToken.path.filter(p => p !== 'light').join('.');
           const darkToken = darkTokensMap.get(lookupKey);
 
           lines.push(`  --${lightName}: ${formatValue(lightToken)};`);
 
           if (darkToken) {
+            const darkName = getCssName(darkToken);
             lines.push(`  --${darkName}: ${formatValue(darkToken)};`);
             lines.push(`  --${coreName}: light-dark(var(--${lightName}), var(--${darkName}));`);
           } else {
@@ -90,11 +85,11 @@ module.exports = {
               const refPath = match[1];
               const refToken = tokenPathMap.get(refPath);
               if (refToken) {
-                value = `$${refToken.path.join('-')}`;
+                value = `$${getScssName(refToken)}`;
               }
             }
           }
-          return `$${token.path.join('-')}: ${value};`;
+          return `$${getScssName(token)}: ${value};`;
         }).join('\n');
       },
       'js/custom-module': ({ dictionary }) => {
@@ -106,23 +101,7 @@ module.exports = {
         ];
 
         dictionary.allTokens.forEach(token => {
-          // Generate a safe JS identifier
-          const parts = token.path.map(part => /^\d/.test(part) ? `val${part}` : part);
-
-          let finalParts = parts;
-          if (isThemed(token)) {
-            const theme = isLight(token) ? 'light' : 'dark';
-            const filteredParts = parts.filter(p =>
-              p.toLowerCase() !== 'light' &&
-              p.toLowerCase() !== 'dark' &&
-              p.toLowerCase() !== 'semantic' &&
-              p.toLowerCase() !== 'vallight' &&
-              p.toLowerCase() !== 'valdark'
-            );
-            finalParts = [theme, ...filteredParts];
-          }
-
-          const name = finalParts.map(p => p.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('')).join('');
+          const name = getJsName(token);
           lines.push(`export const ${name} = ${JSON.stringify(token.value)};`);
         });
 
@@ -137,30 +116,39 @@ module.exports = {
         ];
 
         dictionary.allTokens.forEach(token => {
-          const parts = token.path.map(part => /^\d/.test(part) ? `val${part}` : part);
-
-          let finalParts = parts;
-          if (isThemed(token)) {
-            const theme = isLight(token) ? 'light' : 'dark';
-            const filteredParts = parts.filter(p =>
-              p.toLowerCase() !== 'light' &&
-              p.toLowerCase() !== 'dark' &&
-              p.toLowerCase() !== 'semantic' &&
-              p.toLowerCase() !== 'vallight' &&
-              p.toLowerCase() !== 'valdark'
-            );
-            finalParts = [theme, ...filteredParts];
-          }
-
-          const name = finalParts.map(p => p.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('')).join('');
+          const name = getJsName(token);
           lines.push(`export const ${name}: string;`);
         });
 
         return lines.join('\n');
+      },
+      'markdown/catalog': ({ dictionary, file }) => {
+        return generateCatalog(dictionary.allTokens, file.options?.format);
       }
     }
   },
   platforms: {
+    catalog: {
+      transforms: ['color/css'],
+      buildPath: 'dist/catalogs/',
+      files: [
+        {
+          destination: 'all-tokens-css.md',
+          format: 'markdown/catalog',
+          options: { format: 'css' }
+        },
+        {
+          destination: 'all-tokens-scss.md',
+          format: 'markdown/catalog',
+          options: { format: 'scss' }
+        },
+        {
+          destination: 'all-tokens-js.md',
+          format: 'markdown/catalog',
+          options: { format: 'js' }
+        }
+      ]
+    },
     css: {
       transforms: ['color/css'],
       buildPath: 'dist/css/',

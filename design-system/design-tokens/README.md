@@ -85,3 +85,20 @@ if (window.matchMedia(`(min-width: ${BreakpointMediumMin})`).matches) {
   // logic for medium screens and up
 }
 ```
+
+## Discovery
+
+You can explore all available design tokens by generating a catalog in your preferred format:
+
+```bash
+# Explore CSS variables
+pnpm export-catalog --format css
+
+# Explore SCSS variables
+pnpm export-catalog --format scss
+
+# Explore JS constants
+pnpm export-catalog --format js
+```
+
+These catalogs are optimized for both developer reference and as a context window for AI coding assistants.
