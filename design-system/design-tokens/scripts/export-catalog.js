@@ -8,11 +8,11 @@ const program = new Command();
 
 program
   .name('export-catalog')
-  .description('Output generated color token catalog in Markdown')
+  .description('Output generated design token catalog in Markdown (AI-optimized)')
   .version('1.0.0')
   .option('-f, --format <format>', 'Output format: css, scss, js', 'css')
   .action(async (options) => {
-    const catalogPath = path.join(process.cwd(), 'dist', 'catalogs', `color-${options.format}.md`);
+    const catalogPath = path.join(process.cwd(), 'dist', 'catalogs', `all-tokens-${options.format}.md`);
 
     if (!fs.existsSync(catalogPath)) {
       console.error(`Error: Catalog file for format "${options.format}" not found at: ${catalogPath}`);

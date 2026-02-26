@@ -1,4 +1,5 @@
 const { isThemed, isLight, isDark, getCssName, getScssName, getJsName } = require('./src/utils/token-naming');
+const { generateCatalog } = require('./src/utils/catalog-generator');
 
 module.exports = {
   source: ['src/tokens/**/*.json'],
@@ -122,67 +123,7 @@ module.exports = {
         return lines.join('\n');
       },
       'markdown/catalog': ({ dictionary, file }) => {
-        const format = file.options?.format || 'css';
-        const colorTokens = dictionary.allTokens.filter(token => token.path.includes('color'));
-
-        if (format === 'css') {
-          const lightTokens = [];
-          const darkTokensMap = new Map();
-          const otherTokens = [];
-
-          colorTokens.forEach(token => {
-            if (isLight(token)) {
-              lightTokens.push(token);
-            } else if (isDark(token)) {
-              const key = token.path.filter(p => p !== 'dark').join('.');
-              darkTokensMap.set(key, token);
-            } else {
-              otherTokens.push(token);
-            }
-          });
-
-          let markdown = `| CSS Variable | Value |\n`;
-          markdown += `| :--- | :--- |\n`;
-
-          otherTokens.forEach(token => {
-            markdown += `| \`--${getCssName(token)}\` | \`${token.value}\` |\n`;
-          });
-
-          lightTokens.forEach(lightToken => {
-            const corePath = lightToken.path.filter(p => p !== 'light' && p !== 'semantic');
-            const coreName = corePath.join('-');
-            const lightName = getCssName(lightToken);
-            
-            const lookupKey = lightToken.path.filter(p => p !== 'light').join('.');
-            const darkToken = darkTokensMap.get(lookupKey);
-
-            if (darkToken) {
-              const darkName = getCssName(darkToken);
-              const compositeValue = `light-dark(var(--${lightName}), var(--${darkName}))`;
-              markdown += `| \`--${lightName}\` | \`${lightToken.value}\` |\n`;
-              markdown += `| \`--${darkName}\` | \`${darkToken.value}\` |\n`;
-              markdown += `| \`--${coreName}\` | \`${compositeValue}\` |\n`;
-            } else {
-              markdown += `| \`--${lightName}\` | \`${lightToken.value}\` |\n`;
-              markdown += `| \`--${coreName}\` | \`var(--${lightName})\` |\n`;
-            }
-          });
-
-          return markdown;
-        }
-
-        // SCSS and JS formats (Standard Table)
-        const namingFn = format === 'scss' ? getScssName : getJsName;
-        const prefix = format === 'scss' ? '$' : '';
-        
-        let markdown = `| ${format.toUpperCase()} Name | Value |\n`;
-        markdown += `| :--- | :--- |\n`;
-
-        colorTokens.forEach(token => {
-          markdown += `| \`${prefix}${namingFn(token)}\` | \`${token.value}\` |\n`;
-        });
-
-        return markdown;
+        return generateCatalog(dictionary.allTokens, file.options?.format);
       }
     }
   },
@@ -192,17 +133,17 @@ module.exports = {
       buildPath: 'dist/catalogs/',
       files: [
         {
-          destination: 'color-css.md',
+          destination: 'all-tokens-css.md',
           format: 'markdown/catalog',
           options: { format: 'css' }
         },
         {
-          destination: 'color-scss.md',
+          destination: 'all-tokens-scss.md',
           format: 'markdown/catalog',
           options: { format: 'scss' }
         },
         {
-          destination: 'color-js.md',
+          destination: 'all-tokens-js.md',
           format: 'markdown/catalog',
           options: { format: 'js' }
         }
