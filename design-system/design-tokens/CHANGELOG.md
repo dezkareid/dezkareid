@@ -1,3 +1,10 @@
+# [@dezkareid/design-tokens-v1.1.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.1.0...@dezkareid/design-tokens-v1.1.1) (2026-02-26)
+
+
+### Bug Fixes
+
+* **design-tokens:** add semantic tokens to catalog ([ba3e531](https://github.com/dezkareid/dezkareid/commit/ba3e53117a90fe9fc36cb9c570845debec7905e0))
+
 # [@dezkareid/design-tokens-v1.1.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.0.0...@dezkareid/design-tokens-v1.1.0) (2026-02-26)
 
 
