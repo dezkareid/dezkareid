@@ -1,3 +1,11 @@
+# [@dezkareid/design-tokens-v1.1.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.0.0...@dezkareid/design-tokens-v1.1.0) (2026-02-26)
+
+
+### Features
+
+* **desig-tokens:** add command to export all tokens catalog for ai agents ([459b216](https://github.com/dezkareid/dezkareid/commit/459b21602ec8043e08b2a1748512109475cea85b))
+* **desig-tokens:** add command to export colors catalog ([5aebe02](https://github.com/dezkareid/dezkareid/commit/5aebe0258f1e78257a9445e30f766485c3701065))
+
 # @dezkareid/design-tokens-v1.0.0 (2026-02-05)
 
 
