@@ -1,0 +1,22 @@
+{
+  "name": "@dezkareid/components",
+  "version": "0.0.0",
+  "description": "A package to export UI components in formats like React, Astro, Vue, etc.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dezkareid/dezkareid"
+  },
+  "author": "Joel Humberto Gomez Paredes <elmaildeldezkareid@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dezkareid/dezkareid/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "setup",
+    "package",
+    "npm"
+  ]
+}
