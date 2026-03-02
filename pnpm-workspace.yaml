@@ -4,3 +4,4 @@ packages:
   - "linters/*"
   - "design-system/*"
   - "apps/*"
+  - "ui-tools/*"
