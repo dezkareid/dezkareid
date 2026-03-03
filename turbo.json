@@ -45,6 +45,11 @@
         "src/**/*.jsx",
         "src/**/*.js"
       ]
+    },
+    "storybook": {
+      "cache": false,
+      "persistent": true,
+      "outputs": []
     }
   }
 }

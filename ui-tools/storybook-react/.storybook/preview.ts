@@ -1,11 +1,13 @@
 import type { Preview } from '@storybook/react-vite'
+import '@dezkareid/design-tokens/dist/css/variables.css'
+import '@dezkareid/components/css'
 
 const preview: Preview = {
   parameters: {
     controls: {
       matchers: {
-       color: /(background|color)$/i,
-       date: /Date$/i,
+        color: /(background|color)$/i,
+        date: /Date$/i,
       },
     },
 

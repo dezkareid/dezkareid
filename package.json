@@ -8,7 +8,8 @@
     "build": "turbo run build",
     "lint": "turbo run lint --affected",
     "dev": "turbo run dev",
-    "test": "turbo run test --affected"
+    "test": "turbo run test --affected",
+    "storybook": "turbo run storybook --filter=storybook-react"
   },
   "repository": {
     "type": "git",
