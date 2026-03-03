@@ -7,10 +7,7 @@ type Props = TagProps & HTMLAttributes<HTMLSpanElement>;
 
 export function Tag({ variant = 'default', children, className, ...rest }: Props) {
   return (
-    <span
-      className={cx(styles.tag, styles[`tag--${variant}`], className)}
-      {...rest}
-    >
+    <span className={cx(styles.tag, styles[`tag--${variant}`], className)} {...rest}>
       {children}
     </span>
   );

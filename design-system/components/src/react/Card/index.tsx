@@ -7,10 +7,7 @@ type Props = CardProps & HTMLAttributes<HTMLDivElement>;
 
 export function Card({ elevation = 'raised', children, className, ...rest }: Props) {
   return (
-    <div
-      className={cx(styles.card, styles[`card--${elevation}`], className)}
-      {...rest}
-    >
+    <div className={cx(styles.card, styles[`card--${elevation}`], className)} {...rest}>
       {children}
     </div>
   );

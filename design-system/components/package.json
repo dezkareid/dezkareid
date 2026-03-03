@@ -1,11 +1,27 @@
 {
   "name": "@dezkareid/components",
   "version": "0.0.0",
+  "type": "module",
   "description": "A package to export UI components in formats like React, Astro, Vue, etc.",
   "exports": {
-    "./react": "./src/react/index.ts",
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react.js",
+      "default": "./dist/react.js"
+    },
     "./astro": "./src/astro/index.ts",
-    "./vue": "./src/vue/index.ts"
+    "./vue": "./src/vue/index.ts",
+    "./css": {
+      "import": "./dist/components.min.css",
+      "default": "./dist/components.min.css"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "react": [
+        "./dist/react/index.d.ts"
+      ]
+    }
   },
   "repository": {
     "type": "git",
@@ -27,6 +43,7 @@
     "vue"
   ],
   "scripts": {
+    "build": "rollup -c rollup.config.mjs",
     "test": "vitest --run"
   },
   "peerDependencies": {
@@ -51,19 +68,25 @@
   },
   "dependencies": {
     "@dezkareid/design-tokens": "workspace:*",
-    "classnames": "^2.5.1"
+    "classnames": "2.5.1"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "29.0.0",
+    "@rollup/plugin-node-resolve": "16.0.3",
+    "@rollup/plugin-typescript": "12.3.0",
     "@testing-library/jest-dom": "6.9.1",
     "@testing-library/react": "16.3.2",
     "@testing-library/user-event": "14.5.2",
     "@types/classnames": "^2.3.4",
     "@types/react": "19.2.9",
-    "@vitejs/plugin-react": "5.1.2",
+    "@vitejs/plugin-react": "5.1.4",
     "jsdom": "27.4.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "rollup": "4.56.0",
+    "rollup-plugin-postcss": "4.0.2",
     "typescript": "5.9.3",
+    "vite": "5.1.2",
     "vitest": "4.0.18"
   }
 }

@@ -11,9 +11,44 @@ The following paths are the entry points to the different packages:
 - `src/react/`: React components (entry: `src/react/index.ts`)
 - `src/astro/`: Astro components (entry: `src/astro/index.ts`)
 - `src/vue/`: Vue components (entry: `src/vue/index.ts`)
-- `src/css/`: Shared CSS Modules (one file per component)
+- `src/css/`: Shared CSS Modules (one file per component, `src/css/index.ts` imports all for the CSS bundle)
 - `src/shared/js/`: Framework-agnostic JS utilities
 - `src/shared/types/`: Shared TypeScript interfaces for all components
+
+## Package Exports
+
+| Export | Points to | Compiled? |
+|---|---|---|
+| `@dezkareid/components/react` | `dist/react.js` | Yes — pre-compiled ES module via Rollup + `@rollup/plugin-typescript` |
+| `@dezkareid/components/astro` | `src/astro/index.ts` | No — compiled by the consuming Astro app |
+| `@dezkareid/components/vue` | `src/vue/index.ts` | No — compiled by the consuming Vite/Vue app |
+| `@dezkareid/components/css` | `dist/components.min.css` | Yes — CSS Modules processed and extracted via `rollup-plugin-postcss` |
+
+### Why Astro and Vue are not pre-compiled
+
+- **Astro** `.astro` files require Astro's own compiler — they cannot be pre-compiled to generic JS
+- **Vue** SFCs are best compiled by the consumer's Vite for correct SSR and template optimisation
+
+## Build
+
+The build uses **Rollup** (`rollup.config.mjs`) — not Vite — because `rollup-plugin-postcss` handles CSS Modules extraction correctly in Rollup without conflicts.
+
+The build produces:
+- `dist/react.js` — ES module barrel entry
+- `dist/react/**/*.js` — individual component chunks (tree-shakeable via `preserveModules`)
+- `dist/react/**/*.d.ts` — TypeScript declarations
+- `dist/components.min.css` — all CSS Modules processed, scoped, and bundled into one file
+
+Key plugins:
+- `rollup-plugin-postcss` with `autoModules: true, extract: 'components.min.css', minimize: true` — processes CSS Modules and extracts to a single file
+- `@rollup/plugin-typescript` with `declaration: true` — compiles TSX and emits `.d.ts` files
+- `@rollup/plugin-node-resolve` — resolves node_modules
+
+### CSS Modules in the build
+
+CSS class names are scoped (hashed) by `postcss-modules`. The JS proxy files (e.g. `dist/css/button.module.css.js`) export the class name map so React components can reference the correct hashed names. The `dist/components.min.css` file contains the matching scoped styles.
+
+Consumers **must** import `@dezkareid/components/css` once at their app root — styles are not auto-injected into JS.
 
 ## Development
 

@@ -8,13 +8,36 @@ A package that exports UI components for React, Astro, and Vue. Built on the `@d
 pnpm add @dezkareid/components @dezkareid/design-tokens
 ```
 
+## Package Exports
+
+| Export | Points to | Notes |
+|---|---|---|
+| `@dezkareid/components/react` | `dist/react.js` | Pre-compiled ES module, includes `.d.ts` types |
+| `@dezkareid/components/astro` | `src/astro/index.ts` | Source — compiled by the consuming Astro app |
+| `@dezkareid/components/vue` | `src/vue/index.ts` | Source — compiled by the consuming Vite/Vue app |
+| `@dezkareid/components/css` | `dist/components.min.css` | Pre-compiled CSS Modules bundle |
+
 ## Setup
 
-Import the design tokens CSS file once at the root of your app (before any component styles):
+### 1. Import design tokens
+
+Import the design tokens CSS once at the root of your app — this provides all the CSS custom properties (`--color-*`, `--spacing-*`, etc.) that components depend on:
 
 ```js
 import '@dezkareid/design-tokens/dist/css/variables.css';
 ```
+
+### 2. Import component styles
+
+Import the compiled component styles once at the root of your app:
+
+```js
+import '@dezkareid/components/css';
+```
+
+> **Note:** The component CSS uses CSS Modules scoped class names. The `@dezkareid/components/css` export is the processed bundle that matches the class names used by the compiled JS — do not import the raw source CSS files from `src/css/`.
+
+Both imports must come before any component usage.
 
 ---
 
@@ -28,7 +51,7 @@ A clickable element for triggering actions.
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
-| `variant` | `'primary' \| 'secondary'` | `'primary'` | Visual style |
+| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'success'` | `'primary'` | Visual style |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size variant |
 | `disabled` | `boolean` | `false` | Disables interaction |
 
@@ -46,7 +69,7 @@ import { Button } from '@dezkareid/components/react';
 
 ```astro
 ---
-import Button from '@dezkareid/components/astro/Button/index.astro';
+import { Button } from '@dezkareid/components/astro';
 ---
 <Button variant="primary" size="md">Click me</Button>
 ```
@@ -90,7 +113,7 @@ import { Tag } from '@dezkareid/components/react';
 
 ```astro
 ---
-import Tag from '@dezkareid/components/astro/Tag/index.astro';
+import { Tag } from '@dezkareid/components/astro';
 ---
 <Tag variant="success">Published</Tag>
 ```
@@ -136,7 +159,7 @@ import { Card } from '@dezkareid/components/react';
 
 ```astro
 ---
-import Card from '@dezkareid/components/astro/Card/index.astro';
+import { Card } from '@dezkareid/components/astro';
 ---
 <Card elevation="raised">
   <h2>Title</h2>
@@ -178,7 +201,7 @@ import { ThemeToggle } from '@dezkareid/components/react';
 
 ```astro
 ---
-import ThemeToggle from '@dezkareid/components/astro/ThemeToggle/index.astro';
+import { ThemeToggle } from '@dezkareid/components/astro';
 ---
 <ThemeToggle />
 ```
