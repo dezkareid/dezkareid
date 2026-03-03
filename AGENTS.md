@@ -26,7 +26,8 @@ The following versions are established across the project's packages and should 
 ### Build & Bundling Tools
 - **Rollup**: `4.56.0`
 - **Webpack**: `5.104.1`
-- **Vite**: `5.1.2` (via `@vitejs/plugin-react`)
+- **Vite**: `7.3.1` (via `@vitejs/plugin-react`)
+- **@vitejs/plugin-react**: `5.1.4`
 - **Style Dictionary**: `5.2.0` (for design tokens)
 - **Turbo**: (used in workspace, see `turbo.json`)
 

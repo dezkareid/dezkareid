@@ -144,7 +144,8 @@ The following versions are established across the project's packages and should 
 
 ### Build & Bundling Tools
 - **Rollup**: `4.56.0`
-- **Vite**: `5.1.2` (via `@vitejs/plugin-react`)
+- **Vite**: `7.3.1` (via `@vitejs/plugin-react`)
+- **@vitejs/plugin-react**: `5.1.4`
 
 ### Testing Frameworks
 - **Vitest**: `4.0.18`
