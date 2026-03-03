@@ -2,6 +2,19 @@
 description: "Create a technical implementation plan from a specification"
 ---
 
+### Resolving the Feature Name
+
+Use the following logic to determine `<feature-name>`:
+
+1. If arguments were provided, derive the feature name from them:
+   - If the argument looks like a branch name (no spaces, kebab-case or slash-separated), use the last segment (after the last `/`, or the full value if no `/` is present).
+   - Otherwise treat it as a human-readable description and convert it to a feature name following the constraints in the Feature Name Constraints section.
+2. If **no arguments were provided**:
+   - List all folders under `<project-path>/working-on/`.
+   - If there is **only one folder**, use it automatically and inform the user.
+   - If there are **multiple folders**, present the list to the user and ask them to pick one.
+   - If there are **no folders**, inform the user that no in-progress features were found and stop.
+
 ## Instructions
 
 1. Check whether `osddt.plan.md` already exists in the working directory:
@@ -11,9 +24,16 @@ description: "Create a technical implementation plan from a specification"
      - **Update** — read the existing file and apply targeted changes based on $ARGUMENTS
      - **Do nothing** — stop here and leave the file as-is
 2. Read `osddt.spec.md` from the working directory
-3. Break down the implementation into logical phases and steps
-4. Identify technical decisions, dependencies, and risks
-5. Write the plan to `osddt.plan.md` in the working directory
+3. Check for unanswered open questions in the spec:
+   - Count the items in the **Open Questions** section that have no corresponding entry in the **Decisions** section.
+   - If there are any unanswered questions, inform the user: "This spec has X unanswered open question(s)."
+   - Ask the user whether to:
+     - **Clarify first** — stop here and suggest running `/osddt.clarify <feature-name>` instead
+     - **Proceed anyway** — continue with plan generation using the spec as-is
+   - If there are no unanswered questions, proceed silently.
+4. Break down the implementation into logical phases and steps
+5. Identify technical decisions, dependencies, and risks
+6. Write the plan to `osddt.plan.md` in the working directory
 
 ## Plan Format
 
@@ -33,5 +53,5 @@ $ARGUMENTS
 Run the following command to generate the task list:
 
 ```
-/osddt.tasks $ARGUMENTS
+/osddt.tasks
 ```
