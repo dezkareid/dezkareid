@@ -4,6 +4,7 @@
       "light": {
         "primary": { "value": "{color.base.blue.500}" },
         "success": { "value": "{color.base.green.500}" },
+        "danger": { "value": "{color.base.red.500}" },
         "background": {
           "primary": { "value": "{color.base.white}" },
           "secondary": { "value": "{color.base.gray.100}" }
@@ -16,6 +17,7 @@
       "dark": {
         "primary": { "value": "{color.base.blue.100}" },
         "success": { "value": "{color.base.green.900}" },
+        "danger": { "value": "{color.base.red.900}" },
         "background": {
           "primary": { "value": "{color.base.gray.900}" },
           "secondary": { "value": "{color.base.gray.500}" }
