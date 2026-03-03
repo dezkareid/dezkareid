@@ -2,6 +2,11 @@
   "name": "@dezkareid/components",
   "version": "0.0.0",
   "description": "A package to export UI components in formats like React, Astro, Vue, etc.",
+  "exports": {
+    "./react": "./src/react/index.ts",
+    "./astro": "./src/astro/index.ts",
+    "./vue": "./src/vue/index.ts"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/dezkareid/dezkareid"
@@ -15,8 +20,50 @@
     "access": "public"
   },
   "keywords": [
-    "setup",
-    "package",
-    "npm"
-  ]
+    "design-system",
+    "components",
+    "react",
+    "astro",
+    "vue"
+  ],
+  "scripts": {
+    "test": "vitest --run"
+  },
+  "peerDependencies": {
+    "astro": ">=4.0.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "vue": "^3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "astro": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@dezkareid/design-tokens": "workspace:*",
+    "classnames": "^2.5.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/react": "16.3.2",
+    "@testing-library/user-event": "14.5.2",
+    "@types/classnames": "^2.3.4",
+    "@types/react": "19.2.9",
+    "@vitejs/plugin-react": "5.1.2",
+    "jsdom": "27.4.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "typescript": "5.9.3",
+    "vitest": "4.0.18"
+  }
 }

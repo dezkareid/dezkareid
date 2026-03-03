@@ -1,0 +1,63 @@
+---
+import styles from '../../css/theme-toggle.module.css';
+
+type Props = {
+  class?: string;
+};
+
+const { class: className } = Astro.props;
+
+const classes = [styles['theme-toggle'], className ?? ''].filter(Boolean).join(' ');
+---
+
+<!--
+  The inline script runs before first paint to apply the stored theme,
+  preventing a flash of unstyled/wrong-theme content (FOUC).
+-->
+<script is:inline>
+  (function () {
+    var stored = localStorage.getItem('color-scheme');
+    var theme =
+      stored === 'light' || stored === 'dark'
+        ? stored
+        : window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light';
+    document.documentElement.setAttribute('color-scheme', theme);
+  })();
+</script>
+
+<button
+  type="button"
+  class={classes}
+  data-theme-toggle
+  aria-label="Toggle colour scheme"
+>
+  <span data-theme-label>Light</span>
+</button>
+
+<script>
+  import { getInitialTheme, applyTheme, persistTheme } from '../../shared/js/theme';
+
+  const btn = document.querySelector('[data-theme-toggle]') as HTMLButtonElement | null;
+  const label = document.querySelector('[data-theme-label]') as HTMLElement | null;
+
+  if (btn && label) {
+    let current = getInitialTheme();
+
+    function update(theme: 'light' | 'dark') {
+      label!.textContent = theme === 'dark' ? 'Dark' : 'Light';
+      btn!.setAttribute('aria-pressed', String(theme === 'dark'));
+      btn!.classList.toggle('theme-toggle--dark', theme === 'dark');
+    }
+
+    update(current);
+
+    btn.addEventListener('click', () => {
+      current = current === 'light' ? 'dark' : 'light';
+      applyTheme(current);
+      persistTheme(current);
+      update(current);
+    });
+  }
+</script>
