@@ -5,17 +5,22 @@ import type { CollectionEntry } from 'astro:content';
 
 interface Props {
 	project: CollectionEntry<'projects'>;
+	index?: number;
 }
 
-const { project } = Astro.props;
+const { project, index = 0 } = Astro.props;
 const { title, description, techStack, githubUrl, liveUrl } = project.data;
+
+const num = String(index + 1).padStart(2, "0");
 ---
 
 <Card class="project-card">
 	<div class="project-content">
+		<span class="project-number" aria-hidden="true">{num}</span>
+
 		<h3 class="project-title">{title}</h3>
 		<p class="project-description">{description}</p>
-		
+
 		<div class="project-tech-stack">
 			{techStack.map((tech) => (
 				<span class="tech-tag">{tech}</span>
@@ -23,24 +28,72 @@ const { title, description, techStack, githubUrl, liveUrl } = project.data;
 		</div>
 
 		<div class="project-links">
-			{githubUrl && <Button href={githubUrl} variant="outline" size="small" target="_blank" rel="noopener noreferrer">GitHub</Button>}
-			{liveUrl && <Button href={liveUrl} variant="primary" size="small" target="_blank" rel="noopener noreferrer">Live Demo</Button>}
+			{githubUrl && (
+				<Button href={githubUrl} variant="outline" size="small" target="_blank" rel="noopener noreferrer">
+					GitHub
+				</Button>
+			)}
+			{liveUrl && (
+				<Button href={liveUrl} variant="primary" size="small" target="_blank" rel="noopener noreferrer">
+					Live Demo
+				</Button>
+			)}
 			<Button href={`/projects/${project.slug}`} variant="ghost" size="small">Read More</Button>
 		</div>
 	</div>
 </Card>
 
 <style>
+	/* ====================================================
+	   DESIGN TOKEN ANNOTATIONS
+	   - --color-text-number: large muted counter color
+	     Currently: color-mix(in srgb, primary 12%, transparent)
+	   - --font-size-display-number: 5rem for decorative counters
+	   ==================================================== */
+
 	.project-card {
 		height: 100%;
 		display: flex;
 		flex-direction: column;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.project-content {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		position: relative;
+		z-index: 1;
+	}
+
+	.project-number {
+		/* DS NOTE: --font-size-display-number candidate */
+		font-size: 4.5rem;
+		font-weight: var(--font-weight-bold);
+		font-family: var(--font-family-mono);
+		line-height: 1;
+		/* DS NOTE: --color-text-number candidate */
+		color: color-mix(in srgb, var(--color-primary) 12%, transparent);
+		position: absolute;
+		top: -var(--spacing-8);
+		right: 0;
+		pointer-events: none;
+		user-select: none;
+		transition: color 0.25s ease;
+	}
+
+	.project-card:hover .project-number {
+		color: color-mix(in srgb, var(--color-primary) 20%, transparent);
 	}
 
 	.project-title {
 		font-size: var(--font-size-500);
 		margin-bottom: var(--spacing-12);
-		color: var(--color-primary);
+		margin-top: var(--spacing-32);
+		color: var(--color-text-primary);
+		letter-spacing: -0.01em;
+		line-height: var(--font-line-height-tight);
 	}
 
 	.project-description {
@@ -48,7 +101,7 @@ const { title, description, techStack, githubUrl, liveUrl } = project.data;
 		color: var(--color-base-gray-500);
 		margin-bottom: var(--spacing-24);
 		flex: 1;
-		line-height: var(--font-line-height-normal);
+		line-height: var(--font-line-height-relaxed);
 	}
 
 	.project-tech-stack {
@@ -59,17 +112,21 @@ const { title, description, techStack, githubUrl, liveUrl } = project.data;
 	}
 
 	.tech-tag {
-		background-color: var(--color-background-secondary);
+		background-color: color-mix(in srgb, var(--color-primary) 8%, var(--color-background-secondary));
+		border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
 		padding: var(--spacing-4) var(--spacing-8);
-		border-radius: var(--spacing-4);
+		/* DS NOTE: --border-radius-pill: 9999px candidate */
+		border-radius: 9999px;
 		font-size: var(--font-size-100);
 		font-weight: var(--font-weight-medium);
-		color: var(--color-base-gray-900);
+		color: var(--color-primary);
+		font-family: var(--font-family-mono);
+		letter-spacing: 0.02em;
 	}
 
 	.project-links {
 		display: flex;
-		gap: var(--spacing-12);
+		gap: var(--spacing-8);
 		flex-wrap: wrap;
 	}
 </style>

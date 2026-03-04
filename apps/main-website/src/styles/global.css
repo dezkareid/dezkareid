@@ -1,5 +1,15 @@
 @import "@dezkareid/design-tokens/dist/css/variables.css";
 
+/* ====================================================
+   DESIGN TOKEN ANNOTATIONS
+   The following values used here are candidates for the design system:
+   - --letter-spacing-tight: -0.02em  (headings)
+   - --letter-spacing-wide: 0.08em   (labels, eyebrows)
+   - --border-radius-pill: 9999px
+   - --animation-fade-up: keyframe + delay pattern for staggered entry
+   - --scroll-reveal class as a utility token/pattern
+   ==================================================== */
+
 :root {
   font-family: var(--font-family-base);
   font-size: var(--font-size-300);
@@ -20,6 +30,8 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0;
   font-weight: var(--font-weight-bold);
   line-height: var(--font-line-height-tight);
+  /* DS NOTE: --letter-spacing-tight: -0.02em candidate */
+  letter-spacing: -0.02em;
 }
 
 a {
@@ -33,4 +45,33 @@ a:hover {
 
 * {
   box-sizing: border-box;
+}
+
+/* Scroll-reveal utility — elements start invisible and animate in when visible */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  /* DS NOTE: --animation-fade-up pattern candidate */
+  transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger delays for child elements inside .reveal-group */
+.reveal-group > *:nth-child(1) { transition-delay: 0ms; }
+.reveal-group > *:nth-child(2) { transition-delay: 80ms; }
+.reveal-group > *:nth-child(3) { transition-delay: 160ms; }
+.reveal-group > *:nth-child(4) { transition-delay: 240ms; }
+
+/* Reduced motion: honour user preference */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }

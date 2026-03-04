@@ -2,7 +2,6 @@
 import Layout from '../layouts/Layout.astro';
 import Section from '../components/Section.astro';
 import SkillsList from '../components/SkillsList.astro';
-
 ---
 
 <Layout title="About Me | Frontend Developer Portfolio">
@@ -12,14 +11,17 @@ import SkillsList from '../components/SkillsList.astro';
 			<div class="about-content">
 				<div class="about-text">
 					<p>Hello! I'm a passionate Frontend Developer with a focus on building high-performance, accessible, and user-centric web applications. With years of experience in the React ecosystem, I enjoy solving complex problems and creating seamless digital experiences.</p>
-					
+
 					<p>My approach to development is grounded in clean code, robust architecture, and a deep understanding of web standards. I believe that a great website is not just about how it looks, but how it feels and performs for every user.</p>
 
 					<p>When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or sharing my knowledge with the developer community.</p>
 				</div>
-				<div class="about-image-placeholder">
+				<div class="about-image-placeholder" aria-hidden="true">
 					<!-- Replace with real image in the future -->
-					<div class="placeholder-circle">JD</div>
+					<div class="placeholder-circle">
+						<span class="placeholder-initials">JD</span>
+						<div class="placeholder-ring" aria-hidden="true"></div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -27,18 +29,24 @@ import SkillsList from '../components/SkillsList.astro';
 
 	<Section class="bg-alt">
 		<div class="container">
-			<h2 class="section-title">My Technical Expertise</h2>
+			<header class="section-header">
+				<span class="section-label">Tech Stack</span>
+				<h2 class="section-title">My Technical Expertise</h2>
+			</header>
 			<SkillsList />
 		</div>
 	</Section>
 
 	<Section>
 		<div class="container text-center">
-			<h2 class="section-title">Let's Connect</h2>
-			<p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions.</p>
+			<header class="section-header section-header--centered">
+				<span class="section-label">Contact</span>
+				<h2 class="section-title">Let's Connect</h2>
+			</header>
+			<p class="connect-text">I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions.</p>
 			<div class="contact-links">
-				<a href="mailto:example@example.com" class="contact-link">Email Me</a>
-				<a href="https://linkedin.com" class="contact-link">LinkedIn</a>
+				<a href="mailto:example@example.com" class="contact-link">Email Me →</a>
+				<a href="https://linkedin.com" class="contact-link">LinkedIn →</a>
 			</div>
 		</div>
 	</Section>
@@ -48,12 +56,13 @@ import SkillsList from '../components/SkillsList.astro';
 	.container {
 		max-width: 1200px;
 		margin: 0 auto;
+		padding-inline: var(--spacing-24);
 	}
 
 	.page-title {
 		font-size: var(--font-size-800);
 		margin-bottom: var(--spacing-48);
-		text-align: center;
+		letter-spacing: -0.03em;
 	}
 
 	.about-content {
@@ -70,45 +79,113 @@ import SkillsList from '../components/SkillsList.astro';
 		color: var(--color-base-gray-500);
 	}
 
+	.about-text p:last-child {
+		margin-bottom: 0;
+	}
+
+	/* Avatar placeholder */
 	.placeholder-circle {
+		position: relative;
 		width: 250px;
 		height: 250px;
-		background-color: var(--color-primary);
-		color: var(--color-text-inverse);
-		border-radius: 50%;
+		margin: 0 auto;
+	}
+
+	.placeholder-initials {
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(
+			135deg,
+			var(--color-primary),
+			color-mix(in srgb, var(--color-primary) 70%, var(--color-background-secondary))
+		);
+		color: var(--color-text-inverse);
+		border-radius: 50%;
 		font-size: var(--font-size-900);
 		font-weight: var(--font-weight-bold);
-		margin: 0 auto;
+		font-family: var(--font-family-mono);
+		letter-spacing: -0.03em;
+	}
+
+	/* DS NOTE: decorative animated ring — --animation-spin-slow: 8s linear infinite candidate */
+	.placeholder-ring {
+		position: absolute;
+		inset: -8px;
+		border-radius: 50%;
+		border: 2px dashed color-mix(in srgb, var(--color-primary) 30%, transparent);
+		animation: spin-slow 12s linear infinite;
+	}
+
+	@keyframes spin-slow {
+		from { transform: rotate(0deg); }
+		to   { transform: rotate(360deg); }
+	}
+
+	/* Section headers */
+	.section-header {
+		margin-bottom: var(--spacing-48);
+	}
+
+	.section-header--centered {
+		text-align: center;
+	}
+
+	.section-label {
+		display: block;
+		font-size: var(--font-size-100);
+		font-family: var(--font-family-mono);
+		font-weight: var(--font-weight-medium);
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: var(--color-primary);
+		margin-bottom: var(--spacing-8);
+	}
+
+	.section-title {
+		font-size: var(--font-size-700);
+		color: var(--color-text-primary);
+		letter-spacing: -0.02em;
 	}
 
 	.bg-alt {
 		background-color: var(--color-background-secondary);
 	}
 
-	.section-title {
-		font-size: var(--font-size-700);
-		margin-bottom: var(--spacing-48);
+	.text-center {
 		text-align: center;
 	}
 
-	.text-center {
-		text-align: center;
+	.connect-text {
+		font-size: var(--font-size-400);
+		color: var(--color-base-gray-500);
+		line-height: var(--font-line-height-relaxed);
+		max-width: 520px;
+		margin: 0 auto var(--spacing-48);
 	}
 
 	.contact-links {
 		display: flex;
 		gap: var(--spacing-24);
 		justify-content: center;
-		margin-top: var(--spacing-32);
+		flex-wrap: wrap;
 	}
 
 	.contact-link {
 		color: var(--color-primary);
 		font-weight: var(--font-weight-bold);
 		font-size: var(--font-size-400);
+		text-decoration: none;
+		border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 40%, transparent);
+		padding-bottom: 2px;
+		transition: border-color 0.2s ease;
+	}
+
+	.contact-link:hover {
+		text-decoration: none;
+		border-color: var(--color-primary);
 	}
 
 	@media (max-width: 800px) {
@@ -116,9 +193,13 @@ import SkillsList from '../components/SkillsList.astro';
 			grid-template-columns: 1fr;
 			text-align: center;
 		}
-		
+
 		.about-image-placeholder {
 			order: -1;
+		}
+
+		.about-text p {
+			text-align: left;
 		}
 	}
 </style>

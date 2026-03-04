@@ -1,6 +1,4 @@
 ---
-import Card from "./Card.astro";
-
 interface Skill {
 	name: string;
 	category: "frontend" | "backend" | "tooling" | "other";
@@ -25,45 +23,130 @@ const defaultSkills: Skill[] = [
 ];
 
 const { skills = defaultSkills } = Astro.props;
+
+const categories = [
+	{ key: "frontend", label: "Frontend" },
+	{ key: "backend", label: "Backend" },
+	{ key: "tooling", label: "Tooling" },
+	{ key: "other", label: "Other" },
+] as const;
+
+const grouped = categories
+	.map((cat) => ({
+		...cat,
+		skills: skills.filter((s) => s.category === cat.key),
+	}))
+	.filter((g) => g.skills.length > 0);
 ---
 
-<div class="skills-grid">
-	{skills.map((skill) => (
-		<Card class={`skill-card category-${skill.category}`}>
-			<span class="skill-name">{skill.name}</span>
-		</Card>
+<div class="skills-wrapper">
+	{grouped.map((group) => (
+		<div class="skill-group">
+			<span class="skill-group-label">{group.label}</span>
+			<div class="skill-pills">
+				{group.skills.map((skill) => (
+					<span class={`skill-pill skill-pill--${group.key}`}>
+						{skill.name}
+					</span>
+				))}
+			</div>
+		</div>
 	))}
 </div>
 
 <style>
-	.skills-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+	/* ====================================================
+	   DESIGN TOKEN ANNOTATIONS
+	   - --color-skill-frontend: color-mix(primary, bg) for pill bg
+	   - --color-skill-backend: color-mix(success, bg) for pill bg
+	   - --color-skill-tooling: color-mix(gray, bg) for pill bg
+	   - --border-radius-pill: 9999px for pill/tag shapes
+	   ==================================================== */
+
+	.skills-wrapper {
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacing-24);
+	}
+
+	.skill-group {
+		display: flex;
+		align-items: flex-start;
 		gap: var(--spacing-16);
 	}
 
-	.skill-card {
-		padding: var(--spacing-12) var(--spacing-16);
-		text-align: center;
-		display: flex;
-		align-items: center;
-		justify-content: center;
+	.skill-group-label {
+		flex-shrink: 0;
+		width: 80px;
+		font-size: var(--font-size-100);
+		font-family: var(--font-family-mono);
 		font-weight: var(--font-weight-medium);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--color-base-gray-500);
+		padding-top: calc(var(--spacing-4) + 2px);
 	}
 
-	.skill-name {
-		font-size: var(--font-size-300);
+	.skill-pills {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--spacing-8);
 	}
 
-	.category-frontend {
-		border-left: 4px solid var(--color-primary);
+	.skill-pill {
+		display: inline-flex;
+		align-items: center;
+		padding: var(--spacing-4) var(--spacing-12);
+		/* DS NOTE: --border-radius-pill candidate */
+		border-radius: 9999px;
+		font-size: var(--font-size-200);
+		font-weight: var(--font-weight-medium);
+		font-family: var(--font-family-mono);
+		letter-spacing: 0.02em;
+		border: 1px solid transparent;
+		transition: transform 0.15s ease, box-shadow 0.15s ease;
 	}
 
-	.category-backend {
-		border-left: 4px solid var(--color-base-green-500);
+	.skill-pill:hover {
+		transform: translateY(-1px);
+		box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 	}
 
-	.category-tooling {
-		border-left: 4px solid var(--color-base-gray-500);
+	/* DS NOTE: --color-skill-frontend candidate */
+	.skill-pill--frontend {
+		background: color-mix(in srgb, var(--color-primary) 10%, var(--color-background-secondary));
+		border-color: color-mix(in srgb, var(--color-primary) 25%, transparent);
+		color: var(--color-primary);
+	}
+
+	/* DS NOTE: --color-skill-backend candidate */
+	.skill-pill--backend {
+		background: color-mix(in srgb, var(--color-success) 10%, var(--color-background-secondary));
+		border-color: color-mix(in srgb, var(--color-success) 25%, transparent);
+		color: var(--color-base-green-500);
+	}
+
+	/* DS NOTE: --color-skill-tooling candidate */
+	.skill-pill--tooling {
+		background: color-mix(in srgb, var(--color-base-gray-500) 10%, var(--color-background-secondary));
+		border-color: color-mix(in srgb, var(--color-base-gray-500) 25%, transparent);
+		color: var(--color-base-gray-500);
+	}
+
+	.skill-pill--other {
+		background: var(--color-background-secondary);
+		border-color: color-mix(in srgb, var(--color-text-primary) 12%, transparent);
+		color: var(--color-text-primary);
+	}
+
+	@media (max-width: 600px) {
+		.skill-group {
+			flex-direction: column;
+			gap: var(--spacing-8);
+		}
+
+		.skill-group-label {
+			width: auto;
+		}
 	}
 </style>

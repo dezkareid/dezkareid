@@ -11,6 +11,6 @@
   "dependencies": {
     "@dezkareid/components": "workspace:*",
     "@dezkareid/design-tokens": "workspace:*",
-    "astro": "5.17.1"
+    "astro": "5.18.0"
   }
 }
