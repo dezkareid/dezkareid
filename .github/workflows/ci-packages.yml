@@ -70,6 +70,7 @@ jobs:
       matrix:
         package: ${{ fromJson(needs.check-changes.outputs.packages) }}
       fail-fast: false
+      max-parallel: 1
     env:
       PACKAGE_NAME: ${{ matrix.package }}
       NPM_CONFIG_PROVENANCE: true
