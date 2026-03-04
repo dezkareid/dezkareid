@@ -1,3 +1,10 @@
+# [@dezkareid/design-tokens-v1.2.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.1.1...@dezkareid/design-tokens-v1.2.0) (2026-03-04)
+
+
+### Features
+
+* **design-tokens:** add semantic color for danger ([0951ea9](https://github.com/dezkareid/dezkareid/commit/0951ea92e071f297d5e9a36bfeb18a976a66eb5c))
+
 # [@dezkareid/design-tokens-v1.1.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.1.0...@dezkareid/design-tokens-v1.1.1) (2026-02-26)
 
 
