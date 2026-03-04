@@ -2,13 +2,25 @@
 description: "Generate actionable tasks from an implementation plan"
 ---
 
+### Resolving the Feature Name
+
+Use the following logic to determine `<feature-name>`:
+
+1. If arguments were provided, derive the feature name from them:
+   - If the argument looks like a branch name (no spaces, kebab-case or slash-separated), use the last segment (after the last `/`, or the full value if no `/` is present).
+   - Otherwise treat it as a human-readable description and convert it to a feature name following the constraints in the Feature Name Constraints section.
+2. If **no arguments were provided**:
+   - List all folders under `<project-path>/working-on/`.
+   - If there is **only one folder**, use it automatically and inform the user.
+   - If there are **multiple folders**, present the list to the user and ask them to pick one.
+   - If there are **no folders**, inform the user that no in-progress features were found and stop.
+
 ## Instructions
 
 1. Check whether `osddt.tasks.md` already exists in the working directory:
    - If it **does not exist**, proceed to generate it.
    - If it **already exists**, ask the user whether to:
      - **Regenerate** — discard the existing file and create a fresh task list from scratch
-     - **Update** — read the existing file and apply targeted changes based on $ARGUMENTS
      - **Do nothing** — stop here and leave the file as-is
 2. Read `osddt.plan.md` from the working directory
 3. Break each phase into discrete, executable tasks
@@ -23,14 +35,10 @@ The task list should include:
 - **Dependencies**: Note which tasks must complete before others
 - **Definition of Done**: Clear completion criteria per phase
 
-## Arguments
-
-$ARGUMENTS
-
 ## Next Step
 
 Run the following command to start implementing tasks:
 
 ```
-/osddt.implement $ARGUMENTS
+/osddt.implement
 ```

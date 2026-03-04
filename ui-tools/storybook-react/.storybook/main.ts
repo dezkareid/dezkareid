@@ -1,7 +1,5 @@
 import type { StorybookConfig } from '@storybook/react-vite';
-
 import { dirname } from "path"
-
 import { fileURLToPath } from "url"
 
 /**
@@ -23,6 +21,6 @@ const config: StorybookConfig = {
     getAbsolutePath('@storybook/addon-docs'),
     getAbsolutePath('@storybook/addon-onboarding')
   ],
-  "framework": getAbsolutePath('@storybook/react-vite')
+  "framework": getAbsolutePath('@storybook/react-vite'),
 };
 export default config;

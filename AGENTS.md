@@ -2,9 +2,17 @@
 
 This file provides critical context and dependency information for AI agents working on the `dezkareid` monorepo.
 
-### Commit Rules
+## Development
 
-Always use Conventional Commits format for commit messages. If the files changed are from a project include the project in the scope. Example: `feat(main-website): [description]` or `feat(design-system): [description]`
+Always use Context7 MCP when I need external library/API documentation, code generation, setup or configuration steps without me having to explicitly ask.
+
+For interal libraries every project has a `README.md` file that contains the documentation for the library.
+
+### Commiting
+
+Always use Conventional Commits format for commit messages.
+
+If the files changed are from a project include the project in the scope. Example: `feat(main-website): [description]` or `feat(design-tokens): [description]`
 
 Never commit directly to `main` or `master`. If the current branch is one of them, propose creating a new branch before committing.
 
@@ -18,7 +26,8 @@ The following versions are established across the project's packages and should 
 ### Build & Bundling Tools
 - **Rollup**: `4.56.0`
 - **Webpack**: `5.104.1`
-- **Vite**: `5.1.2` (via `@vitejs/plugin-react`)
+- **Vite**: `7.3.1` (via `@vitejs/plugin-react`)
+- **@vitejs/plugin-react**: `5.1.4`
 - **Style Dictionary**: `5.2.0` (for design tokens)
 - **Turbo**: (used in workspace, see `turbo.json`)
 
@@ -49,5 +58,10 @@ The following versions are established across the project's packages and should 
 - **Monorepo Management**: Uses `turbo` for task orchestration and `pnpm workspaces`.
 - **Naming Convention**: Packages are scoped under `@dezkareid/` (e.g., `@dezkareid/react-hooks`).
 
-## Relevant Agent Files
-- `@/packages/ai-context-sync/AGENTS.md`: Specific instructions for the AI context synchronization utility.
+## Documentation
+
+The README.md file is the source to use the package. The AGENTS.md is the source to understand the package for ai-assisted tools.
+
+When you need to modify a package always look the `AGENTS.md` file for that package to understand the package for ai-assisted tools.
+
+When a package is created or modified, consider update those files with the new information.

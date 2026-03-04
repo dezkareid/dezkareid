@@ -1,0 +1,33 @@
+/* =============================================================================
+   TAG — BEM + OOCSS
+   Structure classes: layout, sizing, spacing
+   Skin classes: colour, border, typography
+   ============================================================================= */
+
+/* --- Structure: block --- */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--spacing-4);
+  padding: var(--spacing-4) var(--spacing-8);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-100);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--font-line-height-none);
+}
+
+/* --- Skin: variant modifiers --- */
+.tag--default {
+  background-color: var(--color-background-secondary);
+  color: var(--color-text-primary);
+}
+
+.tag--success {
+  background-color: var(--color-success);
+  color: var(--color-text-inverse);
+}
+
+.tag--danger {
+  background-color: var(--color-danger);
+  color: var(--color-text-inverse);
+}

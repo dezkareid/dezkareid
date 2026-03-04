@@ -1,0 +1,35 @@
+---
+import type { ButtonProps } from '../../shared/types/button';
+import styles from '../../css/button.module.css';
+
+type Props = ButtonProps & {
+  href?: string;
+  class?: string;
+  [key: string]: unknown;
+};
+
+const {
+  variant = 'primary',
+  size = 'md',
+  disabled = false,
+  href,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+
+const classes = [
+  styles.button,
+  styles[`button--${variant}`],
+  styles[`button--${size}`],
+  disabled ? styles['button--disabled'] : '',
+  className ?? '',
+]
+  .filter(Boolean)
+  .join(' ');
+---
+
+<Tag class={classes} href={href} disabled={!href && disabled} {...rest}>
+  <slot />
+</Tag>

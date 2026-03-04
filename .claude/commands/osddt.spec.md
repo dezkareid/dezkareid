@@ -4,24 +4,31 @@ description: "Analyze requirements and write a feature specification"
 
 ## Instructions
 
-1. Check whether `osddt.research.md` exists in the working directory.
-   - If it exists, read it and use its findings (key insights, constraints, open questions, codebase findings) as additional context when writing the specification.
-   - If it does not exist, proceed using only the requirements provided in $ARGUMENTS.
-2. Analyze the requirements provided in $ARGUMENTS
+1. Gather requirements from all available sources — combine them when multiple sources are present:
+   - **Arguments** ($ARGUMENTS): use as the primary description of the feature, if provided.
+   - **Conversation context**: consider any additional details, clarifications, or constraints discussed in the current session that are not captured in $ARGUMENTS.
+   - **Research file**: if `osddt.research.md` exists in the working directory, read it and incorporate its findings (key insights, constraints, open questions, codebase findings).
+2. Analyze the combined requirements
 3. Identify the core problem being solved
-4. Define the scope, constraints, and acceptance criteria
+4. Define the scope, user-facing constraints, and acceptance criteria
 5. Write the specification to `osddt.spec.md` in the working directory
+6. After writing the spec, check whether the **Open Questions** section contains any items:
+   - If it does, inform the user: "I have some open questions — can we clarify these? You can answer them now, or run `/osddt.clarify` to go through them one by one."
+   - If it does not (or the section is absent), proceed to the Next Step without mentioning clarification.
 
 ## Specification Format
 
-The spec should include:
-- **Overview**: What and why
-- **Requirements**: Functional and non-functional
-- **Scope**: What is in and out of scope
-- **Acceptance Criteria**: Clear, testable criteria
-- **Open Questions**: Any ambiguities to resolve
+The spec should describe **what** the feature does and **why**, from a product and user perspective. Do **not** include implementation details, technology choices, or technical architecture — those belong in the plan.
 
-> If `osddt.research.md` was found, add a **Research Summary** section that briefly references the key insights and constraints it identified.
+The spec should include:
+- **Overview**: What the feature is and why it is needed
+- **Requirements**: Functional requirements only — what the system must do, expressed as user-observable behaviours
+- **Scope**: What is in and out of scope, described in product terms
+- **Acceptance Criteria**: Clear, testable criteria written from a user or business perspective
+- **Open Questions**: Ambiguities about desired behaviour or product decisions to resolve
+
+> If `osddt.research.md` was found, add a **Research Summary** section that briefly references the key insights and user-facing constraints it identified.
+> If additional context was gathered from the conversation session, add a **Session Context** section summarising any extra details, decisions, or constraints discussed beyond what was passed as arguments.
 
 ## Arguments
 
@@ -32,5 +39,5 @@ $ARGUMENTS
 Run the following command to create the implementation plan:
 
 ```
-/osddt.plan $ARGUMENTS
+/osddt.plan <tech stack and key technical decisions, e.g. "use Node.js with SQLite, REST API, no auth">
 ```
