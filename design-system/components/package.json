@@ -3,6 +3,11 @@
   "version": "0.0.0",
   "type": "module",
   "description": "A package to export UI components in formats like React, Astro, Vue, etc.",
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
   "exports": {
     "./react": {
       "types": "./dist/react/index.d.ts",
