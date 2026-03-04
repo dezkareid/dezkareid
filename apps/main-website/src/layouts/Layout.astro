@@ -7,10 +7,19 @@ interface Props {
 	description?: string;
 }
 
-const { 
-	title = "Frontend Developer Portfolio", 
-	description = "A professional portfolio showcasing frontend engineering skills, projects, and services." 
+const {
+	title = "Frontend Developer Portfolio",
+	description = "A professional portfolio showcasing frontend engineering skills, projects, and services."
 } = Astro.props;
+
+const currentPath = Astro.url.pathname;
+
+const navLinks = [
+	{ href: "/", label: "Home" },
+	{ href: "/projects", label: "Projects" },
+	{ href: "/services", label: "Services" },
+	{ href: "/about", label: "About" },
+];
 ---
 
 <!doctype html>
@@ -21,7 +30,7 @@ const {
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		
+
 		<title>{title}</title>
 		<meta name="description" content={description} />
 
@@ -35,9 +44,7 @@ const {
 		<meta property="twitter:title" content={title} />
 		<meta property="twitter:description" content={description} />
 
-		<!-- Theme FOUC guard: apply stored preference before first paint.
-		     Only overrides colorScheme for explicit choices (light/dark).
-		     Absent key = system default; token stylesheet's color-scheme governs. -->
+		<!-- Theme FOUC guard: apply stored preference before first paint. -->
 		<script is:inline>
 			(function () {
 				try {
@@ -50,45 +57,98 @@ const {
 		</script>
 	</head>
 	<body>
-		<header class="site-header">
+		<header class="site-header" id="site-header">
 			<nav class="nav-container">
-				<a href="/" class="logo">JD.DEV</a>
+				<a href="/" class="logo" aria-label="JD.DEV — Home">
+					<span class="logo-text">JD</span><span class="logo-dot">.</span><span class="logo-tld">DEV</span>
+				</a>
+
 				<div class="nav-links">
-					<a href="/">Home</a>
-					<a href="/projects">Projects</a>
-					<a href="/services">Services</a>
-					<a href="/about">About</a>
+					{navLinks.map(({ href, label }) => {
+						const isActive = href === "/" ? currentPath === "/" : currentPath.startsWith(href);
+						return (
+							<a
+								href={href}
+								class:list={["nav-link", { "nav-link--active": isActive }]}
+								aria-current={isActive ? "page" : undefined}
+							>
+								{label}
+							</a>
+						);
+					})}
 				</div>
-				<ThemeToggle />
+
+				<div class="nav-end">
+					<ThemeToggle />
+				</div>
 			</nav>
 		</header>
+
 		<main>
 			<slot />
 		</main>
+
 		<footer class="site-footer">
 			<div class="footer-container">
-				<div class="footer-info">
-					<p>&copy; {new Date().getFullYear()} Frontend Developer. Built with Astro and Design Tokens.</p>
+				<div class="footer-brand">
+					<a href="/" class="footer-logo">JD.DEV</a>
+					<p class="footer-tagline">Building the web, one pixel at a time.</p>
 				</div>
-				<nav class="footer-nav">
-					<a href="/">Home</a>
-					<a href="/projects">Projects</a>
-					<a href="/services">Services</a>
-					<a href="/about">About</a>
+				<nav class="footer-nav" aria-label="Footer navigation">
+					{navLinks.map(({ href, label }) => (
+						<a href={href} class="footer-link">{label}</a>
+					))}
 				</nav>
+				<p class="footer-copy">&copy; {new Date().getFullYear()} Frontend Developer</p>
 			</div>
 		</footer>
 	</body>
 </html>
 
+<script>
+	/* Scroll-aware header: add backdrop blur after 20px scroll */
+	const header = document.getElementById("site-header");
+	if (header) {
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				header.classList.toggle("site-header--scrolled", !entry.isIntersecting);
+			},
+			{ rootMargin: "-20px 0px 0px 0px", threshold: 0 }
+		);
+		const sentinel = document.createElement("div");
+		sentinel.style.cssText = "position:absolute;top:0;left:0;width:1px;height:1px;pointer-events:none;";
+		document.body.prepend(sentinel);
+		observer.observe(sentinel);
+	}
+</script>
+
 <style>
+	/* ====================================================
+	   DESIGN TOKEN ANNOTATIONS
+	   - --color-background-header: semi-transparent surface for nav
+	   - --backdrop-blur-sm: blur(12px) — glassmorphism utility
+	   - --transition-colors: color 0.2s ease — reusable transition
+	   - --font-size-mono-label: 0.7rem (for logo TLD/tag text)
+	   ==================================================== */
+
 	.site-header {
-		padding: var(--spacing-16) var(--spacing-24);
+		padding: var(--spacing-12) var(--spacing-24);
 		background-color: var(--color-background-primary);
-		border-bottom: 1px solid var(--color-base-gray-100);
+		border-bottom: 1px solid color-mix(in srgb, var(--color-text-primary) 8%, transparent);
 		position: sticky;
 		top: 0;
 		z-index: 100;
+		/* DS NOTE: --transition-bg candidate */
+		transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+	}
+
+	.site-header--scrolled {
+		/* DS NOTE: --color-background-header: rgba(bg, 0.85) + blur candidate */
+		background-color: color-mix(in srgb, var(--color-background-primary) 85%, transparent);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		box-shadow: 0 1px 0 color-mix(in srgb, var(--color-text-primary) 8%, transparent),
+		            0 4px 16px color-mix(in srgb, var(--color-text-primary) 6%, transparent);
 	}
 
 	.nav-container {
@@ -97,29 +157,94 @@ const {
 		align-items: center;
 		max-width: 1200px;
 		margin: 0 auto;
-	}
-
-	.logo {
-		font-size: var(--font-size-500);
-		font-weight: var(--font-weight-bold);
-		color: var(--color-primary);
-		text-decoration: none;
-	}
-
-	.nav-links {
-		display: flex;
 		gap: var(--spacing-24);
 	}
 
-	.nav-links a {
-		color: var(--color-text-primary);
-		font-weight: var(--font-weight-medium);
+	/* Logo */
+	.logo {
 		text-decoration: none;
-		transition: color 0.2s ease;
+		display: inline-flex;
+		align-items: baseline;
+		gap: 1px;
+		flex-shrink: 0;
 	}
 
-	.nav-links a:hover {
+	.logo-text {
+		font-size: var(--font-size-500);
+		font-weight: var(--font-weight-bold);
+		color: var(--color-text-primary);
+		letter-spacing: -0.02em;
+		font-family: var(--font-family-mono);
+	}
+
+	.logo-dot {
+		font-size: var(--font-size-500);
+		font-weight: var(--font-weight-bold);
 		color: var(--color-primary);
+	}
+
+	.logo-tld {
+		/* DS NOTE: --font-size-mono-label: 0.7rem candidate */
+		font-size: 0.7rem;
+		font-weight: var(--font-weight-bold);
+		color: var(--color-primary);
+		font-family: var(--font-family-mono);
+		letter-spacing: 0.05em;
+		align-self: flex-end;
+		padding-bottom: 0.15em;
+	}
+
+	/* Nav links */
+	.nav-links {
+		display: flex;
+		gap: var(--spacing-4);
+		align-items: center;
+	}
+
+	.nav-link {
+		position: relative;
+		color: var(--color-base-gray-500);
+		font-size: var(--font-size-300);
+		font-weight: var(--font-weight-medium);
+		text-decoration: none;
+		padding: var(--spacing-8) var(--spacing-12);
+		border-radius: var(--spacing-4);
+		transition: color 0.2s ease, background-color 0.2s ease;
+	}
+
+	.nav-link::after {
+		content: "";
+		position: absolute;
+		bottom: 4px;
+		left: var(--spacing-12);
+		right: var(--spacing-12);
+		height: 2px;
+		background: var(--color-primary);
+		border-radius: 1px;
+		transform: scaleX(0);
+		transform-origin: left;
+		transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.nav-link:hover {
+		color: var(--color-text-primary);
+		background-color: color-mix(in srgb, var(--color-text-primary) 5%, transparent);
+		text-decoration: none;
+	}
+
+	.nav-link:hover::after,
+	.nav-link--active::after {
+		transform: scaleX(1);
+	}
+
+	.nav-link--active {
+		color: var(--color-text-primary);
+	}
+
+	.nav-end {
+		display: flex;
+		align-items: center;
+		flex-shrink: 0;
 	}
 
 	main {
@@ -127,21 +252,43 @@ const {
 		width: 100%;
 	}
 
+	/* Footer */
 	.site-footer {
 		padding: var(--spacing-48) var(--spacing-24);
+		/* DS NOTE: --color-background-footer candidate (slightly darker than secondary) */
 		background-color: var(--color-background-secondary);
-		border-top: 1px solid var(--color-base-gray-100);
+		border-top: 1px solid color-mix(in srgb, var(--color-text-primary) 8%, transparent);
 		margin-top: auto;
 	}
 
 	.footer-container {
 		max-width: 1200px;
 		margin: 0 auto;
-		display: flex;
-		justify-content: space-between;
+		display: grid;
+		grid-template-columns: 1fr auto auto;
 		align-items: center;
-		flex-wrap: wrap;
-		gap: var(--spacing-24);
+		gap: var(--spacing-32);
+	}
+
+	.footer-brand {
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacing-4);
+	}
+
+	.footer-logo {
+		font-size: var(--font-size-400);
+		font-weight: var(--font-weight-bold);
+		color: var(--color-text-primary);
+		font-family: var(--font-family-mono);
+		text-decoration: none;
+		letter-spacing: -0.02em;
+	}
+
+	.footer-tagline {
+		font-size: var(--font-size-200);
+		color: var(--color-base-gray-500);
+		margin: 0;
 	}
 
 	.footer-nav {
@@ -149,20 +296,42 @@ const {
 		gap: var(--spacing-24);
 	}
 
-	.footer-nav a {
+	.footer-link {
 		color: var(--color-base-gray-500);
 		font-size: var(--font-size-200);
 		text-decoration: none;
+		transition: color 0.2s ease;
+		font-weight: var(--font-weight-medium);
 	}
 
-	.footer-nav a:hover {
+	.footer-link:hover {
 		color: var(--color-primary);
 	}
 
-	@media (max-width: 600px) {
+	.footer-copy {
+		font-size: var(--font-size-100);
+		color: var(--color-base-gray-500);
+		margin: 0;
+		white-space: nowrap;
+		font-family: var(--font-family-mono);
+	}
+
+	@media (max-width: 800px) {
+		.nav-links {
+			display: none;
+		}
+
 		.footer-container {
-			flex-direction: column;
+			grid-template-columns: 1fr;
 			text-align: center;
+		}
+
+		.footer-nav {
+			justify-content: center;
+		}
+
+		.footer-copy {
+			order: 3;
 		}
 	}
 </style>

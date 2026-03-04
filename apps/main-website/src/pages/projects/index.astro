@@ -11,12 +11,13 @@ const allProjects = (await getCollection('projects'))
 <Layout title="Projects | Frontend Developer Portfolio">
 	<Section>
 		<div class="container">
+			<span class="page-label">Portfolio</span>
 			<h1 class="page-title">My Projects</h1>
 			<p class="page-description">A collection of my recent work, ranging from design systems to performance audits.</p>
-			
+
 			<div class="grid">
-				{allProjects.map((project) => (
-					<ProjectCard project={project} />
+				{allProjects.map((project, i) => (
+					<ProjectCard project={project} index={i} />
 				))}
 			</div>
 		</div>
@@ -27,21 +28,32 @@ const allProjects = (await getCollection('projects'))
 	.container {
 		max-width: 1200px;
 		margin: 0 auto;
+		padding-inline: var(--spacing-24);
+	}
+
+	.page-label {
+		display: block;
+		font-size: var(--font-size-100);
+		font-family: var(--font-family-mono);
+		font-weight: var(--font-weight-medium);
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: var(--color-primary);
+		margin-bottom: var(--spacing-8);
 	}
 
 	.page-title {
 		font-size: var(--font-size-800);
 		margin-bottom: var(--spacing-16);
-		text-align: center;
+		letter-spacing: -0.03em;
 	}
 
 	.page-description {
 		font-size: var(--font-size-400);
 		color: var(--color-base-gray-500);
-		text-align: center;
 		margin-bottom: var(--spacing-64);
-		max-width: 800px;
-		margin-inline: auto;
+		max-width: 600px;
+		line-height: var(--font-line-height-relaxed);
 	}
 
 	.grid {

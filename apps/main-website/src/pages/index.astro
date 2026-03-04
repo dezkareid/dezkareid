@@ -22,24 +22,37 @@ const services = (await getCollection('services'))
 
 	<Section id="projects">
 		<div class="container">
-			<h2 class="section-title">Featured Projects</h2>
-			<div class="grid">
-				{featuredProjects.map((project) => (
-					<ProjectCard project={project} />
+			<header class="section-header reveal">
+				<span class="section-label">Work</span>
+				<h2 class="section-title">Featured Projects</h2>
+			</header>
+			<div class="grid reveal-group">
+				{featuredProjects.map((project, i) => (
+					<div class="reveal">
+						<ProjectCard project={project} index={i} />
+					</div>
 				))}
 			</div>
-			<div class="section-actions">
-				<a href="/projects" class="view-all">View All Projects →</a>
+			<div class="section-actions reveal">
+				<a href="/projects" class="view-all">
+					<span>View All Projects</span>
+					<span aria-hidden="true" class="view-all-arrow">→</span>
+				</a>
 			</div>
 		</div>
 	</Section>
 
 	<Section id="services" class="bg-alt">
 		<div class="container">
-			<h2 class="section-title">Services</h2>
-			<div class="grid">
+			<header class="section-header reveal">
+				<span class="section-label">Offerings</span>
+				<h2 class="section-title">Services</h2>
+			</header>
+			<div class="grid reveal-group">
 				{services.map((service) => (
-					<ServiceCard service={service} />
+					<div class="reveal">
+						<ServiceCard service={service} />
+					</div>
 				))}
 			</div>
 		</div>
@@ -47,41 +60,93 @@ const services = (await getCollection('services'))
 
 	<Section id="skills">
 		<div class="container">
-			<h2 class="section-title">Skills & Technologies</h2>
-			<SkillsList />
+			<header class="section-header reveal">
+				<span class="section-label">Tech Stack</span>
+				<h2 class="section-title">Skills & Technologies</h2>
+			</header>
+			<div class="reveal">
+				<SkillsList />
+			</div>
 		</div>
 	</Section>
 
 	<Section id="contact" class="bg-alt">
 		<div class="container text-center">
-			<h2 class="section-title">Get In Touch</h2>
-			<p class="contact-text">Interested in working together? Reach out on social media or send me an email.</p>
-			<SocialLinks />
+			<header class="section-header section-header--centered reveal">
+				<span class="section-label">Contact</span>
+				<h2 class="section-title">Get In Touch</h2>
+			</header>
+			<p class="contact-text reveal">
+				Interested in working together? Reach out on social media or send me an email.
+			</p>
+			<div class="reveal">
+				<SocialLinks />
+			</div>
 		</div>
 	</Section>
 </Layout>
 
+<script>
+	/* Scroll-reveal using IntersectionObserver */
+	const revealEls = document.querySelectorAll<HTMLElement>(".reveal");
+
+	if (revealEls.length > 0) {
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						entry.target.classList.add("is-visible");
+						observer.unobserve(entry.target);
+					}
+				});
+			},
+			{ rootMargin: "0px 0px -60px 0px", threshold: 0.1 }
+		);
+
+		revealEls.forEach((el) => observer.observe(el));
+	}
+</script>
+
 <style>
+	/* ====================================================
+	   DESIGN TOKEN ANNOTATIONS
+	   - --section-label-color: mono muted text for eyebrow labels
+	   - --section-title-size: --font-size-700 (already in scale)
+	   ==================================================== */
+
 	.container {
 		max-width: 1200px;
 		margin: 0 auto;
+		padding-inline: var(--spacing-24);
+	}
+
+	/* Section header: eyebrow label + title */
+	.section-header {
+		margin-bottom: var(--spacing-48);
+	}
+
+	.section-header--centered {
+		text-align: center;
+	}
+
+	.section-label {
+		display: block;
+		font-size: var(--font-size-100);
+		font-family: var(--font-family-mono);
+		font-weight: var(--font-weight-medium);
+		text-transform: uppercase;
+		/* DS NOTE: --letter-spacing-wide: 0.08em candidate */
+		letter-spacing: 0.1em;
+		/* DS NOTE: --section-label-color candidate */
+		color: var(--color-primary);
+		margin-bottom: var(--spacing-8);
 	}
 
 	.section-title {
 		font-size: var(--font-size-700);
-		margin-bottom: var(--spacing-48);
-		text-align: center;
-		position: relative;
-	}
-
-	.section-title::after {
-		content: "";
-		display: block;
-		width: 60px;
-		height: 4px;
-		background-color: var(--color-primary);
-		margin: var(--spacing-16) auto 0;
-		border-radius: var(--spacing-4);
+		color: var(--color-text-primary);
+		letter-spacing: -0.02em;
+		line-height: var(--font-line-height-tight);
 	}
 
 	.grid {
@@ -92,13 +157,33 @@ const services = (await getCollection('services'))
 
 	.section-actions {
 		margin-top: var(--spacing-48);
-		text-align: center;
 	}
 
 	.view-all {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--spacing-8);
 		color: var(--color-primary);
 		font-weight: var(--font-weight-bold);
 		font-size: var(--font-size-400);
+		text-decoration: none;
+		border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 40%, transparent);
+		padding-bottom: 2px;
+		transition: gap 0.2s ease, border-color 0.2s ease;
+	}
+
+	.view-all-arrow {
+		transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.view-all:hover {
+		text-decoration: none;
+		gap: var(--spacing-12);
+		border-color: var(--color-primary);
+	}
+
+	.view-all:hover .view-all-arrow {
+		transform: translateX(4px);
 	}
 
 	.bg-alt {
@@ -115,5 +200,6 @@ const services = (await getCollection('services'))
 		margin-bottom: var(--spacing-48);
 		max-width: 600px;
 		margin-inline: auto;
+		line-height: var(--font-line-height-relaxed);
 	}
 </style>
