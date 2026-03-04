@@ -1,3 +1,10 @@
+# [@dezkareid/components-v1.0.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.0.0...@dezkareid/components-v1.0.1) (2026-03-04)
+
+
+### Bug Fixes
+
+* add readme to distribution for ai-tools ([42bead4](https://github.com/dezkareid/dezkareid/commit/42bead4c773fd7a4e19eec47544a10c752179d0a))
+
 # @dezkareid/components-v1.0.0 (2026-03-04)
 
 
