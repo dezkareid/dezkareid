@@ -40,10 +40,12 @@
   "scripts": {
     "build": "style-dictionary build --config sd.config.js",
     "tokens:catalog": "node scripts/export-catalog.js",
-    "test": "vitest run"
+    "test": "vitest run",
+    "visualizer": "http-server . -p 3000 -o /scripts/visualizer/visualizer.html"
   },
   "devDependencies": {
     "commander": "12.0.0",
+    "http-server": "14.1.1",
     "style-dictionary": "5.2.0",
     "vitest": "4.0.18"
   }

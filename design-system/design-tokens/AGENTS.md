@@ -91,18 +91,18 @@ This project uses the **OpenSpec (opsx)** workflow for all changes. Do not modif
         - `dist/js/tokens.mjs` (`js/custom-module`) - ESM.
         - `dist/js/tokens.d.ts` (`typescript/custom-declarations`) - TypeScript declarations.
         - *Patterns*:
-            - `ColorBase{Blue,Green,Red,Gray}Val{100,500,900}`
+            - `ColorBase{Blue,Green,Red,Gray}{100,500,900}`
             - `ColorBase{White,Black}`
             - `{Light,Dark}Color{Primary,Success,BackgroundPrimary,BackgroundSecondary,TextPrimary,TextInverse}`
-            - `SpacingVal{0,4,8,12,16,24,32,48,64}`
+            - `Spacing{0,4,8,12,16,24,32,48,64}`
             - `FontFamily{Base,Mono}`
-            - `FontSizeVal{100-900}`
+            - `FontSize{100-900}`
             - `FontWeight{Light,Regular,Medium,Bold}`
             - `FontLineHeight{None,Tight,Normal,Relaxed}`
             - `Breakpoint{Small,Medium,Large,ExtraLarge}{Min,Max}`
         - *Example*:
             ```javascript
-            export const ColorBaseBlueVal500 = "#3b82f6";
-            export const SpacingVal16 = "1rem";
+            export const ColorBaseBlue500 = "#3b82f6";
+            export const Spacing16 = "1rem";
             export const BreakpointMediumMin = "37.5rem";
             ```

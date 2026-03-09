@@ -39,8 +39,18 @@ describe('token-naming', () => {
   });
 
   describe('getJsName', () => {
-    it('should format standard tokens in PascalCase with val prefix for numbers', () => {
-      expect(getJsName(standardToken)).toBe('ColorBaseBlueVal500');
+    it('should format standard tokens in PascalCase without val prefix for numbers', () => {
+      expect(getJsName(standardToken)).toBe('ColorBaseBlue500');
+    });
+
+    it('should add Val prefix only if the name starts with a digit', () => {
+      expect(getJsName({ path: ['spacing', '4'] })).toBe('Spacing4');
+      expect(getJsName({ path: ['4', 'spacing'] })).toBe('Val4Spacing');
+    });
+
+    it('should strip accidental Val in the middle of names', () => {
+      // Simulating a case where Val might have been accidentally inserted
+      expect(getJsName({ path: ['color', 'base', 'blue', 'Val500'] })).toBe('ColorBaseBlue500');
     });
 
     it('should format light semantic tokens with Light prefix', () => {
