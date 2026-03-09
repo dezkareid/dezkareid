@@ -1,3 +1,16 @@
+# [@dezkareid/design-tokens-v1.3.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.2.0...@dezkareid/design-tokens-v1.3.0) (2026-03-09)
+
+
+### Bug Fixes
+
+* **design-system:** name for design tokens ([84ab8a6](https://github.com/dezkareid/dezkareid/commit/84ab8a6904f43104d7953f9bf114f01187b88e2a))
+* naming generation ([659efe4](https://github.com/dezkareid/dezkareid/commit/659efe478166d89636ecac8e174a31c2309f1cba))
+
+
+### Features
+
+* add token visualizer ([8eb92ec](https://github.com/dezkareid/dezkareid/commit/8eb92ece9ccfc45523869cd53fe56564fbbda159))
+
 # [@dezkareid/design-tokens-v1.2.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.1.1...@dezkareid/design-tokens-v1.2.0) (2026-03-04)
 
 
