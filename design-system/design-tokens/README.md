@@ -86,6 +86,16 @@ if (window.matchMedia(`(min-width: ${BreakpointMediumMin})`).matches) {
 }
 ```
 
+## Visualizer
+
+To explore design tokens visually, including swatches and spacing scales, run the visualizer:
+
+```bash
+pnpm visualizer
+```
+
+This will open an interactive dashboard in your browser.
+
 ## Discovery
 
 You can explore all available design tokens by generating a catalog in your preferred format:

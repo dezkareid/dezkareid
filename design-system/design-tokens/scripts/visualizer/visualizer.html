@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Tokens Visualizer</title>
+    <link rel="stylesheet" href="../../dist/css/variables.css">
+    <style>
+        :root {
+            --bg-color: #f9fafb;
+            --text-color: #111827;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+            --header-bg: #111827;
+            --header-text: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+        }
+
+        h1 { margin: 0; font-size: 1.5rem; }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+
+        section {
+            margin-bottom: 3rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        section h2 {
+            background: #f3f4f6;
+            margin: 0;
+            padding: 1rem 1.5rem;
+            font-size: 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem;
+        }
+
+        .token-item {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .token-info {
+            font-size: 0.875rem;
+        }
+
+        .token-name {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.25rem;
+            word-break: break-all;
+        }
+
+        .token-var {
+            font-family: monospace;
+            color: #6b7280;
+            font-size: 0.75rem;
+            background: #f3f4f6;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        /* Color Visuals */
+        .swatch-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .swatch-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+            min-width: 80px;
+        }
+
+        .swatch {
+            width: 100%;
+            height: 60px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .swatch-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #9ca3af;
+        }
+
+        /* Spacing Visuals */
+        .spacing-viz {
+            display: flex;
+            align-items: center;
+            background: #fee2e2;
+            height: 40px;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .spacing-gap {
+            background: #ef4444;
+            height: 100%;
+        }
+
+        .spacing-value {
+            margin-left: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        /* Breakpoint Visuals */
+        .breakpoint-viz {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        /* Typography Visuals */
+        .typo-viz {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Design Tokens Visualizer</h1>
+    </header>
+
+    <main id="app">
+        <section id="colors">
+            <h2>Colors</h2>
+            <div class="grid" id="colors-grid"></div>
+        </section>
+
+        <section id="spacing">
+            <h2>Spacing</h2>
+            <div class="grid" id="spacing-grid"></div>
+        </section>
+
+        <section id="breakpoints">
+            <h2>Breakpoints</h2>
+            <div class="grid" id="breakpoints-grid"></div>
+        </section>
+
+        <section id="typography">
+            <h2>Typography</h2>
+            <div class="grid" id="typography-grid"></div>
+        </section>
+    </main>
+
+    <script type="module">
+        import * as tokens from '../../dist/js/tokens.mjs';
+
+        const colorGrid = document.getElementById('colors-grid');
+        const spacingGrid = document.getElementById('spacing-grid');
+        const breakpointsGrid = document.getElementById('breakpoints-grid');
+        const typoGrid = document.getElementById('typography-grid');
+
+        const tokenEntries = Object.entries(tokens);
+
+        // Helper to convert PascalCase to kebab-case for CSS vars
+        function toKebab(str) {
+            // Robustly strip any accidental "Val" before numbers
+            let cleanStr = str
+                .replace(/^Val([0-9])/, '$1')
+                .replace(/Val([0-9])/g, '$1');
+            
+            return cleanStr
+                .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+                .replace(/([a-zA-Z])([0-9])/g, '$1-$2')
+                .toLowerCase();
+        }
+
+        function cleanTitle(str) {
+            return str
+                .replace(/^Val([0-9])/, '$1')
+                .replace(/Val([0-9])/g, '$1');
+        }
+
+        // 1. Process Colors (including semantic pairs)
+        const semanticPairs = {};
+        const globalColors = [];
+
+        tokenEntries.forEach(([key, value]) => {
+            if (key.startsWith('ColorBase')) {
+                globalColors.push({ key, value });
+            } else if (key.startsWith('LightColor') || key.startsWith('DarkColor')) {
+                const theme = key.startsWith('Light') ? 'Light' : 'Dark';
+                const baseName = key.replace(theme, ''); // Keeps "ColorPrimary" etc.
+                if (!semanticPairs[baseName]) semanticPairs[baseName] = {};
+                semanticPairs[baseName][theme] = { key, value };
+            }
+        });
+
+        // Render Semantic Colors
+        Object.entries(semanticPairs).forEach(([name, themes]) => {
+            const item = document.createElement('div');
+            item.className = 'token-item';
+            
+            const coreVar = toKebab(name);
+            
+            item.innerHTML = `
+                <div class="token-info">
+                    <div class="token-name">Semantic: ${cleanTitle(name)}</div>
+                    <div class="token-var">--${coreVar}</div>
+                </div>
+                <div class="swatch-group">
+                    <div class="swatch-container">
+                        <div class="swatch" style="background-color: ${themes.Light?.value || 'transparent'}"></div>
+                        <span class="swatch-label">Light</span>
+                    </div>
+                    <div class="swatch-container">
+                        <div class="swatch" style="background-color: ${themes.Dark?.value || 'transparent'}"></div>
+                        <span class="swatch-label">Dark</span>
+                    </div>
+                </div>
+            `;
+            colorGrid.appendChild(item);
+        });
+
+        // Render Global Colors
+        globalColors.forEach(({ key, value }) => {
+            const item = document.createElement('div');
+            item.className = 'token-item';
+            item.innerHTML = `
+                <div class="token-info">
+                    <div class="token-name">${cleanTitle(key)}</div>
+                    <div class="token-var">--${toKebab(key)}</div>
+                </div>
+                <div class="swatch" style="background-color: ${value}"></div>
+            `;
+            colorGrid.appendChild(item);
+        });
+
+        // 2. Process Spacing
+        tokenEntries.filter(([k]) => k.startsWith('Spacing')).forEach(([key, value]) => {
+            const item = document.createElement('div');
+            item.className = 'token-item';
+            item.innerHTML = `
+                <div class="token-info">
+                    <div class="token-name">${cleanTitle(key)}</div>
+                    <div class="token-var">--${toKebab(key)}</div>
+                </div>
+                <div class="spacing-viz">
+                    <div class="spacing-gap" style="width: ${value}"></div>
+                    <span class="spacing-value">${value}</span>
+                </div>
+            `;
+            spacingGrid.appendChild(item);
+        });
+
+        // 3. Process Breakpoints
+        tokenEntries.filter(([k]) => k.startsWith('Breakpoint')).forEach(([key, value]) => {
+            const item = document.createElement('div');
+            item.className = 'token-item';
+            item.innerHTML = `
+                <div class="token-info">
+                    <div class="token-name">${cleanTitle(key)}</div>
+                    <div class="token-var">--${toKebab(key)}</div>
+                </div>
+                <div class="breakpoint-viz">${value}</div>
+            `;
+            breakpointsGrid.appendChild(item);
+        });
+
+        // 4. Process Typography
+        tokenEntries.filter(([k]) => k.startsWith('Font')).forEach(([key, value]) => {
+            const item = document.createElement('div');
+            item.className = 'token-item';
+            
+            let style = '';
+            if (key.includes('Family')) style = `font-family: ${value}`;
+            if (key.includes('Size')) style = `font-size: ${value}`;
+            if (key.includes('Weight')) style = `font-weight: ${value}`;
+            if (key.includes('LineHeight')) style = `line-height: ${value}`;
+
+            item.innerHTML = `
+                <div class="token-info">
+                    <div class="token-name">${cleanTitle(key)}</div>
+                    <div class="token-var">--${toKebab(key)}</div>
+                </div>
+                <div class="typo-viz" style="${style}">The quick brown fox jumps over the lazy dog</div>
+                <div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">Value: ${value}</div>
+            `;
+            typoGrid.appendChild(item);
+        });
+
+    </script>
+</body>
+</html>
