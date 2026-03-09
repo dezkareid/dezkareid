@@ -48,6 +48,11 @@ describe('token-naming', () => {
       expect(getJsName({ path: ['4', 'spacing'] })).toBe('Val4Spacing');
     });
 
+    it('should strip accidental Val in the middle of names', () => {
+      // Simulating a case where Val might have been accidentally inserted
+      expect(getJsName({ path: ['color', 'base', 'blue', 'Val500'] })).toBe('ColorBaseBlue500');
+    });
+
     it('should format light semantic tokens with Light prefix', () => {
       expect(getJsName(lightToken)).toBe('LightColorPrimary');
     });
