@@ -19,22 +19,19 @@ const getScssName = (token) => {
 };
 
 const getJsName = (token) => {
-  const parts = token.path.map(part => /^\d/.test(part) ? `val${part}` : part);
+  let parts = token.path;
 
-  let finalParts = parts;
   if (isThemed(token)) {
     const theme = isLight(token) ? 'light' : 'dark';
-    const filteredParts = parts.filter(p =>
+    parts = [theme, ...token.path.filter(p =>
       p.toLowerCase() !== 'light' &&
       p.toLowerCase() !== 'dark' &&
-      p.toLowerCase() !== 'semantic' &&
-      p.toLowerCase() !== 'vallight' &&
-      p.toLowerCase() !== 'valdark'
-    );
-    finalParts = [theme, ...filteredParts];
+      p.toLowerCase() !== 'semantic'
+    )];
   }
 
-  return finalParts.map(p => p.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('')).join('');
+  const name = parts.map(p => p.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('')).join('');
+  return /^\d/.test(name) ? `Val${name}` : name;
 };
 
 module.exports = {

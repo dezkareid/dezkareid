@@ -30,7 +30,7 @@ describe('catalog-generator', () => {
       expect(markdown).toContain('| CSS Variable | SCSS Variable | JS Variable | Value |');
       expect(markdown).toContain('--color-base-red-500');
       expect(markdown).toContain('$color-base-red-500');
-      expect(markdown).toContain('ColorBaseRedVal500');
+      expect(markdown).toContain('ColorBaseRed500');
     });
 
     it('should stringify object values (like typography)', () => {
