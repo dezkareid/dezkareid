@@ -11,10 +11,10 @@ const { title, description, icon } = service.data;
 ---
 
 <Card class="service-card">
-	<div class="service-icon" aria-hidden="true">
-		{icon || "⚙️"}
+	<div class="service-header">
+		<span class="service-icon" aria-hidden="true">{icon || "⚙️"}</span>
+		<h3 class="service-title">{title}</h3>
 	</div>
-	<h3 class="service-title">{title}</h3>
 	<p class="service-description">{description}</p>
 	<div class="service-footer">
 		<a href={`/services/${service.slug}`} class="learn-more">
@@ -61,31 +61,22 @@ const { title, description, icon } = service.data;
 		opacity: 1;
 	}
 
-	.service-icon {
-		/* DS NOTE: --size-icon-lg: 3rem candidate */
-		font-size: 3rem;
-		margin-bottom: var(--spacing-16);
-		display: inline-flex;
+	.service-header {
+		display: flex;
 		align-items: center;
-		justify-content: center;
-		/* DS NOTE: --color-icon-bg candidate */
-		background: color-mix(in srgb, var(--color-primary) 8%, var(--color-background-secondary));
-		width: 4rem;
-		height: 4rem;
-		border-radius: var(--spacing-12);
-		/* DS NOTE: --border-radius-icon: --spacing-12 candidate */
-		font-size: var(--font-size-700);
-		transition: background 0.25s ease, transform 0.25s ease;
+		gap: var(--spacing-12);
+		margin-bottom: var(--spacing-12);
 	}
 
-	.service-card:hover .service-icon {
-		background: color-mix(in srgb, var(--color-primary) 14%, var(--color-background-secondary));
-		transform: scale(1.05);
+	.service-icon {
+		font-size: var(--font-size-700);
+		line-height: 1;
+		flex-shrink: 0;
 	}
 
 	.service-title {
 		font-size: var(--font-size-500);
-		margin-bottom: var(--spacing-12);
+		margin: 0;
 		color: var(--color-text-primary);
 		letter-spacing: -0.01em;
 	}

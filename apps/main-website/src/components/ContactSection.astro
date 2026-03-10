@@ -1,0 +1,79 @@
+---
+import Section from "./Section.astro";
+import SocialLinks from "./SocialLinks.astro";
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const {
+	title = "Get In Touch",
+	description = "Interested in working together? Reach out on social media or send me an email.",
+} = Astro.props;
+---
+
+<Section id="contact" class="bg-alt">
+	<div class="container">
+		<header class="section-header section-header--centered">
+			<span class="section-label">Contact</span>
+			<h2 class="section-title">{title}</h2>
+		</header>
+		<p class="contact-text">{description}</p>
+		<SocialLinks />
+	</div>
+</Section>
+
+<style>
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding-inline: var(--spacing-24);
+		text-align: center;
+	}
+
+	@media (min-width: 90rem) {
+		.container {
+			padding-inline: 0;
+		}
+	}
+
+	.section-header {
+		margin-bottom: var(--spacing-48);
+	}
+
+	.section-header--centered {
+		text-align: center;
+	}
+
+	.section-label {
+		display: block;
+		font-size: var(--font-size-100);
+		font-family: var(--font-family-mono);
+		font-weight: var(--font-weight-medium);
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: var(--color-primary);
+		margin-bottom: var(--spacing-8);
+	}
+
+	.section-title {
+		font-size: var(--font-size-700);
+		color: var(--color-text-primary);
+		letter-spacing: -0.02em;
+		line-height: var(--font-line-height-tight);
+	}
+
+	.contact-text {
+		font-size: var(--font-size-400);
+		color: var(--color-base-gray-500);
+		margin-bottom: var(--spacing-48);
+		max-width: 600px;
+		margin-inline: auto;
+		line-height: var(--font-line-height-relaxed);
+	}
+
+	.bg-alt {
+		background-color: var(--color-background-secondary);
+	}
+</style>

@@ -4,6 +4,8 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
+    "clean": "rm -rf node_modules/.vite .astro",
+    "dev:clean": "pnpm clean && astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
