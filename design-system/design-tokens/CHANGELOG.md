@@ -1,3 +1,10 @@
+# [@dezkareid/design-tokens-v1.3.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.3.0...@dezkareid/design-tokens-v1.3.1) (2026-03-10)
+
+
+### Bug Fixes
+
+* change semantic color for dark background ([017ede6](https://github.com/dezkareid/dezkareid/commit/017ede6cf94ad81a88ad8cd2a3b2d467bd93314e))
+
 # [@dezkareid/design-tokens-v1.3.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.2.0...@dezkareid/design-tokens-v1.3.0) (2026-03-09)
 
 
