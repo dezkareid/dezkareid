@@ -6,7 +6,7 @@ import Section from '../components/Section.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import ServiceCard from '../components/ServiceCard.astro';
 import SkillsList from '../components/SkillsList.astro';
-import SocialLinks from '../components/SocialLinks.astro';
+import ContactSection from '../components/ContactSection.astro';
 
 const featuredProjects = (await getCollection('projects', ({ data }) => {
 	return data.featured === true;
@@ -19,28 +19,6 @@ const services = (await getCollection('services'))
 
 <Layout title="Frontend Developer | UI/UX & React Expert">
 	<Hero />
-
-	<Section id="projects">
-		<div class="container">
-			<header class="section-header reveal">
-				<span class="section-label">Work</span>
-				<h2 class="section-title">Featured Projects</h2>
-			</header>
-			<div class="grid reveal-group">
-				{featuredProjects.map((project, i) => (
-					<div class="reveal">
-						<ProjectCard project={project} index={i} />
-					</div>
-				))}
-			</div>
-			<div class="section-actions reveal">
-				<a href="/projects" class="view-all">
-					<span>View All Projects</span>
-					<span aria-hidden="true" class="view-all-arrow">→</span>
-				</a>
-			</div>
-		</div>
-	</Section>
 
 	<Section id="services" class="bg-alt">
 		<div class="container">
@@ -70,20 +48,29 @@ const services = (await getCollection('services'))
 		</div>
 	</Section>
 
-	<Section id="contact" class="bg-alt">
-		<div class="container text-center">
-			<header class="section-header section-header--centered reveal">
-				<span class="section-label">Contact</span>
-				<h2 class="section-title">Get In Touch</h2>
+	<Section id="projects" class="bg-alt">
+		<div class="container">
+			<header class="section-header reveal">
+				<span class="section-label">Work</span>
+				<h2 class="section-title">Featured Projects</h2>
 			</header>
-			<p class="contact-text reveal">
-				Interested in working together? Reach out on social media or send me an email.
-			</p>
-			<div class="reveal">
-				<SocialLinks />
+			<div class="grid reveal-group">
+				{featuredProjects.map((project, i) => (
+					<div class="reveal">
+						<ProjectCard project={project} index={i} />
+					</div>
+				))}
+			</div>
+			<div class="section-actions reveal">
+				<a href="/projects" class="view-all">
+					<span>View All Projects</span>
+					<span aria-hidden="true" class="view-all-arrow">→</span>
+				</a>
 			</div>
 		</div>
 	</Section>
+
+	<ContactSection />
 </Layout>
 
 <script>
@@ -118,6 +105,12 @@ const services = (await getCollection('services'))
 		max-width: 1200px;
 		margin: 0 auto;
 		padding-inline: var(--spacing-24);
+	}
+
+	@media (min-width: 90rem) {
+		.container {
+			padding-inline: 0;
+		}
 	}
 
 	/* Section header: eyebrow label + title */
@@ -194,12 +187,4 @@ const services = (await getCollection('services'))
 		text-align: center;
 	}
 
-	.contact-text {
-		font-size: var(--font-size-400);
-		color: var(--color-base-gray-500);
-		margin-bottom: var(--spacing-48);
-		max-width: 600px;
-		margin-inline: auto;
-		line-height: var(--font-line-height-relaxed);
-	}
 </style>

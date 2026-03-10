@@ -27,7 +27,7 @@ const allServices = (await getCollection('services'))
 		<div class="container text-center">
 			<h2 class="cta-title">Ready to start a project?</h2>
 			<p class="cta-text">I'm currently accepting new freelance projects and consulting engagements.</p>
-			<a href="mailto:example@example.com" class="cta-button">Get a Quote</a>
+			<a href="mailto:elmaildeldezkareid@gmail.com" class="cta-button">Get a Quote</a>
 		</div>
 	</Section>
 </Layout>
@@ -37,6 +37,12 @@ const allServices = (await getCollection('services'))
 		max-width: 1200px;
 		margin: 0 auto;
 		padding-inline: var(--spacing-24);
+	}
+
+	@media (min-width: 90rem) {
+		.container {
+			padding-inline: 0;
+		}
 	}
 
 	.page-label {

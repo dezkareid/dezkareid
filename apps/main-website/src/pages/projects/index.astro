@@ -31,6 +31,12 @@ const allProjects = (await getCollection('projects'))
 		padding-inline: var(--spacing-24);
 	}
 
+	@media (min-width: 90rem) {
+		.container {
+			padding-inline: 0;
+		}
+	}
+
 	.page-label {
 		display: block;
 		font-size: var(--font-size-100);

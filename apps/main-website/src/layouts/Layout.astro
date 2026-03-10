@@ -90,23 +90,10 @@ const navLinks = [
 		<footer class="site-footer">
 			<div class="footer-container">
 				<div class="footer-brand">
-					<a href="/" class="footer-logo">JD.DEV</a>
-					<p class="footer-tagline">
-						Building the web, one pixel at a time.
-					</p>
+					<PixelCrab size={20} class="footer-logo-icon" />
+					<span class="footer-tm">Dezkareid™</span>
+					<p class="footer-copy">&copy; {new Date().getFullYear()}</p>
 				</div>
-				<nav class="footer-nav" aria-label="Footer navigation">
-					{
-						navLinks.map(({ href, label }) => (
-							<a href={href} class="footer-link">
-								{label}
-							</a>
-						))
-					}
-				</nav>
-				<p class="footer-copy">
-					&copy; {new Date().getFullYear()} Frontend Developer
-				</p>
 			</div>
 		</footer>
 	</body>
@@ -143,7 +130,7 @@ const navLinks = [
 	   ==================================================== */
 
 	.site-header {
-		padding: var(--spacing-12) var(--spacing-24);
+		padding-block: var(--spacing-12);
 		background-color: var(--color-background-primary);
 		border-bottom: 1px solid
 			color-mix(in srgb, var(--color-text-primary) 8%, transparent);
@@ -176,6 +163,7 @@ const navLinks = [
 		align-items: center;
 		max-width: 1200px;
 		margin: 0 auto;
+		padding-inline: var(--spacing-24);
 		gap: var(--spacing-24);
 	}
 
@@ -257,9 +245,8 @@ const navLinks = [
 
 	/* Footer */
 	.site-footer {
-		padding: var(--spacing-48) var(--spacing-24);
-		/* DS NOTE: --color-background-footer candidate (slightly darker than secondary) */
-		background-color: var(--color-background-secondary);
+		padding-block: var(--spacing-32);
+		background-color: var(--color-background-primary);
 		border-top: 1px solid
 			color-mix(in srgb, var(--color-text-primary) 8%, transparent);
 		margin-top: auto;
@@ -268,74 +255,46 @@ const navLinks = [
 	.footer-container {
 		max-width: 1200px;
 		margin: 0 auto;
-		display: grid;
-		grid-template-columns: 1fr auto auto;
+		padding-inline: var(--spacing-24);
+		display: flex;
 		align-items: center;
-		gap: var(--spacing-32);
+		gap: var(--spacing-8);
 	}
 
-	.footer-brand {
-		display: flex;
-		flex-direction: column;
-		gap: var(--spacing-4);
-	}
-
-	.footer-logo {
-		font-size: var(--font-size-400);
-		font-weight: var(--font-weight-bold);
+	.footer-logo-icon {
 		color: var(--color-text-primary);
+		flex-shrink: 0;
+	}
+
+	.footer-tm {
+		font-size: var(--font-size-200);
 		font-family: var(--font-family-mono);
-		text-decoration: none;
-		letter-spacing: -0.02em;
-	}
-
-	.footer-tagline {
-		font-size: var(--font-size-200);
 		color: var(--color-base-gray-500);
-		margin: 0;
-	}
-
-	.footer-nav {
-		display: flex;
-		gap: var(--spacing-24);
-	}
-
-	.footer-link {
-		color: var(--color-base-gray-500);
-		font-size: var(--font-size-200);
-		text-decoration: none;
-		transition: color 0.2s ease;
-		font-weight: var(--font-weight-medium);
-	}
-
-	.footer-link:hover {
-		color: var(--color-primary);
 	}
 
 	.footer-copy {
 		font-size: var(--font-size-100);
 		color: var(--color-base-gray-500);
 		margin: 0;
-		white-space: nowrap;
 		font-family: var(--font-family-mono);
+	}
+
+	.footer-brand {
+		display: flex;
+		align-items: center;
+		gap: var(--spacing-8);
+	}
+
+	@media (min-width: 90rem) {
+		.nav-container,
+		.footer-container {
+			padding-inline: 0;
+		}
 	}
 
 	@media (max-width: 800px) {
 		.nav-links {
 			display: none;
-		}
-
-		.footer-container {
-			grid-template-columns: 1fr;
-			text-align: center;
-		}
-
-		.footer-nav {
-			justify-content: center;
-		}
-
-		.footer-copy {
-			order: 3;
 		}
 	}
 </style>

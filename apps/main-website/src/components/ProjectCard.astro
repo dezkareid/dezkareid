@@ -76,11 +76,14 @@ const num = String(index + 1).padStart(2, "0");
 		/* DS NOTE: --color-text-number candidate */
 		color: color-mix(in srgb, var(--color-primary) 12%, transparent);
 		position: absolute;
-		top: -var(--spacing-8);
+		top: 0;
 		right: 0;
 		pointer-events: none;
 		user-select: none;
 		transition: color 0.25s ease;
+		/* Prevent overlapping title on small screens */
+		max-width: 40%;
+		text-align: right;
 	}
 
 	.project-card:hover .project-number {
@@ -94,6 +97,8 @@ const num = String(index + 1).padStart(2, "0");
 		color: var(--color-text-primary);
 		letter-spacing: -0.01em;
 		line-height: var(--font-line-height-tight);
+		/* Prevent text running under the absolute number */
+		padding-right: 3.5rem;
 	}
 
 	.project-description {
