@@ -8,15 +8,15 @@ import ServiceCard from "../components/ServiceCard.astro";
 import SkillsList from "../components/SkillsList.astro";
 import ContactSection from "../components/ContactSection.astro";
 
-const featuredProjects = (
-	await getCollection("projects", ({ data }) => {
-		return data.featured === true;
-	})
-)
-	.sort((a, b) => a.data.order - b.data.order)
+const featuredProjectsCollection = await getCollection("projects", ({ data }) => {
+	return data.featured === true;
+});
+const featuredProjects = featuredProjectsCollection
+	.toSorted((a, b) => a.data.order - b.data.order)
 	.slice(0, 3);
 
-const services = (await getCollection("services")).sort(
+const servicesCollection = await getCollection("services");
+const services = servicesCollection.toSorted(
 	(a, b) => a.data.order - b.data.order
 );
 ---
@@ -78,9 +78,9 @@ const services = (await getCollection("services")).sort(
 			</header>
 			<div class="grid reveal-group">
 				{
-					featuredProjects.map((project, i) => (
+					featuredProjects.map((project, index) => (
 						<div class="reveal">
-							<ProjectCard project={project} index={i} />
+							<ProjectCard project={project} index={index} />
 						</div>
 					))
 				}
@@ -104,17 +104,17 @@ const services = (await getCollection("services")).sort(
 	if (revealEls.length > 0) {
 		const observer = new IntersectionObserver(
 			(entries) => {
-				entries.forEach((entry) => {
-					if (entry.isIntersecting) {
-						entry.target.classList.add("is-visible");
-						observer.unobserve(entry.target);
-					}
-				});
+				for (const entry of entries) {
+				if (entry.isIntersecting) {
+					entry.target.classList.add("is-visible");
+					observer.unobserve(entry.target);
+				}
+			}
 			},
 			{ rootMargin: "0px 0px -60px 0px", threshold: 0.1 }
 		);
 
-		revealEls.forEach((el) => observer.observe(el));
+		for (const element of revealEls) observer.observe(element);
 	}
 </script>
 

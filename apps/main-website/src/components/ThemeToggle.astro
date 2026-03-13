@@ -76,18 +76,18 @@
 			localStorage.setItem('theme', theme);
 		} catch { /* localStorage unavailable (e.g. private browsing) */ }
 		document.documentElement.style.colorScheme = theme;
-		const btn = document.getElementById('theme-toggle') as HTMLButtonElement | null;
-		if (!btn) return;
-		btn.dataset.theme = theme;
-		btn.setAttribute('aria-label', NEXT_LABELS[theme]);
+		const button = document.querySelector('#theme-toggle') as HTMLButtonElement | null;
+	if (!button) return;
+	button.dataset.theme = theme;
+	button.setAttribute('aria-label', NEXT_LABELS[theme]);
 	}
 
 	function syncButton(): void {
 		const theme = getTheme();
-		const btn = document.getElementById('theme-toggle') as HTMLButtonElement | null;
-		if (!btn) return;
-		btn.dataset.theme = theme;
-		btn.setAttribute('aria-label', NEXT_LABELS[theme]);
+		const button = document.querySelector('#theme-toggle') as HTMLButtonElement | null;
+	if (!button) return;
+	button.dataset.theme = theme;
+	button.setAttribute('aria-label', NEXT_LABELS[theme]);
 		// colorScheme already set by FOUC guard; no need to re-set for system default
 		if (theme !== 'system') {
 			document.documentElement.style.colorScheme = theme;
@@ -97,7 +97,7 @@
 	// Sync button state with the value already applied by the FOUC guard
 	syncButton();
 
-	document.getElementById('theme-toggle')?.addEventListener('click', () => {
+	document.querySelector('#theme-toggle')?.addEventListener('click', () => {
 		const current = getTheme();
 		applyTheme(TOGGLE[current]);
 	});

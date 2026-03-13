@@ -3,7 +3,7 @@ import "../styles/global.css";
 import ThemeToggle from "../components/ThemeToggle.astro";
 import PixelCrab from "../components/PixelCrab.astro";
 
-interface Props {
+interface Properties {
 	title?: string;
 	description?: string;
 }
@@ -26,7 +26,7 @@ const navLinks = [
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<meta charset="UTF-8" />
+		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
@@ -101,7 +101,7 @@ const navLinks = [
 
 <script>
 	/* Scroll-aware header: add backdrop blur after 20px scroll */
-	const header = document.getElementById("site-header");
+	const header = document.querySelector("#site-header");
 	if (header) {
 		const observer = new IntersectionObserver(
 			([entry]) => {
