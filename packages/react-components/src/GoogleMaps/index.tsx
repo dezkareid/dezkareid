@@ -7,7 +7,7 @@ export interface MapOptions {
     lng: number;
   };
   zoom: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface GoogleMapsProps {
@@ -19,7 +19,7 @@ export interface GoogleMapsProps {
 
 function GoogleMaps({ mapKey, mapOptions, className = '', children = null }: GoogleMapsProps) {
   const google = useGoogleMaps({ key: mapKey });
-  const [map, setMap] = useState<any>(null);
+  const [map, setMap] = useState<unknown>(null);
   const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,9 +31,12 @@ function GoogleMaps({ mapKey, mapOptions, className = '', children = null }: Goo
     }
   }, [google, mapOptions]);
 
-  const mapElements = React.Children.map(children, (child: any) =>
-    React.cloneElement(child, { map })
-  );
+  const mapElements = React.Children.map(children, (child) => {
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, { map } as React.Attributes & { map: unknown });
+    }
+    return child;
+  });
 
   return (
     <div ref={mapRef} className={className}>

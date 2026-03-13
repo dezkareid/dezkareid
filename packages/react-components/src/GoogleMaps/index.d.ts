@@ -5,7 +5,7 @@ export interface MapOptions {
         lng: number;
     };
     zoom: number;
-    [key: string]: any;
+    [key: string]: unknown;
 }
 export interface GoogleMapsProps {
     mapKey: string;

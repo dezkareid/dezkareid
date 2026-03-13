@@ -8,7 +8,17 @@
     "dev:clean": "pnpm clean && astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "devDependencies": {
+    "@dezkareid/eslint-config-ts-base": "workspace:*",
+    "@typescript-eslint/parser": "8.57.0",
+    "eslint": "9.39.2",
+    "eslint-plugin-astro": "1.6.0",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.57.0"
   },
   "dependencies": {
     "@dezkareid/components": "workspace:*",

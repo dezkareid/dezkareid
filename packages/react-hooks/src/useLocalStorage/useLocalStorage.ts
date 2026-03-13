@@ -18,7 +18,7 @@ function useLocalStorage<T>({ key, defaultValue }: UseLocalStorageParams<T>): Us
       if (storedValue !== null) {
         try {
           setValue(JSON.parse(storedValue));
-        } catch (error) {
+        } catch {
           setValue(storedValue as T);
         }
       }

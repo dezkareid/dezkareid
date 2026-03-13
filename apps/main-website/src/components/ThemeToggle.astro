@@ -67,14 +67,14 @@
 		try {
 			const stored = localStorage.getItem('theme');
 			if (stored === 'light' || stored === 'dark') return stored;
-		} catch (_) {}
+		} catch { /* localStorage unavailable (e.g. private browsing) */ }
 		return 'system';
 	}
 
 	function applyTheme(theme: 'light' | 'dark'): void {
 		try {
 			localStorage.setItem('theme', theme);
-		} catch (_) {}
+		} catch { /* localStorage unavailable (e.g. private browsing) */ }
 		document.documentElement.style.colorScheme = theme;
 		const btn = document.getElementById('theme-toggle') as HTMLButtonElement | null;
 		if (!btn) return;
