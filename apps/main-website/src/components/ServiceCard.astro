@@ -1,5 +1,6 @@
 ---
 import Card from "./Card.astro";
+import Button from "./Button.astro";
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -7,22 +8,35 @@ interface Props {
 }
 
 const { service } = Astro.props;
-const { title, description, icon } = service.data;
+const { title, description, icon, cta } = service.data;
 ---
 
 <Card class="service-card">
+	<!-- Stretched link covers the full card; contact button sits above it via z-index -->
+	<a class="card-link" href={`/services/${service.slug}`} aria-label={`Learn about ${title}`}></a>
+
 	<div class="service-header">
 		<span class="service-icon" aria-hidden="true">{icon || "⚙️"}</span>
 		<h3 class="service-title">{title}</h3>
 	</div>
 	<p class="service-description">{description}</p>
 	<div class="service-footer">
-		<a href={`/services/${service.slug}`} class="learn-more">
-			<span>Learn about {title}</span>
-			<span class="learn-more-arrow" aria-hidden="true">→</span>
-		</a>
+		<div class="contact-btn-wrap">
+			<Button variant="outline" size="sm" data-contact-btn>{cta || "Get in touch"}</Button>
+		</div>
 	</div>
 </Card>
+
+<script>
+	document.querySelectorAll('[data-contact-btn]').forEach((btn) => {
+		btn.addEventListener('click', (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+			const target = document.getElementById('contact');
+			if (target) target.scrollIntoView({ behavior: 'smooth' });
+		});
+	});
+</script>
 
 <style>
 	/* ====================================================
@@ -37,6 +51,14 @@ const { title, description, icon } = service.data;
 		flex-direction: column;
 		position: relative;
 		overflow: hidden;
+		cursor: pointer;
+	}
+
+	/* Stretched link — covers the full card */
+	.card-link {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
 	}
 
 	.service-card::before {
@@ -83,7 +105,9 @@ const { title, description, icon } = service.data;
 
 	.service-description {
 		font-size: var(--font-size-300);
-		color: var(--color-base-gray-500);
+		/* Use text-primary for sufficient contrast on secondary backgrounds */
+		color: var(--color-text-primary);
+		opacity: 0.75;
 		margin-bottom: var(--spacing-24);
 		flex: 1;
 		line-height: var(--font-line-height-relaxed);
@@ -91,28 +115,13 @@ const { title, description, icon } = service.data;
 
 	.service-footer {
 		margin-top: auto;
-	}
-
-	.learn-more {
-		display: inline-flex;
-		align-items: center;
+		display: flex;
+		flex-direction: column;
 		gap: var(--spacing-8);
-		color: var(--color-primary);
-		font-weight: var(--font-weight-medium);
-		font-size: var(--font-size-300);
-		text-decoration: none;
-		transition: gap 0.2s ease;
 	}
 
-	.learn-more-arrow {
-		transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-	}
-
-	.learn-more:hover {
-		text-decoration: none;
-	}
-
-	.learn-more:hover .learn-more-arrow {
-		transform: translateX(4px);
+	.contact-btn-wrap {
+		position: relative;
+		z-index: 2;
 	}
 </style>

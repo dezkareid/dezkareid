@@ -6,13 +6,13 @@ interface Props {
 }
 
 const {
-	subtitle = "Building high-performance, accessible, and beautiful interfaces — with meticulous attention to every pixel and interaction.",
+	subtitle = "Solving problems for companies and people. Building solutions and teaching how to do it. Focus on creating value for everyone.",
 } = Astro.props;
 ---
 
 <Section paddingBlock="large" class="hero">
 	<div class="hero-container">
-		<h1 class="hero-title">Crafting product experiences.</h1>
+		<h1 class="hero-title">Crafting frontend product experiences.</h1>
 
 		<div class="hero-body">
 			<div class="hero-avatar-wrap">
@@ -42,7 +42,12 @@ const {
 		background: linear-gradient(
 			135deg,
 			var(--color-background-primary) 0%,
-			color-mix(in srgb, var(--color-primary) 5%, var(--color-background-primary)) 100%
+			color-mix(
+					in srgb,
+					var(--color-primary) 5%,
+					var(--color-background-primary)
+				)
+				100%
 		);
 	}
 
@@ -93,7 +98,8 @@ const {
 		object-fit: cover;
 		object-position: center top;
 		display: block;
-		border: 3px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
+		border: 3px solid
+			color-mix(in srgb, var(--color-primary) 30%, transparent);
 	}
 
 	.hero-subtitle {
