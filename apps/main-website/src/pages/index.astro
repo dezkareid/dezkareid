@@ -1,24 +1,40 @@
 ---
-import { getCollection } from 'astro:content';
-import Layout from '../layouts/Layout.astro';
-import Hero from '../components/Hero.astro';
-import Section from '../components/Section.astro';
-import ProjectCard from '../components/ProjectCard.astro';
-import ServiceCard from '../components/ServiceCard.astro';
-import SkillsList from '../components/SkillsList.astro';
-import ContactSection from '../components/ContactSection.astro';
+import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import Section from "../components/Section.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import ServiceCard from "../components/ServiceCard.astro";
+import SkillsList from "../components/SkillsList.astro";
+import ContactSection from "../components/ContactSection.astro";
 
-const featuredProjects = (await getCollection('projects', ({ data }) => {
-	return data.featured === true;
-})).sort((a, b) => a.data.order - b.data.order).slice(0, 3);
-
-const services = (await getCollection('services'))
+const featuredProjects = (
+	await getCollection("projects", ({ data }) => {
+		return data.featured === true;
+	})
+)
 	.sort((a, b) => a.data.order - b.data.order)
 	.slice(0, 3);
+
+const services = (await getCollection("services")).sort(
+	(a, b) => a.data.order - b.data.order
+);
 ---
 
-<Layout title="Frontend Developer | UI/UX & React Expert">
+<Layout title="Dezkareid - Frontend Architect">
 	<Hero />
+	<Section id="presentation">
+		<div class="container">
+			<div class="presentation-quote reveal">
+				<p class="presentation-quote-text">
+					"I like to solve problems and look back proud of what I've
+					built. I'm a software developer who calls himself a Frontend
+					Architect focused on React, Performance, and
+					Maintainability."
+				</p>
+			</div>
+		</div>
+	</Section>
 
 	<Section id="services" class="bg-alt">
 		<div class="container">
@@ -27,11 +43,13 @@ const services = (await getCollection('services'))
 				<h2 class="section-title">Services</h2>
 			</header>
 			<div class="grid reveal-group">
-				{services.map((service) => (
-					<div class="reveal">
-						<ServiceCard service={service} />
-					</div>
-				))}
+				{
+					services.map((service) => (
+						<div class="reveal">
+							<ServiceCard service={service} />
+						</div>
+					))
+				}
 			</div>
 		</div>
 	</Section>
@@ -53,13 +71,19 @@ const services = (await getCollection('services'))
 			<header class="section-header reveal">
 				<span class="section-label">Work</span>
 				<h2 class="section-title">Featured Projects</h2>
+				<p class="section-intro">
+					Some projects are personal, others are contributions, and
+					others are part of my past work.
+				</p>
 			</header>
 			<div class="grid reveal-group">
-				{featuredProjects.map((project, i) => (
-					<div class="reveal">
-						<ProjectCard project={project} index={i} />
-					</div>
-				))}
+				{
+					featuredProjects.map((project, i) => (
+						<div class="reveal">
+							<ProjectCard project={project} index={i} />
+						</div>
+					))
+				}
 			</div>
 			<div class="section-actions reveal">
 				<a href="/projects" class="view-all">
@@ -142,6 +166,34 @@ const services = (await getCollection('services'))
 		line-height: var(--font-line-height-tight);
 	}
 
+	.section-intro {
+		margin-top: var(--spacing-12);
+		font-size: var(--font-size-300);
+		color: var(--color-text-primary);
+		opacity: 0.7;
+		line-height: var(--font-line-height-relaxed);
+	}
+
+	/* Presentation quote */
+	.presentation-quote {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		gap: var(--spacing-8);
+		max-width: 640px;
+		margin-inline: auto;
+	}
+
+	.presentation-quote-text {
+		font-size: clamp(1.125rem, 2.5vw, 1.375rem);
+		font-weight: var(--font-weight-medium);
+		color: var(--color-text-primary);
+		line-height: var(--font-line-height-relaxed);
+		letter-spacing: -0.01em;
+		margin: 0;
+	}
+
 	.grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -160,7 +212,8 @@ const services = (await getCollection('services'))
 		font-weight: var(--font-weight-bold);
 		font-size: var(--font-size-400);
 		text-decoration: none;
-		border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 40%, transparent);
+		border-bottom: 1px solid
+			color-mix(in srgb, var(--color-primary) 40%, transparent);
 		padding-bottom: 2px;
 		transition: gap 0.2s ease, border-color 0.2s ease;
 	}
@@ -186,5 +239,4 @@ const services = (await getCollection('services'))
 	.text-center {
 		text-align: center;
 	}
-
 </style>

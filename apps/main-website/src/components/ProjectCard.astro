@@ -1,6 +1,5 @@
 ---
 import Card from "./Card.astro";
-import Button from "./Button.astro";
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -9,14 +8,31 @@ interface Props {
 }
 
 const { project, index = 0 } = Astro.props;
-const { title, description, techStack, githubUrl, liveUrl } = project.data;
+const { title, description, techStack, image, type } = project.data;
 
 const num = String(index + 1).padStart(2, "0");
+
+const typeLabel: Record<string, string> = {
+	personal: "Personal",
+	work: "Work",
+	contribution: "Contribution",
+};
 ---
 
 <Card class="project-card">
+	<a class="card-link" href={`/projects/${project.slug}`} aria-label={`View ${title}`}></a>
+
+	{image && (
+		<div class="project-image">
+			<img src={image} alt={`${title} preview`} width="600" height="400" loading="lazy" decoding="async" />
+		</div>
+	)}
+
 	<div class="project-content">
-		<span class="project-number" aria-hidden="true">{num}</span>
+		<div class="project-meta-top">
+			<span class="project-number" aria-hidden="true">{num}</span>
+			<span class="project-type-badge" data-type={type}>{typeLabel[type]}</span>
+		</div>
 
 		<h3 class="project-title">{title}</h3>
 		<p class="project-description">{description}</p>
@@ -25,20 +41,6 @@ const num = String(index + 1).padStart(2, "0");
 			{techStack.map((tech) => (
 				<span class="tech-tag">{tech}</span>
 			))}
-		</div>
-
-		<div class="project-links">
-			{githubUrl && (
-				<Button href={githubUrl} variant="outline" size="small" target="_blank" rel="noopener noreferrer">
-					GitHub
-				</Button>
-			)}
-			{liveUrl && (
-				<Button href={liveUrl} variant="primary" size="small" target="_blank" rel="noopener noreferrer">
-					Live Demo
-				</Button>
-			)}
-			<Button href={`/projects/${project.slug}`} variant="ghost" size="small">Read More</Button>
 		</div>
 	</div>
 </Card>
@@ -57,53 +59,110 @@ const num = String(index + 1).padStart(2, "0");
 		flex-direction: column;
 		position: relative;
 		overflow: hidden;
+		cursor: pointer;
+	}
+
+	/* Stretched link — covers the full card */
+	.card-link {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+	}
+
+	.project-image {
+		width: 100%;
+		aspect-ratio: 3 / 2;
+		overflow: hidden;
+		flex-shrink: 0;
+	}
+
+	.project-image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+		transition: transform 0.3s ease;
+	}
+
+	.project-card:hover .project-image img {
+		transform: scale(1.03);
 	}
 
 	.project-content {
 		display: flex;
 		flex-direction: column;
-		height: 100%;
+		flex: 1;
+		padding-top: var(--spacing-16);
 		position: relative;
-		z-index: 1;
+	}
+
+	.project-meta-top {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: var(--spacing-12);
 	}
 
 	.project-number {
 		/* DS NOTE: --font-size-display-number candidate */
-		font-size: 4.5rem;
+		font-size: 2.5rem;
 		font-weight: var(--font-weight-bold);
 		font-family: var(--font-family-mono);
 		line-height: 1;
 		/* DS NOTE: --color-text-number candidate */
 		color: color-mix(in srgb, var(--color-primary) 12%, transparent);
-		position: absolute;
-		top: 0;
-		right: 0;
 		pointer-events: none;
 		user-select: none;
 		transition: color 0.25s ease;
-		/* Prevent overlapping title on small screens */
-		max-width: 40%;
-		text-align: right;
 	}
 
 	.project-card:hover .project-number {
 		color: color-mix(in srgb, var(--color-primary) 20%, transparent);
 	}
 
+	.project-type-badge {
+		font-size: var(--font-size-100);
+		font-family: var(--font-family-mono);
+		font-weight: var(--font-weight-medium);
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		padding: var(--spacing-4) var(--spacing-8);
+		border-radius: 9999px;
+		position: relative;
+		z-index: 2;
+	}
+
+	.project-type-badge[data-type="personal"] {
+		background-color: color-mix(in srgb, var(--color-primary) 12%, transparent);
+		/* light-dark ensures readable contrast on both themes */
+		color: light-dark(#1d4ed8, #93c5fd);
+		border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
+	}
+
+	.project-type-badge[data-type="work"] {
+		background-color: color-mix(in srgb, #22c55e 12%, transparent);
+		color: light-dark(#15803d, #86efac);
+		border: 1px solid color-mix(in srgb, #22c55e 30%, transparent);
+	}
+
+	.project-type-badge[data-type="contribution"] {
+		background-color: color-mix(in srgb, #f59e0b 12%, transparent);
+		color: light-dark(#92400e, #fcd34d);
+		border: 1px solid color-mix(in srgb, #f59e0b 30%, transparent);
+	}
+
 	.project-title {
 		font-size: var(--font-size-500);
 		margin-bottom: var(--spacing-12);
-		margin-top: var(--spacing-32);
 		color: var(--color-text-primary);
 		letter-spacing: -0.01em;
 		line-height: var(--font-line-height-tight);
-		/* Prevent text running under the absolute number */
-		padding-right: 3.5rem;
 	}
 
 	.project-description {
 		font-size: var(--font-size-300);
-		color: var(--color-base-gray-500);
+		color: var(--color-text-primary);
+		opacity: 0.75;
 		margin-bottom: var(--spacing-24);
 		flex: 1;
 		line-height: var(--font-line-height-relaxed);
@@ -113,7 +172,6 @@ const num = String(index + 1).padStart(2, "0");
 		display: flex;
 		gap: var(--spacing-8);
 		flex-wrap: wrap;
-		margin-bottom: var(--spacing-24);
 	}
 
 	.tech-tag {
@@ -127,11 +185,5 @@ const num = String(index + 1).padStart(2, "0");
 		color: var(--color-primary);
 		font-family: var(--font-family-mono);
 		letter-spacing: 0.02em;
-	}
-
-	.project-links {
-		display: flex;
-		gap: var(--spacing-8);
-		flex-wrap: wrap;
 	}
 </style>

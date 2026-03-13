@@ -1,14 +1,19 @@
 ---
-title: "React Performance Optimization"
-description: "Identifying and resolving performance issues in complex React applications to ensure a smooth user experience."
+title: "Web Performance Optimization"
+description: "I identify and fix the performance bottlenecks holding your web application back."
 icon: "⚡"
-order: 2
+order: 3
+cta: "Request an audit"
 ---
 
 ## Service Overview
-I help companies optimize their existing React applications, focusing on Core Web Vitals and user-perceived performance.
 
-### What's Included
-- **Comprehensive Audit**: In-depth analysis using performance profiling tools.
-- **Optimization Roadmap**: Prioritized list of performance fixes.
-- **Implementation Support**: Hands-on assistance in applying optimizations.
+Performance is not a feature — it's a business requirement. A slow website loses users, hurts SEO, and reduces conversions. I conduct deep performance audits and work with your team to implement lasting improvements, not just quick fixes.
+
+### How it works
+
+- I start by understanding your business goals and the metrics that matter most to you.
+- I conduct a thorough audit to identify root causes — network, rendering, bundle size, and more.
+- I deliver a prioritized action plan with concrete recommendations.
+- We implement the fixes and put guardrails in place to prevent regressions.
+
