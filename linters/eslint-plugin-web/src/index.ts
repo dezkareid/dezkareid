@@ -21,6 +21,15 @@ export const configs: Record<string, Linter.Config[]> = {
   react: [
     reactPlugin.configs.recommended as Linter.Config,
     pluginUnicorn.configs.recommended as Linter.Config,
+    {
+      // Allow 'Ref' suffix to satisfy @eslint-react/naming-convention/ref-name,
+      // which conflicts with unicorn/prevent-abbreviations treating 'Ref' as an abbreviation.
+      rules: {
+        'unicorn/prevent-abbreviations': ['error', {
+          allowList: { Ref: true, ref: true },
+        }],
+      },
+    } as Linter.Config,
   ],
   astro: [
     ...(pluginAstro.configs.recommended as Linter.Config[]),
