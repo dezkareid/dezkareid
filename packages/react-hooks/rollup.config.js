@@ -2,73 +2,58 @@ import cleaner from 'rollup-plugin-cleaner';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
-import { babel } from '@rollup/plugin-babel';
-import json from '@rollup/plugin-json';
-import { dts } from 'rollup-plugin-dts';
-import pkg from './package.json' with { type: 'json' };
+import typescript from '@rollup/plugin-typescript';
+import package_ from './package.json' with { type: 'json' };
+
+const external = Object.keys(package_.peerDependencies);
+
+const inputs = {
+  index: 'src/index.ts',
+  useLocalStorage: 'src/useLocalStorage/index.ts',
+  useEventListener: 'src/useEventListener/index.ts',
+};
 
 const commonPlugins = [
-  cleaner({
-    targets: ['./dist/']
-  }),
-  resolve({
-    extensions: ['.js', '.jsx', '.ts', '.tsx']
-  }),
+  resolve({ extensions: ['.ts', '.tsx'] }),
   commonjs(),
-  json(),
-  terser()
+  terser(),
 ];
 
-const esmConfig = {
-  input: {
-    index: 'src/index.ts',
-    useLocalStorage: 'src/useLocalStorage/index.ts',
-    useEventListener: 'src/useEventListener/index.ts',
-  },
-  output: [
-    {
+export default [
+  {
+    input: inputs,
+    output: {
       dir: 'dist/es',
       format: 'es',
-      sourcemap: true
+      sourcemap: true,
     },
-    {
+    external,
+    plugins: [
+      cleaner({ targets: ['./dist/'] }),
+      typescript({
+        tsconfig: './tsconfig.json',
+        outDir: 'dist/es',
+        declaration: true,
+        declarationDir: 'dist/es',
+      }),
+      ...commonPlugins,
+    ],
+  },
+  {
+    input: inputs,
+    output: {
       dir: 'dist/cjs',
       format: 'cjs',
-      sourcemap: true
-    }
-  ],
-  external: Object.keys(pkg.peerDependencies),
-  plugins: [
-    ...commonPlugins,
-    babel({
-      babelHelpers: 'bundled',
-      presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
-      extensions: ['.js', '.jsx', '.ts', '.tsx']
-    })
-  ]
-};
-
-const dtsRollupConfig = {
-  input: {
-    index: 'src/index.ts',
-    useLocalStorage: 'src/useLocalStorage/index.ts',
-    useEventListener: 'src/useEventListener/index.ts',
+      sourcemap: true,
+    },
+    external,
+    plugins: [
+      typescript({
+        tsconfig: './tsconfig.json',
+        outDir: 'dist/cjs',
+        declaration: false,
+      }),
+      ...commonPlugins,
+    ],
   },
-  output: {
-    dir: 'dist/types',
-    format: 'es'
-  },
-  plugins: [dts()]
-};
-
-export default (commandLineArgs) => {
-  if (commandLineArgs.BUILD_ES_CJS) {
-    return esmConfig;
-  }
-
-  if (commandLineArgs.BUILD_TYPES) {
-    return dtsRollupConfig;
-  }
-
-  return [esmConfig, dtsRollupConfig];
-};
+];

@@ -6,14 +6,14 @@ describe('Test suite useEventListener hook - add and remove event listener from 
   it('Should register event on object, when event happen should execute callback and when is unmounted should remove registration', () => {
     const customEvent = 'customEvent';
     const callback = vi.fn();
-    const params = { element: window, event: customEvent, callback };
-    const { unmount } = renderHook(() => useEventListener(params));
+    const parameters = { element: globalThis, event: customEvent, callback };
+    const { unmount } = renderHook(() => useEventListener(parameters));
     const event = new CustomEvent(customEvent);
     act(() => {
-      window.dispatchEvent(event);
+      globalThis.dispatchEvent(event);
     });
     expect(callback).toHaveBeenCalledTimes(1);
-    const onRemoveEventSpy = vi.spyOn(window, 'removeEventListener');
+    const onRemoveEventSpy = vi.spyOn(globalThis, 'removeEventListener');
     act(() => {
       unmount();
     });
