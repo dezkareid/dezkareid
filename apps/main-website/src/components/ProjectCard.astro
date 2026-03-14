@@ -2,7 +2,7 @@
 import Card from "./Card.astro";
 import type { CollectionEntry } from 'astro:content';
 
-interface Props {
+interface Properties {
 	project: CollectionEntry<'projects'>;
 	index?: number;
 }
@@ -10,7 +10,7 @@ interface Props {
 const { project, index = 0 } = Astro.props;
 const { title, description, techStack, image, type } = project.data;
 
-const num = String(index + 1).padStart(2, "0");
+const number_ = String(index + 1).padStart(2, "0");
 
 const typeLabel: Record<string, string> = {
 	personal: "Personal",
@@ -30,7 +30,7 @@ const typeLabel: Record<string, string> = {
 
 	<div class="project-content">
 		<div class="project-meta-top">
-			<span class="project-number" aria-hidden="true">{num}</span>
+			<span class="project-number" aria-hidden="true">{number_}</span>
 			<span class="project-type-badge" data-type={type}>{typeLabel[type]}</span>
 		</div>
 

@@ -1,10 +1,10 @@
 import tsBase from '@dezkareid/eslint-config-ts-base';
-import pluginAstro from 'eslint-plugin-astro';
+import webPlugin from '@dezkareid/eslint-plugin-web';
 
 export default [
   {
     ignores: ['dist/', 'node_modules/', '.astro/']
   },
   ...tsBase,
-  ...pluginAstro.configs.recommended,
+  ...webPlugin.configs.astro,
 ];

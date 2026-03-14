@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import gMapsLoader from './gm-loader';
 
-interface UseGoogleMapsAPIParams {
+interface UseGoogleMapsAPIParameters {
   key: string;
 }
 
-function useGoogleMapsAPI({ key }: UseGoogleMapsAPIParams): unknown {
-  const [mapsAPI, setMapsAPI] = useState<unknown>(undefined);
+function useGoogleMapsAPI({ key }: UseGoogleMapsAPIParameters): unknown {
+  const [mapsAPI, setMapsAPI] = useState<unknown>();
   useEffect(() => {
     gMapsLoader({ key }).then((googleMapsAPI: unknown) => {
       setMapsAPI(googleMapsAPI);

@@ -1,5 +1,5 @@
-interface UseGoogleMapsAPIParams {
+interface UseGoogleMapsAPIParameters {
     key: string;
 }
-declare function useGoogleMapsAPI({ key }: UseGoogleMapsAPIParams): unknown;
+declare function useGoogleMapsAPI({ key }: UseGoogleMapsAPIParameters): unknown;
 export default useGoogleMapsAPI;

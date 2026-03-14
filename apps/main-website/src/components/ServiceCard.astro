@@ -3,7 +3,7 @@ import Card from "./Card.astro";
 import Button from "./Button.astro";
 import type { CollectionEntry } from 'astro:content';
 
-interface Props {
+interface Properties {
 	service: CollectionEntry<'services'>;
 }
 
@@ -28,14 +28,14 @@ const { title, description, icon, cta } = service.data;
 </Card>
 
 <script>
-	document.querySelectorAll('[data-contact-btn]').forEach((btn) => {
-		btn.addEventListener('click', (e) => {
-			e.preventDefault();
-			e.stopPropagation();
-			const target = document.getElementById('contact');
-			if (target) target.scrollIntoView({ behavior: 'smooth' });
-		});
+	for (const button of document.querySelectorAll('[data-contact-btn]')) {
+	button.addEventListener('click', (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		const target = document.querySelector('#contact');
+		if (target) target.scrollIntoView({ behavior: 'smooth' });
 	});
+}
 </script>
 
 <style>

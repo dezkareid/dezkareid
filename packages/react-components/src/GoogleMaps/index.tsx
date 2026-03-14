@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, ReactNode } from 'react';
+import { createContext, use, useEffect, useRef, ReactNode } from 'react';
 import { useGoogleMaps } from '@dezkareid/react-hooks';
 
 export interface MapOptions {
@@ -10,38 +10,40 @@ export interface MapOptions {
   [key: string]: unknown;
 }
 
-export interface GoogleMapsProps {
+export interface GoogleMapsProperties {
   mapKey: string;
   mapOptions: MapOptions;
   className?: string;
   children?: ReactNode;
 }
 
-function GoogleMaps({ mapKey, mapOptions, className = '', children = null }: GoogleMapsProps) {
+type GoogleMap = unknown;
+
+export const GoogleMapContext = createContext<GoogleMap>(undefined);
+
+export function useGoogleMap() {
+  return use(GoogleMapContext);
+}
+
+function GoogleMaps({ mapKey, mapOptions, className = '', children }: GoogleMapsProperties) {
   const google = useGoogleMaps({ key: mapKey });
-  const [map, setMap] = useState<unknown>(null);
   const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<GoogleMap>(undefined);
 
   useEffect(() => {
     if (google && mapRef.current) {
-      const mapInstance = new google.maps.Map(mapRef.current, {
+      mapInstanceRef.current = new (google as { maps: { Map: new (element: HTMLDivElement, options: MapOptions) => unknown } }).maps.Map(mapRef.current, {
         ...mapOptions
       });
-      setMap(mapInstance);
     }
   }, [google, mapOptions]);
 
-  const mapElements = React.Children.map(children, (child) => {
-    if (React.isValidElement(child)) {
-      return React.cloneElement(child, { map } as React.Attributes & { map: unknown });
-    }
-    return child;
-  });
-
   return (
-    <div ref={mapRef} className={className}>
-      {mapElements}
-    </div>
+    <GoogleMapContext value={mapInstanceRef.current}>
+      <div ref={mapRef} className={className}>
+        {children}
+      </div>
+    </GoogleMapContext>
   );
 }
 

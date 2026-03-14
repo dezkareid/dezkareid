@@ -3,8 +3,8 @@ declare global {
         google: unknown;
     }
 }
-interface GMLoaderParams {
+interface GMLoaderParameters {
     key: string;
 }
-declare function gMLoader({ key }: GMLoaderParams): Promise<unknown>;
+declare function gMLoader({ key }: GMLoaderParameters): Promise<unknown>;
 export default gMLoader;

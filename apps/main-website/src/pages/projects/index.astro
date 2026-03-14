@@ -4,8 +4,8 @@ import Layout from '../../layouts/Layout.astro';
 import Section from '../../components/Section.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 
-const allProjects = (await getCollection('projects'))
-	.sort((a, b) => a.data.order - b.data.order);
+const projectsCollection = await getCollection('projects');
+const allProjects = projectsCollection.toSorted((a, b) => a.data.order - b.data.order);
 ---
 
 <Layout title="Projects | Frontend Developer Portfolio">
@@ -16,8 +16,8 @@ const allProjects = (await getCollection('projects'))
 			<p class="page-description">A collection of my recent work, ranging from design systems to performance audits.</p>
 
 			<div class="grid">
-				{allProjects.map((project, i) => (
-					<ProjectCard project={project} index={i} />
+				{allProjects.map((project, index) => (
+					<ProjectCard project={project} index={index} />
 				))}
 			</div>
 		</div>

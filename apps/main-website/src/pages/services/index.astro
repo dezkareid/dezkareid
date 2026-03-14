@@ -4,8 +4,8 @@ import Layout from '../../layouts/Layout.astro';
 import Section from '../../components/Section.astro';
 import ServiceCard from '../../components/ServiceCard.astro';
 
-const allServices = (await getCollection('services'))
-	.sort((a, b) => a.data.order - b.data.order);
+const servicesCollection = await getCollection('services');
+const allServices = servicesCollection.toSorted((a, b) => a.data.order - b.data.order);
 ---
 
 <Layout title="Services | Frontend Developer Portfolio">
