@@ -1,0 +1,37 @@
+{
+  "name": "@dezkareid/types",
+  "version": "0.0.0",
+  "description": "A collection of types for APIs, structured data and shared types",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dezkareid/dezkareid",
+    "directory": "packages/types"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w",
+    "test": "vitest run"
+  },
+  "author": "Joel Humberto Gomez Paredes <elmaildeldezkareid@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dezkareid/dezkareid/issues"
+  },
+  "keywords": [
+    "typescript",
+    "types"
+  ],
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "@types/node": "25.0.10",
+    "vitest": "4.0.18"
+  }
+}
