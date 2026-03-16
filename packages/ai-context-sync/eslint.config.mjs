@@ -1,20 +1,18 @@
 import tsBase from '@dezkareid/eslint-config-ts-base';
-import webPlugin from '@dezkareid/eslint-plugin-web';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
-  {
-    ignores: ['dist/', 'node_modules/', 'coverage/', '.turbo/', 'webpack/', '**/*.d.ts'],
-  },
   ...tsBase,
-  ...webPlugin.configs.react,
   {
-    files: ['**/*.ts', '**/*.tsx'],
+    files: ['**/*.ts'],
     languageOptions: {
       parserOptions: {
         project: './tsconfig.eslint.json',
         tsconfigRootDir: import.meta.dirname,
       },
     },
+  },
+  {
+    ignores: ['dist/**', 'node_modules/**', 'working-on/**', 'done/**'],
   },
 ];

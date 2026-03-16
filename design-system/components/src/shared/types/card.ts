@@ -1,5 +1,5 @@
 export type CardElevation = 'flat' | 'raised';
 
-export interface CardProps {
+export interface CardProperties {
   elevation?: CardElevation;
 }

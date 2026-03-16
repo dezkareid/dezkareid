@@ -9,6 +9,7 @@ export function ThemeToggle() {
 
   useEffect(() => {
     const initial = getInitialTheme();
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
     setTheme(initial);
     applyTheme(initial);
   }, []);

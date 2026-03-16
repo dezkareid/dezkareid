@@ -22,13 +22,16 @@ export class GeminiStrategy implements SyncStrategy {
 
     await fs.ensureDir(geminiDir);
 
-    let settings: any = {};
+    type GeminiContext = { fileName?: string | string[] };
+    type GeminiSettings = { context?: GeminiContext };
+
+    let settings: GeminiSettings = {};
     let exists = false;
     if (await fs.pathExists(settingsPath)) {
       exists = true;
       try {
-        settings = await fs.readJson(settingsPath);
-      } catch (e) {
+        settings = await fs.readJson(settingsPath) as GeminiSettings;
+      } catch {
         settings = {};
       }
     }

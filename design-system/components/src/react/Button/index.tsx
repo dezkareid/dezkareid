@@ -1,9 +1,9 @@
 import type { ButtonHTMLAttributes } from 'react';
 import cx from 'classnames';
-import type { ButtonProps } from '../../shared/types/button';
+import type { ButtonProperties } from '../../shared/types/button';
 import styles from '../../css/button.module.css';
 
-type Props = ButtonProps & ButtonHTMLAttributes<HTMLButtonElement>;
+type Properties = ButtonProperties & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export function Button({
   variant = 'primary',
@@ -12,7 +12,7 @@ export function Button({
   children,
   className,
   ...rest
-}: Props) {
+}: Properties) {
   return (
     <button
       className={cx(

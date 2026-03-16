@@ -11,14 +11,14 @@ describe('Button', () => {
 
   it('renders primary variant', () => {
     render(<Button variant="primary">Primary</Button>);
-    const btn = screen.getByRole('button');
-    expect(btn.className).toMatch(/button--primary/);
+    const button = screen.getByRole('button');
+    expect(button.className).toMatch(/button--primary/);
   });
 
   it('renders secondary variant', () => {
     render(<Button variant="secondary">Secondary</Button>);
-    const btn = screen.getByRole('button');
-    expect(btn.className).toMatch(/button--secondary/);
+    const button = screen.getByRole('button');
+    expect(button.className).toMatch(/button--secondary/);
   });
 
   it('renders sm size', () => {
@@ -38,9 +38,9 @@ describe('Button', () => {
 
   it('is disabled when disabled prop is set', () => {
     render(<Button disabled>Disabled</Button>);
-    const btn = screen.getByRole('button');
-    expect(btn).toBeDisabled();
-    expect(btn.className).toMatch(/button--disabled/);
+    const button = screen.getByRole('button');
+    expect(button).toBeDisabled();
+    expect(button.className).toMatch(/button--disabled/);
   });
 
   it('does not fire onClick when disabled', async () => {

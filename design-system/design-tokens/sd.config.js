@@ -1,4 +1,4 @@
-const { isThemed, isLight, isDark, getCssName, getScssName, getJsName } = require('./src/utils/token-naming');
+const { isLight, isDark, getCssName, getScssName, getJsName } = require('./src/utils/token-naming');
 const { generateCatalog } = require('./src/utils/catalog-generator');
 
 module.exports = {

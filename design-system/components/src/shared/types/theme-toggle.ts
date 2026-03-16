@@ -1,5 +1,3 @@
 export type Theme = 'light' | 'dark';
 
-export interface ThemeToggleProps {
-  // No required props — self-contained stateful component
-}
+export type ThemeToggleProperties = Record<never, never>;

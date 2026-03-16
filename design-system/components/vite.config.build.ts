@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { resolve } from 'node:path';
+import path from 'node:path';
 import type { Plugin } from 'vite';
 
 function stripCssImports(): Plugin {
@@ -8,7 +8,7 @@ function stripCssImports(): Plugin {
     name: 'strip-css-imports',
     transform(code, id) {
       if (!id.endsWith('.ts') && !id.endsWith('.tsx')) return;
-      return code.replace(/^import\s+\w+\s+from\s+['"].*?\.module\.css['"];?\s*$/gm, '');
+      return code.replaceAll(/^import\s+\w+\s+from\s+['"].*?\.module\.css['"];?\s*$/gm, '');
     },
   };
 }
@@ -17,7 +17,7 @@ export default defineConfig({
   plugins: [react(), stripCssImports()],
   build: {
     lib: {
-      entry: { react: resolve(__dirname, 'src/react/index.ts') },
+      entry: { react: path.resolve(__dirname, 'src/react/index.ts') },
       formats: ['es'],
     },
     rollupOptions: {

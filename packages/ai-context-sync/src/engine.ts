@@ -7,6 +7,46 @@ import { GeminiStrategy } from './strategies/gemini.js';
 import { GeminiMdStrategy } from './strategies/gemini-md.js';
 import { OtherStrategy } from './strategies/other.js';
 
+function buildBuiltInStrategies(fromFile?: string): SyncStrategy[] {
+  return [
+    new ClaudeStrategy(fromFile),
+    new GeminiStrategy(fromFile),
+    new GeminiMdStrategy(fromFile)
+  ];
+}
+
+function resolveStrategiesToRun(
+  selectedStrategies: string | string[] | undefined,
+  builtInStrategies: SyncStrategy[],
+  otherFiles?: string[],
+  fromFile?: string
+): SyncStrategy[] {
+  if (!selectedStrategies || (Array.isArray(selectedStrategies) && selectedStrategies.length === 0)) {
+    return builtInStrategies;
+  }
+
+  const selectedList = Array.isArray(selectedStrategies) ? selectedStrategies : [selectedStrategies];
+  const normalizedList = selectedList.map(s => s.toLowerCase());
+
+  let strategies: SyncStrategy[];
+  if (normalizedList.includes('all') || normalizedList.includes('both')) {
+    strategies = [...builtInStrategies];
+  } else {
+    strategies = builtInStrategies.filter(s => normalizedList.includes(s.name.toLowerCase()));
+  }
+
+  if (normalizedList.includes('other')) {
+    if (!otherFiles || otherFiles.length === 0) {
+      throw new Error('Strategy "other" requires otherFiles to be specified.');
+    }
+    for (const filename of otherFiles) {
+      strategies.push(new OtherStrategy(filename, fromFile));
+    }
+  }
+
+  return strategies;
+}
+
 export class SyncEngine {
   async sync(
     projectRoot: string,
@@ -24,41 +64,11 @@ export class SyncEngine {
     }
 
     const context = await fs.readFile(agentsPath, 'utf-8');
+    const builtInStrategies = buildBuiltInStrategies(fromFile);
+    const strategiesToRun = resolveStrategiesToRun(selectedStrategies, builtInStrategies, otherFiles, fromFile);
 
-    const builtInStrategies: SyncStrategy[] = [
-      new ClaudeStrategy(fromFile),
-      new GeminiStrategy(fromFile),
-      new GeminiMdStrategy(fromFile)
-    ];
-
-    let strategiesToRun: SyncStrategy[];
-
-    if (!selectedStrategies || (Array.isArray(selectedStrategies) && selectedStrategies.length === 0)) {
-      strategiesToRun = builtInStrategies;
-    } else {
-      const selectedList = Array.isArray(selectedStrategies) ? selectedStrategies : [selectedStrategies];
-      const normalizedList = selectedList.map(s => s.toLowerCase());
-
-      if (normalizedList.includes('all') || normalizedList.includes('both')) {
-        strategiesToRun = builtInStrategies;
-      } else {
-        strategiesToRun = builtInStrategies.filter(s =>
-          normalizedList.includes(s.name.toLowerCase())
-        );
-      }
-
-      if (normalizedList.includes('other')) {
-        if (!otherFiles || otherFiles.length === 0) {
-          throw new Error('Strategy "other" requires otherFiles to be specified.');
-        }
-        for (const filename of otherFiles) {
-          strategiesToRun.push(new OtherStrategy(filename, fromFile));
-        }
-      }
-    }
-
-    const availableNames = [...builtInStrategies.map(s => s.name), 'other'].join(', ');
     if (strategiesToRun.length === 0 && selectedStrategies) {
+      const availableNames = [...builtInStrategies.map(s => s.name), 'other'].join(', ');
       throw new Error(`No valid strategies found for: ${selectedStrategies}. Available strategies: ${availableNames}`);
     }
 

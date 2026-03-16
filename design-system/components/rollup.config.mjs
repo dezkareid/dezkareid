@@ -18,7 +18,7 @@ export default {
       tsconfig: './tsconfig.json',
       declaration: true,
       declarationDir: 'dist',
-      exclude: ['**/*.test.tsx', '**/*.test.ts', 'setupTests.ts'],
+      exclude: ['**/*.test.tsx', '**/*.test.ts', 'setup-tests.ts'],
     }),
   ],
   output: {

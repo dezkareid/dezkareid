@@ -61,24 +61,7 @@ const generateCatalog = (allTokens, format = 'all') => {
 
     sortedCorePaths.forEach(corePath => {
       const pair = semanticMap.get(corePath);
-      
-      // Add Synthesized Core Token (CSS only for light-dark support)
-      if (format === 'all' || format === 'css') {
-        if (pair.light && pair.dark) {
-          const coreName = corePath.split('.').join('-');
-          const lightName = getCssName(pair.light);
-          const darkName = getCssName(pair.dark);
-          
-          let row = [];
-          if (format === 'all' || format === 'css') row.push(`\`--${coreName}\``);
-          if (format === 'all' || format === 'scss') row.push(`-`);
-          if (format === 'all' || format === 'js') row.push(`-`);
-          row.push(`\`light-dark(var(--${lightName}), var(--${darkName}))\``);
-          markdown += `| ${row.join(' | ')} |\n`;
-        }
-      }
-
-      // Add Individual Variants
+      markdown += generateSynthesizedRow(corePath, pair, format);
       if (pair.light) markdown += `| ${generateRow(pair.light, format).join(' | ')} |\n`;
       if (pair.dark) markdown += `| ${generateRow(pair.dark, format).join(' | ')} |\n`;
     });
@@ -86,6 +69,19 @@ const generateCatalog = (allTokens, format = 'all') => {
   }
 
   return markdown;
+};
+
+const generateSynthesizedRow = (corePath, pair, format) => {
+  if ((format !== 'all' && format !== 'css') || !pair.light || !pair.dark) return '';
+  const coreName = corePath.split('.').join('-');
+  const lightName = getCssName(pair.light);
+  const darkName = getCssName(pair.dark);
+  const row = [];
+  if (format === 'all' || format === 'css') row.push(`\`--${coreName}\``);
+  if (format === 'all' || format === 'scss') row.push(`-`);
+  if (format === 'all' || format === 'js') row.push(`-`);
+  row.push(`\`light-dark(var(--${lightName}), var(--${darkName}))\``);
+  return `| ${row.join(' | ')} |\n`;
 };
 
 const getTableHeaders = (format) => {

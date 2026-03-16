@@ -4,12 +4,12 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ThemeToggle } from './index';
 
 function mockMatchMedia(prefersDark: boolean) {
-  Object.defineProperty(window, 'matchMedia', {
+  Object.defineProperty(globalThis, 'matchMedia', {
     writable: true,
     value: vi.fn((query: string) => ({
       matches: query === '(prefers-color-scheme: dark)' ? prefersDark : false,
       media: query,
-      onchange: null,
+      onchange: undefined,
       addEventListener: vi.fn(),
       removeEventListener: vi.fn(),
       dispatchEvent: vi.fn(),

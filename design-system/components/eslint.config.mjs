@@ -4,7 +4,7 @@ import webPlugin from '@dezkareid/eslint-plugin-web';
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   {
-    ignores: ['dist/', 'node_modules/', 'coverage/', '.turbo/', 'webpack/', '**/*.d.ts'],
+    ignores: ['dist/', 'node_modules/', 'coverage/', '.turbo/', '**/*.d.ts'],
   },
   ...tsBase,
   ...webPlugin.configs.react,
