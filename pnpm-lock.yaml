@@ -515,12 +515,24 @@ importers:
 
   packages/types:
     devDependencies:
+      '@dezkareid/eslint-config-ts-base':
+        specifier: workspace:^
+        version: link:../../configs/eslint-config-ts-base
+      '@eslint/js':
+        specifier: 9.39.2
+        version: 9.39.2
       '@types/node':
         specifier: 25.0.10
         version: 25.0.10
+      eslint:
+        specifier: 9.39.2
+        version: 9.39.2(jiti@2.6.0)
       typescript:
         specifier: 5.9.3
         version: 5.9.3
+      typescript-eslint:
+        specifier: 8.57.0
+        version: 8.57.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)
       vitest:
         specifier: 4.0.18
         version: 4.0.18(@types/node@25.0.10)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.0)(jsdom@27.4.0)(terser@5.46.0)
@@ -13386,7 +13398,7 @@ snapshots:
 
   '@typescript-eslint/project-service@8.48.0(typescript@5.9.3)':
     dependencies:
-      '@typescript-eslint/tsconfig-utils': 8.56.1(typescript@5.9.3)
+      '@typescript-eslint/tsconfig-utils': 8.57.0(typescript@5.9.3)
       '@typescript-eslint/types': 8.57.0
       debug: 4.4.3
       typescript: 5.9.3
@@ -13395,7 +13407,7 @@ snapshots:
 
   '@typescript-eslint/project-service@8.56.1(typescript@5.9.3)':
     dependencies:
-      '@typescript-eslint/tsconfig-utils': 8.56.1(typescript@5.9.3)
+      '@typescript-eslint/tsconfig-utils': 8.57.0(typescript@5.9.3)
       '@typescript-eslint/types': 8.57.0
       debug: 4.4.3
       typescript: 5.9.3
