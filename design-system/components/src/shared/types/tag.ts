@@ -1,5 +1,5 @@
 export type TagVariant = 'default' | 'success' | 'danger';
 
-export interface TagProps {
+export interface TagProperties {
   variant?: TagVariant;
 }

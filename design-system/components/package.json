@@ -49,6 +49,8 @@
   ],
   "scripts": {
     "build": "rollup -c rollup.config.mjs",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "vitest --run"
   },
   "peerDependencies": {
@@ -76,21 +78,26 @@
     "classnames": "2.5.1"
   },
   "devDependencies": {
+    "@dezkareid/eslint-config-ts-base": "workspace:^",
+    "@dezkareid/eslint-plugin-web": "workspace:^",
+    "@eslint/js": "9.39.2",
     "@rollup/plugin-commonjs": "29.0.0",
     "@rollup/plugin-node-resolve": "16.0.3",
     "@rollup/plugin-typescript": "12.3.0",
     "@testing-library/jest-dom": "6.9.1",
     "@testing-library/react": "16.3.2",
     "@testing-library/user-event": "14.5.2",
-    "@types/classnames": "^2.3.4",
+    "@types/classnames": "2.3.4",
     "@types/react": "19.2.9",
     "@vitejs/plugin-react": "5.1.4",
+    "eslint": "9.39.2",
     "jsdom": "27.4.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "rollup": "4.56.0",
     "rollup-plugin-postcss": "4.0.2",
     "typescript": "5.9.3",
+    "typescript-eslint": "8.57.0",
     "vite": "7.3.1",
     "vitest": "4.0.18"
   }

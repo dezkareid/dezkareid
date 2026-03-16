@@ -26,9 +26,9 @@ describe('Card', () => {
 
   it('applies flat elevation when set', () => {
     const { container } = render(<Card elevation="flat">Content</Card>);
-    const el = container.firstChild as HTMLElement;
-    expect(el.className).toMatch(/card--flat/);
-    expect(el.className).not.toMatch(/card--raised/);
+    const element = container.firstChild as HTMLElement;
+    expect(element.className).toMatch(/card--flat/);
+    expect(element.className).not.toMatch(/card--raised/);
   });
 
   it('applies raised elevation when explicitly set', () => {

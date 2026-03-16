@@ -40,11 +40,15 @@
   "scripts": {
     "build": "style-dictionary build --config sd.config.js",
     "tokens:catalog": "node scripts/export-catalog.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "vitest run",
     "visualizer": "http-server . -p 3000 -o /scripts/visualizer/visualizer.html"
   },
   "devDependencies": {
+    "@eslint/js": "9.39.2",
     "commander": "12.0.0",
+    "eslint": "9.39.2",
     "http-server": "14.1.1",
     "style-dictionary": "5.2.0",
     "vitest": "4.0.18"
