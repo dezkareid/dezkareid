@@ -21,7 +21,7 @@ const { title, description, icon } = service.data;
 	<Section>
 		<div class="container">
 			<nav class="breadcrumb">
-				<a href="/services">← Back to Services</a>
+				<a href="/services" aria-label="Go back to the services list">← Back to Services</a>
 			</nav>
 
 			<header class="service-header">
@@ -30,7 +30,7 @@ const { title, description, icon } = service.data;
 				</div>
 				<h1 class="service-title">{title}</h1>
 				<p class="service-description">{description}</p>
-				<Button href="mailto:elmaildeldezkareid@gmail.com" size="large">Inquire About This Service</Button>
+				<Button href="mailto:elmaildeldezkareid@gmail.com" size="large" aria-label={`Inquire about ${title}`}>Inquire About This Service</Button>
 			</header>
 
 			<hr class="divider" />

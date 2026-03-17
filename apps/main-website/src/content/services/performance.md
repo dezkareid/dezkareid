@@ -1,14 +1,20 @@
 ---
 title: "Web Performance Optimization"
-description: "I identify and fix the performance bottlenecks holding your web application back."
+description: "Measurable Core Web Vitals improvements — not guesses, not quick fixes, but root-cause analysis and lasting changes your team can build on."
 icon: "⚡"
 order: 3
 cta: "Request an audit"
 ---
 
+## Who this is for
+
+Product teams and businesses where slow pages are affecting user retention, search rankings, or conversion rates — and who need more than a Lighthouse score screenshot as a diagnosis.
+
 ## Service Overview
 
-Performance is not a feature — it's a business requirement. A slow website loses users, hurts SEO, and reduces conversions. I conduct deep performance audits and work with your team to implement lasting improvements, not just quick fixes.
+Performance problems have real business costs: every second of load time loses users, hurts SEO rankings, and reduces conversions. I find the root causes — not just the symptoms — and deliver a prioritized action plan with concrete fixes.
+
+The work doesn't stop at recommendations. I implement the changes alongside your team and put regression guardrails in place so the gains stick.
 
 ### How it works
 

@@ -1,14 +1,20 @@
 ---
 title: "Consulting"
-description: "I help you align your technology strategy with your business goals."
+description: "Technology decisions made with business context — so your team builds the right thing, not just the technically correct thing."
 icon: "🧭"
 order: 4
 cta: "Book a call"
 ---
 
+## Who this is for
+
+CTOs, engineering leads, and founders who need an experienced outside perspective before committing to a major technical decision — stack choice, architecture migration, team structure, or roadmap prioritization.
+
 ## Service Overview
 
-Building a product is hard when business context and technology strategy are not aligned. I bring an outside perspective to help you make better decisions — whether you're choosing a tech stack, evaluating a migration, or defining a roadmap.
+The most expensive technical decisions are the ones made without enough context. I bring an independent perspective grounded in real-world frontend engineering experience — helping you evaluate options clearly, understand the tradeoffs, and build a plan that fits your business, not just your tech stack.
+
+Engagements can be a single strategy call or ongoing advisory support as you execute.
 
 ### How it works
 

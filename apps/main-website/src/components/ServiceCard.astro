@@ -12,7 +12,7 @@ const { title, description, icon, cta } = service.data;
 ---
 
 <Card class="service-card">
-	<!-- Stretched link covers the full card; contact button sits above it via z-index -->
+	<!-- Stretched link covers the full card -->
 	<a class="card-link" href={`/services/${service.slug}`} aria-label={`Learn about ${title}`}></a>
 
 	<div class="service-header">
@@ -21,21 +21,29 @@ const { title, description, icon, cta } = service.data;
 	</div>
 	<p class="service-description">{description}</p>
 	<div class="service-footer">
-		<div class="contact-btn-wrap">
-			<Button variant="outline" size="sm" data-contact-btn>{cta || "Get in touch"}</Button>
+		<div class="service-actions">
+			<a href={`/services/${service.slug}`} class="cta-link-btn" aria-label={`View ${title} details`}>
+				<Button variant="outline" size="sm" as="span">{cta || "Learn more"}</Button>
+			</a>
+			<a href="#contact" class="secondary-contact-link" data-contact-link>Get in touch &rarr;</a>
 		</div>
 	</div>
 </Card>
 
 <script>
-	for (const button of document.querySelectorAll('[data-contact-btn]')) {
-	button.addEventListener('click', (event) => {
-		event.preventDefault();
-		event.stopPropagation();
-		const target = document.querySelector('#contact');
-		if (target) target.scrollIntoView({ behavior: 'smooth' });
-	});
-}
+	for (const link of document.querySelectorAll('[data-contact-link]')) {
+		link.addEventListener('click', (event) => {
+			const targetId = link.getAttribute('href');
+			if (targetId && targetId.startsWith('#')) {
+				const target = document.querySelector(targetId);
+				if (target) {
+					event.preventDefault();
+					event.stopPropagation();
+					target.scrollIntoView({ behavior: 'smooth' });
+				}
+			}
+		});
+	}
 </script>
 
 <style>
@@ -115,13 +123,32 @@ const { title, description, icon, cta } = service.data;
 
 	.service-footer {
 		margin-top: auto;
-		display: flex;
-		flex-direction: column;
-		gap: var(--spacing-8);
 	}
 
-	.contact-btn-wrap {
+	.service-actions {
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacing-12);
 		position: relative;
 		z-index: 2;
+	}
+
+	.cta-link-btn {
+		display: block;
+		text-decoration: none;
+	}
+
+	.secondary-contact-link {
+		font-size: var(--font-size-200);
+		color: var(--color-primary);
+		text-decoration: none;
+		font-weight: var(--font-weight-medium);
+		align-self: flex-start;
+		transition: transform 0.2s ease;
+	}
+
+	.secondary-contact-link:hover {
+		transform: translateX(4px);
+		text-decoration: underline;
 	}
 </style>

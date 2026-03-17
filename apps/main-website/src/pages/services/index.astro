@@ -6,6 +6,9 @@ import ServiceCard from '../../components/ServiceCard.astro';
 
 const servicesCollection = await getCollection('services');
 const allServices = servicesCollection.toSorted((a, b) => a.data.order - b.data.order);
+
+const deliveryServices = allServices.filter(s => s.data.order <= 3);
+const supportServices = allServices.filter(s => s.data.order > 3);
 ---
 
 <Layout title="Services | Frontend Developer Portfolio">
@@ -15,10 +18,28 @@ const allServices = servicesCollection.toSorted((a, b) => a.data.order - b.data.
 			<h1 class="page-title">Professional Services</h1>
 			<p class="page-description">I offer a variety of frontend-focused services to help businesses build better web experiences.</p>
 			
-			<div class="grid">
-				{allServices.map((service) => (
-					<ServiceCard service={service} />
-				))}
+			<div class="services-group">
+				<div class="group-header">
+					<h2 class="group-title">Development & Architecture</h2>
+					<p class="group-subtitle">End-to-end frontend delivery and technical leadership.</p>
+				</div>
+				<div class="grid">
+					{deliveryServices.map((service) => (
+						<ServiceCard service={service} />
+					))}
+				</div>
+			</div>
+
+			<div class="services-group">
+				<div class="group-header">
+					<h2 class="group-title">Strategic Support</h2>
+					<p class="group-subtitle">Expertise to scale your team's impact and reach.</p>
+				</div>
+				<div class="grid">
+					{supportServices.map((service) => (
+						<ServiceCard service={service} />
+					))}
+				</div>
 			</div>
 		</div>
 	</Section>
@@ -64,10 +85,31 @@ const allServices = servicesCollection.toSorted((a, b) => a.data.order - b.data.
 
 	.page-description {
 		font-size: var(--font-size-400);
-		color: var(--color-base-gray-500);
+		color: var(--color-text-secondary, var(--color-base-gray-500));
 		margin-bottom: var(--spacing-64);
 		max-width: 600px;
 		line-height: var(--font-line-height-relaxed);
+	}
+
+	.services-group {
+		margin-bottom: var(--spacing-80);
+	}
+
+	.group-header {
+		margin-bottom: var(--spacing-32);
+		border-left: 4px solid var(--color-primary);
+		padding-left: var(--spacing-24);
+	}
+
+	.group-title {
+		font-size: var(--font-size-600);
+		margin-bottom: var(--spacing-4);
+		letter-spacing: -0.02em;
+	}
+
+	.group-subtitle {
+		font-size: var(--font-size-300);
+		color: var(--color-text-secondary, var(--color-base-gray-500));
 	}
 
 	.grid {
@@ -91,7 +133,7 @@ const allServices = servicesCollection.toSorted((a, b) => a.data.order - b.data.
 
 	.cta-text {
 		font-size: var(--font-size-400);
-		color: var(--color-base-gray-500);
+		color: var(--color-text-secondary, var(--color-base-gray-500));
 		margin-bottom: var(--spacing-32);
 	}
 
