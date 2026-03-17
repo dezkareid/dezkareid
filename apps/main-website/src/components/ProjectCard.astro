@@ -4,10 +4,9 @@ import type { CollectionEntry } from "astro:content";
 
 interface Properties {
 	project: CollectionEntry<"projects">;
-	index?: number;
 }
 
-const { project, index = 0 } = Astro.props;
+const { project } = Astro.props;
 const {
 	title,
 	description,
@@ -18,8 +17,6 @@ const {
 	liveUrl,
 	npmUrl,
 } = project.data;
-
-const number_ = String(index + 1).padStart(2, "0");
 
 const typeLabel: Record<string, string> = {
 	personal: "Personal",
@@ -51,7 +48,6 @@ const typeLabel: Record<string, string> = {
 
 	<div class="project-content">
 		<div class="project-meta-top">
-			<span class="project-number" aria-hidden="true">{number_}</span>
 			<span class="project-type-badge" data-type={type}>{typeLabel[type]}</span>
 		</div>
 
@@ -125,14 +121,7 @@ const typeLabel: Record<string, string> = {
 </Card>
 
 <style>
-	/* ====================================================
-	   DESIGN TOKEN ANNOTATIONS
-	   - --color-text-number: large muted counter color
-	     Currently: color-mix(in srgb, primary 12%, transparent)
-	   - --font-size-display-number: 5rem for decorative counters
-	   ==================================================== */
-
-	.project-card {
+.project-card {
 		height: 100%;
 		display: flex;
 		flex-direction: column;
@@ -182,24 +171,7 @@ const typeLabel: Record<string, string> = {
 		margin-bottom: var(--spacing-12);
 	}
 
-	.project-number {
-		/* DS NOTE: --font-size-display-number candidate */
-		font-size: 2.5rem;
-		font-weight: var(--font-weight-bold);
-		font-family: var(--font-family-mono);
-		line-height: 1;
-		/* DS NOTE: --color-text-number candidate */
-		color: color-mix(in srgb, var(--color-primary) 12%, transparent);
-		pointer-events: none;
-		user-select: none;
-		transition: color 0.25s ease;
-	}
-
-	.project-card:hover .project-number {
-		color: color-mix(in srgb, var(--color-primary) 20%, transparent);
-	}
-
-	.project-type-badge {
+.project-type-badge {
 		font-size: var(--font-size-100);
 		font-family: var(--font-family-mono);
 		font-weight: var(--font-weight-medium);

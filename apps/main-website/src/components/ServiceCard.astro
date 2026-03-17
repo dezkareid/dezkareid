@@ -1,6 +1,5 @@
 ---
 import Card from "./Card.astro";
-import Button from "./Button.astro";
 import type { CollectionEntry } from 'astro:content';
 
 interface Properties {
@@ -8,7 +7,7 @@ interface Properties {
 }
 
 const { service } = Astro.props;
-const { title, description, icon, cta } = service.data;
+const { title, description, icon } = service.data;
 ---
 
 <Card class="service-card">
@@ -20,31 +19,7 @@ const { title, description, icon, cta } = service.data;
 		<h3 class="service-title">{title}</h3>
 	</div>
 	<p class="service-description">{description}</p>
-	<div class="service-footer">
-		<div class="service-actions">
-			<a href={`/services/${service.slug}`} class="cta-link-btn" aria-label={`View ${title} details`}>
-				<Button variant="outline" size="sm" as="span">{cta || "Learn more"}</Button>
-			</a>
-			<a href="#contact" class="secondary-contact-link" data-contact-link>Get in touch &rarr;</a>
-		</div>
-	</div>
 </Card>
-
-<script>
-	for (const link of document.querySelectorAll('[data-contact-link]')) {
-		link.addEventListener('click', (event) => {
-			const targetId = link.getAttribute('href');
-			if (targetId && targetId.startsWith('#')) {
-				const target = document.querySelector(targetId);
-				if (target) {
-					event.preventDefault();
-					event.stopPropagation();
-					target.scrollIntoView({ behavior: 'smooth' });
-				}
-			}
-		});
-	}
-</script>
 
 <style>
 	/* ====================================================
@@ -116,39 +91,7 @@ const { title, description, icon, cta } = service.data;
 		/* Use text-primary for sufficient contrast on secondary backgrounds */
 		color: var(--color-text-primary);
 		opacity: 0.75;
-		margin-bottom: var(--spacing-24);
 		flex: 1;
 		line-height: var(--font-line-height-relaxed);
-	}
-
-	.service-footer {
-		margin-top: auto;
-	}
-
-	.service-actions {
-		display: flex;
-		flex-direction: column;
-		gap: var(--spacing-12);
-		position: relative;
-		z-index: 2;
-	}
-
-	.cta-link-btn {
-		display: block;
-		text-decoration: none;
-	}
-
-	.secondary-contact-link {
-		font-size: var(--font-size-200);
-		color: var(--color-primary);
-		text-decoration: none;
-		font-weight: var(--font-weight-medium);
-		align-self: flex-start;
-		transition: transform 0.2s ease;
-	}
-
-	.secondary-contact-link:hover {
-		transform: translateX(4px);
-		text-decoration: underline;
 	}
 </style>
