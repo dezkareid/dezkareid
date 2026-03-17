@@ -22,6 +22,22 @@ const services = servicesCollection.toSorted(
 ---
 
 <Layout title="Dezkareid - Frontend Architect">
+	<script
+		slot="head"
+		is:inline
+		type="application/ld+json"
+		set:html={JSON.stringify({
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Joel Humberto Gomez Paredes",
+			"jobTitle": "Frontend Architect",
+			"url": "https://dezkareid.dev",
+			"sameAs": [
+				"https://github.com/dezkareid",
+				"https://www.linkedin.com/in/joelhumberto/"
+			]
+		})}
+	/>
 	<Hero />
 	<Section id="presentation">
 		<div class="container">

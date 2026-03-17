@@ -13,6 +13,7 @@
     "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
+    "@astrojs/sitemap": "3.7.1",
     "@dezkareid/eslint-config-ts-base": "workspace:*",
     "@dezkareid/eslint-plugin-web": "workspace:*",
     "@typescript-eslint/parser": "8.57.0",
