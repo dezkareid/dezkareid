@@ -1,19 +1,23 @@
 ---
 title: "Platzi Frontend Migration"
-description: "Led the migration of Platzi's frontend from a legacy stack to a modern React architecture, improving performance, maintainability, and developer experience."
-image: "https://placehold.co/600x400"
+description: "Led the architectural overhaul of Platzi's frontend — turning a hard-to-maintain legacy codebase into a component-driven React platform the whole team could build on."
+image: "/images/projects/platzi-frontend-migration.png"
+liveUrl: "https://platzi.com/"
 techStack: ["React", "TypeScript", "Webpack", "CSS Modules"]
 type: "work"
-featured: false
-order: 5
+featured: true
+order: 3
 ---
 
 ## Project Overview
 
-Platzi's frontend had grown into a hard-to-maintain codebase with inconsistent patterns and poor performance. I led the architectural migration to a component-driven React approach, establishing conventions and tooling that the team could build on.
+Platzi is Latin America's largest tech education platform, serving millions of students. The frontend had accumulated years of inconsistent patterns, slow build times, and no clear component model — making new features expensive to ship and risky to change.
+
+I led the migration from the legacy stack to a modern, component-driven React architecture. The goal wasn't just a technical rewrite — it was to leave the team with conventions, tooling, and a codebase they could own and extend confidently.
 
 ### Key Outcomes
 
-- **Reduced complexity**: Introduced clear component boundaries and standardized patterns across the codebase.
-- **Improved performance**: Reduced bundle size and improved Time to Interactive through code splitting and lazy loading.
-- **Better developer experience**: Established linting, type safety, and testing conventions adopted by the whole frontend team.
+- **Faster delivery**: Standardized component boundaries and co-location patterns cut the time to build new features significantly.
+- **Smaller bundles**: Code splitting and lazy loading reduced the initial bundle size and improved Time to Interactive across key pages.
+- **Team-wide adoption**: The linting, TypeScript, and testing conventions I introduced were adopted across the entire frontend team and became the baseline for new hires.
+- **Reduced risk**: Clear separation of concerns meant changes to one part of the UI stopped causing unexpected regressions elsewhere.

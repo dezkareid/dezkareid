@@ -8,9 +8,12 @@ import ServiceCard from "../components/ServiceCard.astro";
 import SkillsList from "../components/SkillsList.astro";
 import ContactSection from "../components/ContactSection.astro";
 
-const featuredProjectsCollection = await getCollection("projects", ({ data }) => {
-	return data.featured === true;
-});
+const featuredProjectsCollection = await getCollection(
+	"projects",
+	({ data }) => {
+		return data.featured === true;
+	}
+);
 const featuredProjects = featuredProjectsCollection
 	.toSorted((a, b) => a.data.order - b.data.order)
 	.slice(0, 3);
@@ -29,24 +32,23 @@ const services = servicesCollection.toSorted(
 		set:html={JSON.stringify({
 			"@context": "https://schema.org",
 			"@type": "Person",
-			"name": "Joel Humberto Gomez Paredes",
-			"jobTitle": "Frontend Architect",
-			"url": "https://dezkareid.dev",
-			"sameAs": [
+			name: "Joel Humberto Gomez Paredes",
+			jobTitle: "Frontend Architect",
+			url: "https://dezkareid.dev",
+			sameAs: [
 				"https://github.com/dezkareid",
-				"https://www.linkedin.com/in/joelhumberto/"
-			]
+				"https://www.linkedin.com/in/joelhumberto/",
+			],
 		})}
-	/>
+	></script>
 	<Hero />
 	<Section id="presentation">
 		<div class="container">
 			<div class="presentation-quote reveal">
 				<p class="presentation-quote-text">
-					"I like to solve problems and look back proud of what I've
-					built. I'm a software developer who calls himself a Frontend
-					Architect focused on React, Performance, and
-					Maintainability."
+					"I like to solve problems and look back proud of what I've built. I'm
+					a software developer who calls himself a Frontend Architect focused on
+					React, Performance, and Maintainability."
 				</p>
 			</div>
 		</div>
@@ -55,8 +57,8 @@ const services = servicesCollection.toSorted(
 	<Section id="services" class="bg-alt">
 		<div class="container">
 			<header class="section-header reveal">
-				<span class="section-label">Offerings</span>
-				<h2 class="section-title">Services</h2>
+				<span class="section-label">Expertise</span>
+				<h2 class="section-title">Professional Services</h2>
 			</header>
 			<div class="grid reveal-group">
 				{
@@ -73,7 +75,7 @@ const services = servicesCollection.toSorted(
 	<Section id="skills">
 		<div class="container">
 			<header class="section-header reveal">
-				<span class="section-label">Tech Stack</span>
+				<span class="section-label">Capabilities</span>
 				<h2 class="section-title">Skills & Technologies</h2>
 			</header>
 			<div class="reveal">
@@ -85,11 +87,12 @@ const services = servicesCollection.toSorted(
 	<Section id="projects" class="bg-alt">
 		<div class="container">
 			<header class="section-header reveal">
-				<span class="section-label">Work</span>
-				<h2 class="section-title">Featured Projects</h2>
+				<span class="section-label">Evidence</span>
+				<h2 class="section-title">Selected Work</h2>
 				<p class="section-intro">
-					Some projects are personal, others are contributions, and
-					others are part of my past work.
+					A selection of professional projects, open-source contributions, and
+					personal initiatives that demonstrate my range in frontend
+					architecture and developer experience.
 				</p>
 			</header>
 			<div class="grid reveal-group">
@@ -121,11 +124,11 @@ const services = servicesCollection.toSorted(
 		const observer = new IntersectionObserver(
 			(entries) => {
 				for (const entry of entries) {
-				if (entry.isIntersecting) {
-					entry.target.classList.add("is-visible");
-					observer.unobserve(entry.target);
+					if (entry.isIntersecting) {
+						entry.target.classList.add("is-visible");
+						observer.unobserve(entry.target);
+					}
 				}
-			}
 			},
 			{ rootMargin: "0px 0px -60px 0px", threshold: 0.1 }
 		);

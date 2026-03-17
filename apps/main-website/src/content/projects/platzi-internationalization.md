@@ -1,7 +1,8 @@
 ---
 title: "Platzi Internationalization"
-description: "Architected and implemented the i18n system for Platzi's platform, enabling content and UI to be delivered in multiple languages at scale."
+description: "Designed Platzi's i18n architecture from scratch — enabling new language markets to ship without engineering support and with zero performance regression."
 image: "https://placehold.co/600x400"
+liveUrl: "https://platzi.com/"
 techStack: ["React", "Next.js", "TypeScript", "i18next"]
 type: "work"
 featured: false

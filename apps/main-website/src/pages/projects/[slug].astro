@@ -1,11 +1,11 @@
 ---
-import { getCollection } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
-import Section from '../../components/Section.astro';
-import Button from '../../components/Button.astro';
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import Section from "../../components/Section.astro";
+import Button from "../../components/Button.astro";
 
 export async function getStaticPaths() {
-	const projects = await getCollection('projects');
+	const projects = await getCollection("projects");
 	return projects.map((project) => ({
 		params: { slug: project.slug },
 		props: { project },
@@ -14,29 +14,62 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content } = await project.render();
-const { title, description, techStack, githubUrl, liveUrl } = project.data;
+const { title, description, techStack, githubUrl, liveUrl, npmUrl } =
+	project.data;
 ---
 
 <Layout title={`${title} | Projects`}>
 	<Section>
 		<div class="container">
 			<nav class="breadcrumb">
-				<a href="/projects">← Back to Projects</a>
+				<a href="/projects" aria-label="Go back to the projects list"
+					>← Back to Projects</a
+				>
 			</nav>
 
 			<header class="project-header">
 				<h1 class="project-title">{title}</h1>
 				<p class="project-description">{description}</p>
-				
+
 				<div class="project-meta">
 					<div class="tech-stack">
-						{techStack.map((tech) => (
-							<span class="tech-tag">{tech}</span>
-						))}
+						{
+							techStack.map((tech: string) => (
+								<span class="tech-tag">{tech}</span>
+							))
+						}
 					</div>
 					<div class="project-links">
-						{githubUrl && <Button href={githubUrl} target="_blank" rel="noopener noreferrer">GitHub Repo</Button>}
-						{liveUrl && <Button href={liveUrl} variant="success" target="_blank" rel="noopener noreferrer">Live Demo</Button>}
+						{
+							githubUrl && (
+								<Button
+									href={githubUrl}
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									GitHub Repo
+								</Button>
+							)
+						}
+						{
+							npmUrl && (
+								<Button href={npmUrl} target="_blank" rel="noopener noreferrer">
+									NPM Package
+								</Button>
+							)
+						}
+						{
+							liveUrl && (
+								<Button
+									href={liveUrl}
+									variant="success"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									Live Demo
+								</Button>
+							)
+						}
 					</div>
 				</div>
 			</header>

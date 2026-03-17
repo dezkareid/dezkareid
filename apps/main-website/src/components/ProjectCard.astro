@@ -1,16 +1,22 @@
 ---
 import Card from "./Card.astro";
-import type { CollectionEntry } from 'astro:content';
+import type { CollectionEntry } from "astro:content";
 
 interface Properties {
-	project: CollectionEntry<'projects'>;
-	index?: number;
+	project: CollectionEntry<"projects">;
 }
 
-const { project, index = 0 } = Astro.props;
-const { title, description, techStack, image, type } = project.data;
-
-const number_ = String(index + 1).padStart(2, "0");
+const { project } = Astro.props;
+const {
+	title,
+	description,
+	techStack,
+	image,
+	type,
+	githubUrl,
+	liveUrl,
+	npmUrl,
+} = project.data;
 
 const typeLabel: Record<string, string> = {
 	personal: "Personal",
@@ -20,40 +26,102 @@ const typeLabel: Record<string, string> = {
 ---
 
 <Card class="project-card">
-	<a class="card-link" href={`/projects/${project.slug}`} aria-label={`View ${title}`}></a>
+	<a
+		class="card-link"
+		href={`/projects/${project.slug}`}
+		aria-label={`View ${title}`}></a>
 
-	{image && (
-		<div class="project-image">
-			<img src={image} alt={`${title} preview`} width="600" height="400" loading="lazy" decoding="async" />
-		</div>
-	)}
+	{
+		image && (
+			<div class="project-image">
+				<img
+					src={image}
+					alt={`${title} preview`}
+					width="600"
+					height="400"
+					loading="lazy"
+					decoding="async"
+				/>
+			</div>
+		)
+	}
 
 	<div class="project-content">
 		<div class="project-meta-top">
-			<span class="project-number" aria-hidden="true">{number_}</span>
 			<span class="project-type-badge" data-type={type}>{typeLabel[type]}</span>
 		</div>
 
 		<h3 class="project-title">{title}</h3>
 		<p class="project-description">{description}</p>
 
-		<div class="project-tech-stack">
-			{techStack.map((tech) => (
-				<span class="tech-tag">{tech}</span>
-			))}
+		<div class="project-footer">
+			<div class="project-tech-stack">
+				{techStack.map((tech: string) => <span class="tech-tag">{tech}</span>)}
+			</div>
+
+			<div class="project-links">
+				{
+					githubUrl && (
+						<a
+							href={githubUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="project-link"
+							aria-label={`View ${title} on GitHub`}
+						>
+							<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+								<path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+							</svg>
+						</a>
+					)
+				}
+				{
+					npmUrl && (
+						<a
+							href={npmUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="project-link"
+							aria-label={`View ${title} on NPM`}
+						>
+							<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+								<path d="M0 7.334v8h6.666v1.332H12V15.334h12v-8H0zm6.666 6.666H5.334v-4H4v4H1.334v-5.332h5.332v5.332zm6.666 0h-1.332v-5.332h5.332v5.332h-1.332v-4h-1.334v4h-1.334v-4h-1.332v4zm7.998 0h-1.334v-4h-1.334v4H15.332v-5.332h6.666v5.332h.002z" />
+							</svg>
+						</a>
+					)
+				}
+				{
+					liveUrl && (
+						<a
+							href={liveUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="project-link"
+							aria-label={`View ${title} live`}
+						>
+							<svg
+								viewBox="0 0 24 24"
+								aria-hidden="true"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							>
+								<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+								<polyline points="15 3 21 3 21 9" />
+								<line x1="10" y1="14" x2="21" y2="3" />
+							</svg>
+						</a>
+					)
+				}
+			</div>
 		</div>
 	</div>
 </Card>
 
 <style>
-	/* ====================================================
-	   DESIGN TOKEN ANNOTATIONS
-	   - --color-text-number: large muted counter color
-	     Currently: color-mix(in srgb, primary 12%, transparent)
-	   - --font-size-display-number: 5rem for decorative counters
-	   ==================================================== */
-
-	.project-card {
+.project-card {
 		height: 100%;
 		display: flex;
 		flex-direction: column;
@@ -103,24 +171,7 @@ const typeLabel: Record<string, string> = {
 		margin-bottom: var(--spacing-12);
 	}
 
-	.project-number {
-		/* DS NOTE: --font-size-display-number candidate */
-		font-size: 2.5rem;
-		font-weight: var(--font-weight-bold);
-		font-family: var(--font-family-mono);
-		line-height: 1;
-		/* DS NOTE: --color-text-number candidate */
-		color: color-mix(in srgb, var(--color-primary) 12%, transparent);
-		pointer-events: none;
-		user-select: none;
-		transition: color 0.25s ease;
-	}
-
-	.project-card:hover .project-number {
-		color: color-mix(in srgb, var(--color-primary) 20%, transparent);
-	}
-
-	.project-type-badge {
+.project-type-badge {
 		font-size: var(--font-size-100);
 		font-family: var(--font-family-mono);
 		font-weight: var(--font-weight-medium);
@@ -168,14 +219,27 @@ const typeLabel: Record<string, string> = {
 		line-height: var(--font-line-height-relaxed);
 	}
 
+	.project-footer {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+		gap: var(--spacing-16);
+		margin-top: auto;
+	}
+
 	.project-tech-stack {
 		display: flex;
 		gap: var(--spacing-8);
 		flex-wrap: wrap;
+		flex: 1;
 	}
 
 	.tech-tag {
-		background-color: color-mix(in srgb, var(--color-primary) 8%, var(--color-background-secondary));
+		background-color: color-mix(
+			in srgb,
+			var(--color-primary) 8%,
+			var(--color-background-secondary)
+		);
 		border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
 		padding: var(--spacing-4) var(--spacing-8);
 		/* DS NOTE: --border-radius-pill: 9999px candidate */
@@ -185,5 +249,32 @@ const typeLabel: Record<string, string> = {
 		color: var(--color-primary);
 		font-family: var(--font-family-mono);
 		letter-spacing: 0.02em;
+	}
+
+	.project-links {
+		display: flex;
+		gap: var(--spacing-12);
+		position: relative;
+		z-index: 2;
+	}
+
+	.project-link {
+		color: var(--color-text-primary);
+		opacity: 0.6;
+		transition: color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.project-link:hover {
+		color: var(--color-primary);
+		opacity: 1;
+		transform: translateY(-2px);
+	}
+
+	.project-link svg {
+		width: 1.25rem;
+		height: 1.25rem;
 	}
 </style>

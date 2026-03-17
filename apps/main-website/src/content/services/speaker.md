@@ -1,14 +1,22 @@
 ---
 title: "Speaker & Workshops"
-description: "I share my experience at conferences, meetups, and events on frontend, architecture, and performance."
+description: "Practical, experience-backed talks and workshops on frontend architecture, performance, and engineering practices — for your event or team."
 icon: "🎤"
 order: 6
 cta: "Send a request"
 ---
 
+## Who this is for
+
+Conference and meetup organizers looking for a speaker on frontend engineering topics. Also engineering teams that want a focused internal workshop on architecture, performance, or development practices rather than a generic training session.
+
 ## Service Overview
 
-I enjoy sharing what I've learned with the community. I speak at conferences and meetups and run workshops on frontend architecture, web performance, and software development practices. My goal is to deliver talks that are practical, honest, and immediately useful.
+I speak from experience, not slides. Every talk and workshop I run is grounded in real decisions I've made on real products — what worked, what didn't, and why.
+
+Topics I cover: frontend architecture and design systems, web performance and Core Web Vitals, AI-assisted development workflows, and engineering career growth.
+
+Public community events: free. Private team workshops and paid conferences: get in touch with the details and we'll figure out if it's a good fit.
 
 ### How it works
 

@@ -1,14 +1,20 @@
 ---
 title: "Frontend as a Service"
-description: "I build modern, high-quality frontends so your team can focus on the product."
+description: "You get a production-ready frontend built to your standards — your team stays focused on the product, not on frontend delivery."
 icon: "🖥️"
 order: 1
 cta: "Start a project"
 ---
 
+## Who this is for
+
+Companies and product teams that need a high-quality frontend shipped without pulling engineers off other work. Whether you're building from scratch, modernizing a legacy UI, or need a component library your team can own long-term.
+
 ## Service Overview
 
-Whether you're starting from scratch or modernizing an existing codebase, I deliver production-ready frontends using React, Next.js, and Astro. I can also build shared component libraries and design systems that scale with your team.
+I embed as your frontend specialist — understanding your stack, your users, and your constraints before writing a line of code. I deliver production-ready frontends using React, Next.js, and Astro, plus shared component libraries and design systems that grow with your team.
+
+The handoff includes clean, documented code with the patterns and conventions your team needs to maintain and extend it confidently.
 
 ### How it works
 

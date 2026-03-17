@@ -3,6 +3,7 @@ title: "Dezkareid Design System"
 description: "A multi-framework design system with design tokens, React components, and Storybook documentation — the foundation behind this portfolio."
 image: "https://placehold.co/600x400"
 techStack: ["Astro", "React", "Style Dictionary", "Rollup", "Storybook", "TypeScript"]
+githubUrl: "https://github.com/dezkareid/dezkareid/tree/main/design-system"
 type: "personal"
 featured: true
 order: 1
@@ -12,9 +13,7 @@ order: 1
 
 This design system is the shared foundation for all my projects. It provides a centralized token pipeline (colors, spacing, typography) exported to CSS, SCSS, and JS, plus a multi-framework component library for React, Astro, and Vue.
 
-### Key Features
+### Key Outcomes
 
-- **Design Tokens**: Style Dictionary pipeline exporting to CSS custom properties, SCSS, and JS/ESM.
-- **Multi-framework Components**: Button, Card, Tag, and ThemeToggle usable across React, Astro, and Vue.
-- **Storybook Documentation**: Full component explorer with accessibility checks and visual regression via Chromatic.
-- **Monorepo Integration**: Consumed directly by other packages in the workspace via pnpm workspaces.
+- **Single token pipeline**: Style Dictionary transforms one token config into CSS, SCSS, and JS/ESM — consumed by every package in the monorepo.
+- **Multi-framework components**: Button, Card, Tag, and ThemeToggle ship as React, Astro, and Vue variants from the same source.
