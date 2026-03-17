@@ -6,12 +6,17 @@ import PixelCrab from "../components/PixelCrab.astro";
 interface Properties {
 	title?: string;
 	description?: string;
+	image?: string;
 }
 
 const {
-	title = "Frontend Developer Portfolio",
-	description = "A professional portfolio showcasing frontend engineering skills, projects, and services.",
+	title = "Joel Humberto Gomez Paredes — Frontend Architect",
+	description = "Frontend architect specialising in React, performance, and scalable UI systems. Explore my projects, services, and open-source work.",
+	// TODO(design-system): replace with a locally hosted OG image asset once one is created
+	image = "https://res.cloudinary.com/ddyovtxd2/image/upload/v1773092115/JOEL_GOMEZ-4_viqymi.jpg",
 } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 const currentPath = Astro.url.pathname;
 
@@ -27,22 +32,29 @@ const navLinks = [
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 
 		<title>{title}</title>
 		<meta name="description" content={description} />
+		<link rel="canonical" href={canonicalURL} />
 
 		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content="website" />
+		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:site_name" content="Dezkareid" />
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
+		<meta property="og:image" content={image} />
 
 		<!-- Twitter -->
-		<meta property="twitter:card" content="summary_large_image" />
-		<meta property="twitter:title" content={title} />
-		<meta property="twitter:description" content={description} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={image} />
+
+		<slot name="head" />
 
 		<!-- Theme FOUC guard: apply stored preference before first paint. -->
 		<script is:inline set:html={`(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){document.documentElement.style.colorScheme=t;}}catch(_){}})();`}></script>
