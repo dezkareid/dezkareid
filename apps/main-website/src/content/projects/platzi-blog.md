@@ -1,7 +1,7 @@
 ---
 title: "Platzi Blog"
 description: "Built the frontend for Platzi's high-traffic blog — millions of monthly readers, near-instant loads via Next.js SSG, and SEO architecture that drives organic discovery."
-image: "/images/projects/platzi-blog.png"
+image: "./platzi-blog.png"
 liveUrl: "https://platzi.com/blog/"
 techStack: ["React", "Next.js", "TypeScript", "CSS Modules"]
 type: "work"

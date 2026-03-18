@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import Section from "../../components/Section.astro";
 import Button from "../../components/Button.astro";
@@ -7,17 +7,17 @@ import Button from "../../components/Button.astro";
 export async function getStaticPaths() {
 	const projects = await getCollection("projects");
 	return projects.map((project) => ({
-		params: { slug: project.slug },
+		params: { slug: project.id },
 		props: { project },
 	}));
 }
 
 const { project } = Astro.props;
-const { Content } = await project.render();
+const { Content } = await render(project);
 const { title, description, techStack, githubUrl, liveUrl, npmUrl } =
 	project.data;
 
-const canonicalURL = new URL(`/projects/${project.slug}`, Astro.site);
+const canonicalURL = new URL(`/projects/${project.id}`, Astro.site);
 
 const jsonLd = {
 	"@context": "https://schema.org",

@@ -12,7 +12,7 @@ const { title, description, icon } = service.data;
 
 <Card class="service-card">
 	<!-- Stretched link covers the full card -->
-	<a class="card-link" href={`/services/${service.slug}`} aria-label={`Learn about ${title}`}></a>
+	<a class="card-link" href={`/services/${service.id}`} aria-label={`Learn about ${title}`}></a>
 
 	<div class="service-header">
 		<span class="service-icon" aria-hidden="true">{icon || "⚙️"}</span>
