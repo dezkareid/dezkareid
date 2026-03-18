@@ -1,7 +1,6 @@
 ---
 title: "Sync AI Context"
 description: "A CLI that eliminates manual AI context drift — one AGENTS.md file, automatically synced to every provider your team uses."
-image: "https://placehold.co/600x400"
 techStack: ["TypeScript", "Node.js", "Commander"]
 npmUrl: "https://www.npmjs.com/package/@dezkareid/ai-context-sync"
 type: "personal"

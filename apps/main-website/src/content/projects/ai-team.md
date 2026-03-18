@@ -1,7 +1,6 @@
 ---
 title: "AI Team"
 description: "A plugin system that brings company context, architecture principles, and team outcomes into AI agent workflows."
-image: "https://placehold.co/600x400"
 npmUrl: "https://www.npmjs.com/package/@dezkareid/ai-team"
 techStack: ["TypeScript", "Node.js", "MCP"]
 type: "personal"

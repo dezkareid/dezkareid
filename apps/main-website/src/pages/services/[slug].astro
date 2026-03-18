@@ -1,18 +1,18 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Section from '../../components/Section.astro';
 
 export async function getStaticPaths() {
 	const services = await getCollection('services');
 	return services.map((service) => ({
-		params: { slug: service.slug },
+		params: { slug: service.id },
 		props: { service },
 	}));
 }
 
 const { service } = Astro.props;
-const { Content } = await service.render();
+const { Content } = await render(service);
 const { title, description, icon, cta, metaDescription, priceRange, serviceType } = service.data;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);

@@ -1,7 +1,7 @@
 ---
 title: "Platzi Frontend Migration"
 description: "Led the architectural overhaul of Platzi's frontend — turning a hard-to-maintain legacy codebase into a component-driven React platform the whole team could build on."
-image: "/images/projects/platzi-frontend-migration.png"
+image: "./platzi-frontend-migration.png"
 liveUrl: "https://platzi.com/"
 techStack: ["React", "TypeScript", "Webpack", "CSS Modules"]
 type: "work"

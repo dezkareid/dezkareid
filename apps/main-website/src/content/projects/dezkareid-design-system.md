@@ -1,7 +1,6 @@
 ---
 title: "Dezkareid Design System"
 description: "A multi-framework design system with design tokens, React components, and Storybook documentation — the foundation behind this portfolio."
-image: "https://placehold.co/600x400"
 techStack: ["Astro", "React", "Style Dictionary", "Rollup", "Storybook", "TypeScript"]
 githubUrl: "https://github.com/dezkareid/dezkareid/tree/main/design-system"
 type: "personal"

@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import Card from "./Card.astro";
 import type { CollectionEntry } from "astro:content";
 
@@ -28,23 +29,28 @@ const typeLabel: Record<string, string> = {
 <Card class="project-card">
 	<a
 		class="card-link"
-		href={`/projects/${project.slug}`}
+		href={`/projects/${project.id}`}
 		aria-label={`View ${title}`}></a>
 
-	{
-		image && (
-			<div class="project-image">
-				<img
-					src={image}
-					alt={`${title} preview`}
-					width="600"
-					height="400"
-					loading="lazy"
-					decoding="async"
-				/>
+	<div class="project-image">
+		{image ? (
+			<Image
+				src={image}
+				alt={`${title} preview`}
+				width="600"
+				height="400"
+				widths={[350, 600, 900]}
+				sizes="(max-width: 37.49rem) 100vw, (max-width: 59.99rem) calc(100vw - 3rem), (max-width: 89.99rem) calc(50vw - 3rem), 400px"
+				loading="lazy"
+			/>
+		) : (
+			<div class="project-image-placeholder" aria-hidden="true">
+				<span class="project-image-placeholder-initials">
+					{title.split(" ").slice(0, 2).map((w: string) => w[0]).join("")}
+				</span>
 			</div>
-		)
-	}
+		)}
+	</div>
 
 	<div class="project-content">
 		<div class="project-meta-top">
@@ -142,6 +148,28 @@ const typeLabel: Record<string, string> = {
 		aspect-ratio: 3 / 2;
 		overflow: hidden;
 		flex-shrink: 0;
+	}
+
+	.project-image-placeholder {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: linear-gradient(
+			135deg,
+			color-mix(in srgb, var(--color-primary) 8%, var(--color-background-secondary)),
+			color-mix(in srgb, var(--color-primary) 18%, var(--color-background-secondary))
+		);
+	}
+
+	.project-image-placeholder-initials {
+		font-size: var(--font-size-800);
+		font-weight: var(--font-weight-bold);
+		font-family: var(--font-family-mono);
+		color: color-mix(in srgb, var(--color-primary) 60%, transparent);
+		letter-spacing: -0.03em;
+		user-select: none;
 	}
 
 	.project-image img {

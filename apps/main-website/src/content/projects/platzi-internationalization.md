@@ -1,7 +1,6 @@
 ---
 title: "Platzi Internationalization"
 description: "Designed Platzi's i18n architecture from scratch — enabling new language markets to ship without engineering support and with zero performance regression."
-image: "https://placehold.co/600x400"
 liveUrl: "https://platzi.com/"
 techStack: ["React", "Next.js", "TypeScript", "i18next"]
 type: "work"

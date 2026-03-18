@@ -1,7 +1,6 @@
 ---
 title: "Spec-Driven Development Tool"
 description: "A structured workflow for AI-assisted development — turns vague feature ideas into auditable specs, plans, and task lists that AI agents execute one step at a time."
-image: "https://placehold.co/600x400"
 npmUrl: "https://www.npmjs.com/package/@dezkareid/osddt"
 techStack: ["TypeScript", "Node.js", "Claude Code"]
 type: "personal"
