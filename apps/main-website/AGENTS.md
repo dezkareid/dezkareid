@@ -4,13 +4,13 @@ Astro 5 marketing website for Joel Gomez (dezkareid). Static site built with Ast
 
 ## Overview
 
-This is a marketing website for Joel Gomez (dezkareid). It is a static site built with Astro 5.
+This is a marketing website for Joel Gomez (dezkareid). It is a static site built with Astro 6.
 
 Production URL: https://dezkareid.dev
 
 ### Stack
 
-- **Framework**: Astro 5 (`astro: 5.18.0`) — static output, no SSR
+- **Framework**: Astro 6 (`astro: 6.0.6`) — static output, no SSR
 - **UI components**: `@dezkareid/components` (Button, Card, ThemeToggle — Astro variants)
 - **Design tokens**: `@dezkareid/design-tokens` — CSS custom properties, never hardcode values
 - **Styling**: Scoped `<style>` per component + `src/styles/global.css`
@@ -34,9 +34,9 @@ src/
 │   ├── ThemeToggle.astro
 │   └── PixelCrab.astro # Logo mark
 ├── content/
-│   ├── config.ts       # Zod schemas for collections
-│   ├── projects/       # 8 project .md files
+│   ├── projects/       # 8 project .md files (images colocated here)
 │   └── services/       # 6 service .md files
+├── content.config.ts   # Content Layer API schemas (Astro 6 — glob loaders)
 ├── layouts/
 │   └── Layout.astro    # HTML shell, nav, footer, SEO meta
 ├── pages/
@@ -61,7 +61,7 @@ src/
 |---|---|---|
 | `title` | `string` | |
 | `description` | `string` | |
-| `image` | `string` (optional) | Local path e.g. `/images/projects/foo.png` |
+| `image` | `ImageMetadata` (optional) | Relative path to colocated image e.g. `./foo.png`; validated by Astro's `image()` helper |
 | `techStack` | `string[]` | |
 | `githubUrl` | `string` (url, optional) | |
 | `liveUrl` | `string` (url, optional) | |
@@ -97,9 +97,9 @@ Services (in order): frontend-as-a-service, frontend-architecture, performance, 
 |---|---|---|
 | Homepage | `/` | Featured projects (top 3 by order), all services |
 | Projects index | `/projects` | All projects sorted by `order` |
-| Project detail | `/projects/[slug]` | Single project entry + rendered markdown |
+| Project detail | `/projects/[id]` | Single project entry + rendered markdown |
 | Services index | `/services` | All services split: delivery (order ≤ 3) / support (order > 4) |
-| Service detail | `/services/[slug]` | Single service entry + rendered markdown + CTA button |
+| Service detail | `/services/[id]` | Single service entry + rendered markdown + CTA button |
 | About | `/about` | Static copy |
 
 ## Styling Guidelines
@@ -123,9 +123,16 @@ pnpm lint:fix     # eslint . --fix
 
 The audits should be done over the production site.
 
+## Images
+
+- Project images are colocated with their `.md` file in `src/content/projects/` and referenced as `./filename.png` in frontmatter.
+- The `image()` schema helper (Astro Content Layer API) validates and imports them at build time.
+- `ProjectCard.astro` uses `<Image>` from `astro:assets` with `widths` and `sizes` for responsive output (WebP via `sharp`).
+- Projects without an image show a gradient placeholder with initials derived from the project title.
+- Avatar images (Hero, About) are served from Cloudinary with `srcset` for HiDPI support.
+
 ## Known Gaps / TODOs
 
 - Mobile navigation (hamburger menu) is not implemented — nav links are hidden below 800px.
-- AI-generated images for personal/OSS projects are deferred — those projects still use `https://placehold.co/600x400`.
-- Cloudinary integration is deferred — images are served from `public/images/`.
+- AI-generated images for personal/OSS projects are not yet available — those project cards show the initials placeholder.
 - OG image uses a Cloudinary URL directly in `Layout.astro` as a temporary placeholder.
