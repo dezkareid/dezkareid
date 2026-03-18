@@ -154,6 +154,38 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+
+        /* Border Radius Visuals */
+        .radius-viz {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .radius-box {
+            width: 60px;
+            height: 60px;
+            background: #3b82f6;
+            flex-shrink: 0;
+        }
+
+        .radius-value {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        /* Shadow Visuals */
+        .shadow-viz {
+            height: 60px;
+            background: #ffffff;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
     </style>
 </head>
 <body>
@@ -181,6 +213,16 @@
             <h2>Typography</h2>
             <div class="grid" id="typography-grid"></div>
         </section>
+
+        <section id="border-radius">
+            <h2>Border Radius</h2>
+            <div class="grid" id="border-radius-grid"></div>
+        </section>
+
+        <section id="shadows">
+            <h2>Shadows</h2>
+            <div class="grid" id="shadows-grid"></div>
+        </section>
     </main>
 
     <script type="module">
@@ -190,6 +232,8 @@
         const spacingGrid = document.getElementById('spacing-grid');
         const breakpointsGrid = document.getElementById('breakpoints-grid');
         const typoGrid = document.getElementById('typography-grid');
+        const borderRadiusGrid = document.getElementById('border-radius-grid');
+        const shadowsGrid = document.getElementById('shadows-grid');
 
         const tokenEntries = Object.entries(tokens);
 
@@ -308,6 +352,7 @@
             if (key.includes('Size')) style = `font-size: ${value}`;
             if (key.includes('Weight')) style = `font-weight: ${value}`;
             if (key.includes('LineHeight')) style = `line-height: ${value}`;
+            if (key.includes('LetterSpacing')) style = `letter-spacing: ${value}; font-size: 1rem`;
 
             item.innerHTML = `
                 <div class="token-info">
@@ -318,6 +363,38 @@
                 <div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">Value: ${value}</div>
             `;
             typoGrid.appendChild(item);
+        });
+
+        // 5. Process Border Radius
+        tokenEntries.filter(([k]) => k.startsWith('BorderRadius')).forEach(([key, value]) => {
+            const item = document.createElement('div');
+            item.className = 'token-item';
+            item.innerHTML = `
+                <div class="token-info">
+                    <div class="token-name">${cleanTitle(key)}</div>
+                    <div class="token-var">--${toKebab(key)}</div>
+                </div>
+                <div class="radius-viz">
+                    <div class="radius-box" style="border-radius: ${value}"></div>
+                    <span class="radius-value">${value}</span>
+                </div>
+            `;
+            borderRadiusGrid.appendChild(item);
+        });
+
+        // 6. Process Shadows
+        tokenEntries.filter(([k]) => k.startsWith('Shadow')).forEach(([key, value]) => {
+            const item = document.createElement('div');
+            item.className = 'token-item';
+            item.innerHTML = `
+                <div class="token-info">
+                    <div class="token-name">${cleanTitle(key)}</div>
+                    <div class="token-var">--${toKebab(key)}</div>
+                </div>
+                <div class="shadow-viz" style="box-shadow: ${value}">${value === 'none' ? 'none' : ''}</div>
+                <div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem; word-break: break-all;">${value}</div>
+            `;
+            shadowsGrid.appendChild(item);
         });
 
     </script>
