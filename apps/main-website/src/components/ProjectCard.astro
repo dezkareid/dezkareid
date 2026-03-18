@@ -51,7 +51,7 @@ const typeLabel: Record<string, string> = {
 			<span class="project-type-badge" data-type={type}>{typeLabel[type]}</span>
 		</div>
 
-		<h3 class="project-title">{title}</h3>
+		<h2 class="project-title">{title}</h2>
 		<p class="project-description">{description}</p>
 
 		<div class="project-footer">
@@ -212,8 +212,8 @@ const typeLabel: Record<string, string> = {
 
 	.project-description {
 		font-size: var(--font-size-300);
-		color: var(--color-text-primary);
-		opacity: 0.75;
+		/* TODO(design-system): needs token for secondary text color (light: #4b5563 ~7:1, dark: #9ca3af ~4.6:1) */
+		color: light-dark(#4b5563, #9ca3af);
 		margin-bottom: var(--spacing-24);
 		flex: 1;
 		line-height: var(--font-line-height-relaxed);
@@ -259,8 +259,10 @@ const typeLabel: Record<string, string> = {
 	}
 
 	.project-link {
-		color: var(--color-text-primary);
-		opacity: 0.6;
+		color: var(--color-base-gray-500);
+		min-width: 24px;
+		min-height: 24px;
+		padding: var(--spacing-4);
 		transition: color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
 		display: flex;
 		align-items: center;
