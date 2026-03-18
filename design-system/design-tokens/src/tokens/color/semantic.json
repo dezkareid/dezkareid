@@ -23,6 +23,9 @@
           "primary": {
             "value": "{color.base.gray.900}"
           },
+          "secondary": {
+            "value": "{color.base.gray.600}"
+          },
           "inverse": {
             "value": "{color.base.white}"
           }
@@ -49,6 +52,9 @@
         "text": {
           "primary": {
             "value": "{color.base.white}"
+          },
+          "secondary": {
+            "value": "{color.base.gray.400}"
           },
           "inverse": {
             "value": "{color.base.gray.900}"
