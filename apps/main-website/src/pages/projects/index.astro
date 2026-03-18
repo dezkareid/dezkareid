@@ -6,9 +6,26 @@ import ProjectCard from '../../components/ProjectCard.astro';
 
 const projectsCollection = await getCollection('projects');
 const allProjects = projectsCollection.toSorted((a, b) => a.data.order - b.data.order);
+
+const jsonLd = {
+	"@context": "https://schema.org",
+	"@type": "CollectionPage",
+	name: "Projects",
+	description: "Explore my portfolio of frontend projects — design systems, performance tooling, and open-source contributions.",
+	url: new URL("/projects", Astro.site).toString(),
+	author: {
+		"@type": "Person",
+		name: "Joel Humberto Gomez Paredes",
+		url: Astro.site?.toString(),
+	},
+};
 ---
 
-<Layout title="Projects | Frontend Developer Portfolio">
+<Layout
+	title="Projects | Frontend Developer Portfolio"
+	description="Explore my portfolio of frontend projects — design systems, performance tooling, and open-source contributions."
+>
+	<script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
 	<Section>
 		<div class="container">
 			<span class="page-label">Portfolio</span>
@@ -56,7 +73,8 @@ const allProjects = projectsCollection.toSorted((a, b) => a.data.order - b.data.
 
 	.page-description {
 		font-size: var(--font-size-400);
-		color: var(--color-base-gray-500);
+		/* TODO(design-system): needs token for secondary text color (light: #4b5563 ~7:1, dark: #9ca3af ~7.2:1) */
+		color: light-dark(#4b5563, #9ca3af);
 		margin-bottom: var(--spacing-64);
 		max-width: 600px;
 		line-height: var(--font-line-height-relaxed);
