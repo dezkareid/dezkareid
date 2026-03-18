@@ -55,14 +55,6 @@ const grouped = categories
 </div>
 
 <style>
-	/* ====================================================
-	   DESIGN TOKEN ANNOTATIONS
-	   - --color-skill-frontend: color-mix(primary, bg) for pill bg
-	   - --color-skill-backend: color-mix(success, bg) for pill bg
-	   - --color-skill-tooling: color-mix(gray, bg) for pill bg
-	   - --border-radius-pill: 9999px for pill/tag shapes
-	   ==================================================== */
-
 	.skills-wrapper {
 		display: flex;
 		flex-direction: column;
@@ -82,7 +74,7 @@ const grouped = categories
 		font-family: var(--font-family-mono);
 		font-weight: var(--font-weight-medium);
 		text-transform: uppercase;
-		letter-spacing: 0.08em;
+		letter-spacing: var(--font-letter-spacing-wide);
 		color: var(--color-base-gray-500);
 		padding-top: calc(var(--spacing-4) + 2px);
 	}
@@ -97,8 +89,7 @@ const grouped = categories
 		display: inline-flex;
 		align-items: center;
 		padding: var(--spacing-4) var(--spacing-12);
-		/* DS NOTE: --border-radius-pill candidate */
-		border-radius: 9999px;
+		border-radius: var(--border-radius-pill);
 		font-size: var(--font-size-200);
 		font-weight: var(--font-weight-medium);
 		font-family: var(--font-family-mono);
@@ -109,7 +100,7 @@ const grouped = categories
 
 	.skill-pill:hover {
 		transform: translateY(-1px);
-		box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+		box-shadow: var(--shadow-card);
 	}
 
 	/* DS NOTE: --color-skill-frontend candidate */

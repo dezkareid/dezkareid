@@ -171,9 +171,7 @@ const services = servicesCollection.toSorted(
 		font-family: var(--font-family-mono);
 		font-weight: var(--font-weight-medium);
 		text-transform: uppercase;
-		/* DS NOTE: --letter-spacing-wide: 0.08em candidate */
 		letter-spacing: 0.1em;
-		/* DS NOTE: --section-label-color candidate */
 		color: var(--color-primary);
 		margin-bottom: var(--spacing-8);
 	}
@@ -181,7 +179,7 @@ const services = servicesCollection.toSorted(
 	.section-title {
 		font-size: var(--font-size-700);
 		color: var(--color-text-primary);
-		letter-spacing: -0.02em;
+		letter-spacing: var(--font-letter-spacing-tight);
 		line-height: var(--font-line-height-tight);
 	}
 

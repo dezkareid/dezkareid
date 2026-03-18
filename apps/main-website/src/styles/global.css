@@ -1,15 +1,5 @@
 @import "@dezkareid/design-tokens/dist/css/variables.css";
 
-/* ====================================================
-   DESIGN TOKEN ANNOTATIONS
-   The following values used here are candidates for the design system:
-   - --letter-spacing-tight: -0.02em  (headings)
-   - --letter-spacing-wide: 0.08em   (labels, eyebrows)
-   - --border-radius-pill: 9999px
-   - --animation-fade-up: keyframe + delay pattern for staggered entry
-   - --scroll-reveal class as a utility token/pattern
-   ==================================================== */
-
 :root {
   font-family: var(--font-family-base);
   font-size: var(--font-size-300);
@@ -30,8 +20,7 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0;
   font-weight: var(--font-weight-bold);
   line-height: var(--font-line-height-tight);
-  /* DS NOTE: --letter-spacing-tight: -0.02em candidate */
-  letter-spacing: -0.02em;
+  letter-spacing: var(--font-letter-spacing-tight);
 }
 
 a {
