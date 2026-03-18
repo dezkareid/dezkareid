@@ -1,3 +1,11 @@
+# [@dezkareid/design-tokens-v1.4.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.3.1...@dezkareid/design-tokens-v1.4.0) (2026-03-18)
+
+
+### Features
+
+* **design-tokens:** add border-radius and shadow sections to visualizer ([3010ddd](https://github.com/dezkareid/dezkareid/commit/3010ddd5ddf9766e3991490e9764eba546d39101))
+* **design-tokens:** add secondary text, letter-spacing, border-radius, and shadow tokens ([2d5ca0d](https://github.com/dezkareid/dezkareid/commit/2d5ca0de6f4f80da0256e4c980ac0931bb04595c)), closes [#9ca3af](https://github.com/dezkareid/dezkareid/issues/9ca3af) [#4b5563](https://github.com/dezkareid/dezkareid/issues/4b5563)
+
 # [@dezkareid/design-tokens-v1.3.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.3.0...@dezkareid/design-tokens-v1.3.1) (2026-03-10)
 
 
