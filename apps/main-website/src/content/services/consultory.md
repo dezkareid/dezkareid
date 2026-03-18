@@ -4,6 +4,9 @@ description: "Technology decisions made with business context — so your team b
 icon: "🧭"
 order: 4
 cta: "Book a call"
+metaDescription: "Independent technical strategy for CTOs and engineering leads. Single calls to ongoing advisory — grounded in real-world frontend experience."
+priceRange: "From $70/session"
+serviceType: "Technical Advisory"
 ---
 
 ## Who this is for

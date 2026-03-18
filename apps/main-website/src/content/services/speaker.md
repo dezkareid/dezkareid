@@ -4,6 +4,9 @@ description: "Practical, experience-backed talks and workshops on frontend archi
 icon: "🎤"
 order: 6
 cta: "Send a request"
+metaDescription: "Frontend conference talks and internal workshops on architecture, design systems, performance, and AI-assisted development. Public events free."
+priceRange: "Free (public events) / Negotiated (private)"
+serviceType: "Speaking & Training"
 ---
 
 ## Who this is for

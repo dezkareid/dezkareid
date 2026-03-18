@@ -4,6 +4,9 @@ description: "You get a production-ready frontend built to your standards — yo
 icon: "🖥️"
 order: 1
 cta: "Start a project"
+metaDescription: "Hire a dedicated frontend specialist for React, Next.js, and Astro delivery. Your team stays focused — I handle the frontend end-to-end."
+priceRange: "Project-based"
+serviceType: "Frontend Development"
 ---
 
 ## Who this is for
