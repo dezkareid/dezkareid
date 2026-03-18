@@ -17,7 +17,8 @@ on:
       - "design-system/**"
     branches:
       - main
-
+env:
+  HUSKY: 0
 jobs:
   test:
     runs-on: ubuntu-latest
