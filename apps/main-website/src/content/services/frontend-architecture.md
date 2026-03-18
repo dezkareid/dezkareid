@@ -4,6 +4,9 @@ description: "Your team gets a clear, prioritized path from friction-heavy codeb
 icon: "🏗️"
 order: 2
 cta: "Request an audit"
+metaDescription: "Get a prioritized frontend architecture audit with an actionable roadmap. I analyze your codebase, workflows, and tooling — then fix them."
+priceRange: "From $1,500"
+serviceType: "Technical Consulting"
 ---
 
 ## Who this is for

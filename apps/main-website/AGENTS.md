@@ -2,7 +2,13 @@
 
 Astro 5 marketing website for Joel Gomez (dezkareid). Static site built with Astro content collections, design tokens, and a shared component library.
 
-## Stack
+## Overview
+
+This is a marketing website for Joel Gomez (dezkareid). It is a static site built with Astro 5.
+
+Production URL: https://dezkareid.dev
+
+### Stack
 
 - **Framework**: Astro 5 (`astro: 5.18.0`) — static output, no SSR
 - **UI components**: `@dezkareid/components` (Button, Card, ThemeToggle — Astro variants)
@@ -10,7 +16,7 @@ Astro 5 marketing website for Joel Gomez (dezkareid). Static site built with Ast
 - **Styling**: Scoped `<style>` per component + `src/styles/global.css`
 - **Linting**: ESLint 9 flat config via `@dezkareid/eslint-plugin-web` (`configs.astro`)
 
-## Project Structure
+### Project Structure
 
 ```
 src/
@@ -112,6 +118,10 @@ pnpm preview      # serve dist/
 pnpm lint         # eslint .
 pnpm lint:fix     # eslint . --fix
 ```
+
+### Auditories
+
+The audits should be done over the production site.
 
 ## Known Gaps / TODOs
 

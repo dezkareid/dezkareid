@@ -11,7 +11,7 @@ const deliveryServices = allServices.filter(s => s.data.order <= 3);
 const supportServices = allServices.filter(s => s.data.order > 3);
 ---
 
-<Layout title="Services | Frontend Developer Portfolio">
+<Layout title="Services | Frontend Developer Portfolio" description="Frontend development, architecture audits, web performance optimization, consulting, mentoring, and workshops. Hire a specialist who ships.">
 	<Section>
 		<div class="container">
 			<span class="page-label">Offerings</span>
@@ -30,6 +30,8 @@ const supportServices = allServices.filter(s => s.data.order > 3);
 				</div>
 			</div>
 
+			<hr class="groups-divider" />
+
 			<div class="services-group">
 				<div class="group-header">
 					<h2 class="group-title">Strategic Support</h2>
@@ -44,13 +46,6 @@ const supportServices = allServices.filter(s => s.data.order > 3);
 		</div>
 	</Section>
 
-	<Section class="bg-alt">
-		<div class="container text-center">
-			<h2 class="cta-title">Ready to start a project?</h2>
-			<p class="cta-text">I'm currently accepting new freelance projects and consulting engagements.</p>
-			<a href="mailto:elmaildeldezkareid@gmail.com" class="cta-button">Get a Quote</a>
-		</div>
-	</Section>
 </Layout>
 
 <style>
@@ -85,14 +80,21 @@ const supportServices = allServices.filter(s => s.data.order > 3);
 
 	.page-description {
 		font-size: var(--font-size-400);
-		color: var(--color-text-secondary, var(--color-base-gray-500));
+		color: var(--color-text-primary);
+		opacity: 0.7;
 		margin-bottom: var(--spacing-64);
 		max-width: 600px;
 		line-height: var(--font-line-height-relaxed);
 	}
 
 	.services-group {
-		margin-bottom: var(--spacing-80);
+		margin-bottom: var(--spacing-64);
+	}
+
+	.groups-divider {
+		border: 0;
+		border-top: 1px solid color-mix(in srgb, var(--color-text-primary) 10%, transparent);
+		margin-bottom: var(--spacing-64);
 	}
 
 	.group-header {
@@ -109,7 +111,8 @@ const supportServices = allServices.filter(s => s.data.order > 3);
 
 	.group-subtitle {
 		font-size: var(--font-size-300);
-		color: var(--color-text-secondary, var(--color-base-gray-500));
+		color: var(--color-text-primary);
+		opacity: 0.65;
 	}
 
 	.grid {
@@ -118,37 +121,4 @@ const supportServices = allServices.filter(s => s.data.order > 3);
 		gap: var(--spacing-32);
 	}
 
-	.bg-alt {
-		background-color: var(--color-background-secondary);
-	}
-
-	.text-center {
-		text-align: center;
-	}
-
-	.cta-title {
-		font-size: var(--font-size-700);
-		margin-bottom: var(--spacing-16);
-	}
-
-	.cta-text {
-		font-size: var(--font-size-400);
-		color: var(--color-text-secondary, var(--color-base-gray-500));
-		margin-bottom: var(--spacing-32);
-	}
-
-	.cta-button {
-		display: inline-block;
-		background-color: var(--color-primary);
-		color: var(--color-text-inverse);
-		padding: var(--spacing-12) var(--spacing-32);
-		border-radius: var(--spacing-4);
-		font-weight: var(--font-weight-bold);
-		text-decoration: none;
-	}
-
-	.cta-button:hover {
-		opacity: 0.9;
-		text-decoration: none;
-	}
 </style>

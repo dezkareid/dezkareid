@@ -24,6 +24,9 @@ const servicesCollection = defineCollection({
 		icon: z.string().optional(),
 		cta: z.string().optional(),
 		order: z.number().default(0),
+		metaDescription: z.string().optional(),
+		priceRange: z.string().optional(),
+		serviceType: z.string().optional(),
 	}),
 });
 

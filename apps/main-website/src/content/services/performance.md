@@ -4,6 +4,9 @@ description: "Measurable Core Web Vitals improvements — not guesses, not quick
 icon: "⚡"
 order: 3
 cta: "Request an audit"
+metaDescription: "Root-cause web performance audits for teams where slow pages hurt retention and SEO. Measurable improvements, not just Lighthouse scores."
+priceRange: "From $100"
+serviceType: "Performance Optimization"
 ---
 
 ## Who this is for
