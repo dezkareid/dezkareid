@@ -3,7 +3,7 @@
     "semantic": {
       "light": {
         "primary": {
-          "value": "{color.base.blue.500}"
+          "value": "{color.base.blue.600}"
         },
         "success": {
           "value": "{color.base.green.500}"
@@ -46,7 +46,7 @@
             "value": "{color.base.black}"
           },
           "secondary": {
-            "value": "{color.base.gray.500}"
+            "value": "{color.base.gray.800}"
           }
         },
         "text": {
