@@ -34,24 +34,26 @@ const categories = [
 const grouped = categories
 	.map((cat) => ({
 		...cat,
-		skills: skills.filter((s) => s.category === cat.key),
+		skills: skills.filter((s: Skill) => s.category === cat.key),
 	}))
 	.filter((g) => g.skills.length > 0);
 ---
 
 <div class="skills-wrapper">
-	{grouped.map((group) => (
-		<div class="skill-group">
-			<span class="skill-group-label">{group.label}</span>
-			<div class="skill-pills">
-				{group.skills.map((skill) => (
-					<span class={`skill-pill skill-pill--${group.key}`}>
-						{skill.name}
-					</span>
-				))}
+	{
+		grouped.map((group) => (
+			<div class="skill-group">
+				<span class="skill-group-label">{group.label}</span>
+				<div class="skill-pills">
+					{group.skills.map((skill: Skill) => (
+						<span class={`skill-pill skill-pill--${group.key}`}>
+							{skill.name}
+						</span>
+					))}
+				</div>
 			</div>
-		</div>
-	))}
+		))
+	}
 </div>
 
 <style>
@@ -75,7 +77,7 @@ const grouped = categories
 		font-weight: var(--font-weight-medium);
 		text-transform: uppercase;
 		letter-spacing: var(--font-letter-spacing-wide);
-		color: var(--color-base-gray-500);
+		color: var(--color-text-secondary);
 		padding-top: calc(var(--spacing-4) + 2px);
 	}
 
@@ -105,28 +107,48 @@ const grouped = categories
 
 	/* DS NOTE: --color-skill-frontend candidate */
 	.skill-pill--frontend {
-		background: color-mix(in srgb, var(--color-primary) 10%, var(--color-background-secondary));
+		background: color-mix(
+			in srgb,
+			var(--color-primary) 10%,
+			var(--color-background-secondary)
+		);
 		border-color: color-mix(in srgb, var(--color-primary) 25%, transparent);
 		color: var(--color-primary);
 	}
 
 	/* DS NOTE: --color-skill-backend candidate */
 	.skill-pill--backend {
-		background: color-mix(in srgb, var(--color-success) 10%, var(--color-background-secondary));
+		background: color-mix(
+			in srgb,
+			var(--color-success) 10%,
+			var(--color-background-secondary)
+		);
 		border-color: color-mix(in srgb, var(--color-success) 25%, transparent);
 		color: var(--color-base-green-500);
 	}
 
 	/* DS NOTE: --color-skill-tooling candidate */
 	.skill-pill--tooling {
-		background: color-mix(in srgb, var(--color-base-gray-500) 10%, var(--color-background-secondary));
-		border-color: color-mix(in srgb, var(--color-base-gray-500) 25%, transparent);
-		color: var(--color-base-gray-500);
+		background: color-mix(
+			in srgb,
+			var(--color-text-secondary) 10%,
+			var(--color-background-primary)
+		);
+		border-color: color-mix(
+			in srgb,
+			var(--color-text-secondary) 25%,
+			transparent
+		);
+		color: var(--color-text-secondary);
 	}
 
 	.skill-pill--other {
 		background: var(--color-background-secondary);
-		border-color: color-mix(in srgb, var(--color-text-primary) 12%, transparent);
+		border-color: color-mix(
+			in srgb,
+			var(--color-text-primary) 12%,
+			transparent
+		);
 		color: var(--color-text-primary);
 	}
 

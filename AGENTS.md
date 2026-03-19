@@ -125,7 +125,7 @@ Storybook 10 instance for developing and documenting React components. **Private
 
 Always use Context7 MCP when I need external library/API documentation, code generation, setup or configuration steps without me having to explicitly ask.
 
-For internal libraries every project has a `README.md` file that contains the documentation for the library.
+For internal libraries every project has a `README.md` file that contains the documentation to use the library. When you need make modifications to an internal library you should read the `AGENTS.md` file for that library and follow the instructions in it.
 
 ### Building Web UI
 

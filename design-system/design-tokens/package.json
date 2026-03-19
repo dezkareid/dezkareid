@@ -43,6 +43,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "vitest run",
+    "contrast-check": "node scripts/contrast-check.js",
     "visualizer": "http-server . -p 3000 -o /scripts/visualizer/visualizer.html"
   },
   "devDependencies": {
