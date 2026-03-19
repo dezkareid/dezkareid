@@ -1,3 +1,10 @@
+# [@dezkareid/design-tokens-v1.4.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.4.0...@dezkareid/design-tokens-v1.4.1) (2026-03-19)
+
+
+### Bug Fixes
+
+* add colors and change tokens to improve contrast ([ff42940](https://github.com/dezkareid/dezkareid/commit/ff42940ccb5e657a02c7a66563cb5c2fba7ab7d7))
+
 # [@dezkareid/design-tokens-v1.4.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.3.1...@dezkareid/design-tokens-v1.4.0) (2026-03-18)
 
 
