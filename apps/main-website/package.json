@@ -14,6 +14,7 @@
   },
   "devDependencies": {
     "@astrojs/sitemap": "3.7.1",
+    "sharp": "0.34.5",
     "@dezkareid/eslint-config-ts-base": "workspace:*",
     "@dezkareid/eslint-plugin-web": "workspace:*",
     "@typescript-eslint/parser": "8.57.0",
@@ -22,9 +23,9 @@
     "typescript-eslint": "8.57.0"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "12.6.12",
     "@dezkareid/components": "workspace:*",
     "@dezkareid/design-tokens": "workspace:*",
-    "astro": "6.0.6",
-    "sharp": "0.34.5"
+    "astro": "6.0.6"
   }
 }
