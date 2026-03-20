@@ -47,6 +47,7 @@
       ]
     },
     "storybook": {
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true,
       "outputs": []
