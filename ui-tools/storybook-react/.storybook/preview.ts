@@ -5,6 +5,35 @@ import '@dezkareid/components/css'
 
 export default definePreview({
   addons: [addonPerformancePanel()],
+
+  globals: {
+    colorScheme: 'light',
+  },
+
+  globalTypes: {
+    colorScheme: {
+      description: 'Color scheme (light / dark)',
+      toolbar: {
+        title: 'Theme',
+        icon: 'circlehollow',
+        items: [
+          { value: 'light', title: 'Light', icon: 'sun' },
+          { value: 'dark', title: 'Dark', icon: 'moon' },
+        ],
+        dynamicTitle: true,
+      },
+    },
+  },
+
+  decorators: [
+    (Story, context) => {
+      const scheme = (context.globals['colorScheme'] as string) ?? 'light';
+      document.documentElement.style.colorScheme = scheme;
+      document.documentElement.style.backgroundColor = 'var(--color-background-primary)';
+      return Story();
+    },
+  ],
+
   parameters: {
     controls: {
       matchers: {
