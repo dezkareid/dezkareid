@@ -11,6 +11,9 @@
         "danger": {
           "value": "{color.base.red.500}"
         },
+        "warning": {
+          "value": "{color.base.amber.600}"
+        },
         "background": {
           "primary": {
             "value": "{color.base.white}"
@@ -40,6 +43,9 @@
         },
         "danger": {
           "value": "{color.base.red.900}"
+        },
+        "warning": {
+          "value": "{color.base.amber.900}"
         },
         "background": {
           "primary": {

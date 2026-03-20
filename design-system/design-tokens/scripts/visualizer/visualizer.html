@@ -84,9 +84,9 @@
 
         .token-var {
             font-family: monospace;
-            color: #4b5563;
+            color: #111827;
             font-size: 0.75rem;
-            background: #f3f4f6;
+            background: #e5e7eb;
             padding: 2px 4px;
             border-radius: 4px;
         }
@@ -117,7 +117,7 @@
         .swatch-label {
             font-size: 0.7rem;
             text-transform: uppercase;
-            color: #6b7280;
+            color: #374151;
         }
 
         /* Spacing Visuals */
@@ -184,7 +184,7 @@
             align-items: center;
             justify-content: center;
             font-size: 0.75rem;
-            color: #6b7280;
+            color: #374151;
         }
 
         /* Contrast Pairs */
@@ -220,6 +220,7 @@
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+            font-weight: 600;
         }
 
         .contrast-theme-cell + .contrast-theme-cell {
@@ -248,12 +249,12 @@
         .contrast-ratio-badge {
             display: inline-block;
             margin-top: 0.5rem;
-            font-size: 0.6875rem;
+            font-size: 0.75rem;
             font-family: monospace;
             font-weight: 700;
-            padding: 2px 6px;
+            padding: 3px 8px;
             border-radius: 4px;
-            border: 1px solid currentColor;
+            border: 2px solid currentColor;
             width: fit-content;
         }
     </style>
@@ -501,7 +502,7 @@
                     <div class="token-var">--${toKebab(key)}</div>
                 </div>
                 <div class="typo-viz" style="${style}">The quick brown fox jumps over the lazy dog</div>
-                <div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">Value: ${value}</div>
+                <div style="font-size: 0.75rem; color: #374151; margin-top: 0.25rem;">Value: ${value}</div>
             `;
             typoGrid.appendChild(item);
         });
@@ -533,7 +534,7 @@
                     <div class="token-var">--${toKebab(key)}</div>
                 </div>
                 <div class="shadow-viz" style="box-shadow: ${value}">${value === 'none' ? 'none' : ''}</div>
-                <div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem; word-break: break-all;">${value}</div>
+                <div style="font-size: 0.75rem; color: #374151; margin-top: 0.25rem; word-break: break-all;">${value}</div>
             `;
             shadowsGrid.appendChild(item);
         });

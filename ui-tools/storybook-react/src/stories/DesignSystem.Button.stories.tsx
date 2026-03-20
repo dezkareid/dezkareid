@@ -29,6 +29,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// --- Variants ---
+
 export const Primary: Story = {
   args: { variant: 'primary', size: 'md' },
 };
@@ -49,6 +51,8 @@ export const Success: Story = {
   args: { variant: 'success', size: 'md' },
 };
 
+// --- Sizes ---
+
 export const Small: Story = {
   args: { variant: 'primary', size: 'sm' },
 };
@@ -61,9 +65,18 @@ export const Large: Story = {
   args: { variant: 'primary', size: 'lg' },
 };
 
+// --- States ---
+
 export const Disabled: Story = {
   args: { variant: 'primary', size: 'md', disabled: true },
 };
+
+export const DisabledSecondary: Story = {
+  name: 'Disabled (Secondary)',
+  args: { variant: 'secondary', size: 'md', disabled: true },
+};
+
+// --- Compositions ---
 
 export const AllVariants: Story = {
   name: 'All Variants',
@@ -89,4 +102,47 @@ export const AllSizes: Story = {
     </div>
   ),
   args: { variant: 'primary' },
+};
+
+export const AllDisabled: Story = {
+  name: 'All Variants Disabled',
+  render: (args) => (
+    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+      <Button {...args} variant="primary" disabled>Primary</Button>
+      <Button {...args} variant="secondary" disabled>Secondary</Button>
+      <Button {...args} variant="outline" disabled>Outline</Button>
+      <Button {...args} variant="ghost" disabled>Ghost</Button>
+      <Button {...args} variant="success" disabled>Success</Button>
+    </div>
+  ),
+  args: { size: 'md' },
+};
+
+export const CustomColour: Story = {
+  name: 'Custom Colour (CSS Custom Properties)',
+  render: (args) => (
+    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+      <Button
+        {...args}
+        variant="primary"
+        style={{
+          '--button-primary-color-background': 'var(--color-danger)',
+          '--button-primary-color-text': 'var(--color-text-inverse)',
+        } as React.CSSProperties}
+      >
+        Danger Primary
+      </Button>
+      <Button
+        {...args}
+        variant="success"
+        style={{
+          '--button-success-color-background': 'var(--color-warning)',
+          '--button-success-color-text': 'var(--color-text-primary)',
+        } as React.CSSProperties}
+      >
+        Warning Success
+      </Button>
+    </div>
+  ),
+  args: { size: 'md' },
 };
