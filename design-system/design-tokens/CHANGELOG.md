@@ -1,3 +1,10 @@
+# [@dezkareid/design-tokens-v1.5.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.4.1...@dezkareid/design-tokens-v1.5.0) (2026-03-20)
+
+
+### Features
+
+* add warning token ([a38e96f](https://github.com/dezkareid/dezkareid/commit/a38e96fb70e32495a32f67ea855cd98ff4b8d00e))
+
 # [@dezkareid/design-tokens-v1.4.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.4.0...@dezkareid/design-tokens-v1.4.1) (2026-03-19)
 
 
