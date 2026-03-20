@@ -4,6 +4,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
+  output: 'server',
   adapter: cloudflare(),
   site: 'https://dezkareid.dev',
   integrations: [sitemap()],

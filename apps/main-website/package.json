@@ -22,7 +22,7 @@
     "typescript-eslint": "8.57.0"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^12.6.12",
+    "@astrojs/cloudflare": "12.6.12",
     "@dezkareid/components": "workspace:*",
     "@dezkareid/design-tokens": "workspace:*",
     "astro": "6.0.6",
