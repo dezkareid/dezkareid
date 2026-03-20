@@ -23,6 +23,7 @@ export function Button({
         className,
       )}
       disabled={disabled}
+      aria-disabled={disabled}
       {...rest}
     >
       {children}

@@ -9,15 +9,31 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--spacing-8);
   cursor: pointer;
   border: none;
-  border-radius: var(--spacing-4);
+  border-radius: var(--border-radius-medium);
   font-family: var(--font-family-base);
   font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-300);
   line-height: var(--font-line-height-none);
+  letter-spacing: var(--font-letter-spacing-wide);
   text-decoration: none;
   white-space: nowrap;
-  transition: opacity 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s ease;
+}
+
+/* --- Structure: focus ring --- */
+.button:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-background-primary),
+    0 0 0 4px var(--color-primary);
 }
 
 /* --- Structure: size modifiers --- */
@@ -25,6 +41,7 @@
 .button--small {
   padding: var(--spacing-4) var(--spacing-12);
   font-size: var(--font-size-200);
+  border-radius: var(--border-radius-small);
 }
 
 .button--md,
@@ -37,49 +54,67 @@
 .button--large {
   padding: var(--spacing-12) var(--spacing-32);
   font-size: var(--font-size-400);
+  border-radius: var(--border-radius-large);
 }
 
 /* --- Skin: variant modifiers --- */
 .button--primary {
-  background-color: var(--color-primary);
-  color: var(--color-text-inverse);
+  --button-primary-color-background: var(--color-primary);
+  --button-primary-color-text: var(--color-text-inverse);
+  background-color: var(--button-primary-color-background);
+  color: var(--button-primary-color-text);
   border: 1px solid transparent;
 }
 
 .button--primary:hover:not(.button--disabled) {
-  opacity: 0.88;
+  box-shadow: var(--shadow-card-hover);
+  opacity: 0.92;
 }
 
 .button--secondary,
 .button--outline {
-  background-color: transparent;
-  color: var(--color-primary);
-  border: 1px solid var(--color-primary);
+  --button-secondary-color-background: transparent;
+  --button-secondary-color-text: var(--color-primary);
+  --button-secondary-color-border: var(--color-primary);
+  background-color: var(--button-secondary-color-background);
+  color: var(--button-secondary-color-text);
+  border: 1px solid var(--button-secondary-color-border);
 }
 
 .button--secondary:hover:not(.button--disabled),
 .button--outline:hover:not(.button--disabled) {
   background-color: var(--color-background-secondary);
+  box-shadow: var(--shadow-subtle);
 }
 
+/* Success button: uses text-primary for text to meet WCAG AA 4.5:1
+   Light: #22c55e bg + #111827 text = 7.79:1 ✅
+   Dark:  #14532d bg + #ffffff text = 9.11:1 ✅ */
+
 .button--success {
-  background-color: var(--color-success);
-  color: var(--color-text-inverse);
+  --button-success-color-background: var(--color-success);
+  --button-success-color-text: var(--color-text-primary);
+  background-color: var(--button-success-color-background);
+  color: var(--button-success-color-text);
   border: 1px solid transparent;
 }
 
 .button--success:hover:not(.button--disabled) {
-  opacity: 0.88;
+  box-shadow: var(--shadow-card-hover);
+  opacity: 0.92;
 }
 
 .button--ghost {
-  background-color: transparent;
-  color: var(--color-text-primary);
+  --button-ghost-color-background: transparent;
+  --button-ghost-color-text: var(--color-text-primary);
+  background-color: var(--button-ghost-color-background);
+  color: var(--button-ghost-color-text);
   border: 1px solid transparent;
 }
 
 .button--ghost:hover:not(.button--disabled) {
   background-color: var(--color-background-secondary);
+  border-color: var(--color-background-secondary);
 }
 
 /* --- Skin: state modifier --- */

@@ -30,6 +30,6 @@ const classes = [
   .join(' ');
 ---
 
-<Tag class={classes} href={href} disabled={!href && disabled} {...rest}>
+<Tag class={classes} href={href} disabled={!href && disabled} aria-disabled={!href && disabled} {...rest}>
   <slot />
 </Tag>

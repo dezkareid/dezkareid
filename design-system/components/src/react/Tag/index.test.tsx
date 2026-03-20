@@ -32,4 +32,14 @@ describe('Tag', () => {
     render(<Tag>No variant</Tag>);
     expect(screen.getByText('No variant').className).toMatch(/tag--default/);
   });
+
+  it('renders warning variant', () => {
+    render(<Tag variant="warning">Warning</Tag>);
+    expect(screen.getByText('Warning').className).toMatch(/tag--warning/);
+  });
+
+  it('forwards aria-label to root span', () => {
+    render(<Tag variant="success" aria-label="Success status">Active</Tag>);
+    expect(screen.getByLabelText('Success status')).toBeInTheDocument();
+  });
 });

@@ -8,7 +8,7 @@
 .tag {
   display: inline-flex;
   align-items: center;
-  border-radius: var(--spacing-4);
+  border-radius: var(--spacing-12);
   padding: var(--spacing-4) var(--spacing-8);
   font-family: var(--font-family-base);
   font-size: var(--font-size-100);
@@ -18,16 +18,30 @@
 
 /* --- Skin: variant modifiers --- */
 .tag--default {
-  background-color: var(--color-background-secondary);
-  color: var(--color-text-primary);
+  --tag-default-color-background: var(--color-background-secondary);
+  --tag-default-color-text: var(--color-text-primary);
+  background-color: var(--tag-default-color-background);
+  color: var(--tag-default-color-text);
 }
 
 .tag--success {
-  background-color: var(--color-success);
-  color: var(--color-text-inverse);
+  --tag-success-color-background: var(--color-success);
+  --tag-success-color-text: var(--color-text-inverse);
+  background-color: var(--tag-success-color-background);
+  color: var(--tag-success-color-text);
 }
 
 .tag--danger {
-  background-color: var(--color-danger);
-  color: var(--color-text-inverse);
+  --tag-danger-color-background: var(--color-danger);
+  --tag-danger-color-text: var(--color-text-inverse);
+  background-color: var(--tag-danger-color-background);
+  color: var(--tag-danger-color-text);
+}
+
+/* TODO(design-system): needs token --color-warning (suggest amber-600 #d97706 for light, amber-900 #78350f for dark) */
+.tag--warning {
+  --tag-warning-color-background: #d97706;
+  --tag-warning-color-text: var(--color-text-inverse);
+  background-color: var(--tag-warning-color-background);
+  color: var(--tag-warning-color-text);
 }
