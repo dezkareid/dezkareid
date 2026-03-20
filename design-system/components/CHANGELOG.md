@@ -1,3 +1,10 @@
+# [@dezkareid/components-v1.0.2](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.0.1...@dezkareid/components-v1.0.2) (2026-03-20)
+
+
+### Bug Fixes
+
+* improve design and a11y ([959e007](https://github.com/dezkareid/dezkareid/commit/959e00713f8a5ecd54d8105496d2118680e4c9f9))
+
 # [@dezkareid/components-v1.0.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.0.0...@dezkareid/components-v1.0.1) (2026-03-04)
 
 
