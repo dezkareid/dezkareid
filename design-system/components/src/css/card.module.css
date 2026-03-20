@@ -20,11 +20,13 @@
 
 /* --- Skin: elevation modifiers --- */
 
-/* TODO: Propose --shadow-raised token to the design-tokens package. */
+/* TODO(design-system): needs token --shadow-raised (suggest 0 2px 8px rgba(0,0,0,0.12)) */
 .card--raised {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
+/* TODO(design-system): needs token --color-border (suggest var(--color-background-secondary)) */
 .card--flat {
   box-shadow: none;
+  border: 1px solid var(--color-background-secondary);
 }

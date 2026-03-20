@@ -35,4 +35,14 @@ describe('Card', () => {
     const { container } = render(<Card elevation="raised">Content</Card>);
     expect((container.firstChild as HTMLElement).className).toMatch(/card--raised/);
   });
+
+  it('forwards role prop to root element', () => {
+    render(<Card role="article">Content</Card>);
+    expect(screen.getByRole('article')).toBeInTheDocument();
+  });
+
+  it('applies card--flat class when elevation is flat', () => {
+    const { container } = render(<Card elevation="flat">Content</Card>);
+    expect((container.firstChild as HTMLElement).className).toMatch(/card--flat/);
+  });
 });

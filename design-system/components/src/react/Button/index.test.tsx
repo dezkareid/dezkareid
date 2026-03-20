@@ -56,4 +56,14 @@ describe('Button', () => {
     await userEvent.click(screen.getByRole('button'));
     expect(onClick).toHaveBeenCalledOnce();
   });
+
+  it('has aria-disabled when disabled', () => {
+    render(<Button disabled>Disabled</Button>);
+    expect(screen.getByRole('button')).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('does not have aria-disabled when enabled', () => {
+    render(<Button>Enabled</Button>);
+    expect(screen.getByRole('button')).toHaveAttribute('aria-disabled', 'false');
+  });
 });

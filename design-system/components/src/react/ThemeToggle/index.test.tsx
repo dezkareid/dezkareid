@@ -81,4 +81,27 @@ describe('ThemeToggle', () => {
     await act(async () => { render(<ThemeToggle />); });
     expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'false');
   });
+
+  it('has aria-label "Switch to dark mode" when in light mode', async () => {
+    await act(async () => { render(<ThemeToggle />); });
+    expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Switch to dark mode');
+  });
+
+  it('has aria-label "Switch to light mode" after toggling to dark', async () => {
+    await act(async () => { render(<ThemeToggle />); });
+    await userEvent.click(screen.getByRole('button'));
+    expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Switch to light mode');
+  });
+
+  it('renders an aria-live polite region', async () => {
+    await act(async () => { render(<ThemeToggle />); });
+    const liveRegion = document.querySelector('[aria-live="polite"]');
+    expect(liveRegion).toBeInTheDocument();
+  });
+
+  it('renders an SVG icon with aria-hidden', async () => {
+    await act(async () => { render(<ThemeToggle />); });
+    const svg = document.querySelector('svg[aria-hidden="true"]');
+    expect(svg).toBeInTheDocument();
+  });
 });

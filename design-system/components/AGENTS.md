@@ -54,6 +54,15 @@ Consumers **must** import `@dezkareid/components/css` once at their app root —
 
 Each component lives in its own folder within each framework directory, e.g. `src/react/Button/index.tsx`.
 
+### Component characteristics
+
+Each component should have support for the following characteristics:
+
+- Multi-theme support
+- Mobile first
+- Accessibility/WCAG 2.2 support
+- Performance focused
+
 A component set should include:
 
 - `src/shared/types/<component>.ts` — shared TypeScript props interface
@@ -71,6 +80,7 @@ A component set should include:
 - Use semantic tokens (`--color-primary`, `--color-text-primary`, etc.) for automatic light/dark support
 - When a needed token doesn't exist, use the closest base token and add a `TODO: Propose --token-name` comment
 
+
 ### Available components
 
 #### Button
@@ -79,12 +89,37 @@ File: `src/react/Button/index.tsx` | `src/astro/Button/index.astro` | `src/vue/B
 Types: `src/shared/types/button.ts` | CSS: `src/css/button.module.css`
 
 Props:
-- `variant?: 'primary' | 'secondary'` — default `'primary'`
+- `variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'success'` — default `'primary'`
 - `size?: 'sm' | 'md' | 'lg'` — default `'md'`
 - `disabled?: boolean` — default `false`
 - Forwards all native `<button>` HTML attributes
 
-BEM classes: `.button`, `.button--primary`, `.button--secondary`, `.button--sm`, `.button--md`, `.button--lg`, `.button--disabled`
+Accessibility:
+- Sets both `disabled` and `aria-disabled={disabled}` so screen readers announce the disabled state regardless of the element's interactive role.
+- `:focus-visible` outline uses `var(--color-primary)` — never removed.
+
+BEM classes: `.button`, `.button--primary`, `.button--secondary`, `.button--outline`, `.button--ghost`, `.button--success`, `.button--sm`, `.button--md`, `.button--lg`, `.button--disabled`
+
+Component custom properties (override per-variant colours without touching global tokens):
+| Property | Variant | Default |
+|---|---|---|
+| `--button-primary-color-background` | primary | `var(--color-primary)` |
+| `--button-primary-color-text` | primary | `var(--color-text-inverse)` |
+| `--button-secondary-color-background` | secondary/outline | `transparent` |
+| `--button-secondary-color-text` | secondary/outline | `var(--color-primary)` |
+| `--button-secondary-color-border` | secondary/outline | `var(--color-primary)` |
+| `--button-success-color-background` | success | `var(--color-success)` |
+| `--button-success-color-text` | success | `var(--color-text-inverse)` |
+| `--button-ghost-color-background` | ghost | `transparent` |
+| `--button-ghost-color-text` | ghost | `var(--color-text-primary)` |
+
+Usage example:
+```css
+.my-section .button--primary {
+  --button-primary-color-background: var(--color-danger);
+  --button-primary-color-text: var(--color-text-inverse);
+}
+```
 
 #### Tag
 
@@ -92,10 +127,35 @@ File: `src/react/Tag/index.tsx` | `src/astro/Tag/index.astro` | `src/vue/Tag/ind
 Types: `src/shared/types/tag.ts` | CSS: `src/css/tag.module.css`
 
 Props:
-- `variant?: 'default' | 'success' | 'danger'` — default `'default'`
+- `variant?: 'default' | 'success' | 'danger' | 'warning'` — default `'default'`
 - Accepts arbitrary `children`/slot content (not limited to plain text)
 
-BEM classes: `.tag`, `.tag--default`, `.tag--success`, `.tag--danger`
+Accessibility:
+- The component does not inject accessible text for semantic variants. Consumers must provide a meaningful `aria-label` when the variant colour conveys status (e.g. `<Tag variant="danger" aria-label="Error: item rejected">`).
+
+BEM classes: `.tag`, `.tag--default`, `.tag--success`, `.tag--danger`, `.tag--warning`
+
+Component custom properties (override per-variant colours without touching global tokens):
+| Property | Variant | Default |
+|---|---|---|
+| `--tag-default-color-background` | default | `var(--color-background-secondary)` |
+| `--tag-default-color-text` | default | `var(--color-text-primary)` |
+| `--tag-success-color-background` | success | `var(--color-success)` |
+| `--tag-success-color-text` | success | `var(--color-text-inverse)` |
+| `--tag-danger-color-background` | danger | `var(--color-danger)` |
+| `--tag-danger-color-text` | danger | `var(--color-text-inverse)` |
+| `--tag-warning-color-background` | warning | `#d97706` |
+| `--tag-warning-color-text` | warning | `var(--color-text-inverse)` |
+
+Usage example:
+```css
+.my-section {
+  --tag-success-color-background: var(--color-primary);
+  --tag-success-color-text: var(--color-text-inverse);
+}
+```
+
+Note: `--color-warning` token is proposed but not yet in `@dezkareid/design-tokens`; currently uses raw `#d97706` (amber-600).
 
 #### Card
 
@@ -104,11 +164,12 @@ Types: `src/shared/types/card.ts` | CSS: `src/css/card.module.css`
 
 Props:
 - `elevation?: 'flat' | 'raised'` — default `'raised'`
+- `role?: string` — forwarded to root `<div>` for semantic landmark declaration (e.g. `role="article"`, `role="region"` with `aria-label`). No default role is set.
 - Accepts arbitrary `children`/slot content
 
 BEM classes: `.card`, `.card--raised`, `.card--flat`
 
-Note: `--shadow-raised` token is proposed but not yet in `@dezkareid/design-tokens`; currently uses a raw `box-shadow` value.
+Note: `--shadow-raised` and `--color-border` tokens are proposed but not yet in `@dezkareid/design-tokens`; currently use raw values.
 
 #### ThemeToggle
 
@@ -121,10 +182,12 @@ Props: none (self-contained stateful component)
 Behaviour:
 - On mount: reads `localStorage.getItem('color-scheme')`; falls back to `window.matchMedia('(prefers-color-scheme: dark)')`
 - On toggle: flips theme, calls `applyTheme()` (sets `color-scheme` on `<html>`), calls `persistTheme()` (writes to `localStorage`)
+- Renders an inline SVG sun icon (light mode) or moon icon (dark mode) alongside the text label. SVGs have `aria-hidden="true"`.
+- A visually-hidden `<span aria-live="polite">` sibling outside the `<button>` announces the new theme to screen readers after each toggle.
 - Astro version includes an inline `<script is:inline>` for FOUC prevention
 - All `window`/`localStorage` access is SSR-safe (`typeof window !== 'undefined'` guards in `theme.ts`)
 
-BEM classes: `.theme-toggle`, `.theme-toggle--dark`
+BEM classes: `.theme-toggle`, `.theme-toggle--dark`, `.theme-toggle__icon`, `.theme-toggle__wrapper`
 
 And offer support for the next characteristics:
 
