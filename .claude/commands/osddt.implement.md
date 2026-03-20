@@ -5,7 +5,7 @@ description: "Execute tasks from the task list one by one"
 ## Instructions
 
 1. Check whether `osddt.tasks.md` exists in the working directory:
-   - If it **does not exist**, stop and ask the user to run `/osddt.tasks $ARGUMENTS` first.
+   - If it **does not exist**, stop and ask the user to run `/osddt.tasks` first.
 2. Read `osddt.tasks.md` from the working directory
 3. Find the next unchecked task (`- [ ]`)
 4. Implement that task following the spec (`osddt.spec.md`) and plan (`osddt.plan.md`) in the working directory
@@ -19,14 +19,10 @@ description: "Execute tasks from the task list one by one"
 - Write tests for new functionality when applicable
 - Ask for clarification if requirements are ambiguous
 
-## Arguments
-
-$ARGUMENTS
-
 ## Next Step
 
 Once all tasks are checked off, run the following command to mark the feature as done:
 
 ```
-/osddt.done $ARGUMENTS
+/osddt.done
 ```

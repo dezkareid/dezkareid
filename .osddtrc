@@ -1,3 +1,7 @@
 {
-  "repoType": "monorepo"
+  "repoType": "monorepo",
+  "agents": [
+    "claude",
+    "gemini"
+  ]
 }

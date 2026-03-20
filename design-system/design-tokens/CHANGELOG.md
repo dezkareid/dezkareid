@@ -1,3 +1,67 @@
+# [@dezkareid/design-tokens-v1.5.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.4.1...@dezkareid/design-tokens-v1.5.0) (2026-03-20)
+
+
+### Features
+
+* add warning token ([a38e96f](https://github.com/dezkareid/dezkareid/commit/a38e96fb70e32495a32f67ea855cd98ff4b8d00e))
+
+# [@dezkareid/design-tokens-v1.4.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.4.0...@dezkareid/design-tokens-v1.4.1) (2026-03-19)
+
+
+### Bug Fixes
+
+* add colors and change tokens to improve contrast ([ff42940](https://github.com/dezkareid/dezkareid/commit/ff42940ccb5e657a02c7a66563cb5c2fba7ab7d7))
+
+# [@dezkareid/design-tokens-v1.4.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.3.1...@dezkareid/design-tokens-v1.4.0) (2026-03-18)
+
+
+### Features
+
+* **design-tokens:** add border-radius and shadow sections to visualizer ([3010ddd](https://github.com/dezkareid/dezkareid/commit/3010ddd5ddf9766e3991490e9764eba546d39101))
+* **design-tokens:** add secondary text, letter-spacing, border-radius, and shadow tokens ([2d5ca0d](https://github.com/dezkareid/dezkareid/commit/2d5ca0de6f4f80da0256e4c980ac0931bb04595c)), closes [#9ca3af](https://github.com/dezkareid/dezkareid/issues/9ca3af) [#4b5563](https://github.com/dezkareid/dezkareid/issues/4b5563)
+
+# [@dezkareid/design-tokens-v1.3.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.3.0...@dezkareid/design-tokens-v1.3.1) (2026-03-10)
+
+
+### Bug Fixes
+
+* change semantic color for dark background ([017ede6](https://github.com/dezkareid/dezkareid/commit/017ede6cf94ad81a88ad8cd2a3b2d467bd93314e))
+
+# [@dezkareid/design-tokens-v1.3.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.2.0...@dezkareid/design-tokens-v1.3.0) (2026-03-09)
+
+
+### Bug Fixes
+
+* **design-system:** name for design tokens ([84ab8a6](https://github.com/dezkareid/dezkareid/commit/84ab8a6904f43104d7953f9bf114f01187b88e2a))
+* naming generation ([659efe4](https://github.com/dezkareid/dezkareid/commit/659efe478166d89636ecac8e174a31c2309f1cba))
+
+
+### Features
+
+* add token visualizer ([8eb92ec](https://github.com/dezkareid/dezkareid/commit/8eb92ece9ccfc45523869cd53fe56564fbbda159))
+
+# [@dezkareid/design-tokens-v1.2.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.1.1...@dezkareid/design-tokens-v1.2.0) (2026-03-04)
+
+
+### Features
+
+* **design-tokens:** add semantic color for danger ([0951ea9](https://github.com/dezkareid/dezkareid/commit/0951ea92e071f297d5e9a36bfeb18a976a66eb5c))
+
+# [@dezkareid/design-tokens-v1.1.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.1.0...@dezkareid/design-tokens-v1.1.1) (2026-02-26)
+
+
+### Bug Fixes
+
+* **design-tokens:** add semantic tokens to catalog ([ba3e531](https://github.com/dezkareid/dezkareid/commit/ba3e53117a90fe9fc36cb9c570845debec7905e0))
+
+# [@dezkareid/design-tokens-v1.1.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.0.0...@dezkareid/design-tokens-v1.1.0) (2026-02-26)
+
+
+### Features
+
+* **desig-tokens:** add command to export all tokens catalog for ai agents ([459b216](https://github.com/dezkareid/dezkareid/commit/459b21602ec8043e08b2a1748512109475cea85b))
+* **desig-tokens:** add command to export colors catalog ([5aebe02](https://github.com/dezkareid/dezkareid/commit/5aebe0258f1e78257a9445e30f766485c3701065))
+
 # @dezkareid/design-tokens-v1.0.0 (2026-02-05)
 
 

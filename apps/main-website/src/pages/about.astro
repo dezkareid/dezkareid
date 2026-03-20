@@ -2,24 +2,38 @@
 import Layout from '../layouts/Layout.astro';
 import Section from '../components/Section.astro';
 import SkillsList from '../components/SkillsList.astro';
-
+import ContactSection from '../components/ContactSection.astro';
 ---
 
-<Layout title="About Me | Frontend Developer Portfolio">
+<Layout title="About Me | Frontend Architect Portfolio">
 	<Section>
 		<div class="container">
 			<h1 class="page-title">About Me</h1>
 			<div class="about-content">
 				<div class="about-text">
-					<p>Hello! I'm a passionate Frontend Developer with a focus on building high-performance, accessible, and user-centric web applications. With years of experience in the React ecosystem, I enjoy solving complex problems and creating seamless digital experiences.</p>
-					
-					<p>My approach to development is grounded in clean code, robust architecture, and a deep understanding of web standards. I believe that a great website is not just about how it looks, but how it feels and performs for every user.</p>
+					<p>I'm a Frontend Architect with over a decade of experience in the software industry. I specialize in building large-scale React applications, designing resilient design systems, and optimizing web performance for companies that care about the developer experience as much as the end-user outcome.</p>
 
-					<p>When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or sharing my knowledge with the developer community.</p>
+					<p>My philosophy is that technical architecture should serve the business and the team. I bridge the gap between complex engineering challenges and clear product delivery, ensuring that frontend codebases remain maintainable, auditable, and scalable over time.</p>
+
+					<p>Currently, I'm deeply focused on the intersection of AI and developer workflows, exploring how to automate context synchronization for AI agents while maintaining high standards of code quality and accessibility.</p>
 				</div>
-				<div class="about-image-placeholder">
-					<!-- Replace with real image in the future -->
-					<div class="placeholder-circle">JD</div>
+				<div class="about-avatar">
+					<img
+						src="https://res.cloudinary.com/ddyovtxd2/image/upload/w_300,h_300,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg"
+						srcset="
+							https://res.cloudinary.com/ddyovtxd2/image/upload/w_200,h_200,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg 200w,
+							https://res.cloudinary.com/ddyovtxd2/image/upload/w_300,h_300,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg 300w,
+							https://res.cloudinary.com/ddyovtxd2/image/upload/w_400,h_400,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg 400w,
+							https://res.cloudinary.com/ddyovtxd2/image/upload/w_600,h_600,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg 600w
+						"
+						sizes="(max-width: 37.49rem) 200px, 300px"
+						alt="Joel Gomez"
+						class="avatar-img"
+						width="300"
+						height="300"
+						loading="lazy"
+						decoding="async"
+					/>
 				</div>
 			</div>
 		</div>
@@ -27,33 +41,37 @@ import SkillsList from '../components/SkillsList.astro';
 
 	<Section class="bg-alt">
 		<div class="container">
-			<h2 class="section-title">My Technical Expertise</h2>
+			<header class="section-header">
+				<span class="section-label">Tech Stack</span>
+				<h2 class="section-title">My Technical Expertise</h2>
+			</header>
 			<SkillsList />
 		</div>
 	</Section>
 
-	<Section>
-		<div class="container text-center">
-			<h2 class="section-title">Let's Connect</h2>
-			<p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions.</p>
-			<div class="contact-links">
-				<a href="mailto:example@example.com" class="contact-link">Email Me</a>
-				<a href="https://linkedin.com" class="contact-link">LinkedIn</a>
-			</div>
-		</div>
-	</Section>
+	<ContactSection
+		title="Let's Connect"
+		description="I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions."
+	/>
 </Layout>
 
 <style>
 	.container {
 		max-width: 1200px;
 		margin: 0 auto;
+		padding-inline: var(--spacing-24);
+	}
+
+	@media (min-width: 90rem) {
+		.container {
+			padding-inline: 0;
+		}
 	}
 
 	.page-title {
 		font-size: var(--font-size-800);
 		margin-bottom: var(--spacing-48);
-		text-align: center;
+		letter-spacing: -0.03em;
 	}
 
 	.about-content {
@@ -67,48 +85,51 @@ import SkillsList from '../components/SkillsList.astro';
 		font-size: var(--font-size-400);
 		line-height: var(--font-line-height-relaxed);
 		margin-bottom: var(--spacing-24);
-		color: var(--color-base-gray-500);
+		color: var(--color-text-primary);
 	}
 
-	.placeholder-circle {
-		width: 250px;
-		height: 250px;
-		background-color: var(--color-primary);
-		color: var(--color-text-inverse);
+	.about-text p:last-child {
+		margin-bottom: 0;
+	}
+
+	.about-avatar {
+		flex-shrink: 0;
+	}
+
+	.avatar-img {
+		width: 300px;
+		height: 300px;
 		border-radius: 50%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: var(--font-size-900);
-		font-weight: var(--font-weight-bold);
-		margin: 0 auto;
+		object-fit: cover;
+		object-position: center top;
+		display: block;
+		border: 3px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
 	}
 
-	.bg-alt {
-		background-color: var(--color-background-secondary);
+	/* Section headers */
+	.section-header {
+		margin-bottom: var(--spacing-48);
+	}
+
+	.section-label {
+		display: block;
+		font-size: var(--font-size-100);
+		font-family: var(--font-family-mono);
+		font-weight: var(--font-weight-medium);
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: var(--color-primary);
+		margin-bottom: var(--spacing-8);
 	}
 
 	.section-title {
 		font-size: var(--font-size-700);
-		margin-bottom: var(--spacing-48);
-		text-align: center;
+		color: var(--color-text-primary);
+		letter-spacing: var(--font-letter-spacing-tight);
 	}
 
-	.text-center {
-		text-align: center;
-	}
-
-	.contact-links {
-		display: flex;
-		gap: var(--spacing-24);
-		justify-content: center;
-		margin-top: var(--spacing-32);
-	}
-
-	.contact-link {
-		color: var(--color-primary);
-		font-weight: var(--font-weight-bold);
-		font-size: var(--font-size-400);
+	.bg-alt {
+		background-color: var(--color-background-secondary);
 	}
 
 	@media (max-width: 800px) {
@@ -116,9 +137,19 @@ import SkillsList from '../components/SkillsList.astro';
 			grid-template-columns: 1fr;
 			text-align: center;
 		}
-		
-		.about-image-placeholder {
+
+		.about-avatar {
 			order: -1;
+		}
+
+		.avatar-img {
+			width: 200px;
+			height: 200px;
+			margin: 0 auto;
+		}
+
+		.about-text p {
+			text-align: left;
 		}
 	}
 </style>

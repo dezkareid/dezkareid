@@ -4,13 +4,28 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
+    "clean": "rm -rf node_modules/.vite .astro",
+    "dev:clean": "pnpm clean && astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "devDependencies": {
+    "@astrojs/sitemap": "3.7.1",
+    "@dezkareid/eslint-config-ts-base": "workspace:*",
+    "@dezkareid/eslint-plugin-web": "workspace:*",
+    "@typescript-eslint/parser": "8.57.0",
+    "eslint": "9.39.2",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.57.0"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.12",
+    "@dezkareid/components": "workspace:*",
     "@dezkareid/design-tokens": "workspace:*",
-    "astro": "5.17.1"
+    "astro": "6.0.6",
+    "sharp": "0.34.5"
   }
 }

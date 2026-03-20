@@ -5,13 +5,17 @@
   "main": "dist/js/tokens.js",
   "module": "dist/js/tokens.mjs",
   "types": "dist/js/tokens.d.ts",
+  "bin": {
+    "color-catalog": "scripts/export-catalog.js"
+  },
   "sideEffects": [
     "*.css",
     "*.scss"
   ],
   "files": [
     "dist",
-    "AGENTS.md"
+    "AGENTS.md",
+    "scripts/export-catalog.js"
   ],
   "publishConfig": {
     "access": "public",
@@ -34,9 +38,20 @@
   },
   "homepage": "https://github.com/dezkareid/dezkareid/tree/main/projects/dezkareid/design-system/design-tokens#readme",
   "scripts": {
-    "build": "style-dictionary build --config sd.config.js"
+    "build": "style-dictionary build --config sd.config.js",
+    "tokens:catalog": "node scripts/export-catalog.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run",
+    "contrast-check": "node scripts/contrast-check.js",
+    "visualizer": "http-server . -p 3000 -o /scripts/visualizer/visualizer.html"
   },
   "devDependencies": {
-    "style-dictionary": "5.2.0"
+    "@eslint/js": "9.39.2",
+    "commander": "12.0.0",
+    "eslint": "9.39.2",
+    "http-server": "14.1.1",
+    "style-dictionary": "5.2.0",
+    "vitest": "4.0.18"
   }
 }

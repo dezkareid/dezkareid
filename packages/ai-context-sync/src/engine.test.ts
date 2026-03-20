@@ -109,7 +109,104 @@ describe('SyncEngine', () => {
     const agentsPath = path.join(tempDir, AGENTS_FILENAME);
     await fs.writeFile(agentsPath, '# Agent Context');
 
-    await expect(engine.sync(tempDir, 'invalid')).rejects.toThrow('No valid strategies found for: invalid. Available strategies: claude, gemini, gemini-md');
+    await expect(engine.sync(tempDir, 'invalid')).rejects.toThrow('No valid strategies found for: invalid. Available strategies: claude, gemini, gemini-md, other');
+  });
+
+  describe('otherFiles option', () => {
+    it('should create a symlink for a single otherFile', async () => {
+      const engine = new SyncEngine();
+      const agentsPath = path.join(tempDir, AGENTS_FILENAME);
+      await fs.writeFile(agentsPath, '# Agent Context');
+
+      await engine.sync(tempDir, 'other', undefined, undefined, ['CURSOR.md']);
+
+      const cursorPath = path.join(tempDir, 'CURSOR.md');
+      expect(await fs.pathExists(cursorPath)).toBe(true);
+      const stats = await fs.lstat(cursorPath);
+      expect(stats.isSymbolicLink()).toBe(true);
+    });
+
+    it('should create symlinks for multiple otherFiles', async () => {
+      const engine = new SyncEngine();
+      const agentsPath = path.join(tempDir, AGENTS_FILENAME);
+      await fs.writeFile(agentsPath, '# Agent Context');
+
+      await engine.sync(tempDir, ['other'], undefined, undefined, ['CURSOR.md', 'COPILOT.md']);
+
+      const cursorPath = path.join(tempDir, 'CURSOR.md');
+      const copilotPath = path.join(tempDir, 'COPILOT.md');
+      expect(await fs.pathExists(cursorPath)).toBe(true);
+      expect(await fs.pathExists(copilotPath)).toBe(true);
+    });
+
+    it('should throw descriptive error when strategy is "other" but otherFiles is not provided', async () => {
+      const engine = new SyncEngine();
+      const agentsPath = path.join(tempDir, AGENTS_FILENAME);
+      await fs.writeFile(agentsPath, '# Agent Context');
+
+      await expect(engine.sync(tempDir, 'other')).rejects.toThrow('Strategy "other" requires otherFiles to be specified.');
+    });
+
+    it('should throw descriptive error when strategy is "other" but otherFiles is empty', async () => {
+      const engine = new SyncEngine();
+      const agentsPath = path.join(tempDir, AGENTS_FILENAME);
+      await fs.writeFile(agentsPath, '# Agent Context');
+
+      await expect(engine.sync(tempDir, 'other', undefined, undefined, [])).rejects.toThrow('Strategy "other" requires otherFiles to be specified.');
+    });
+
+    it('should run both built-in and custom strategies when combined', async () => {
+      const engine = new SyncEngine();
+      const agentsPath = path.join(tempDir, AGENTS_FILENAME);
+      await fs.writeFile(agentsPath, '# Agent Context');
+
+      await engine.sync(tempDir, ['claude', 'other'], undefined, undefined, ['CURSOR.md']);
+
+      const claudePath = path.join(tempDir, 'CLAUDE.md');
+      const cursorPath = path.join(tempDir, 'CURSOR.md');
+      expect(await fs.pathExists(claudePath)).toBe(true);
+      expect(await fs.pathExists(cursorPath)).toBe(true);
+    });
+  });
+
+  describe('fromFile option', () => {
+    it('should use a custom source file when fromFile is provided', async () => {
+      const engine = new SyncEngine();
+      const customSource = 'MY_AGENTS.md';
+      const customSourcePath = path.join(tempDir, customSource);
+      await fs.writeFile(customSourcePath, '# Custom Agent Context');
+
+      await engine.sync(tempDir, 'claude', undefined, customSource);
+
+      const claudePath = path.join(tempDir, 'CLAUDE.md');
+      expect(await fs.pathExists(claudePath)).toBe(true);
+      const stats = await fs.lstat(claudePath);
+      expect(stats.isSymbolicLink()).toBe(true);
+
+      // Symlink should resolve to the custom source file
+      const resolvedPath = await fs.realpath(claudePath);
+      const expectedPath = await fs.realpath(customSourcePath);
+      expect(resolvedPath).toBe(expectedPath);
+    });
+
+    it('should throw error when custom fromFile does not exist', async () => {
+      const engine = new SyncEngine();
+
+      await expect(engine.sync(tempDir, 'claude', undefined, 'MISSING.md')).rejects.toThrow('MISSING.md not found in');
+    });
+
+    it('should use custom fromFile with other strategy', async () => {
+      const engine = new SyncEngine();
+      const customSource = 'MY_AGENTS.md';
+      await fs.writeFile(path.join(tempDir, customSource), '# Custom Agent Context');
+
+      await engine.sync(tempDir, 'other', undefined, customSource, ['CURSOR.md']);
+
+      const cursorPath = path.join(tempDir, 'CURSOR.md');
+      const resolvedPath = await fs.realpath(cursorPath);
+      const expectedPath = await fs.realpath(path.join(tempDir, customSource));
+      expect(resolvedPath).toBe(expectedPath);
+    });
   });
 
   describe('targetDir option', () => {

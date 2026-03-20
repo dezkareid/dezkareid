@@ -1,0 +1,23 @@
+---
+import type { TagProps } from '../../shared/types/tag';
+import styles from '../../css/tag.module.css';
+
+type Props = TagProps & {
+  class?: string;
+  [key: string]: unknown;
+};
+
+const { variant = 'default', class: className, ...rest } = Astro.props;
+
+const classes = [
+  styles.tag,
+  styles[`tag--${variant}`],
+  className ?? '',
+]
+  .filter(Boolean)
+  .join(' ');
+---
+
+<span class={classes} {...rest}>
+  <slot />
+</span>

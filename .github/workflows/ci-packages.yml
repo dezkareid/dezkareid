@@ -17,7 +17,8 @@ on:
       - "design-system/**"
     branches:
       - main
-
+env:
+  HUSKY: 0
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -70,6 +71,7 @@ jobs:
       matrix:
         package: ${{ fromJson(needs.check-changes.outputs.packages) }}
       fail-fast: false
+      max-parallel: 1
     env:
       PACKAGE_NAME: ${{ matrix.package }}
       NPM_CONFIG_PROVENANCE: true

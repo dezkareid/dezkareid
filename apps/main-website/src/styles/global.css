@@ -20,6 +20,7 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0;
   font-weight: var(--font-weight-bold);
   line-height: var(--font-line-height-tight);
+  letter-spacing: var(--font-letter-spacing-tight);
 }
 
 a {
@@ -33,4 +34,39 @@ a:hover {
 
 * {
   box-sizing: border-box;
+}
+
+/* Scroll-reveal utility — elements start invisible and animate in when visible */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  /* DS NOTE: --animation-fade-up pattern candidate */
+  transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger delays for child elements inside .reveal-group */
+.reveal-group > *:nth-child(1) { transition-delay: 0ms; }
+.reveal-group > *:nth-child(2) { transition-delay: 80ms; }
+.reveal-group > *:nth-child(3) { transition-delay: 160ms; }
+.reveal-group > *:nth-child(4) { transition-delay: 240ms; }
+
+/* Reduced motion: honour user preference */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Global focus-visible ring */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
 }

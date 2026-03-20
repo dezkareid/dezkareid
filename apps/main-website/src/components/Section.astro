@@ -1,13 +1,15 @@
 ---
-interface Props {
+interface Properties {
 	paddingBlock?: "none" | "small" | "medium" | "large";
 	as?: "section" | "div";
+	id?: string;
+	class?: string;
 }
 
-const { paddingBlock = "medium", as: Tag = "section" } = Astro.props;
+const { paddingBlock = "medium", as: Tag = "section", id, class: className } = Astro.props;
 ---
 
-<Tag class={`section padding-block-${paddingBlock}`}>
+<Tag id={id} class:list={["section", `padding-block-${paddingBlock}`, className]}>
 	<slot />
 </Tag>
 

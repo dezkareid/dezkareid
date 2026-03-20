@@ -1,0 +1,23 @@
+---
+import type { CardProps } from '../../shared/types/card';
+import styles from '../../css/card.module.css';
+
+type Props = CardProps & {
+  class?: string;
+  [key: string]: unknown;
+};
+
+const { elevation = 'raised', class: className, ...rest } = Astro.props;
+
+const classes = [
+  styles.card,
+  styles[`card--${elevation}`],
+  className ?? '',
+]
+  .filter(Boolean)
+  .join(' ');
+---
+
+<div class={classes} {...rest}>
+  <slot />
+</div>

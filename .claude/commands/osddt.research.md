@@ -24,7 +24,7 @@ Before proceeding, read the `.osddtrc` file in the root of the repository to det
 
 ## Working Directory
 
-All generated files live under `<project-path>/working-on/<feature-name>/`. The `<feature-name>` is derived from the arguments provided. Create the directory if it does not exist.
+All generated files live under `<project-path>/working-on/<feature-name>/`.
 
 > All file paths in the instructions below are relative to `<project-path>/working-on/<feature-name>/`.
 
@@ -95,8 +95,22 @@ $ARGUMENTS
 
 ## Next Step
 
-Run the following command to write the feature specification:
+- If $ARGUMENTS was a **human-readable description** (not a branch name):
 
-```
-/osddt.spec $ARGUMENTS
-```
+  Your description will be used as the starting point for the spec. Run:
+
+  ```
+  /osddt.spec
+  ```
+
+  > You can append more details if you want the spec to capture additional context.
+
+- If $ARGUMENTS was a **branch name** (or no arguments were provided):
+
+  Run the following command to write the feature specification:
+
+  ```
+  /osddt.spec <brief feature description, e.g. "add user authentication with JWT">
+  ```
+
+  > Add a short description of what you're building so the spec has the right starting point.

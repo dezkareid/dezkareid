@@ -1,0 +1,105 @@
+{
+  "name": "@dezkareid/components",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "A package to export UI components in formats like React, Astro, Vue, etc.",
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "exports": {
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react.js",
+      "default": "./dist/react.js"
+    },
+    "./astro": "./src/astro/index.ts",
+    "./vue": "./src/vue/index.ts",
+    "./css": {
+      "import": "./dist/components.min.css",
+      "default": "./dist/components.min.css"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "react": [
+        "./dist/react/index.d.ts"
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dezkareid/dezkareid"
+  },
+  "author": "Joel Humberto Gomez Paredes <elmaildeldezkareid@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dezkareid/dezkareid/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "design-system",
+    "components",
+    "react",
+    "astro",
+    "vue"
+  ],
+  "scripts": {
+    "build": "rollup -c rollup.config.mjs",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest --run --config vitest.config.ts"
+  },
+  "peerDependencies": {
+    "astro": ">=6.0.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "vue": "^3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "astro": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@dezkareid/design-tokens": "workspace:*",
+    "classnames": "2.5.1"
+  },
+  "devDependencies": {
+    "astro": "6.0.6",
+    "@dezkareid/eslint-config-ts-base": "workspace:^",
+    "@dezkareid/eslint-plugin-web": "workspace:^",
+    "@eslint/js": "9.39.2",
+    "@rollup/plugin-commonjs": "29.0.0",
+    "@rollup/plugin-node-resolve": "16.0.3",
+    "@rollup/plugin-typescript": "12.3.0",
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/react": "16.3.2",
+    "@testing-library/user-event": "14.5.2",
+    "@types/classnames": "2.3.4",
+    "@types/react": "19.2.9",
+    "@vitejs/plugin-react": "5.1.4",
+    "eslint": "9.39.2",
+    "jsdom": "27.4.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "rollup": "4.56.0",
+    "rollup-plugin-postcss": "4.0.2",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.57.0",
+    "vite": "7.3.1",
+    "vitest": "4.0.18"
+  }
+}

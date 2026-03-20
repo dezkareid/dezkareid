@@ -1,7 +1,7 @@
 ---
-interface Props {
+interface Properties {
 	class?: string;
-	[key: string]: any;
+	[key: string]: unknown;
 }
 
 const { class: className, ...rest } = Astro.props;
@@ -14,19 +14,20 @@ const { class: className, ...rest } = Astro.props;
 <style>
 	.card {
 		background-color: var(--color-background-primary);
-		border: 1px solid var(--color-base-gray-100);
+		border: 1px solid color-mix(in srgb, var(--color-text-primary) 8%, transparent);
 		border-radius: var(--spacing-8);
 		padding: var(--spacing-24);
-		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-		transition: transform 0.2s ease, box-shadow 0.2s ease;
-	}
-
-	:root[data-theme='dark'] .card {
-		border-color: var(--color-base-gray-500);
+		box-shadow: var(--shadow-subtle);
+		transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+		            box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+		            border-color 0.25s ease;
 	}
 
 	.card:hover {
-		transform: translateY(-4px);
-		box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+		transform: translateY(-3px);
+		border-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
+		box-shadow:
+			var(--shadow-card-hover),
+			0 0 0 1px color-mix(in srgb, var(--color-primary) 15%, transparent);
 	}
 </style>

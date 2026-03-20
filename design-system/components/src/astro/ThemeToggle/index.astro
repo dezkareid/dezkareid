@@ -1,0 +1,101 @@
+---
+import styles from '../../css/theme-toggle.module.css';
+
+type Props = {
+  class?: string;
+};
+
+const { class: className } = Astro.props;
+
+const classes = [styles['theme-toggle'], className ?? ''].filter(Boolean).join(' ');
+const wrapperClass = styles['theme-toggle__wrapper'];
+const iconClass = styles['theme-toggle__icon'];
+const srOnlyClass = styles['sr-only'];
+---
+
+<!--
+  The inline script runs before first paint to apply the stored theme,
+  preventing a flash of unstyled/wrong-theme content (FOUC).
+-->
+<script is:inline>
+  (function () {
+    var stored = localStorage.getItem('color-scheme');
+    var theme =
+      stored === 'light' || stored === 'dark'
+        ? stored
+        : window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light';
+    document.documentElement.setAttribute('color-scheme', theme);
+  })();
+</script>
+
+<span class={wrapperClass}>
+  <button
+    type="button"
+    class={classes}
+    data-theme-toggle
+    aria-label="Toggle colour scheme"
+    aria-pressed="false"
+  >
+    <!-- Sun icon (light mode default) -->
+    <svg
+      aria-hidden="true"
+      class={iconClass}
+      data-theme-icon
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="12" cy="12" r="5" />
+      <line x1="12" y1="1" x2="12" y2="3" />
+      <line x1="12" y1="21" x2="12" y2="23" />
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+      <line x1="1" y1="12" x2="3" y2="12" />
+      <line x1="21" y1="12" x2="23" y2="12" />
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+    </svg>
+    <span data-theme-label>Light</span>
+  </button>
+  <span aria-live="polite" class={srOnlyClass} data-theme-live>Light mode active</span>
+</span>
+
+<script>
+  import { getInitialTheme, applyTheme, persistTheme } from '../../shared/js/theme';
+
+  const btn = document.querySelector('[data-theme-toggle]') as HTMLButtonElement | null;
+  const label = document.querySelector('[data-theme-label]') as HTMLElement | null;
+  const liveRegion = document.querySelector('[data-theme-live]') as HTMLElement | null;
+  const iconEl = document.querySelector('[data-theme-icon]') as SVGElement | null;
+
+  const sunPath = `<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`;
+  const moonPath = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+
+  if (btn && label) {
+    let current = getInitialTheme();
+
+    function update(theme: 'light' | 'dark') {
+      const isDark = theme === 'dark';
+      label!.textContent = isDark ? 'Dark' : 'Light';
+      btn!.setAttribute('aria-pressed', String(isDark));
+      btn!.classList.toggle('theme-toggle--dark', isDark);
+      if (iconEl) iconEl.innerHTML = isDark ? moonPath : sunPath;
+      if (liveRegion) liveRegion.textContent = `${isDark ? 'Dark' : 'Light'} mode active`;
+    }
+
+    update(current);
+
+    btn.addEventListener('click', () => {
+      current = current === 'light' ? 'dark' : 'light';
+      applyTheme(current);
+      persistTheme(current);
+      update(current);
+    });
+  }
+</script>

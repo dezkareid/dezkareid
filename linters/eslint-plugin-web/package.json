@@ -1,24 +1,52 @@
 {
   "name": "@dezkareid/eslint-plugin-web",
   "version": "0.0.0",
-  "main": "src/index.js",
+  "main": "./dist/index.js",
+  "exports": "./dist/index.js",
+  "type": "module",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dezkareid/dezkareid.git",
+    "directory": "linters/eslint-plugin-web"
+  },
+  "bugs": {
+    "url": "https://github.com/dezkareid/dezkareid/issues"
+  },
+  "engines": {
+    "node": ">=22"
+  },
   "keywords": [
     "eslint",
     "eslint-plugin",
     "eslintplugin"
   ],
-  "license": "MIT",
   "files": [
-    "src"
+    "dist"
   ],
-  "scripts": {},
-  "peerDependencies": {
-    "eslint": "^8.0.0"
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest --run"
   },
-  "dependencies": {
-    "eslint": "8.23.1"
+  "peerDependencies": {
+    "eslint": "9.39.2"
   },
   "devDependencies": {
-    "jest": "29.0.3"
+    "@eslint/js": "9.39.2",
+    "@types/node": "25.0.10",
+    "eslint": "9.39.2",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.57.0",
+    "vitest": "4.0.18"
+  },
+  "dependencies": {
+    "@dezkareid/eslint-config-ts-base": "workspace:*",
+    "@eslint-react/eslint-plugin": "2.13.0",
+    "eslint-plugin-astro": "1.6.0",
+    "eslint-plugin-unicorn": "63.0.0"
   }
 }

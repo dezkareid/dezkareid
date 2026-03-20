@@ -21,3 +21,4 @@ I'm a **Frontend Developer** passionate about building high-quality web experien
 - 🐦 [X (Twitter)](https://x.com/DezkaReid)
 - ✍️ [DEV Community](https://dev.to/dezkareid)
 - 📺 [YouTube](https://www.youtube.com/@dezkareid)
+- 📦 [NPM](https://www.npmjs.com/~dezkareid)

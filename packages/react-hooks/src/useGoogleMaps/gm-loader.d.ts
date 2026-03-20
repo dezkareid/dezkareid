@@ -1,10 +1,10 @@
 declare global {
     interface Window {
-        google: any;
+        google: unknown;
     }
 }
-interface GMLoaderParams {
+interface GMLoaderParameters {
     key: string;
 }
-declare function gMLoader({ key }: GMLoaderParams): Promise<any>;
+declare function gMLoader({ key }: GMLoaderParameters): Promise<unknown>;
 export default gMLoader;

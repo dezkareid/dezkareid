@@ -5,13 +5,13 @@ export interface MapOptions {
         lng: number;
     };
     zoom: number;
-    [key: string]: any;
+    [key: string]: unknown;
 }
-export interface GoogleMapsProps {
+export interface GoogleMapsProperties {
     mapKey: string;
     mapOptions: MapOptions;
     className?: string;
     children?: ReactNode;
 }
-declare function GoogleMaps({ mapKey, mapOptions, className, children }: GoogleMapsProps): import("react/jsx-runtime").JSX.Element;
+declare function GoogleMaps({ mapKey, mapOptions, className, children }: GoogleMapsProperties): import("react/jsx-runtime").JSX.Element;
 export default GoogleMaps;

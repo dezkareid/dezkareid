@@ -1,2 +1,1 @@
-import useLocalStorage from './useLocalStorage';
-export default useLocalStorage;
+export { default } from './use-local-storage';

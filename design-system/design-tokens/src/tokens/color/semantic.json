@@ -2,27 +2,69 @@
   "color": {
     "semantic": {
       "light": {
-        "primary": { "value": "{color.base.blue.500}" },
-        "success": { "value": "{color.base.green.500}" },
+        "primary": {
+          "value": "{color.base.blue.600}"
+        },
+        "success": {
+          "value": "{color.base.green.500}"
+        },
+        "danger": {
+          "value": "{color.base.red.500}"
+        },
+        "warning": {
+          "value": "{color.base.amber.600}"
+        },
         "background": {
-          "primary": { "value": "{color.base.white}" },
-          "secondary": { "value": "{color.base.gray.100}" }
+          "primary": {
+            "value": "{color.base.white}"
+          },
+          "secondary": {
+            "value": "{color.base.gray.100}"
+          }
         },
         "text": {
-          "primary": { "value": "{color.base.gray.900}" },
-          "inverse": { "value": "{color.base.white}" }
+          "primary": {
+            "value": "{color.base.gray.900}"
+          },
+          "secondary": {
+            "value": "{color.base.gray.600}"
+          },
+          "inverse": {
+            "value": "{color.base.white}"
+          }
         }
       },
       "dark": {
-        "primary": { "value": "{color.base.blue.100}" },
-        "success": { "value": "{color.base.green.900}" },
+        "primary": {
+          "value": "{color.base.blue.100}"
+        },
+        "success": {
+          "value": "{color.base.green.900}"
+        },
+        "danger": {
+          "value": "{color.base.red.900}"
+        },
+        "warning": {
+          "value": "{color.base.amber.900}"
+        },
         "background": {
-          "primary": { "value": "{color.base.gray.900}" },
-          "secondary": { "value": "{color.base.gray.500}" }
+          "primary": {
+            "value": "{color.base.black}"
+          },
+          "secondary": {
+            "value": "{color.base.gray.800}"
+          }
         },
         "text": {
-          "primary": { "value": "{color.base.white}" },
-          "inverse": { "value": "{color.base.gray.900}" }
+          "primary": {
+            "value": "{color.base.white}"
+          },
+          "secondary": {
+            "value": "{color.base.gray.400}"
+          },
+          "inverse": {
+            "value": "{color.base.gray.900}"
+          }
         }
       }
     }

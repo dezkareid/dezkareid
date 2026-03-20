@@ -1,40 +1,39 @@
-const path = require('path');
-const { camelCase } = require('camel-case');
+const path = require('node:path');
 const webpack = require('webpack');
-const pkg = require('../package.json');
+const package_ = require('../package.json');
 
 const { ModuleFederationPlugin } = webpack.container;
 
-const name = camelCase(pkg.name);
+const name = package_.name.replace(/[^a-zA-Z0-9]/g, '_');
 
 const exposes = {
-  './GoogleMaps': './src/GoogleMaps/index.tsx'
+  './GoogleMaps': './src/GoogleMaps/index.tsx',
 };
 
 const config = {
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx']
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
   module: {
     rules: [
       {
-        test: /\.(js|jsx|ts|tsx)$/,
+        test: /\.(ts|tsx)$/,
         loader: 'ts-loader',
         exclude: /node_modules/,
-      }
-    ]
+      },
+    ],
   },
   output: {
-    path: path.resolve('dist/browser')
+    path: path.resolve('dist/browser'),
   },
   plugins: [
     new ModuleFederationPlugin({
       name,
       filename: 'remote-entry.js',
       exposes,
-      shared: { react: { singleton: true } }
-    })
-  ]
+      shared: { react: { singleton: true } },
+    }),
+  ],
 };
 
 module.exports = config;

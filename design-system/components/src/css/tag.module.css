@@ -1,0 +1,48 @@
+/* =============================================================================
+   TAG — BEM + OOCSS
+   Structure classes: layout, sizing, spacing
+   Skin classes: colour, border, typography
+   ============================================================================= */
+
+/* --- Structure: block --- */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--spacing-12);
+  padding: var(--spacing-4) var(--spacing-8);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-100);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--font-line-height-none);
+}
+
+/* --- Skin: variant modifiers --- */
+.tag--default {
+  --tag-default-color-background: var(--color-background-secondary);
+  --tag-default-color-text: var(--color-text-primary);
+  background-color: var(--tag-default-color-background);
+  color: var(--tag-default-color-text);
+}
+
+/* Success: text-primary gives 7.79:1 light (#22c55e) and 9.11:1 dark (#14532d) ✅ */
+.tag--success {
+  --tag-success-color-background: var(--color-success);
+  --tag-success-color-text: var(--color-text-primary);
+  background-color: var(--tag-success-color-background);
+  color: var(--tag-success-color-text);
+}
+
+/* Danger: text-primary gives 4.71:1 light (#ef4444) and 10.02:1 dark (#7f1d1d) ✅ */
+.tag--danger {
+  --tag-danger-color-background: var(--color-danger);
+  --tag-danger-color-text: var(--color-text-primary);
+  background-color: var(--tag-danger-color-background);
+  color: var(--tag-danger-color-text);
+}
+
+.tag--warning {
+  --tag-warning-color-background: var(--color-warning);
+  --tag-warning-color-text: var(--color-text-primary);
+  background-color: var(--tag-warning-color-background);
+  color: var(--tag-warning-color-text);
+}
