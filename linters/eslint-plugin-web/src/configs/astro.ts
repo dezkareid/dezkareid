@@ -1,8 +1,10 @@
 import type { Linter } from 'eslint';
 import pluginAstro from 'eslint-plugin-astro';
 import pluginUnicorn from 'eslint-plugin-unicorn';
+import stylisticConfig from './stylistic.js';
 
 const config: Linter.Config[] = [
+  ...stylisticConfig,
   ...(pluginAstro.configs.recommended as Linter.Config[]),
   pluginUnicorn.configs.recommended as Linter.Config,
   {
@@ -13,6 +15,13 @@ const config: Linter.Config[] = [
       'unicorn/filename-case': ['error', { cases: { pascalCase: true, kebabCase: true } }],
       // Props/Properties interfaces are used implicitly via Astro.props typing
       '@typescript-eslint/no-unused-vars': ['error', { varsIgnorePattern: '^Properties$' }],
+      // Astro templates use HTML attribute conventions (double quotes, no JSX rules).
+      '@stylistic/quotes': 'off',
+      '@stylistic/jsx-one-expression-per-line': 'off',
+      '@stylistic/jsx-indent-props': 'off',
+      '@stylistic/jsx-first-prop-new-line': 'off',
+      '@stylistic/jsx-closing-bracket-location': 'off',
+      '@stylistic/jsx-max-props-per-line': 'off',
     },
   } as Linter.Config,
 ];

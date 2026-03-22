@@ -12,113 +12,113 @@ const supportServices = allServices.filter(s => s.data.order > 3);
 ---
 
 <Layout title="Services | Frontend Architect Portfolio" description="Frontend development, architecture audits, web performance optimization, consulting, mentoring, and workshops. Hire a specialist who ships.">
-	<Section>
-		<div class="container">
-			<span class="page-label">Offerings</span>
-			<h1 class="page-title">Professional Services</h1>
-			<p class="page-description">I offer a variety of frontend-focused services to help businesses build better web experiences.</p>
-			
-			<div class="services-group">
-				<div class="group-header">
-					<h2 class="group-title">Development & Architecture</h2>
-					<p class="group-subtitle">End-to-end frontend delivery and technical leadership.</p>
-				</div>
-				<div class="grid">
-					{deliveryServices.map((service) => (
-						<ServiceCard service={service} />
-					))}
-				</div>
-			</div>
+  <Section>
+    <div class="container">
+      <span class="page-label">Offerings</span>
+      <h1 class="page-title">Professional Services</h1>
+      <p class="page-description">I offer a variety of frontend-focused services to help businesses build better web experiences.</p>
 
-			<hr class="groups-divider" />
+      <div class="services-group">
+        <div class="group-header">
+          <h2 class="group-title">Development & Architecture</h2>
+          <p class="group-subtitle">End-to-end frontend delivery and technical leadership.</p>
+        </div>
+        <div class="grid">
+          {deliveryServices.map(service => (
+            <ServiceCard service={service} />
+          ))}
+        </div>
+      </div>
 
-			<div class="services-group">
-				<div class="group-header">
-					<h2 class="group-title">Strategic Support</h2>
-					<p class="group-subtitle">Expertise to scale your team's impact and reach.</p>
-				</div>
-				<div class="grid">
-					{supportServices.map((service) => (
-						<ServiceCard service={service} />
-					))}
-				</div>
-			</div>
-		</div>
-	</Section>
+      <hr class="groups-divider" />
+
+      <div class="services-group">
+        <div class="group-header">
+          <h2 class="group-title">Strategic Support</h2>
+          <p class="group-subtitle">Expertise to scale your team's impact and reach.</p>
+        </div>
+        <div class="grid">
+          {supportServices.map(service => (
+            <ServiceCard service={service} />
+          ))}
+        </div>
+      </div>
+    </div>
+  </Section>
 
 </Layout>
 
 <style>
-	.container {
-		max-width: 1200px;
-		margin: 0 auto;
-		padding-inline: var(--spacing-24);
-	}
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-inline: var(--spacing-24);
+  }
 
-	@media (min-width: 90rem) {
-		.container {
-			padding-inline: 0;
-		}
-	}
+  @media (min-width: 90rem) {
+    .container {
+      padding-inline: 0;
+    }
+  }
 
-	.page-label {
-		display: block;
-		font-size: var(--font-size-100);
-		font-family: var(--font-family-mono);
-		font-weight: var(--font-weight-medium);
-		text-transform: uppercase;
-		letter-spacing: 0.1em;
-		color: var(--color-primary);
-		margin-bottom: var(--spacing-8);
-	}
+  .page-label {
+    display: block;
+    font-size: var(--font-size-100);
+    font-family: var(--font-family-mono);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-8);
+  }
 
-	.page-title {
-		font-size: var(--font-size-800);
-		margin-bottom: var(--spacing-16);
-		letter-spacing: -0.03em;
-	}
+  .page-title {
+    font-size: var(--font-size-800);
+    margin-bottom: var(--spacing-16);
+    letter-spacing: -0.03em;
+  }
 
-	.page-description {
-		font-size: var(--font-size-400);
-		color: var(--color-text-primary);
-		opacity: 0.7;
-		margin-bottom: var(--spacing-64);
-		max-width: 600px;
-		line-height: var(--font-line-height-relaxed);
-	}
+  .page-description {
+    font-size: var(--font-size-400);
+    color: var(--color-text-primary);
+    opacity: 0.7;
+    margin-bottom: var(--spacing-64);
+    max-width: 600px;
+    line-height: var(--font-line-height-relaxed);
+  }
 
-	.services-group {
-		margin-bottom: var(--spacing-64);
-	}
+  .services-group {
+    margin-bottom: var(--spacing-64);
+  }
 
-	.groups-divider {
-		border: 0;
-		border-top: 1px solid color-mix(in srgb, var(--color-text-primary) 10%, transparent);
-		margin-bottom: var(--spacing-64);
-	}
+  .groups-divider {
+    border: 0;
+    border-top: 1px solid color-mix(in srgb, var(--color-text-primary) 10%, transparent);
+    margin-bottom: var(--spacing-64);
+  }
 
-	.group-header {
-		margin-bottom: var(--spacing-32);
-		border-left: 4px solid var(--color-primary);
-		padding-left: var(--spacing-24);
-	}
+  .group-header {
+    margin-bottom: var(--spacing-32);
+    border-left: 4px solid var(--color-primary);
+    padding-left: var(--spacing-24);
+  }
 
-	.group-title {
-		font-size: var(--font-size-600);
-		margin-bottom: var(--spacing-4);
-		letter-spacing: var(--font-letter-spacing-tight);
-	}
+  .group-title {
+    font-size: var(--font-size-600);
+    margin-bottom: var(--spacing-4);
+    letter-spacing: var(--font-letter-spacing-tight);
+  }
 
-	.group-subtitle {
-		font-size: var(--font-size-300);
-		color: var(--color-text-primary);
-		opacity: 0.65;
-	}
+  .group-subtitle {
+    font-size: var(--font-size-300);
+    color: var(--color-text-primary);
+    opacity: 0.65;
+  }
 
-	.grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-		gap: var(--spacing-32);
-	}
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-32);
+  }
 
 </style>

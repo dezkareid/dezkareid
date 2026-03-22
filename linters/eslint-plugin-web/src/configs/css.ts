@@ -1,7 +1,9 @@
 import type { Linter } from 'eslint';
 import css from '@eslint/css';
+import stylisticConfig from './stylistic.js';
 
 const config: Linter.Config[] = [
+  ...stylisticConfig,
   {
     files: ['**/*.css'],
     plugins: { css },

@@ -1,37 +1,37 @@
 ---
 interface Properties {
-	paddingBlock?: "none" | "small" | "medium" | "large";
-	as?: "section" | "div";
-	id?: string;
-	class?: string;
+  paddingBlock?: "none" | "small" | "medium" | "large";
+  as?: "section" | "div";
+  id?: string;
+  class?: string;
 }
 
 const { paddingBlock = "medium", as: Tag = "section", id, class: className } = Astro.props;
 ---
 
 <Tag id={id} class:list={["section", `padding-block-${paddingBlock}`, className]}>
-	<slot />
+  <slot />
 </Tag>
 
 <style>
-	.section {
-		display: block;
-		width: 100%;
-	}
+  .section {
+    display: block;
+    width: 100%;
+  }
 
-	.padding-block-none {
-		padding-block: 0;
-	}
+  .padding-block-none {
+    padding-block: 0;
+  }
 
-	.padding-block-small {
-		padding-block: var(--spacing-24);
-	}
+  .padding-block-small {
+    padding-block: var(--spacing-24);
+  }
 
-	.padding-block-medium {
-		padding-block: var(--spacing-48);
-	}
+  .padding-block-medium {
+    padding-block: var(--spacing-48);
+  }
 
-	.padding-block-large {
-		padding-block: var(--spacing-64);
-	}
+  .padding-block-large {
+    padding-block: var(--spacing-64);
+  }
 </style>

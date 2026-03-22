@@ -64,6 +64,7 @@
   "dependencies": {
     "@dezkareid/eslint-config-ts-base": "1.0.0",
     "@eslint/css": "1.0.0",
+    "@stylistic/eslint-plugin": "5.10.0",
     "eslint-plugin-unicorn": "63.0.0"
   }
 }

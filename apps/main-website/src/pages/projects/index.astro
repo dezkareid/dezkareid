@@ -8,86 +8,86 @@ const projectsCollection = await getCollection('projects');
 const allProjects = projectsCollection.toSorted((a, b) => a.data.order - b.data.order);
 
 const jsonLd = {
-	"@context": "https://schema.org",
-	"@type": "CollectionPage",
-	name: "Projects",
-	description: "Explore my portfolio of frontend projects — design systems, performance tooling, and open-source contributions.",
-	url: new URL("/projects", Astro.site).toString(),
-	author: {
-		"@type": "Person",
-		name: "Joel Humberto Gomez Paredes",
-		url: Astro.site?.toString(),
-	},
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Projects",
+  "description": "Explore my portfolio of frontend projects — design systems, performance tooling, and open-source contributions.",
+  "url": new URL("/projects", Astro.site).toString(),
+  "author": {
+    "@type": "Person",
+    "name": "Joel Humberto Gomez Paredes",
+    "url": Astro.site?.toString(),
+  },
 };
 ---
 
 <Layout
-	title="Projects | Frontend Architect Portfolio"
-	description="Explore my portfolio of frontend projects — design systems, performance tooling, and open-source contributions."
+  title="Projects | Frontend Architect Portfolio"
+  description="Explore my portfolio of frontend projects — design systems, performance tooling, and open-source contributions."
 >
-	<script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
-	<Section>
-		<div class="container">
-			<span class="page-label">Portfolio</span>
-			<h1 class="page-title">My Projects</h1>
-			<p class="page-description">A collection of my recent work, ranging from design systems to performance audits.</p>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
+  <Section>
+    <div class="container">
+      <span class="page-label">Portfolio</span>
+      <h1 class="page-title">My Projects</h1>
+      <p class="page-description">A collection of my recent work, ranging from design systems to performance audits.</p>
 
-			<div class="grid">
-				{allProjects.map((project, index) => (
-					<ProjectCard project={project} index={index} />
-				))}
-			</div>
-		</div>
-	</Section>
+      <div class="grid">
+        {allProjects.map((project, index) => (
+          <ProjectCard project={project} index={index} />
+        ))}
+      </div>
+    </div>
+  </Section>
 </Layout>
 
 <style>
-	.container {
-		max-width: 1200px;
-		margin: 0 auto;
-		padding-inline: var(--spacing-24);
-	}
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-inline: var(--spacing-24);
+  }
 
-	@media (min-width: 90rem) {
-		.container {
-			padding-inline: 0;
-		}
-	}
+  @media (min-width: 90rem) {
+    .container {
+      padding-inline: 0;
+    }
+  }
 
-	.page-label {
-		display: block;
-		font-size: var(--font-size-100);
-		font-family: var(--font-family-mono);
-		font-weight: var(--font-weight-medium);
-		text-transform: uppercase;
-		letter-spacing: 0.1em;
-		color: var(--color-primary);
-		margin-bottom: var(--spacing-8);
-	}
+  .page-label {
+    display: block;
+    font-size: var(--font-size-100);
+    font-family: var(--font-family-mono);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-8);
+  }
 
-	.page-title {
-		font-size: var(--font-size-800);
-		margin-bottom: var(--spacing-16);
-		letter-spacing: -0.03em;
-	}
+  .page-title {
+    font-size: var(--font-size-800);
+    margin-bottom: var(--spacing-16);
+    letter-spacing: -0.03em;
+  }
 
-	.page-description {
-		font-size: var(--font-size-400);
-		color: var(--color-text-secondary);
-		margin-bottom: var(--spacing-64);
-		max-width: 600px;
-		line-height: var(--font-line-height-relaxed);
-	}
+  .page-description {
+    font-size: var(--font-size-400);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-64);
+    max-width: 600px;
+    line-height: var(--font-line-height-relaxed);
+  }
 
-	.grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-		gap: var(--spacing-32);
-	}
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--spacing-32);
+  }
 
-	@media (max-width: 600px) {
-		.grid {
-			grid-template-columns: 1fr;
-		}
-	}
+  @media (max-width: 600px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>

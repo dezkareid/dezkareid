@@ -4,16 +4,16 @@ import ThemeToggle from "../components/ThemeToggle.astro";
 import PixelCrab from "../components/PixelCrab.astro";
 
 interface Properties {
-	title?: string;
-	description?: string;
-	image?: string;
+  title?: string;
+  description?: string;
+  image?: string;
 }
 
 const {
-	title = "Joel Humberto Gomez Paredes — Frontend Architect",
-	description = "Frontend architect specialising in React, performance, and scalable UI systems. Explore my projects, services, and open-source work.",
-	// TODO(design-system): replace with a locally hosted OG image asset once one is created
-	image = "https://res.cloudinary.com/ddyovtxd2/image/upload/v1773092115/JOEL_GOMEZ-4_viqymi.jpg",
+  title = "Joel Humberto Gomez Paredes — Frontend Architect",
+  description = "Frontend architect specialising in React, performance, and scalable UI systems. Explore my projects, services, and open-source work.",
+  // TODO(design-system): replace with a locally hosted OG image asset once one is created
+  image = "https://res.cloudinary.com/ddyovtxd2/image/upload/v1773092115/JOEL_GOMEZ-4_viqymi.jpg",
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -21,292 +21,292 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const currentPath = Astro.url.pathname;
 
 const navLinks = [
-	{ href: "/", label: "Home" },
-	{ href: "/projects", label: "Projects" },
-	{ href: "/services", label: "Services" },
-	{ href: "/about", label: "About" },
+  { href: "/", label: "Home" },
+  { href: "/projects", label: "Projects" },
+  { href: "/services", label: "Services" },
+  { href: "/about", label: "About" },
 ];
 ---
 
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
 
-		<title>{title}</title>
-		<meta name="description" content={description} />
-		<link rel="canonical" href={canonicalURL} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
 
-		<!-- Open Graph / Facebook -->
-		<meta property="og:type" content="website" />
-		<meta property="og:url" content={canonicalURL} />
-		<meta property="og:site_name" content="Dezkareid" />
-		<meta property="og:title" content={title} />
-		<meta property="og:description" content={description} />
-		<meta property="og:image" content={image} />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:site_name" content="Dezkareid" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
 
-		<!-- Twitter -->
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:title" content={title} />
-		<meta name="twitter:description" content={description} />
-		<meta name="twitter:image" content={image} />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
 
-		<slot name="head" />
+    <slot name="head" />
 
-		<!-- Theme FOUC guard: apply stored preference before first paint. -->
-		<script is:inline set:html={`(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){document.documentElement.style.colorScheme=t;}}catch(_){}})();`}></script>
-	</head>
-	<body>
-		<header class="site-header" id="site-header">
-			<nav class="nav-container">
-				<a href="/" class="logo" aria-label="Dezkareid — Home">
-					<PixelCrab size={24} class="logo-icon" />
-				</a>
+    <!-- Theme FOUC guard: apply stored preference before first paint. -->
+    <script is:inline set:html={`(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){document.documentElement.style.colorScheme=t;}}catch(_){}})();`}></script>
+  </head>
+  <body>
+    <header class="site-header" id="site-header">
+      <nav class="nav-container">
+        <a href="/" class="logo" aria-label="Dezkareid — Home">
+          <PixelCrab size={24} class="logo-icon" />
+        </a>
 
-				<div class="nav-links">
-					{
-						navLinks.map(({ href, label }) => {
-							const isActive =
-								href === "/"
-									? currentPath === "/"
-									: currentPath.startsWith(href);
-							return (
-								<a
-									href={href}
-									class:list={[
-										"nav-link",
-										{ "nav-link--active": isActive },
-									]}
-									aria-current={isActive ? "page" : undefined}
-								>
-									{label}
-								</a>
-							);
-						})
-					}
-				</div>
+        <div class="nav-links">
+          {
+            navLinks.map(({ href, label }) => {
+              const isActive
+                = href === "/"
+                  ? currentPath === "/"
+                  : currentPath.startsWith(href);
+              return (
+                <a
+                  href={href}
+                  class:list={[
+                    "nav-link",
+                    { "nav-link--active": isActive },
+                  ]}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  {label}
+                </a>
+              );
+            })
+          }
+        </div>
 
-				<div class="nav-end">
-					<ThemeToggle />
-				</div>
-			</nav>
-		</header>
+        <div class="nav-end">
+          <ThemeToggle />
+        </div>
+      </nav>
+    </header>
 
-		<main>
-			<slot />
-		</main>
+    <main>
+      <slot />
+    </main>
 
-		<footer class="site-footer">
-			<div class="footer-container">
-				<div class="footer-brand">
-					<PixelCrab size={20} class="footer-logo-icon" />
-					<span class="footer-tm">Dezkareid™</span>
-					<p class="footer-copy">&copy; {new Date().getFullYear()}</p>
-				</div>
-			</div>
-		</footer>
-	</body>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-brand">
+          <PixelCrab size={20} class="footer-logo-icon" />
+          <span class="footer-tm">Dezkareid™</span>
+          <p class="footer-copy">&copy; {new Date().getFullYear()}</p>
+        </div>
+      </div>
+    </footer>
+  </body>
 </html>
 
 <script>
-	/* Scroll-aware header: add backdrop blur after 20px scroll */
-	const header = document.querySelector("#site-header");
-	if (header) {
-		const observer = new IntersectionObserver(
-			([entry]) => {
-				header.classList.toggle(
-					"site-header--scrolled",
-					!entry.isIntersecting
-				);
-			},
-			{ rootMargin: "-20px 0px 0px 0px", threshold: 0 }
-		);
-		const sentinel = document.createElement("div");
-		sentinel.style.cssText =
-			"position:absolute;top:0;left:0;width:1px;height:1px;pointer-events:none;";
-		document.body.prepend(sentinel);
-		observer.observe(sentinel);
-	}
+  /* Scroll-aware header: add backdrop blur after 20px scroll */
+  const header = document.querySelector("#site-header");
+  if (header) {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        header.classList.toggle(
+          "site-header--scrolled",
+          !entry.isIntersecting,
+        );
+      },
+      { rootMargin: "-20px 0px 0px 0px", threshold: 0 },
+    );
+    const sentinel = document.createElement("div");
+    sentinel.style.cssText
+      = "position:absolute;top:0;left:0;width:1px;height:1px;pointer-events:none;";
+    document.body.prepend(sentinel);
+    observer.observe(sentinel);
+  }
 </script>
 
 <style>
-	/* ====================================================
-	   DESIGN TOKEN ANNOTATIONS
-	   - --color-background-header: semi-transparent surface for nav
-	   - --backdrop-blur-sm: blur(12px) — glassmorphism utility
-	   - --transition-colors: color 0.2s ease — reusable transition
-	   - --font-size-mono-label: 0.7rem (for logo TLD/tag text)
-	   ==================================================== */
+  /* ====================================================
+     DESIGN TOKEN ANNOTATIONS
+     - --color-background-header: semi-transparent surface for nav
+     - --backdrop-blur-sm: blur(12px) — glassmorphism utility
+     - --transition-colors: color 0.2s ease — reusable transition
+     - --font-size-mono-label: 0.7rem (for logo TLD/tag text)
+     ==================================================== */
 
-	.site-header {
-		padding-block: var(--spacing-12);
-		background-color: var(--color-background-primary);
-		border-bottom: 1px solid
-			color-mix(in srgb, var(--color-text-primary) 8%, transparent);
-		position: sticky;
-		top: 0;
-		z-index: 100;
-		/* DS NOTE: --transition-bg candidate */
-		transition: background-color 0.3s ease, box-shadow 0.3s ease,
-			border-color 0.3s ease;
-	}
+  .site-header {
+    padding-block: var(--spacing-12);
+    background-color: var(--color-background-primary);
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-text-primary) 8%, transparent);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    /* DS NOTE: --transition-bg candidate */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease,
+      border-color 0.3s ease;
+  }
 
-	.site-header--scrolled {
-		/* DS NOTE: --color-background-header: rgba(bg, 0.85) + blur candidate */
-		background-color: color-mix(
-			in srgb,
-			var(--color-background-primary) 85%,
-			transparent
-		);
-		backdrop-filter: blur(12px);
-		-webkit-backdrop-filter: blur(12px);
-		box-shadow: 0 1px 0
-				color-mix(in srgb, var(--color-text-primary) 8%, transparent),
-			0 4px 16px
-				color-mix(in srgb, var(--color-text-primary) 6%, transparent);
-	}
+  .site-header--scrolled {
+    /* DS NOTE: --color-background-header: rgba(bg, 0.85) + blur candidate */
+    background-color: color-mix(
+      in srgb,
+      var(--color-background-primary) 85%,
+      transparent
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 1px 0
+        color-mix(in srgb, var(--color-text-primary) 8%, transparent),
+      0 4px 16px
+        color-mix(in srgb, var(--color-text-primary) 6%, transparent);
+  }
 
-	.nav-container {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		max-width: 1200px;
-		margin: 0 auto;
-		padding-inline: var(--spacing-24);
-		gap: var(--spacing-24);
-	}
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-inline: var(--spacing-24);
+    gap: var(--spacing-24);
+  }
 
-	/* Logo */
-	.logo {
-		text-decoration: none;
-		display: inline-flex;
-		align-items: center;
-		gap: var(--spacing-8);
-		flex-shrink: 0;
-	}
+  /* Logo */
+  .logo {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-8);
+    flex-shrink: 0;
+  }
 
-	.logo-icon {
-		color: var(--color-text-primary);
-		flex-shrink: 0;
-	}
+  .logo-icon {
+    color: var(--color-text-primary);
+    flex-shrink: 0;
+  }
 
-	/* Nav links */
-	.nav-links {
-		display: flex;
-		gap: var(--spacing-4);
-		align-items: center;
-	}
+  /* Nav links */
+  .nav-links {
+    display: flex;
+    gap: var(--spacing-4);
+    align-items: center;
+  }
 
-	.nav-link {
-		position: relative;
-		color: var(--color-text-secondary);
-		font-size: var(--font-size-300);
-		font-weight: var(--font-weight-medium);
-		text-decoration: none;
-		padding: var(--spacing-8) var(--spacing-12);
-		border-radius: var(--spacing-4);
-		transition: color 0.2s ease, background-color 0.2s ease;
-	}
+  .nav-link {
+    position: relative;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-300);
+    font-weight: var(--font-weight-medium);
+    text-decoration: none;
+    padding: var(--spacing-8) var(--spacing-12);
+    border-radius: var(--spacing-4);
+    transition: color 0.2s ease, background-color 0.2s ease;
+  }
 
-	.nav-link::after {
-		content: "";
-		position: absolute;
-		bottom: 4px;
-		left: var(--spacing-12);
-		right: var(--spacing-12);
-		height: 2px;
-		background: var(--color-primary);
-		border-radius: 1px;
-		transform: scaleX(0);
-		transform-origin: left;
-		transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-	}
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: 4px;
+    left: var(--spacing-12);
+    right: var(--spacing-12);
+    height: 2px;
+    background: var(--color-primary);
+    border-radius: 1px;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
-	.nav-link:hover {
-		color: var(--color-text-primary);
-		background-color: color-mix(
-			in srgb,
-			var(--color-text-primary) 5%,
-			transparent
-		);
-		text-decoration: none;
-	}
+  .nav-link:hover {
+    color: var(--color-text-primary);
+    background-color: color-mix(
+      in srgb,
+      var(--color-text-primary) 5%,
+      transparent
+    );
+    text-decoration: none;
+  }
 
-	.nav-link:hover::after,
-	.nav-link--active::after {
-		transform: scaleX(1);
-	}
+  .nav-link:hover::after,
+  .nav-link--active::after {
+    transform: scaleX(1);
+  }
 
-	.nav-link--active {
-		color: var(--color-text-primary);
-	}
+  .nav-link--active {
+    color: var(--color-text-primary);
+  }
 
-	.nav-end {
-		display: flex;
-		align-items: center;
-		flex-shrink: 0;
-	}
+  .nav-end {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
 
-	main {
-		flex: 1;
-		width: 100%;
-	}
+  main {
+    flex: 1;
+    width: 100%;
+  }
 
-	/* Footer */
-	.site-footer {
-		padding-block: var(--spacing-32);
-		background-color: var(--color-background-primary);
-		border-top: 1px solid
-			color-mix(in srgb, var(--color-text-primary) 8%, transparent);
-		margin-top: auto;
-	}
+  /* Footer */
+  .site-footer {
+    padding-block: var(--spacing-32);
+    background-color: var(--color-background-primary);
+    border-top: 1px solid
+      color-mix(in srgb, var(--color-text-primary) 8%, transparent);
+    margin-top: auto;
+  }
 
-	.footer-container {
-		max-width: 1200px;
-		margin: 0 auto;
-		padding-inline: var(--spacing-24);
-		display: flex;
-		align-items: center;
-		gap: var(--spacing-8);
-	}
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-inline: var(--spacing-24);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-8);
+  }
 
-	.footer-logo-icon {
-		color: var(--color-text-primary);
-		flex-shrink: 0;
-	}
+  .footer-logo-icon {
+    color: var(--color-text-primary);
+    flex-shrink: 0;
+  }
 
-	.footer-tm {
-		font-size: var(--font-size-200);
-		font-family: var(--font-family-mono);
-		color: var(--color-text-secondary);
-	}
+  .footer-tm {
+    font-size: var(--font-size-200);
+    font-family: var(--font-family-mono);
+    color: var(--color-text-secondary);
+  }
 
-	.footer-copy {
-		font-size: var(--font-size-100);
-		color: var(--color-text-secondary);
-		margin: 0;
-		font-family: var(--font-family-mono);
-	}
+  .footer-copy {
+    font-size: var(--font-size-100);
+    color: var(--color-text-secondary);
+    margin: 0;
+    font-family: var(--font-family-mono);
+  }
 
-	.footer-brand {
-		display: flex;
-		align-items: center;
-		gap: var(--spacing-8);
-	}
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-8);
+  }
 
-	@media (min-width: 90rem) {
-		.nav-container,
-		.footer-container {
-			padding-inline: 0;
-		}
-	}
+  @media (min-width: 90rem) {
+    .nav-container,
+    .footer-container {
+      padding-inline: 0;
+    }
+  }
 
-	@media (max-width: 800px) {
-		.nav-links {
-			display: none;
-		}
-	}
+  @media (max-width: 800px) {
+    .nav-links {
+      display: none;
+    }
+  }
 </style>

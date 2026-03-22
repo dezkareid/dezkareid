@@ -4,11 +4,11 @@ import Layout from '../../layouts/Layout.astro';
 import Section from '../../components/Section.astro';
 
 export async function getStaticPaths() {
-	const services = await getCollection('services');
-	return services.map((service) => ({
-		params: { slug: service.id },
-		props: { service },
-	}));
+  const services = await getCollection('services');
+  return services.map(service => ({
+    params: { slug: service.id },
+    props: { service },
+  }));
 }
 
 const { service } = Astro.props;
@@ -19,232 +19,234 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const pageDescription = metaDescription ?? description;
 
 const jsonLd = {
-	"@context": "https://schema.org",
-	"@type": "Service",
-	"name": title,
-	"description": pageDescription,
-	"url": canonicalURL.toString(),
-	...(serviceType ? { "serviceType": serviceType } : {}),
-	"provider": {
-		"@type": "Person",
-		"name": "Joel Humberto Gomez Paredes",
-		"url": Astro.site?.toString() ?? "https://dezkareid.com"
-	},
-	...(priceRange ? {
-		"offers": {
-			"@type": "Offer",
-			"priceSpecification": {
-				"@type": "PriceSpecification",
-				"description": priceRange
-			}
-		}
-	} : {})
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": title,
+  "description": pageDescription,
+  "url": canonicalURL.toString(),
+  ...(serviceType ? { serviceType: serviceType } : {}),
+  "provider": {
+    "@type": "Person",
+    "name": "Joel Humberto Gomez Paredes",
+    "url": Astro.site?.toString() ?? "https://dezkareid.com",
+  },
+  ...(priceRange
+    ? {
+        offers: {
+          "@type": "Offer",
+          "priceSpecification": {
+            "@type": "PriceSpecification",
+            "description": priceRange,
+          },
+        },
+      }
+    : {}),
 };
 ---
 
 <Layout title={`${title} | Services`} description={pageDescription}>
-	<Fragment slot="head">
-		<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-	</Fragment>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </Fragment>
 
-	<Section>
-		<div class="container">
-			<nav class="breadcrumb" aria-label="Breadcrumb">
-				<a href="/services">← Back to Services</a>
-			</nav>
+  <Section>
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/services">← Back to Services</a>
+      </nav>
 
-			<header class="service-header">
-				<div class="service-icon" aria-hidden="true">
-					{icon || "⚙️"}
-				</div>
-				<h1 class="service-title">{title}</h1>
-				<p class="service-description">{description}</p>
-			</header>
+      <header class="service-header">
+        <div class="service-icon" aria-hidden="true">
+          {icon || "⚙️"}
+        </div>
+        <h1 class="service-title">{title}</h1>
+        <p class="service-description">{description}</p>
+      </header>
 
-			<hr class="divider" />
+      <hr class="divider" />
 
-			<div class="service-content">
-				<Content />
-			</div>
-		</div>
-	</Section>
+      <div class="service-content">
+        <Content />
+      </div>
+    </div>
+  </Section>
 
-	<Section class="pricing-section">
-		<div class="pricing-container">
-			<span class="pricing-label">Pricing</span>
-			{priceRange && (
-				<div class="pricing-card">
-					<p class="pricing-amount">{priceRange}</p>
-					<p class="pricing-note">Scope and pricing are discussed on a discovery call — no commitment required.</p>
-				</div>
-			)}
-			<a href="mailto:elmaildeldezkareid@gmail.com" class="cta-button">
-				<span>{cta ?? 'Get in touch'}</span>
-				<span class="cta-arrow" aria-hidden="true">→</span>
-			</a>
-		</div>
-	</Section>
+  <Section class="pricing-section">
+    <div class="pricing-container">
+      <span class="pricing-label">Pricing</span>
+      {priceRange && (
+        <div class="pricing-card">
+          <p class="pricing-amount">{priceRange}</p>
+          <p class="pricing-note">Scope and pricing are discussed on a discovery call — no commitment required.</p>
+        </div>
+      )}
+      <a href="mailto:elmaildeldezkareid@gmail.com" class="cta-button">
+        <span>{cta ?? 'Get in touch'}</span>
+        <span class="cta-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </Section>
 </Layout>
 
 <style>
-	.container {
-		max-width: 800px;
-		margin: 0 auto;
-		padding-inline: var(--spacing-24);
-	}
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-inline: var(--spacing-24);
+  }
 
-	@media (min-width: 90rem) {
-		.container {
-			padding-inline: 0;
-		}
-	}
+  @media (min-width: 90rem) {
+    .container {
+      padding-inline: 0;
+    }
+  }
 
-	.breadcrumb {
-		margin-bottom: var(--spacing-32);
-	}
+  .breadcrumb {
+    margin-bottom: var(--spacing-32);
+  }
 
-	.service-header {
-		text-align: center;
-		margin-bottom: var(--spacing-48);
-	}
+  .service-header {
+    text-align: center;
+    margin-bottom: var(--spacing-48);
+  }
 
-	.service-icon {
-		font-size: var(--font-size-900);
-		margin-bottom: var(--spacing-24);
-	}
+  .service-icon {
+    font-size: var(--font-size-900);
+    margin-bottom: var(--spacing-24);
+  }
 
-	.service-title {
-		font-size: var(--font-size-800);
-		margin-bottom: var(--spacing-16);
-	}
+  .service-title {
+    font-size: var(--font-size-800);
+    margin-bottom: var(--spacing-16);
+  }
 
-	.service-description {
-		font-size: var(--font-size-500);
-		color: var(--color-text-primary);
-		opacity: 0.7;
-		margin-bottom: var(--spacing-24);
-		margin-inline: auto;
-		line-height: var(--font-line-height-relaxed);
-		max-width: 600px;
-	}
+  .service-description {
+    font-size: var(--font-size-500);
+    color: var(--color-text-primary);
+    opacity: 0.7;
+    margin-bottom: var(--spacing-24);
+    margin-inline: auto;
+    line-height: var(--font-line-height-relaxed);
+    max-width: 600px;
+  }
 
-	/* Pricing section */
-	:global(.pricing-section) {
-		border-top: 1px solid color-mix(in srgb, var(--color-text-primary) 10%, transparent);
-	}
+  /* Pricing section */
+  :global(.pricing-section) {
+    border-top: 1px solid color-mix(in srgb, var(--color-text-primary) 10%, transparent);
+  }
 
-	.pricing-container {
-		max-width: 600px;
-		margin: 0 auto;
-		padding-inline: var(--spacing-24);
-	}
+  .pricing-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding-inline: var(--spacing-24);
+  }
 
-	@media (min-width: 90rem) {
-		.pricing-container {
-			padding-inline: 0;
-		}
-	}
+  @media (min-width: 90rem) {
+    .pricing-container {
+      padding-inline: 0;
+    }
+  }
 
-	.pricing-label {
-		display: block;
-		font-size: var(--font-size-100);
-		font-family: var(--font-family-mono);
-		font-weight: var(--font-weight-medium);
-		text-transform: uppercase;
-		letter-spacing: 0.1em;
-		color: var(--color-primary);
-		margin-bottom: var(--spacing-16);
-	}
+  .pricing-label {
+    display: block;
+    font-size: var(--font-size-100);
+    font-family: var(--font-family-mono);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-16);
+  }
 
-	.pricing-card {
-		display: flex;
-		align-items: center;
-		gap: var(--spacing-32);
-		padding: var(--spacing-24) var(--spacing-32);
-		border: 1px solid color-mix(in srgb, var(--color-text-primary) 20%, transparent);
-		border-left: 3px solid var(--color-primary);
-		border-radius: var(--spacing-4);
-		background-color: color-mix(in srgb, var(--color-primary) 5%, var(--color-background-primary));
-	}
+  .pricing-card {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-32);
+    padding: var(--spacing-24) var(--spacing-32);
+    border: 1px solid color-mix(in srgb, var(--color-text-primary) 20%, transparent);
+    border-left: 3px solid var(--color-primary);
+    border-radius: var(--spacing-4);
+    background-color: color-mix(in srgb, var(--color-primary) 5%, var(--color-background-primary));
+  }
 
-	@media (max-width: 600px) {
-		.pricing-card {
-			flex-direction: column;
-			gap: var(--spacing-8);
-		}
-	}
+  @media (max-width: 600px) {
+    .pricing-card {
+      flex-direction: column;
+      gap: var(--spacing-8);
+    }
+  }
 
-	.pricing-amount {
-		font-size: var(--font-size-600);
-		font-family: var(--font-family-mono);
-		font-weight: var(--font-weight-bold);
-		color: var(--color-text-primary);
-		letter-spacing: var(--font-letter-spacing-tight);
-		line-height: var(--font-line-height-tight);
-		white-space: nowrap;
-		flex-shrink: 0;
-		margin: 0;
-	}
+  .pricing-amount {
+    font-size: var(--font-size-600);
+    font-family: var(--font-family-mono);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    letter-spacing: var(--font-letter-spacing-tight);
+    line-height: var(--font-line-height-tight);
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin: 0;
+  }
 
-	.pricing-note {
-		font-size: var(--font-size-300);
-		color: var(--color-text-primary);
-		opacity: 0.65;
-		line-height: var(--font-line-height-relaxed);
-		margin: 0;
-	}
+  .pricing-note {
+    font-size: var(--font-size-300);
+    color: var(--color-text-primary);
+    opacity: 0.65;
+    line-height: var(--font-line-height-relaxed);
+    margin: 0;
+  }
 
-	.divider {
-		border: 0;
-		border-top: 1px solid var(--color-base-gray-100);
-		margin: var(--spacing-48) 0;
-	}
+  .divider {
+    border: 0;
+    border-top: 1px solid var(--color-base-gray-100);
+    margin: var(--spacing-48) 0;
+  }
 
-	.service-content {
-		font-size: var(--font-size-400);
-		line-height: var(--font-line-height-relaxed);
-		color: var(--color-text-primary);
-	}
+  .service-content {
+    font-size: var(--font-size-400);
+    line-height: var(--font-line-height-relaxed);
+    color: var(--color-text-primary);
+  }
 
-	.service-content :global(h2) {
-		font-size: var(--font-size-600);
-		margin: var(--spacing-48) 0 var(--spacing-24);
-	}
+  .service-content :global(h2) {
+    font-size: var(--font-size-600);
+    margin: var(--spacing-48) 0 var(--spacing-24);
+  }
 
-	.service-content :global(p) {
-		margin-bottom: var(--spacing-24);
-	}
+  .service-content :global(p) {
+    margin-bottom: var(--spacing-24);
+  }
 
-	.service-content :global(ul) {
-		margin-bottom: var(--spacing-24);
-		padding-left: var(--spacing-24);
-	}
+  .service-content :global(ul) {
+    margin-bottom: var(--spacing-24);
+    padding-left: var(--spacing-24);
+  }
 
-	.cta-button {
-		display: inline-flex;
-		align-items: center;
-		gap: var(--spacing-12);
-		margin-top: var(--spacing-32);
-		background-color: var(--color-primary);
-		color: var(--color-text-inverse);
-		padding: var(--spacing-16) var(--spacing-32);
-		border-radius: var(--spacing-4);
-		font-weight: var(--font-weight-bold);
-		font-size: var(--font-size-400);
-		text-decoration: none;
-		transition: opacity 0.15s ease;
-	}
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-12);
+    margin-top: var(--spacing-32);
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
+    padding: var(--spacing-16) var(--spacing-32);
+    border-radius: var(--spacing-4);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-400);
+    text-decoration: none;
+    transition: opacity 0.15s ease;
+  }
 
-	.cta-button:hover {
-		opacity: 0.88;
-		text-decoration: none;
-	}
+  .cta-button:hover {
+    opacity: 0.88;
+    text-decoration: none;
+  }
 
-	.cta-arrow {
-		transition: transform 0.2s ease;
-	}
+  .cta-arrow {
+    transition: transform 0.2s ease;
+  }
 
-	.cta-button:hover .cta-arrow {
-		transform: translateX(4px);
-	}
+  .cta-button:hover .cta-arrow {
+    transform: translateX(4px);
+  }
 </style>

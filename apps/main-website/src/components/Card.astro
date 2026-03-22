@@ -1,33 +1,33 @@
 ---
 interface Properties {
-	class?: string;
-	[key: string]: unknown;
+  class?: string;
+  [key: string]: unknown;
 }
 
 const { class: className, ...rest } = Astro.props;
 ---
 
 <div class:list={["card", className]} {...rest}>
-	<slot />
+  <slot />
 </div>
 
 <style>
-	.card {
-		background-color: var(--color-background-primary);
-		border: 1px solid color-mix(in srgb, var(--color-text-primary) 8%, transparent);
-		border-radius: var(--spacing-8);
-		padding: var(--spacing-24);
-		box-shadow: var(--shadow-subtle);
-		transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-		            box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-		            border-color 0.25s ease;
-	}
+  .card {
+    background-color: var(--color-background-primary);
+    border: 1px solid color-mix(in srgb, var(--color-text-primary) 8%, transparent);
+    border-radius: var(--spacing-8);
+    padding: var(--spacing-24);
+    box-shadow: var(--shadow-subtle);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.25s ease;
+  }
 
-	.card:hover {
-		transform: translateY(-3px);
-		border-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
-		box-shadow:
-			var(--shadow-card-hover),
-			0 0 0 1px color-mix(in srgb, var(--color-primary) 15%, transparent);
-	}
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
+    box-shadow:
+      var(--shadow-card-hover),
+      0 0 0 1px color-mix(in srgb, var(--color-primary) 15%, transparent);
+  }
 </style>

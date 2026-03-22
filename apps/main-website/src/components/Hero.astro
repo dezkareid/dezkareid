@@ -2,164 +2,164 @@
 import Section from "./Section.astro";
 
 interface Properties {
-	subtitle?: string;
+  subtitle?: string;
 }
 
 const {
-	subtitle = "Helping companies and engineering teams build scalable, performant, and maintainable frontend architectures. I specialize in React ecosystem, design systems, and mentoring developers to reach their full potential.",
+  subtitle = "Helping companies and engineering teams build scalable, performant, and maintainable frontend architectures. I specialize in React ecosystem, design systems, and mentoring developers to reach their full potential.",
 } = Astro.props;
 ---
 
 <Section paddingBlock="large" class="hero">
-	<div class="hero-container">
-		<h1 class="hero-title">
-			Crafting frontend products and experiences that scale.
-		</h1>
+  <div class="hero-container">
+    <h1 class="hero-title">
+      Crafting frontend products and experiences that scale.
+    </h1>
 
-		<div class="hero-body">
-			<div class="hero-avatar-wrap">
-				<img
-					src="https://res.cloudinary.com/ddyovtxd2/image/upload/w_150,h_150,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg"
-					srcset="
-						https://res.cloudinary.com/ddyovtxd2/image/upload/w_150,h_150,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg 1x,
-						https://res.cloudinary.com/ddyovtxd2/image/upload/w_300,h_300,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg 2x
-					"
-					sizes="150px"
-					alt="Joel Gomez"
-					class="hero-avatar"
-					width="150"
-					height="150"
-					loading="eager"
-					decoding="async"
-				/>
-			</div>
+    <div class="hero-body">
+      <div class="hero-avatar-wrap">
+        <img
+          src="https://res.cloudinary.com/ddyovtxd2/image/upload/w_150,h_150,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg"
+          srcset="
+            https://res.cloudinary.com/ddyovtxd2/image/upload/w_150,h_150,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg 1x,
+            https://res.cloudinary.com/ddyovtxd2/image/upload/w_300,h_300,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg 2x
+          "
+          sizes="150px"
+          alt="Joel Gomez"
+          class="hero-avatar"
+          width="150"
+          height="150"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
 
-			<div class="hero-body-text">
-				<p class="hero-subtitle">{subtitle}</p>
-				<a href="/about" class="hero-link">
-					About me <span aria-hidden="true">→</span>
-				</a>
-			</div>
-		</div>
-	</div>
+      <div class="hero-body-text">
+        <p class="hero-subtitle">{subtitle}</p>
+        <a href="/about" class="hero-link">
+          About me <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
 </Section>
 
 <style>
-	.hero {
-		background: linear-gradient(
-			135deg,
-			var(--color-background-primary) 0%,
-			color-mix(
-					in srgb,
-					var(--color-primary) 5%,
-					var(--color-background-primary)
-				)
-				100%
-		);
-	}
+  .hero {
+    background: linear-gradient(
+      135deg,
+      var(--color-background-primary) 0%,
+      color-mix(
+          in srgb,
+          var(--color-primary) 5%,
+          var(--color-background-primary)
+        )
+        100%
+    );
+  }
 
-	.hero-container {
-		max-width: 1200px;
-		margin: 0 auto;
-		padding-inline: var(--spacing-24);
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: var(--spacing-48);
-	}
+  .hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-inline: var(--spacing-24);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-48);
+  }
 
-	.hero-title {
-		font-size: clamp(2.5rem, 6vw, 5rem);
-		font-weight: var(--font-weight-bold);
-		line-height: 1.05;
-		letter-spacing: -0.03em;
-		color: var(--color-text-primary);
-		text-align: center;
-		margin: 0;
-	}
+  .hero-title {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: var(--font-weight-bold);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--color-text-primary);
+    text-align: center;
+    margin: 0;
+  }
 
-	/* Mobile: avatar above subtitle, stacked */
-	.hero-body {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: var(--spacing-32);
-		width: 100%;
-	}
+  /* Mobile: avatar above subtitle, stacked */
+  .hero-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-32);
+    width: 100%;
+  }
 
-	.hero-body-text {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: var(--spacing-24);
-	}
+  .hero-body-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-24);
+  }
 
-	.hero-avatar-wrap {
-		flex-shrink: 0;
-	}
+  .hero-avatar-wrap {
+    flex-shrink: 0;
+  }
 
-	.hero-avatar {
-		width: 150px;
-		height: 150px;
-		border-radius: 50%;
-		object-fit: cover;
-		object-position: center top;
-		display: block;
-		border: 3px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
-	}
+  .hero-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    border: 3px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
+  }
 
-	.hero-subtitle {
-		font-size: var(--font-size-400);
-		color: var(--color-text-primary);
-		line-height: var(--font-line-height-relaxed);
-		margin: 0;
-		text-align: center;
-		max-width: 48ch;
-	}
+  .hero-subtitle {
+    font-size: var(--font-size-400);
+    color: var(--color-text-primary);
+    line-height: var(--font-line-height-relaxed);
+    margin: 0;
+    text-align: center;
+    max-width: 48ch;
+  }
 
-	.hero-link {
-		display: inline-flex;
-		align-items: center;
-		gap: var(--spacing-8);
-		color: var(--color-primary);
-		font-weight: var(--font-weight-medium);
-		font-size: var(--font-size-300);
-		text-decoration: none;
-		transition: gap 0.2s ease;
-	}
+  .hero-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-8);
+    color: var(--color-primary);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-300);
+    text-decoration: none;
+    transition: gap 0.2s ease;
+  }
 
-	.hero-link:hover {
-		gap: var(--spacing-12);
-		text-decoration: none;
-	}
+  .hero-link:hover {
+    gap: var(--spacing-12);
+    text-decoration: none;
+  }
 
-	/* ≥600px: avatar left, text right */
-	@media (min-width: 37.5rem) {
-		.hero-body {
-			flex-direction: row;
-			align-items: center;
-			gap: var(--spacing-48);
-		}
+  /* ≥600px: avatar left, text right */
+  @media (min-width: 37.5rem) {
+    .hero-body {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--spacing-48);
+    }
 
-		.hero-body-text {
-			align-items: flex-start;
-		}
+    .hero-body-text {
+      align-items: flex-start;
+    }
 
-		.hero-subtitle {
-			text-align: left;
-			max-width: 40ch;
-		}
-	}
+    .hero-subtitle {
+      text-align: left;
+      max-width: 40ch;
+    }
+  }
 
-	/* XL: title left-aligned, no inline padding */
-	@media (min-width: 90rem) {
-		.hero-container {
-			align-items: flex-start;
-			padding-inline: 0;
-		}
+  /* XL: title left-aligned, no inline padding */
+  @media (min-width: 90rem) {
+    .hero-container {
+      align-items: flex-start;
+      padding-inline: 0;
+    }
 
-		.hero-title {
-			text-align: left;
-		}
-	}
+    .hero-title {
+      text-align: left;
+    }
+  }
 </style>

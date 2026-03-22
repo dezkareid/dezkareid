@@ -1,8 +1,10 @@
 import type { Linter } from 'eslint';
 import reactPlugin from '@eslint-react/eslint-plugin';
 import pluginUnicorn from 'eslint-plugin-unicorn';
+import stylisticConfig from './stylistic.js';
 
 const config: Linter.Config[] = [
+  ...stylisticConfig,
   reactPlugin.configs.recommended as Linter.Config,
   pluginUnicorn.configs.recommended as Linter.Config,
   {
