@@ -40,8 +40,8 @@ importers:
         specifier: 3.7.1
         version: 3.7.1
       '@dezkareid/eslint-config-ts-base':
-        specifier: workspace:*
-        version: link:../../configs/eslint-config-ts-base
+        specifier: 1.0.0
+        version: 1.0.0(@eslint/js@9.39.2)(eslint@9.39.2(jiti@2.6.0))(typescript-eslint@8.57.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3))(typescript@5.9.3)
       '@dezkareid/eslint-plugin-web':
         specifier: workspace:*
         version: link:../../linters/eslint-plugin-web
