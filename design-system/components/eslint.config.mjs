@@ -1,5 +1,5 @@
 import tsBase from '@dezkareid/eslint-config-ts-base';
-import webPlugin from '@dezkareid/eslint-plugin-web';
+import reactConfig from '@dezkareid/eslint-plugin-web/react';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -7,7 +7,7 @@ export default [
     ignores: ['dist/', 'node_modules/', 'coverage/', '.turbo/', '**/*.d.ts'],
   },
   ...tsBase,
-  ...webPlugin.configs.react,
+  ...reactConfig,
   {
     files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
