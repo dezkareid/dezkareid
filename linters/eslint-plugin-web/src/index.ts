@@ -1,6 +1,7 @@
 import type { Linter, Rule } from 'eslint';
 import tsBase from '@dezkareid/eslint-config-ts-base';
 import reactPlugin from '@eslint-react/eslint-plugin';
+import css from '@eslint/css';
 import pluginAstro from 'eslint-plugin-astro';
 import pluginUnicorn from 'eslint-plugin-unicorn';
 import noJquery from './rules/no-jquery.js';
@@ -30,6 +31,20 @@ export const configs: Record<string, Linter.Config[]> = {
         }],
       },
     } as Linter.Config,
+  ],
+  css: [
+    {
+      files: ['**/*.css'],
+      plugins: { css },
+      language: 'css/css',
+      rules: {
+        'css/no-duplicate-imports': 'error',
+        'css/no-empty-blocks': 'error',
+        'css/no-invalid-at-rules': 'error',
+        'css/no-invalid-properties': 'error',
+        'css/use-baseline': ['warn', { available: 'widely' }],
+      },
+    } as unknown as Linter.Config,
   ],
   astro: [
     ...(pluginAstro.configs.recommended as Linter.Config[]),
