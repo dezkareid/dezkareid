@@ -1,3 +1,10 @@
+# [@dezkareid/components-v1.0.3](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.0.2...@dezkareid/components-v1.0.3) (2026-03-22)
+
+
+### Bug Fixes
+
+* change harcoded color using design token ([22742bb](https://github.com/dezkareid/dezkareid/commit/22742bb9ea2bff37c3863568fe65d9c20afc1f6a))
+
 # [@dezkareid/components-v1.0.2](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.0.1...@dezkareid/components-v1.0.2) (2026-03-20)
 
 
