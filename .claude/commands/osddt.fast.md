@@ -1,5 +1,5 @@
 ---
-description: "Start a new feature by creating a branch and working-on folder"
+description: "Bootstrap all planning artifacts (spec, plan, tasks) from a single description"
 ---
 
 ## Context
@@ -32,12 +32,16 @@ All generated files live under `<project-path>/working-on/<feature-name>/`.
 
 The argument provided is: $ARGUMENTS
 
-Determine the branch name using the following logic:
+This command runs the full spec-driven setup sequence in one shot — branch creation, spec, plan, and task list — without pausing for user input. Follow each step below in order without asking the user for clarification or confirmation between steps.
 
-1. If $ARGUMENTS looks like a branch name (e.g. `feat/my-feature`, `fix/some-bug`, `my-feature-branch` — no spaces, kebab-case or slash-separated), use it as-is.
+### Step 1 — Derive branch and feature name
+
+Determine the branch name from $ARGUMENTS:
+
+1. If $ARGUMENTS looks like a branch name (no spaces, kebab-case or slash-separated), use it as-is.
 2. Otherwise treat $ARGUMENTS as a human-readable feature description, convert it to a feature name, and use the format `feat/<derived-name>` as the branch name.
 
-Apply the constraints below to the feature name (the segment after the last `/`) before using it:
+Apply the constraints below to the feature name (the segment after the last `/`):
 
 ### Feature Name Constraints
 
@@ -61,7 +65,7 @@ When deriving a feature name from a description:
 | `feat/implement-real-time-notifications-for-dashboard` | `implement-real-time` |
 
 
-Once the branch name is determined:
+### Step 2 — Create branch and working directory
 
 3. Check whether the branch already exists locally or remotely:
    - If it **does not exist**, create and switch to it:
@@ -83,14 +87,54 @@ Once the branch name is determined:
 
 Where `<feature-name>` is the last segment of the branch name (after the last `/`, or the full branch name if no `/` is present).
 
-5. Report the branch name and working directory that were created or resumed.
+### Step 3 — Generate spec
+
+Write `osddt.spec.md` to the working directory. Base it entirely on $ARGUMENTS and any codebase context you can gather. Do **not** ask the user any questions. If there are ambiguities, record them in an **Open Questions** section and continue.
+
+The spec must include:
+- **Overview**: What the feature is and why it is needed
+- **Requirements**: Functional requirements expressed as user-observable behaviours
+- **Scope**: In scope and out of scope in product terms
+- **Acceptance Criteria**: Clear, testable criteria from a user or business perspective
+- **Open Questions** (if any): Ambiguities to resolve later — do not block on these
+
+### Step 4 — Generate plan
+
+Write `osddt.plan.md` to the working directory. Derive all technical decisions from the spec and codebase inspection. Do **not** ask the user for input.
+
+The plan must include:
+- **Assumptions**: Document every technical decision made automatically (e.g. library choices, architecture patterns) so the user can review them before implementing
+- **Architecture Overview**: High-level design decisions
+- **Implementation Phases**: Ordered phases with goals
+- **Technical Dependencies**: Libraries, APIs, services needed
+- **Risks & Mitigations**: Known risks and mitigations
+- **Out of Scope**: What will not be built
+
+### Step 5 — Generate task list
+
+Write `osddt.tasks.md` to the working directory based on `osddt.plan.md`.
+
+The task list must include:
+- A checklist of tasks grouped by phase: `- [ ] [S/M/L] Description`
+- Dependencies between tasks noted where relevant
+- A Definition of Done per phase
+
+### Step 6 — Report
+
+Display the full contents of `osddt.tasks.md` to the user. Then prompt them to run:
+
+```
+/osddt.implement
+```
+
+> You can optionally run `/osddt.clarify` before implementing to resolve any Open Questions recorded in the spec.
 
 ## Custom Context
 
 Run the following command and, if it returns content, use it as additional context before proceeding:
 
 ```
-npx @dezkareid/osddt context start
+npx @dezkareid/osddt context fast
 ```
 
 If the command returns no output, skip this section and continue.
@@ -98,25 +142,3 @@ If the command returns no output, skip this section and continue.
 ## Arguments
 
 $ARGUMENTS
-
-## Next Step
-
-- If $ARGUMENTS was a **human-readable description** (not a branch name):
-
-  Your description will be used as the starting point for the spec. Run:
-
-  ```
-  /osddt.spec
-  ```
-
-  > You can append more details if you want the spec to capture additional context.
-
-- If $ARGUMENTS was a **branch name** (or no arguments were provided):
-
-  Run the following command to write the feature specification:
-
-  ```
-  /osddt.spec <brief feature description, e.g. "add user authentication with JWT">
-  ```
-
-  > Add a short description of what you're building so the spec has the right starting point.

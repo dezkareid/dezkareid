@@ -88,6 +88,16 @@ The research file should include:
 - **Constraints & Risks**: Known limitations or risks uncovered during research
 - **Open Questions**: Ambiguities that the specification phase should resolve
 
+## Custom Context
+
+Run the following command and, if it returns content, use it as additional context before proceeding:
+
+```
+npx @dezkareid/osddt context research
+```
+
+If the command returns no output, skip this section and continue.
+
 ## Arguments
 
 {{args}}

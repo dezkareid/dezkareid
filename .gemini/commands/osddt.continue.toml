@@ -57,6 +57,16 @@ Report which file was found, which phase that corresponds to, and the exact comm
 
 > **Open Questions check**: After reporting the phase, if the detected phase is **Spec done** or **Planning done**, also check whether `osddt.spec.md` contains any unanswered open questions (items in the **Open Questions** section with no corresponding entry in the **Decisions** section). If unanswered questions exist, inform the user and recommend running `/osddt.clarify <feature-name>` before (or in addition to) the suggested next command.
 
+## Custom Context
+
+Run the following command and, if it returns content, use it as additional context before proceeding:
+
+```
+npx @dezkareid/osddt context continue
+```
+
+If the command returns no output, skip this section and continue.
+
 ## Arguments
 
 {{args}}
