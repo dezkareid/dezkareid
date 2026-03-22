@@ -77,7 +77,7 @@ export function ThemeToggle() {
         {label}
       </button>
       <span aria-live="polite" className={styles['sr-only']}>
-        {label} mode active
+        {`${label} mode active`}
       </span>
     </span>
   );

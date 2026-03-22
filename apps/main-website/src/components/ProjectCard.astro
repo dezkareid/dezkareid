@@ -4,305 +4,308 @@ import Card from "./Card.astro";
 import type { CollectionEntry } from "astro:content";
 
 interface Properties {
-	project: CollectionEntry<"projects">;
+  project: CollectionEntry<"projects">;
 }
 
 const { project } = Astro.props;
 const {
-	title,
-	description,
-	techStack,
-	image,
-	type,
-	githubUrl,
-	liveUrl,
-	npmUrl,
+  title,
+  description,
+  techStack,
+  image,
+  type,
+  githubUrl,
+  liveUrl,
+  npmUrl,
 } = project.data;
 
 const typeLabel: Record<string, string> = {
-	personal: "Personal",
-	work: "Work",
-	contribution: "Contribution",
+  personal: "Personal",
+  work: "Work",
+  contribution: "Contribution",
 };
 ---
 
 <Card class="project-card">
-	<a
-		class="card-link"
-		href={`/projects/${project.id}`}
-		aria-label={`View ${title}`}></a>
+  <a
+    class="card-link"
+    href={`/projects/${project.id}`}
+    aria-label={`View ${title}`}>
+  </a>
 
-	<div class="project-image">
-		{image ? (
-			<Image
-				src={image}
-				alt={`${title} preview`}
-				width="600"
-				height="400"
-				widths={[350, 600, 900]}
-				sizes="(max-width: 37.49rem) 100vw, (max-width: 59.99rem) calc(100vw - 3rem), (max-width: 89.99rem) calc(50vw - 3rem), 400px"
-				loading="lazy"
-			/>
-		) : (
-			<div class="project-image-placeholder" aria-hidden="true">
-				<span class="project-image-placeholder-initials">
-					{title.split(" ").slice(0, 2).map((w: string) => w[0]).join("")}
-				</span>
-			</div>
-		)}
-	</div>
+  <div class="project-image">
+    {image
+      ? (
+          <Image
+            src={image}
+            alt={`${title} preview`}
+            width="600"
+            height="400"
+            widths={[350, 600, 900]}
+            sizes="(max-width: 37.49rem) 100vw, (max-width: 59.99rem) calc(100vw - 3rem), (max-width: 89.99rem) calc(50vw - 3rem), 400px"
+            loading="lazy"
+          />
+        )
+      : (
+          <div class="project-image-placeholder" aria-hidden="true">
+            <span class="project-image-placeholder-initials">
+              {title.split(" ").slice(0, 2).map((w: string) => w[0]).join("")}
+            </span>
+          </div>
+        )}
+  </div>
 
-	<div class="project-content">
-		<div class="project-meta-top">
-			<span class="project-type-badge" data-type={type}>{typeLabel[type]}</span>
-		</div>
+  <div class="project-content">
+    <div class="project-meta-top">
+      <span class="project-type-badge" data-type={type}>{typeLabel[type]}</span>
+    </div>
 
-		<h2 class="project-title">{title}</h2>
-		<p class="project-description">{description}</p>
+    <h2 class="project-title">{title}</h2>
+    <p class="project-description">{description}</p>
 
-		<div class="project-footer">
-			<div class="project-tech-stack">
-				{techStack.map((tech: string) => <span class="tech-tag">{tech}</span>)}
-			</div>
+    <div class="project-footer">
+      <div class="project-tech-stack">
+        {techStack.map((tech: string) => <span class="tech-tag">{tech}</span>)}
+      </div>
 
-			<div class="project-links">
-				{
-					githubUrl && (
-						<a
-							href={githubUrl}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="project-link"
-							aria-label={`View ${title} on GitHub`}
-						>
-							<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-								<path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-							</svg>
-						</a>
-					)
-				}
-				{
-					npmUrl && (
-						<a
-							href={npmUrl}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="project-link"
-							aria-label={`View ${title} on NPM`}
-						>
-							<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-								<path d="M0 7.334v8h6.666v1.332H12V15.334h12v-8H0zm6.666 6.666H5.334v-4H4v4H1.334v-5.332h5.332v5.332zm6.666 0h-1.332v-5.332h5.332v5.332h-1.332v-4h-1.334v4h-1.334v-4h-1.332v4zm7.998 0h-1.334v-4h-1.334v4H15.332v-5.332h6.666v5.332h.002z" />
-							</svg>
-						</a>
-					)
-				}
-				{
-					liveUrl && (
-						<a
-							href={liveUrl}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="project-link"
-							aria-label={`View ${title} live`}
-						>
-							<svg
-								viewBox="0 0 24 24"
-								aria-hidden="true"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-							>
-								<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-								<polyline points="15 3 21 3 21 9" />
-								<line x1="10" y1="14" x2="21" y2="3" />
-							</svg>
-						</a>
-					)
-				}
-			</div>
-		</div>
-	</div>
+      <div class="project-links">
+        {
+          githubUrl && (
+            <a
+              href={githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="project-link"
+              aria-label={`View ${title} on GitHub`}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+              </svg>
+            </a>
+          )
+        }
+        {
+          npmUrl && (
+            <a
+              href={npmUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="project-link"
+              aria-label={`View ${title} on NPM`}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                <path d="M0 7.334v8h6.666v1.332H12V15.334h12v-8H0zm6.666 6.666H5.334v-4H4v4H1.334v-5.332h5.332v5.332zm6.666 0h-1.332v-5.332h5.332v5.332h-1.332v-4h-1.334v4h-1.334v-4h-1.332v4zm7.998 0h-1.334v-4h-1.334v4H15.332v-5.332h6.666v5.332h.002z" />
+              </svg>
+            </a>
+          )
+        }
+        {
+          liveUrl && (
+            <a
+              href={liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="project-link"
+              aria-label={`View ${title} live`}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </div>
 </Card>
 
 <style>
 .project-card {
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-		position: relative;
-		overflow: hidden;
-		cursor: pointer;
-	}
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
 
-	/* Stretched link — covers the full card */
-	.card-link {
-		position: absolute;
-		inset: 0;
-		z-index: 1;
-	}
+  /* Stretched link — covers the full card */
+  .card-link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
 
-	.project-image {
-		width: 100%;
-		aspect-ratio: 3 / 2;
-		overflow: hidden;
-		flex-shrink: 0;
-	}
+  .project-image {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
 
-	.project-image-placeholder {
-		width: 100%;
-		height: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: linear-gradient(
-			135deg,
-			color-mix(in srgb, var(--color-primary) 8%, var(--color-background-secondary)),
-			color-mix(in srgb, var(--color-primary) 18%, var(--color-background-secondary))
-		);
-	}
+  .project-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-primary) 8%, var(--color-background-secondary)),
+      color-mix(in srgb, var(--color-primary) 18%, var(--color-background-secondary))
+    );
+  }
 
-	.project-image-placeholder-initials {
-		font-size: var(--font-size-800);
-		font-weight: var(--font-weight-bold);
-		font-family: var(--font-family-mono);
-		color: color-mix(in srgb, var(--color-primary) 60%, transparent);
-		letter-spacing: -0.03em;
-		user-select: none;
-	}
+  .project-image-placeholder-initials {
+    font-size: var(--font-size-800);
+    font-weight: var(--font-weight-bold);
+    font-family: var(--font-family-mono);
+    color: color-mix(in srgb, var(--color-primary) 60%, transparent);
+    letter-spacing: -0.03em;
+    user-select: none;
+  }
 
-	.project-image img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		display: block;
-		transition: transform 0.3s ease;
-	}
+  .project-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
 
-	.project-card:hover .project-image img {
-		transform: scale(1.03);
-	}
+  .project-card:hover .project-image img {
+    transform: scale(1.03);
+  }
 
-	.project-content {
-		display: flex;
-		flex-direction: column;
-		flex: 1;
-		padding-top: var(--spacing-16);
-		position: relative;
-	}
+  .project-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding-top: var(--spacing-16);
+    position: relative;
+  }
 
-	.project-meta-top {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		margin-bottom: var(--spacing-12);
-	}
+  .project-meta-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-12);
+  }
 
 .project-type-badge {
-		font-size: var(--font-size-100);
-		font-family: var(--font-family-mono);
-		font-weight: var(--font-weight-medium);
-		letter-spacing: 0.05em;
-		text-transform: uppercase;
-		padding: var(--spacing-4) var(--spacing-8);
-		border-radius: var(--border-radius-pill);
-		position: relative;
-		z-index: 2;
-	}
+    font-size: var(--font-size-100);
+    font-family: var(--font-family-mono);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: var(--spacing-4) var(--spacing-8);
+    border-radius: var(--border-radius-pill);
+    position: relative;
+    z-index: 2;
+  }
 
-	.project-type-badge[data-type="personal"] {
-		background-color: color-mix(in srgb, var(--color-primary) 12%, transparent);
-		/* light-dark ensures readable contrast on both themes */
-		color: light-dark(#1d4ed8, #93c5fd);
-		border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
-	}
+  .project-type-badge[data-type="personal"] {
+    background-color: color-mix(in srgb, var(--color-primary) 12%, transparent);
+    /* light-dark ensures readable contrast on both themes */
+    color: light-dark(#1d4ed8, #93c5fd);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
+  }
 
-	.project-type-badge[data-type="work"] {
-		background-color: color-mix(in srgb, #22c55e 12%, transparent);
-		color: light-dark(#15803d, #86efac);
-		border: 1px solid color-mix(in srgb, #22c55e 30%, transparent);
-	}
+  .project-type-badge[data-type="work"] {
+    background-color: color-mix(in srgb, #22c55e 12%, transparent);
+    color: light-dark(#15803d, #86efac);
+    border: 1px solid color-mix(in srgb, #22c55e 30%, transparent);
+  }
 
-	.project-type-badge[data-type="contribution"] {
-		background-color: color-mix(in srgb, #f59e0b 12%, transparent);
-		color: light-dark(#92400e, #fcd34d);
-		border: 1px solid color-mix(in srgb, #f59e0b 30%, transparent);
-	}
+  .project-type-badge[data-type="contribution"] {
+    background-color: color-mix(in srgb, #f59e0b 12%, transparent);
+    color: light-dark(#92400e, #fcd34d);
+    border: 1px solid color-mix(in srgb, #f59e0b 30%, transparent);
+  }
 
-	.project-title {
-		font-size: var(--font-size-500);
-		margin-bottom: var(--spacing-12);
-		color: var(--color-text-primary);
-		letter-spacing: -0.01em;
-		line-height: var(--font-line-height-tight);
-	}
+  .project-title {
+    font-size: var(--font-size-500);
+    margin-bottom: var(--spacing-12);
+    color: var(--color-text-primary);
+    letter-spacing: -0.01em;
+    line-height: var(--font-line-height-tight);
+  }
 
-	.project-description {
-		font-size: var(--font-size-300);
-		color: var(--color-text-secondary);
-		margin-bottom: var(--spacing-24);
-		flex: 1;
-		line-height: var(--font-line-height-relaxed);
-	}
+  .project-description {
+    font-size: var(--font-size-300);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-24);
+    flex: 1;
+    line-height: var(--font-line-height-relaxed);
+  }
 
-	.project-footer {
-		display: flex;
-		justify-content: space-between;
-		align-items: flex-end;
-		gap: var(--spacing-16);
-		margin-top: auto;
-	}
+  .project-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--spacing-16);
+    margin-top: auto;
+  }
 
-	.project-tech-stack {
-		display: flex;
-		gap: var(--spacing-8);
-		flex-wrap: wrap;
-		flex: 1;
-	}
+  .project-tech-stack {
+    display: flex;
+    gap: var(--spacing-8);
+    flex-wrap: wrap;
+    flex: 1;
+  }
 
-	.tech-tag {
-		background-color: color-mix(
-			in srgb,
-			var(--color-primary) 8%,
-			var(--color-background-secondary)
-		);
-		border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
-		padding: var(--spacing-4) var(--spacing-8);
-		border-radius: var(--border-radius-pill);
-		font-size: var(--font-size-100);
-		font-weight: var(--font-weight-medium);
-		color: var(--color-primary);
-		font-family: var(--font-family-mono);
-		letter-spacing: 0.02em;
-	}
+  .tech-tag {
+    background-color: color-mix(
+      in srgb,
+      var(--color-primary) 8%,
+      var(--color-background-secondary)
+    );
+    border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
+    padding: var(--spacing-4) var(--spacing-8);
+    border-radius: var(--border-radius-pill);
+    font-size: var(--font-size-100);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-primary);
+    font-family: var(--font-family-mono);
+    letter-spacing: 0.02em;
+  }
 
-	.project-links {
-		display: flex;
-		gap: var(--spacing-12);
-		position: relative;
-		z-index: 2;
-	}
+  .project-links {
+    display: flex;
+    gap: var(--spacing-12);
+    position: relative;
+    z-index: 2;
+  }
 
-	.project-link {
-		color: var(--color-base-gray-500);
-		min-width: 24px;
-		min-height: 24px;
-		padding: var(--spacing-4);
-		transition: color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
+  .project-link {
+    color: var(--color-base-gray-500);
+    min-width: 24px;
+    min-height: 24px;
+    padding: var(--spacing-4);
+    transition: color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-	.project-link:hover {
-		color: var(--color-primary);
-		opacity: 1;
-		transform: translateY(-2px);
-	}
+  .project-link:hover {
+    color: var(--color-primary);
+    opacity: 1;
+    transform: translateY(-2px);
+  }
 
-	.project-link svg {
-		width: 1.25rem;
-		height: 1.25rem;
-	}
+  .project-link svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
 </style>

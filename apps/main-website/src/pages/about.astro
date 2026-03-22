@@ -6,150 +6,150 @@ import ContactSection from '../components/ContactSection.astro';
 ---
 
 <Layout title="About Me | Frontend Architect Portfolio">
-	<Section>
-		<div class="container">
-			<h1 class="page-title">About Me</h1>
-			<div class="about-content">
-				<div class="about-text">
-					<p>I'm a Frontend Architect with over a decade of experience in the software industry. I specialize in building large-scale React applications, designing resilient design systems, and optimizing web performance for companies that care about the developer experience as much as the end-user outcome.</p>
+  <Section>
+    <div class="container">
+      <h1 class="page-title">About Me</h1>
+      <div class="about-content">
+        <div class="about-text">
+          <p>I'm a Frontend Architect with over a decade of experience in the software industry. I specialize in building large-scale React applications, designing resilient design systems, and optimizing web performance for companies that care about the developer experience as much as the end-user outcome.</p>
 
-					<p>My philosophy is that technical architecture should serve the business and the team. I bridge the gap between complex engineering challenges and clear product delivery, ensuring that frontend codebases remain maintainable, auditable, and scalable over time.</p>
+          <p>My philosophy is that technical architecture should serve the business and the team. I bridge the gap between complex engineering challenges and clear product delivery, ensuring that frontend codebases remain maintainable, auditable, and scalable over time.</p>
 
-					<p>Currently, I'm deeply focused on the intersection of AI and developer workflows, exploring how to automate context synchronization for AI agents while maintaining high standards of code quality and accessibility.</p>
-				</div>
-				<div class="about-avatar">
-					<img
-						src="https://res.cloudinary.com/ddyovtxd2/image/upload/w_300,h_300,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg"
-						srcset="
-							https://res.cloudinary.com/ddyovtxd2/image/upload/w_200,h_200,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg 200w,
-							https://res.cloudinary.com/ddyovtxd2/image/upload/w_300,h_300,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg 300w,
-							https://res.cloudinary.com/ddyovtxd2/image/upload/w_400,h_400,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg 400w,
-							https://res.cloudinary.com/ddyovtxd2/image/upload/w_600,h_600,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg 600w
-						"
-						sizes="(max-width: 37.49rem) 200px, 300px"
-						alt="Joel Gomez"
-						class="avatar-img"
-						width="300"
-						height="300"
-						loading="lazy"
-						decoding="async"
-					/>
-				</div>
-			</div>
-		</div>
-	</Section>
+          <p>Currently, I'm deeply focused on the intersection of AI and developer workflows, exploring how to automate context synchronization for AI agents while maintaining high standards of code quality and accessibility.</p>
+        </div>
+        <div class="about-avatar">
+          <img
+            src="https://res.cloudinary.com/ddyovtxd2/image/upload/w_300,h_300,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg"
+            srcset="
+              https://res.cloudinary.com/ddyovtxd2/image/upload/w_200,h_200,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg 200w,
+              https://res.cloudinary.com/ddyovtxd2/image/upload/w_300,h_300,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg 300w,
+              https://res.cloudinary.com/ddyovtxd2/image/upload/w_400,h_400,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg 400w,
+              https://res.cloudinary.com/ddyovtxd2/image/upload/w_600,h_600,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg 600w
+            "
+            sizes="(max-width: 37.49rem) 200px, 300px"
+            alt="Joel Gomez"
+            class="avatar-img"
+            width="300"
+            height="300"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      </div>
+    </div>
+  </Section>
 
-	<Section class="bg-alt">
-		<div class="container">
-			<header class="section-header">
-				<span class="section-label">Tech Stack</span>
-				<h2 class="section-title">My Technical Expertise</h2>
-			</header>
-			<SkillsList />
-		</div>
-	</Section>
+  <Section class="bg-alt">
+    <div class="container">
+      <header class="section-header">
+        <span class="section-label">Tech Stack</span>
+        <h2 class="section-title">My Technical Expertise</h2>
+      </header>
+      <SkillsList />
+    </div>
+  </Section>
 
-	<ContactSection
-		title="Let's Connect"
-		description="I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions."
-	/>
+  <ContactSection
+    title="Let's Connect"
+    description="I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions."
+  />
 </Layout>
 
 <style>
-	.container {
-		max-width: 1200px;
-		margin: 0 auto;
-		padding-inline: var(--spacing-24);
-	}
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-inline: var(--spacing-24);
+  }
 
-	@media (min-width: 90rem) {
-		.container {
-			padding-inline: 0;
-		}
-	}
+  @media (min-width: 90rem) {
+    .container {
+      padding-inline: 0;
+    }
+  }
 
-	.page-title {
-		font-size: var(--font-size-800);
-		margin-bottom: var(--spacing-48);
-		letter-spacing: -0.03em;
-	}
+  .page-title {
+    font-size: var(--font-size-800);
+    margin-bottom: var(--spacing-48);
+    letter-spacing: -0.03em;
+  }
 
-	.about-content {
-		display: grid;
-		grid-template-columns: 1fr 300px;
-		gap: var(--spacing-64);
-		align-items: center;
-	}
+  .about-content {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: var(--spacing-64);
+    align-items: center;
+  }
 
-	.about-text p {
-		font-size: var(--font-size-400);
-		line-height: var(--font-line-height-relaxed);
-		margin-bottom: var(--spacing-24);
-		color: var(--color-text-primary);
-	}
+  .about-text p {
+    font-size: var(--font-size-400);
+    line-height: var(--font-line-height-relaxed);
+    margin-bottom: var(--spacing-24);
+    color: var(--color-text-primary);
+  }
 
-	.about-text p:last-child {
-		margin-bottom: 0;
-	}
+  .about-text p:last-child {
+    margin-bottom: 0;
+  }
 
-	.about-avatar {
-		flex-shrink: 0;
-	}
+  .about-avatar {
+    flex-shrink: 0;
+  }
 
-	.avatar-img {
-		width: 300px;
-		height: 300px;
-		border-radius: 50%;
-		object-fit: cover;
-		object-position: center top;
-		display: block;
-		border: 3px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
-	}
+  .avatar-img {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    border: 3px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
+  }
 
-	/* Section headers */
-	.section-header {
-		margin-bottom: var(--spacing-48);
-	}
+  /* Section headers */
+  .section-header {
+    margin-bottom: var(--spacing-48);
+  }
 
-	.section-label {
-		display: block;
-		font-size: var(--font-size-100);
-		font-family: var(--font-family-mono);
-		font-weight: var(--font-weight-medium);
-		text-transform: uppercase;
-		letter-spacing: 0.1em;
-		color: var(--color-primary);
-		margin-bottom: var(--spacing-8);
-	}
+  .section-label {
+    display: block;
+    font-size: var(--font-size-100);
+    font-family: var(--font-family-mono);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-8);
+  }
 
-	.section-title {
-		font-size: var(--font-size-700);
-		color: var(--color-text-primary);
-		letter-spacing: var(--font-letter-spacing-tight);
-	}
+  .section-title {
+    font-size: var(--font-size-700);
+    color: var(--color-text-primary);
+    letter-spacing: var(--font-letter-spacing-tight);
+  }
 
-	.bg-alt {
-		background-color: var(--color-background-secondary);
-	}
+  .bg-alt {
+    background-color: var(--color-background-secondary);
+  }
 
-	@media (max-width: 800px) {
-		.about-content {
-			grid-template-columns: 1fr;
-			text-align: center;
-		}
+  @media (max-width: 800px) {
+    .about-content {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
 
-		.about-avatar {
-			order: -1;
-		}
+    .about-avatar {
+      order: -1;
+    }
 
-		.avatar-img {
-			width: 200px;
-			height: 200px;
-			margin: 0 auto;
-		}
+    .avatar-img {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+    }
 
-		.about-text p {
-			text-align: left;
-		}
-	}
+    .about-text p {
+      text-align: left;
+    }
+  }
 </style>
