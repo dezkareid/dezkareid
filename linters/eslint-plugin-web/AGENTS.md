@@ -2,7 +2,7 @@
 
 ## Project Context
 
-Custom ESLint plugin that provides shared lint configurations and custom rules for web projects in the monorepo. Consumers spread its configs into their `eslint.config.mjs`.
+Custom ESLint plugin that provides shared lint configurations and custom rules for web projects in the monorepo. Consumers import named config entrypoints into their `eslint.config.mjs`.
 
 ## Package Structure
 
@@ -11,6 +11,11 @@ linters/eslint-plugin-web/
 ├── src/
 │   ├── index.ts                    # Plugin entry — exports meta, rules, configs
 │   ├── declarations.d.ts           # Ambient type declarations for untyped deps
+│   ├── configs/
+│   │   ├── typescript.ts           # Config: TypeScript (via eslint-config-ts-base)
+│   │   ├── react.ts                # Config: React (via @eslint-react/eslint-plugin)
+│   │   ├── astro.ts                # Config: Astro (via eslint-plugin-astro)
+│   │   └── css.ts                  # Config: CSS (via @eslint/css)
 │   └── rules/
 │       ├── no-jquery.ts            # Rule: forbid jQuery imports
 │       └── no-allowed-packages.ts  # Rule: forbid configurable package list
@@ -27,17 +32,28 @@ linters/eslint-plugin-web/
 - **Language**: TypeScript (NodeNext module resolution)
 - **Build**: `tsc` → `dist/`
 - **Test**: Vitest
+- **Version**: Read at runtime from `package.json` via `createRequire` — always in sync with the published version, no hardcoding.
+
+## Entrypoints
+
+Each config is a separate named export in `package.json`. Consumers import only what they need, making the required peer dependencies explicit per entrypoint.
+
+| Entrypoint | Import path | Required peer |
+|---|---|---|
+| Default (all) | `@dezkareid/eslint-plugin-web` | — |
+| typescript | `@dezkareid/eslint-plugin-web/typescript` | none |
+| react | `@dezkareid/eslint-plugin-web/react` | `@eslint-react/eslint-plugin` |
+| astro | `@dezkareid/eslint-plugin-web/astro` | `eslint-plugin-astro` |
+| css | `@dezkareid/eslint-plugin-web/css` | none (`@eslint/css` is bundled) |
 
 ## Configs
 
-All configs are exported from `src/index.ts` under `configs` and are arrays of `Linter.Config[]`.
-
-| Config key   | Plugin(s) used                                      | Target files       |
-|--------------|-----------------------------------------------------|--------------------|
-| `typescript` | `@dezkareid/eslint-config-ts-base`                  | `**/*.{ts,tsx}`    |
-| `react`      | `@eslint-react/eslint-plugin`, `eslint-plugin-unicorn` | `**/*.{jsx,tsx}` |
-| `css`        | `@eslint/css`                                       | `**/*.css`         |
-| `astro`      | `eslint-plugin-astro`, `eslint-plugin-unicorn`      | `**/*.astro`       |
+| Config key   | Source file           | Plugin(s) used                                         | Target files       |
+|--------------|-----------------------|--------------------------------------------------------|--------------------|
+| `typescript` | `configs/typescript.ts` | `@dezkareid/eslint-config-ts-base`                   | `**/*.{ts,tsx}`    |
+| `react`      | `configs/react.ts`    | `@eslint-react/eslint-plugin`, `eslint-plugin-unicorn` | `**/*.{jsx,tsx}`   |
+| `css`        | `configs/css.ts`      | `@eslint/css`                                          | `**/*.css`         |
+| `astro`      | `configs/astro.ts`    | `eslint-plugin-astro`, `eslint-plugin-unicorn`         | `**/*.astro`       |
 
 ### CSS config rules
 
@@ -73,11 +89,13 @@ pnpm test             # vitest --run
 
 ## Adding a New Config
 
-1. Import the plugin in `src/index.ts`.
-2. Add the dependency to `package.json` (exact version, no `^` or `~`).
-3. Add a new key to the `configs` object.
-4. If the plugin's types are incompatible with `Linter.Config`, use `as unknown as Linter.Config`.
-5. Document the config in `README.md` and this file.
+1. Create `src/configs/<name>.ts` exporting a `Linter.Config[]`.
+2. Import and re-export it in `src/index.ts` under `configs`.
+3. Add a new named export in `package.json` under `exports` (e.g., `./<name>": "./dist/configs/<name>.js"`).
+4. Add the plugin dependency to `package.json`:
+   - If optional (framework-specific): add to `peerDependencies` + `peerDependenciesMeta` (optional: true) + `devDependencies`.
+   - If always needed: add to `dependencies`.
+5. Document the entrypoint, its peer, and usage in `README.md` and this file.
 
 ## Adding a New Rule
 

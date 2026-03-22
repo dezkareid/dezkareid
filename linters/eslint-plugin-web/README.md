@@ -10,15 +10,16 @@ pnpm add -D @dezkareid/eslint-plugin-web
 
 ## Usage
 
-Import the plugin and spread the desired config(s) into your `eslint.config.mjs`:
+Each config is available as a **named entrypoint**. Import only the config(s) you need — this way you only need to install the peer dependencies relevant to your project.
 
 ```js
-import web from '@dezkareid/eslint-plugin-web';
+// eslint.config.mjs
+import tsBase from '@dezkareid/eslint-config-ts-base';
+import reactConfig from '@dezkareid/eslint-plugin-web/react';
 
 export default [
-  ...web.configs.typescript,
-  ...web.configs.react,
-  ...web.configs.css,
+  ...tsBase,
+  ...reactConfig,
 ];
 ```
 
@@ -26,34 +27,78 @@ export default [
 
 ### `typescript`
 
+**Entrypoint**: `@dezkareid/eslint-plugin-web/typescript`
+
 Extends `@dezkareid/eslint-config-ts-base`. Applies TypeScript-aware linting rules using `typescript-eslint`.
 
+**Peer dependencies**: none beyond `eslint`.
+
 ```js
-import web from '@dezkareid/eslint-plugin-web';
+import typescriptConfig from '@dezkareid/eslint-plugin-web/typescript';
 
 export default [
-  ...web.configs.typescript,
+  ...typescriptConfig,
 ];
 ```
 
+---
+
 ### `react`
+
+**Entrypoint**: `@dezkareid/eslint-plugin-web/react`
 
 Linting for React projects. Includes:
 - [`@eslint-react/eslint-plugin`](https://github.com/Rel1cx/eslint-react) recommended rules
 - [`eslint-plugin-unicorn`](https://github.com/sindresorhus/eslint-plugin-unicorn) recommended rules
 - Override to allow `Ref`/`ref` abbreviations (conflicts with `@eslint-react/naming-convention/ref-name`)
 
+**Required peer**:
+```bash
+pnpm add -D @eslint-react/eslint-plugin
+```
+
 ```js
-import web from '@dezkareid/eslint-plugin-web';
+import reactConfig from '@dezkareid/eslint-plugin-web/react';
 
 export default [
-  ...web.configs.react,
+  ...reactConfig,
 ];
 ```
 
+---
+
+### `astro`
+
+**Entrypoint**: `@dezkareid/eslint-plugin-web/astro`
+
+Linting for Astro projects. Includes:
+- [`eslint-plugin-astro`](https://github.com/ota-meshi/eslint-plugin-astro) recommended rules
+- [`eslint-plugin-unicorn`](https://github.com/sindresorhus/eslint-plugin-unicorn) recommended rules
+- Overrides for Astro filename conventions (PascalCase and kebab-case)
+- Suppresses `@typescript-eslint/no-unused-vars` for `Properties` (implicit via `Astro.props`)
+
+**Required peer**:
+```bash
+pnpm add -D eslint-plugin-astro
+```
+
+```js
+import astroConfig from '@dezkareid/eslint-plugin-web/astro';
+
+export default [
+  ...astroConfig,
+];
+```
+
+---
+
 ### `css`
 
+**Entrypoint**: `@dezkareid/eslint-plugin-web/css`
+
 Linting for CSS files using [`@eslint/css`](https://github.com/eslint/css). Targets `**/*.css` files.
+
+**Peer dependencies**: none beyond `eslint` (`@eslint/css` is bundled).
 
 | Rule | Severity | Description |
 |------|----------|-------------|
@@ -64,37 +109,24 @@ Linting for CSS files using [`@eslint/css`](https://github.com/eslint/css). Targ
 | `css/use-baseline` | warn | Warns when using CSS features not yet **widely** available across browsers |
 
 ```js
-import web from '@dezkareid/eslint-plugin-web';
+import cssConfig from '@dezkareid/eslint-plugin-web/css';
 
 export default [
-  ...web.configs.css,
+  ...cssConfig,
 ];
 ```
 
-### `astro`
-
-Linting for Astro projects. Includes:
-- [`eslint-plugin-astro`](https://github.com/ota-meshi/eslint-plugin-astro) recommended rules
-- [`eslint-plugin-unicorn`](https://github.com/sindresorhus/eslint-plugin-unicorn) recommended rules
-- Overrides for Astro filename conventions (PascalCase and kebab-case)
-- Suppresses `@typescript-eslint/no-unused-vars` for `Properties` (implicit via `Astro.props`)
-
-```js
-import web from '@dezkareid/eslint-plugin-web';
-
-export default [
-  ...web.configs.astro,
-];
-```
+---
 
 ## Rules
+
+The plugin also exposes custom rules. To use them, import the full plugin:
 
 ### `web/no-jquery`
 
 Disallows importing `jquery`. Reports an error on any `import` from `'jquery'`.
 
 ```js
-// eslint.config.mjs
 import web from '@dezkareid/eslint-plugin-web';
 
 export default [
@@ -114,7 +146,6 @@ Disallows importing from a configurable list of forbidden packages.
 **Options**: array of package name strings to forbid.
 
 ```js
-// eslint.config.mjs
 import web from '@dezkareid/eslint-plugin-web';
 
 export default [
@@ -127,7 +158,9 @@ export default [
 ];
 ```
 
+---
+
 ## Requirements
 
 - Node >= 22
-- ESLint `9.39.2` (peer dependency)
+- ESLint `>=9.39.2` (peer dependency)
