@@ -31,3 +31,14 @@ description: "Resolve open questions in the spec and record decisions"
 ```
 
 > Note: if `osddt.plan.md` already exists, the plan should be regenerated to incorporate the decisions.
+
+## Custom Context
+
+Run the following command and, if it returns content, use it as additional context before proceeding:
+
+```
+npx @dezkareid/osddt context clarify
+```
+
+If the command returns no output, skip this section and continue.
+

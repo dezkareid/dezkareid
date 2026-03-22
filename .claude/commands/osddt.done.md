@@ -15,3 +15,14 @@ npx @dezkareid/osddt done <feature-name> --dir <project-path>
    For example, `working-on/feature-a` will be moved to `done/YYYY-MM-DD-feature-a`.
 
 3. Report the result of the command, including the full destination path
+
+## Custom Context
+
+Run the following command and, if it returns content, use it as additional context before proceeding:
+
+```
+npx @dezkareid/osddt context done
+```
+
+If the command returns no output, skip this section and continue.
+

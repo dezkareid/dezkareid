@@ -19,6 +19,16 @@ description: "Execute tasks from the task list one by one"
 - Write tests for new functionality when applicable
 - Ask for clarification if requirements are ambiguous
 
+## Custom Context
+
+Run the following command and, if it returns content, use it as additional context before proceeding:
+
+```
+npx @dezkareid/osddt context implement
+```
+
+If the command returns no output, skip this section and continue.
+
 ## Next Step
 
 Once all tasks are checked off, run the following command to mark the feature as done:
