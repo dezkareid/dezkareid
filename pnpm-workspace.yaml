@@ -5,3 +5,5 @@ packages:
   - "design-system/*"
   - "apps/*"
   - "ui-tools/*"
+
+enableGlobalVirtualStore: true
