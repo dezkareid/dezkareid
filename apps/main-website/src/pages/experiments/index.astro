@@ -1,0 +1,195 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Section from '../../components/Section.astro';
+import ExperimentCard from '../../components/ExperimentCard.astro';
+import type { ExperimentMetadata } from '../../types/experiment';
+
+// Collect metadata from all experiment pages (excludes this index file)
+const modules = import.meta.glob<{ metadata: ExperimentMetadata }>(
+  './*.astro',
+  { eager: true },
+);
+
+const experiments: ExperimentMetadata[] = Object.values(modules)
+  .filter(module_ => module_.metadata !== undefined)
+  .map(module_ => module_.metadata)
+  .toSorted((a, b) => {
+    const orderDiff = (a.order ?? 0) - (b.order ?? 0);
+    if (orderDiff !== 0) return orderDiff;
+    return new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime();
+  });
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Experiments",
+  "description":
+    "Interactive experiments exploring new and experimental web APIs — live demos built with vanilla browser capabilities.",
+  "url": new URL("/experiments", Astro.site).toString(),
+  "author": {
+    "@type": "Person",
+    "name": "Joel Humberto Gomez Paredes",
+    "url": Astro.site?.toString(),
+  },
+};
+---
+
+<Layout
+  title="Experiments | Frontend Architect Portfolio"
+  description="Interactive experiments exploring new and experimental web APIs — live demos built with vanilla browser capabilities."
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
+
+  <Section>
+    <div class="container">
+      <span class="page-label">Lab</span>
+      <h1 class="page-title">Experiments</h1>
+      <p class="page-description">
+        A collection of interactive demos exploring new and experimental web APIs.
+        Each experiment is a live, in-browser implementation — no frameworks, just the platform.
+      </p>
+
+      {
+        experiments.length > 0
+          ? (
+              <div class="grid reveal-group">
+                {experiments.map((experiment, index) => (
+                  <ExperimentCard experiment={experiment} index={index} />
+                ))}
+              </div>
+            )
+          : (
+              <div class="empty-state reveal">
+                <div class="empty-state-icon" aria-hidden="true">⚗</div>
+                <h2 class="empty-state-heading">Something is brewing</h2>
+                <p class="empty-state-message">
+                  New experiments are coming very soon.<br />
+                  Check back shortly.
+                </p>
+              </div>
+            )
+      }
+    </div>
+  </Section>
+</Layout>
+
+<script>
+  // Scroll-reveal: observe .reveal elements and add .is-visible
+  const reveals = document.querySelectorAll<HTMLElement>('.reveal');
+  if ('IntersectionObserver' in globalThis) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.1 },
+    );
+    for (const element of reveals) {
+      observer.observe(element);
+    }
+  }
+  else {
+    for (const element of reveals) {
+      element.classList.add('is-visible');
+    }
+  }
+</script>
+
+<style>
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-inline: var(--spacing-24);
+  }
+
+  @media (min-width: 90rem) {
+    .container {
+      padding-inline: 0;
+    }
+  }
+
+  .page-label {
+    display: block;
+    font-size: var(--font-size-100);
+    font-family: var(--font-family-mono);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-8);
+  }
+
+  .page-title {
+    font-size: var(--font-size-800);
+    margin-bottom: var(--spacing-16);
+    letter-spacing: -0.03em;
+  }
+
+  .page-description {
+    font-size: var(--font-size-400);
+    color: var(--color-text-secondary, color-mix(in srgb, var(--color-text-primary) 65%, transparent));
+    margin-bottom: var(--spacing-64);
+    max-width: 600px;
+    line-height: var(--font-line-height-relaxed);
+  }
+
+  /* ── Grid ─────────────────────────────────────────────────────── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--spacing-32);
+  }
+
+  @media (max-width: 37.49rem) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ── Empty state ──────────────────────────────────────────────── */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-16);
+    padding: var(--spacing-64) 0;
+    border-left: 2px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
+    padding-left: var(--spacing-32);
+  }
+
+  .empty-state-icon {
+    font-size: var(--font-size-800);
+    line-height: 1;
+    /* subtle float animation */
+    animation: float 4s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .empty-state-icon {
+      animation: none;
+    }
+  }
+
+  .empty-state-heading {
+    font-size: var(--font-size-600);
+    letter-spacing: -0.02em;
+    margin: 0;
+    font-family: var(--font-family-mono);
+  }
+
+  .empty-state-message {
+    font-size: var(--font-size-300);
+    color: var(--color-text-secondary, color-mix(in srgb, var(--color-text-primary) 65%, transparent));
+    line-height: var(--font-line-height-relaxed);
+    margin: 0;
+  }
+</style>

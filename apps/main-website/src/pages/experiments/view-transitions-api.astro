@@ -1,0 +1,541 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Section from '../../components/Section.astro';
+import type { ExperimentMetadata } from '../../types/experiment';
+
+export const metadata: ExperimentMetadata = {
+  title: 'View Transitions API',
+  description:
+    'Animate page state changes natively with the browser\'s View Transitions API — no JavaScript animation library required.',
+  slug: 'view-transitions-api',
+  webApis: ['View Transitions API', 'document.startViewTransition'],
+  status: 'experimental',
+  publishedDate: '2026-03-23',
+  order: 1,
+};
+
+const canonicalURL = new URL(`/experiments/${metadata.slug}`, Astro.site);
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": metadata.title,
+  "description": metadata.description,
+  "url": canonicalURL.toString(),
+  "datePublished": metadata.publishedDate,
+  "author": {
+    "@type": "Person",
+    "name": "Joel Humberto Gomez Paredes",
+    "url": Astro.site?.toString(),
+  },
+  "about": metadata.webApis.map(api => ({ "@type": "SoftwareApplication", "name": api })),
+};
+
+const statusLabel: Record<ExperimentMetadata['status'], string> = {
+  experimental: 'Experimental',
+  stable: 'Stable',
+  deprecated: 'Deprecated',
+};
+
+const codeSnippet = `document.startViewTransition(() => {
+  // Synchronously mutate the DOM here.
+  // The browser captures before/after snapshots
+  // and cross-fades between them automatically.
+  updateState();
+});`;
+---
+
+<Layout title={`${metadata.title} | Experiments`} description={metadata.description}>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
+
+  <Section>
+    <div class="container">
+
+      <nav class="breadcrumb">
+        <a href="/experiments" aria-label="Back to experiments list">← Experiments</a>
+      </nav>
+
+      <header class="experiment-header">
+        <div class="header-meta">
+          <span class="status-badge" data-status={metadata.status}>
+            <span class="status-dot" aria-hidden="true"></span>
+            {statusLabel[metadata.status]}
+          </span>
+          <time class="publish-date" datetime={metadata.publishedDate}>
+            {new Date(metadata.publishedDate).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}
+          </time>
+        </div>
+
+        <h1 class="experiment-title">{metadata.title}</h1>
+        <p class="experiment-description">{metadata.description}</p>
+
+        <div class="api-tags">
+          {metadata.webApis.map(api => (
+            <span class="api-tag">{api}</span>
+          ))}
+        </div>
+      </header>
+
+      <hr class="divider" />
+
+      <!-- ── Interactive demo ───────────────────────────────────── -->
+      <section class="demo-section" aria-labelledby="demo-heading">
+        <h2 id="demo-heading" class="demo-heading">
+          <span class="demo-label">Demo</span>
+          State transition
+        </h2>
+        <p class="demo-description">
+          Click the button to animate between two UI states using
+          <code>document.startViewTransition()</code>. The cross-fade is driven by the
+          browser — zero JavaScript animation code.
+        </p>
+
+        <div class="demo-stage" id="demo-stage">
+          <div class="demo-card" id="demo-card" data-state="a">
+            <div class="demo-card-inner">
+              <div class="demo-shape" id="demo-shape" aria-hidden="true"></div>
+              <div class="demo-text-group">
+                <span class="demo-card-label" id="demo-card-label">State A</span>
+                <p class="demo-card-body" id="demo-card-body">
+                  Rounded, centred, primary colour. Hit the button to transition.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="demo-controls">
+            <button class="demo-button" id="demo-toggle" type="button">
+              Trigger transition
+            </button>
+            <span class="demo-support-note" id="demo-support-note" hidden>
+              ⚠ Your browser doesn't support <code>document.startViewTransition</code> — the state still changes, just without the animation.
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ── Explainer ──────────────────────────────────────────── -->
+      <section class="explainer" aria-labelledby="explainer-heading">
+        <h2 id="explainer-heading" class="explainer-heading">How it works</h2>
+        <div class="code-block">
+          <pre>
+            <code set:html={codeSnippet} />
+          </pre>
+        </div>
+        <p class="explainer-body">
+          <code>document.startViewTransition()</code> captures a screenshot of the current state,
+          applies your DOM mutation, then animates between the two snapshots using a default
+          cross-fade. You can override the animation entirely with the
+          <code>::view-transition-old</code> and <code>::view-transition-new</code> pseudo-elements.
+        </p>
+      </section>
+
+    </div>
+  </Section>
+</Layout>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('#demo-toggle');
+  const card = document.querySelector<HTMLDivElement>('#demo-card');
+  const label = document.querySelector<HTMLSpanElement>('#demo-card-label');
+  const body = document.querySelector<HTMLParagraphElement>('#demo-card-body');
+  const supportNote = document.querySelector<HTMLSpanElement>('#demo-support-note');
+
+  if (!('startViewTransition' in document) && supportNote) {
+    supportNote.hidden = false;
+  }
+
+  const states = {
+    a: {
+      label: 'State A',
+      body: 'Rounded, centred, primary colour. Hit the button to transition.',
+    },
+    b: {
+      label: 'State B',
+      body: 'Sharp corners, shifted layout, accent colour. Transition back anytime.',
+    },
+  };
+
+  function updateDOM(next: 'a' | 'b') {
+    if (!card || !label || !body) return;
+    card.dataset.state = next;
+    label.textContent = states[next].label;
+    body.textContent = states[next].body;
+  }
+
+  toggle?.addEventListener('click', () => {
+    const current = (card?.dataset.state ?? 'a') as 'a' | 'b';
+    const next = current === 'a' ? 'b' : 'a';
+
+    if ('startViewTransition' in document) {
+      (document as Document & { startViewTransition: (callback: () => void) => unknown })
+        .startViewTransition(() => updateDOM(next));
+    }
+    else {
+      updateDOM(next);
+    }
+  });
+</script>
+
+<style>
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-inline: var(--spacing-24);
+  }
+
+  @media (min-width: 90rem) {
+    .container {
+      padding-inline: 0;
+    }
+  }
+
+  /* ── Breadcrumb ───────────────────────────────────────────────── */
+  .breadcrumb {
+    margin-bottom: var(--spacing-32);
+  }
+  .breadcrumb a {
+    font-size: var(--font-size-200);
+    font-family: var(--font-family-mono);
+    color: var(--color-primary);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    transition: opacity 0.2s ease;
+  }
+  .breadcrumb a:hover {
+    opacity: 0.75;
+    text-decoration: none;
+  }
+
+  /* ── Header ───────────────────────────────────────────────────── */
+  .experiment-header {
+    margin-bottom: var(--spacing-48);
+  }
+
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-16);
+    margin-bottom: var(--spacing-24);
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    font-size: var(--font-size-100);
+    font-family: var(--font-family-mono);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: var(--spacing-4) var(--spacing-8);
+    border-radius: 9999px;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .status-badge[data-status="experimental"] {
+    /* TODO(design-system): needs semantic token for warning/amber */
+    background-color: color-mix(in srgb, #f59e0b 12%, transparent);
+    color: light-dark(#92400e, #fcd34d);
+    border: 1px solid color-mix(in srgb, #f59e0b 30%, transparent);
+  }
+  .status-badge[data-status="experimental"] .status-dot {
+    background-color: light-dark(#d97706, #fbbf24);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  .status-badge[data-status="stable"] {
+    background-color: color-mix(in srgb, var(--color-success) 12%, transparent);
+    color: light-dark(#15803d, #86efac);
+    border: 1px solid color-mix(in srgb, var(--color-success) 30%, transparent);
+  }
+  .status-badge[data-status="stable"] .status-dot { background-color: var(--color-success); }
+  .status-badge[data-status="deprecated"] {
+    background-color: color-mix(in srgb, var(--color-base-gray-500) 12%, transparent);
+    color: var(--color-base-gray-500);
+    border: 1px solid color-mix(in srgb, var(--color-base-gray-500) 30%, transparent);
+  }
+  .status-badge[data-status="deprecated"] .status-dot { background-color: var(--color-base-gray-500); }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.75); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .status-badge[data-status="experimental"] .status-dot { animation: none; }
+  }
+
+  .publish-date {
+    font-size: var(--font-size-100);
+    font-family: var(--font-family-mono);
+    /* TODO(design-system): needs semantic token for secondary/muted text */
+    color: var(--color-text-primary);
+    letter-spacing: 0.04em;
+  }
+
+  .experiment-title {
+    font-size: var(--font-size-800);
+    letter-spacing: -0.03em;
+    margin-bottom: var(--spacing-16);
+  }
+
+  .experiment-description {
+    font-size: var(--font-size-400);
+    color: color-mix(in srgb, var(--color-text-primary) 65%, transparent);
+    line-height: var(--font-line-height-relaxed);
+    max-width: 56ch;
+    margin-bottom: var(--spacing-24);
+  }
+
+  .api-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-8);
+  }
+
+  .api-tag {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-100);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.03em;
+    padding: var(--spacing-4) var(--spacing-8);
+    border-radius: 9999px;
+    background-color: color-mix(in srgb, var(--color-primary) 8%, var(--color-background-secondary));
+    border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
+    color: var(--color-primary);
+  }
+
+  /* ── Divider ──────────────────────────────────────────────────── */
+  .divider {
+    border: none;
+    border-top: 1px solid color-mix(in srgb, var(--color-text-primary) 8%, transparent);
+    margin-block: var(--spacing-48);
+  }
+
+  /* ── Demo section ─────────────────────────────────────────────── */
+  .demo-section {
+    margin-bottom: var(--spacing-48);
+  }
+
+  .demo-heading {
+    font-size: var(--font-size-600);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--spacing-12);
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-12);
+  }
+
+  .demo-label {
+    font-size: var(--font-size-100);
+    font-family: var(--font-family-mono);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-primary);
+  }
+
+  .demo-description {
+    font-size: var(--font-size-300);
+    color: color-mix(in srgb, var(--color-text-primary) 65%, transparent);
+    line-height: var(--font-line-height-relaxed);
+    max-width: 56ch;
+    margin-bottom: var(--spacing-32);
+  }
+
+  .demo-stage {
+    background-color: var(--color-background-secondary);
+    border: 1px solid color-mix(in srgb, var(--color-text-primary) 8%, transparent);
+    border-radius: var(--spacing-8);
+    padding: var(--spacing-48) var(--spacing-32);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-32);
+  }
+
+  /* The card transitions between state A and state B */
+  .demo-card {
+    background-color: var(--color-background-primary);
+    border: 1px solid color-mix(in srgb, var(--color-text-primary) 10%, transparent);
+    padding: var(--spacing-24);
+    /* view-transition-name lets the browser animate this specific element */
+    view-transition-name: demo-card;
+    transition: border-radius 0.3s ease;
+  }
+
+  .demo-card[data-state="a"] {
+    border-radius: var(--spacing-16);
+  }
+
+  .demo-card[data-state="b"] {
+    border-radius: var(--spacing-4);
+  }
+
+  .demo-card-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-24);
+  }
+
+  .demo-shape {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    /* view-transition-name lets the browser animate the shape separately */
+    view-transition-name: demo-shape;
+    transition: border-radius 0.3s ease, background-color 0.3s ease;
+  }
+
+  .demo-card[data-state="a"] .demo-shape {
+    border-radius: 50%;
+    background-color: var(--color-primary);
+  }
+
+  .demo-card[data-state="b"] .demo-shape {
+    border-radius: var(--spacing-4);
+    /* TODO(design-system): needs semantic token for accent/secondary action */
+    background-color: color-mix(in srgb, #f59e0b 80%, var(--color-background-primary));
+  }
+
+  .demo-text-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+  }
+
+  .demo-card-label {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-200);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-text-primary);
+  }
+
+  .demo-card-body {
+    font-size: var(--font-size-300);
+    color: color-mix(in srgb, var(--color-text-primary) 65%, transparent);
+    line-height: var(--font-line-height-relaxed);
+    margin: 0;
+  }
+
+  .demo-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-12);
+  }
+
+  .demo-button {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-200);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.04em;
+    padding: var(--spacing-12) var(--spacing-24);
+    border-radius: var(--spacing-4);
+    border: 1px solid var(--color-primary);
+    background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    color: var(--color-primary);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+  }
+
+  .demo-button:hover {
+    background-color: color-mix(in srgb, var(--color-primary) 18%, transparent);
+    transform: translateY(-1px);
+  }
+
+  .demo-button:active {
+    transform: translateY(0);
+  }
+
+  .demo-support-note {
+    font-size: var(--font-size-100);
+    color: color-mix(in srgb, var(--color-text-primary) 55%, transparent);
+    line-height: var(--font-line-height-relaxed);
+  }
+
+  /* ── View transition override: smooth cross-fade ─────────────── */
+  @keyframes vt-fade-in {
+    from { opacity: 0; }
+  }
+  @keyframes vt-fade-out {
+    to { opacity: 0; }
+  }
+
+  ::view-transition-old(demo-card),
+  ::view-transition-old(demo-shape) {
+    animation: 200ms ease-out both vt-fade-out;
+  }
+
+  ::view-transition-new(demo-card),
+  ::view-transition-new(demo-shape) {
+    animation: 280ms ease-out both vt-fade-in;
+  }
+
+  /* ── Explainer ────────────────────────────────────────────────── */
+  .explainer-heading {
+    font-size: var(--font-size-600);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--spacing-24);
+  }
+
+  .code-block {
+    background-color: var(--color-background-secondary);
+    border: 1px solid color-mix(in srgb, var(--color-text-primary) 8%, transparent);
+    border-left: 3px solid var(--color-primary);
+    border-radius: var(--spacing-4);
+    padding: var(--spacing-24);
+    overflow-x: auto;
+    margin-bottom: var(--spacing-24);
+  }
+
+  .code-block pre {
+    margin: 0;
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-200);
+    line-height: var(--font-line-height-relaxed);
+    color: var(--color-text-primary);
+    white-space: pre;
+  }
+
+  .explainer-body {
+    font-size: var(--font-size-300);
+    color: color-mix(in srgb, var(--color-text-primary) 75%, transparent);
+    line-height: var(--font-line-height-relaxed);
+    max-width: 60ch;
+  }
+
+  .explainer-body code {
+    font-family: var(--font-family-mono);
+    font-size: 0.9em;
+    background-color: color-mix(in srgb, var(--color-primary) 8%, var(--color-background-secondary));
+    border: 1px solid color-mix(in srgb, var(--color-primary) 18%, transparent);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    color: var(--color-primary);
+  }
+
+  .demo-description code {
+    font-family: var(--font-family-mono);
+    font-size: 0.9em;
+    background-color: color-mix(in srgb, var(--color-primary) 8%, var(--color-background-secondary));
+    border: 1px solid color-mix(in srgb, var(--color-primary) 18%, transparent);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    color: var(--color-primary);
+  }
+</style>
