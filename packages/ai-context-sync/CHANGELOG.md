@@ -1,3 +1,10 @@
+# [@dezkareid/ai-context-sync-v1.4.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/ai-context-sync-v1.3.0...@dezkareid/ai-context-sync-v1.4.0) (2026-03-23)
+
+
+### Features
+
+* add sync projects feature ([c4c6549](https://github.com/dezkareid/dezkareid/commit/c4c654931ed4d4f64f3fd199487ee478dea1278e))
+
 # [@dezkareid/ai-context-sync-v1.3.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/ai-context-sync-v1.2.0...@dezkareid/ai-context-sync-v1.3.0) (2026-02-24)
 
 
