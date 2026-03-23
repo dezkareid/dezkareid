@@ -4,11 +4,13 @@ on:
     types: [opened, synchronize, reopened]
     paths:
       - "apps/**"
+      - "!apps/collectstory/**"
     branches:
       - main
   push:
     paths:
       - "apps/**"
+      - "!apps/collectstory/**"
     branches:
       - main
 
