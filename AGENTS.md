@@ -163,6 +163,23 @@ When building or modifying any UI (components, pages, apps):
 | `lint` | Inputs source files, no outputs |
 | `storybook` | Persistent, no cache |
 
+> **Always run tasks from the monorepo root.** Never run `build`, `dev`, `test`, `lint`, or `storybook` directly inside a package directory (e.g., `cd apps/main-website && pnpm build`). Doing so bypasses Turborepo and skips the `^build` dependency chain, causing failures when internal packages like `@dezkareid/design-tokens` or `@dezkareid/components` haven't been built yet.
+>
+> **Correct usage:**
+> ```bash
+> # Build all packages (respects dependency order)
+> pnpm build
+>
+> # Build a specific app/package (Turborepo resolves its internal deps automatically)
+> pnpm turbo run build --filter=@dezkareid/main-website
+>
+> # Run dev for a specific app
+> pnpm turbo run dev --filter=@dezkareid/main-website
+>
+> # Run tests for a specific package
+> pnpm turbo run test --filter=@dezkareid/react-hooks
+> ```
+
 ### Committing
 
 Always use Conventional Commits format for commit messages.
