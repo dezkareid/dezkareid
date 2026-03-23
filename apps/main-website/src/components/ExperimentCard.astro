@@ -1,0 +1,205 @@
+---
+import Card from './Card.astro';
+import type { ExperimentMetadata } from '../types/experiment';
+
+interface Properties {
+  experiment: ExperimentMetadata;
+  index?: number;
+}
+
+const { experiment, index = 0 } = Astro.props;
+const { title, description, slug, webApis, status } = experiment;
+
+const statusLabel: Record<ExperimentMetadata['status'], string> = {
+  experimental: 'Experimental',
+  stable: 'Stable',
+  deprecated: 'Deprecated',
+};
+---
+
+<div class="experiment-card-wrapper reveal" style={`transition-delay: ${index * 80}ms`}>
+  <Card class="experiment-card">
+    <a
+      class="card-link"
+      href={`/experiments/${slug}`}
+      aria-label={`View experiment: ${title}`}
+    >
+    </a>
+
+    <div class="card-header">
+      <span class="status-badge" data-status={status}>
+        <span class="status-dot" aria-hidden="true"></span>
+        {statusLabel[status]}
+      </span>
+    </div>
+
+    <h2 class="experiment-title">{title}</h2>
+    <p class="experiment-description">{description}</p>
+
+    <div class="experiment-footer">
+      <div class="api-tags">
+        {webApis.map(api => (
+          <span class="api-tag">{api}</span>
+        ))}
+      </div>
+      <span class="card-arrow" aria-hidden="true">→</span>
+    </div>
+  </Card>
+</div>
+
+<style>
+  .experiment-card-wrapper {
+    height: 100%;
+  }
+
+  .experiment-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    cursor: pointer;
+    /* subtle left accent line */
+    border-left: 2px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
+    transition:
+      border-color 0.25s ease,
+      transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .experiment-card:hover {
+    border-left-color: var(--color-primary);
+  }
+
+  /* Stretched link */
+  .card-link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-16);
+  }
+
+  /* ── Status badge ─────────────────────────────────────────────── */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    font-size: var(--font-size-100);
+    font-family: var(--font-family-mono);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: var(--spacing-4) var(--spacing-8);
+    border-radius: var(--border-radius-pill, 9999px);
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .status-badge[data-status="experimental"] {
+    /* TODO(design-system): needs semantic token for warning/amber */
+    background-color: color-mix(in srgb, #f59e0b 12%, transparent);
+    color: light-dark(#92400e, #fcd34d);
+    border: 1px solid color-mix(in srgb, #f59e0b 30%, transparent);
+  }
+  .status-badge[data-status="experimental"] .status-dot {
+    background-color: light-dark(#d97706, #fbbf24);
+    /* pulsing dot for "experimental" */
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  .status-badge[data-status="stable"] {
+    background-color: color-mix(in srgb, var(--color-success) 12%, transparent);
+    color: light-dark(#15803d, #86efac);
+    border: 1px solid color-mix(in srgb, var(--color-success) 30%, transparent);
+  }
+  .status-badge[data-status="stable"] .status-dot {
+    background-color: var(--color-success);
+  }
+
+  .status-badge[data-status="deprecated"] {
+    background-color: color-mix(in srgb, var(--color-base-gray-500) 12%, transparent);
+    color: var(--color-base-gray-500);
+    border: 1px solid color-mix(in srgb, var(--color-base-gray-500) 30%, transparent);
+  }
+  .status-badge[data-status="deprecated"] .status-dot {
+    background-color: var(--color-base-gray-500);
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.75); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .status-badge[data-status="experimental"] .status-dot {
+      animation: none;
+    }
+  }
+
+  /* ── Content ──────────────────────────────────────────────────── */
+  .experiment-title {
+    font-size: var(--font-size-500);
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+    line-height: var(--font-line-height-tight);
+    margin-bottom: var(--spacing-12);
+  }
+
+  .experiment-description {
+    font-size: var(--font-size-300);
+    color: var(--color-text-secondary, color-mix(in srgb, var(--color-text-primary) 65%, transparent));
+    line-height: var(--font-line-height-relaxed);
+    flex: 1;
+    margin-bottom: var(--spacing-24);
+  }
+
+  .experiment-footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--spacing-16);
+    margin-top: auto;
+  }
+
+  .api-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-8);
+    flex: 1;
+  }
+
+  .api-tag {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-100);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.03em;
+    padding: var(--spacing-4) var(--spacing-8);
+    border-radius: var(--border-radius-pill, 9999px);
+    background-color: color-mix(in srgb, var(--color-primary) 8%, var(--color-background-secondary));
+    border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
+    color: var(--color-primary);
+  }
+
+  .card-arrow {
+    font-size: var(--font-size-400);
+    color: color-mix(in srgb, var(--color-primary) 40%, transparent);
+    transition: transform 0.2s ease, color 0.2s ease;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .experiment-card:hover .card-arrow {
+    transform: translateX(4px);
+    color: var(--color-primary);
+  }
+</style>
