@@ -48,15 +48,62 @@ To bypass reading or creating this configuration file, use the `--skip-config` f
 npx @dezkareid/ai-context-sync sync --skip-config
 ```
 
+### Monorepo / Multi-project Sync
+
+In complex projects or monorepos, you can configure multiple subdirectories to be synchronized in a single command. The tool will sequentially sync the root project and then each configured subdirectory.
+
+#### Managing Projects
+
+Use the `project` command to manage your configured projects:
+
+```bash
+# Add a new project (interactive)
+npx @dezkareid/ai-context-sync project add apps/web
+
+# Add a project with specific strategies
+npx @dezkareid/ai-context-sync project add packages/ui --strategy "claude, gemini"
+
+# Add a project with custom files
+npx @dezkareid/ai-context-sync project add packages/lib --strategy other --files "CUSTOM.md"
+```
+
+#### Configuration Structure
+
+Configured projects are stored in the `.ai-context-configrc` file at the root:
+
+```json
+{
+  "strategies": ["claude"],
+  "projects": {
+    "apps/web": {
+      "strategies": ["gemini"]
+    },
+    "packages/ui": {
+      "strategies": ["claude", "gemini"]
+    }
+  }
+}
+```
+
+When you run `npx @dezkareid/ai-context-sync sync`, it will:
+1. Sync the root using the top-level `strategies`.
+2. Sync `apps/web` using the `gemini` strategy.
+3. Sync `packages/ui` using `claude` and `gemini` strategies.
+
+If a project doesn't define its own `strategies`, it will inherit the root's `strategies`.
+
+
 ### Directory option
+
+The `-d, --dir` option allows you to specify where the root `AGENTS.md` and configuration file live. All project paths are resolved relative to this directory.
 
 ## How it works
 
-1. The tool looks for an `AGENTS.md` file in the target directory.
+1. The tool looks for an `AGENTS.md` file in the target directory (root and each configured project).
 2. It reads the content of `AGENTS.md`.
-3. It applies different strategies to update provider-specific files:
-   - **Claude**: Creates a symbolic link `CLAUDE.md` pointing to `AGENTS.md`.
-   - **Gemini**: Updates `.gemini/settings.json` to include `AGENTS.md` in the `context.fileName` list.
+3. It applies different strategies sequentially.
+4. If a specific synchronization fails, it reports the error but continues with the next project (fail-soft).
+5. A summary is displayed at the end if any errors occurred.
 
 ## License
 
