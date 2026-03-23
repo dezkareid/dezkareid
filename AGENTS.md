@@ -9,7 +9,8 @@ The monorepo is managed by `pnpm` and `turbo` across 6 workspace directories:
 ```
 /dezkareid
 ├── apps/                          # Production applications
-│   └── main-website/              # Astro-based marketing website
+│   ├── main-website/              # Astro-based marketing website
+│   └── collectstory/              # Collectstory application
 ├── packages/                      # Shared libraries and utilities
 │   ├── react-components/          # Reusable React component library
 │   ├── react-hooks/               # Custom React hooks
@@ -40,6 +41,10 @@ The monorepo is managed by `pnpm` and `turbo` across 6 workspace directories:
 #### `main-website` (`@dezkareid/main-website`) — `apps/main-website/`
 Astro 5 marketing website.
 - **Dependencies**: `@dezkareid/components`, `@dezkareid/design-tokens`
+- **Scripts**: `dev` (astro dev), `build` (astro build), `preview`
+
+#### `collectstory` (`@dezkareid/collectstory`) — `apps/collectstory/`
+Collectstory application.
 - **Scripts**: `dev` (astro dev), `build` (astro build), `preview`
 
 ### Packages
