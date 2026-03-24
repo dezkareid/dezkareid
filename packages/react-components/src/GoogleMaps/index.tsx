@@ -33,7 +33,7 @@ function GoogleMaps({ mapKey, mapOptions, className = '', children }: GoogleMaps
   useEffect(() => {
     if (google && mapRef.current) {
       mapInstanceRef.current = new (google as { maps: { Map: new (element: HTMLDivElement, options: MapOptions) => unknown } }).maps.Map(mapRef.current, {
-        ...mapOptions
+        ...mapOptions,
       });
     }
   }, [google, mapOptions]);

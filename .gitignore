@@ -3,3 +3,5 @@ dist
 keys.js
 .turbo
 coverage
+.next
+.env.local
