@@ -1,3 +1,10 @@
+# [@dezkareid/react-hooks-v1.1.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/react-hooks-v1.0.0...@dezkareid/react-hooks-v1.1.0) (2026-03-25)
+
+
+### Features
+
+* **collectstory:** scaffold Next.js 16 app with Supabase auth, design system, and linting ([5119a98](https://github.com/dezkareid/dezkareid/commit/5119a98c818062999c5ea44e7266f423982467c4))
+
 # @dezkareid/react-hooks-v1.0.0 (2026-03-14)
 
 
