@@ -4,7 +4,7 @@ const package_ = require('../package.json');
 
 const { ModuleFederationPlugin } = webpack.container;
 
-const name = package_.name.replace(/[^a-zA-Z0-9]/g, '_');
+const name = package_.name.replaceAll(/[^a-zA-Z0-9]/g, '_');
 
 const exposes = {
   './GoogleMaps': './src/GoogleMaps/index.tsx',

@@ -1,0 +1,64 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-background-secondary);
+}
+
+.header {
+  background-color: var(--color-background-primary);
+  border-bottom: 1px solid var(--color-text-secondary);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-16) var(--spacing-48);
+  gap: var(--spacing-24);
+}
+
+@media (max-width: 768px) {
+  .headerInner {
+    padding: var(--spacing-16) var(--spacing-24);
+  }
+}
+
+.brand {
+  font-size: var(--font-size-300);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-16);
+}
+
+.userEmail {
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 480px) {
+  .userEmail {
+    display: none;
+  }
+}
+
+.main {
+  flex: 1;
+  padding: var(--spacing-48);
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding: var(--spacing-24);
+  }
+}

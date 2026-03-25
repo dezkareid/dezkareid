@@ -1,0 +1,100 @@
+.card {
+  background-color: var(--color-background-primary);
+  border-radius: var(--border-radius-large);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+.imageWrapper {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  background-color: var(--color-background-secondary);
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.imagePlaceholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-background-secondary);
+}
+
+.placeholderIcon {
+  font-size: var(--font-size-800);
+  color: var(--color-text-secondary);
+  opacity: 0.3;
+}
+
+.body {
+  padding: var(--spacing-16);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  flex: 1;
+}
+
+.name {
+  font-size: var(--font-size-400);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: var(--font-line-height-tight);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-4) var(--spacing-8);
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+  border-radius: var(--border-radius-pill);
+  font-size: var(--font-size-100);
+  font-weight: var(--font-weight-medium);
+}
+
+.tagSecondary {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-4) var(--spacing-8);
+  background-color: var(--color-background-secondary);
+  color: var(--color-text-secondary);
+  border-radius: var(--border-radius-pill);
+  font-size: var(--font-size-100);
+  font-weight: var(--font-weight-regular);
+}
+
+.description {
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+  line-height: var(--font-line-height-normal);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.date {
+  font-size: var(--font-size-100);
+  color: var(--color-text-secondary);
+  margin-top: auto;
+}

@@ -1,11 +1,29 @@
 {
   "name": "@dezkareid/collectstory",
-  "type": "module",
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@dezkareid/components": "workspace:*",
+    "@dezkareid/design-tokens": "workspace:*",
+    "@supabase/ssr": "0.9.0",
+    "@supabase/supabase-js": "2.100.0",
+    "next": "16.2.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@dezkareid/eslint-config-ts-base": "1.0.0",
+    "@dezkareid/eslint-plugin-web": "workspace:*",
+    "@types/node": "25.0.10",
+    "@types/react": "19.2.9",
+    "@types/react-dom": "19.2.3",
+    "eslint": "9.39.2",
+    "typescript": "5.9.3"
   }
 }

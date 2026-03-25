@@ -1,0 +1,48 @@
+import { createServerClient } from '@supabase/ssr';
+import { NextResponse, type NextRequest } from 'next/server';
+
+export async function middleware(request: NextRequest) {
+  let supabaseResponse = NextResponse.next({ request });
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          for (const { name, value } of cookiesToSet) request.cookies.set(name, value);
+
+          supabaseResponse = NextResponse.next({ request });
+          for (const { name, value, options } of cookiesToSet) supabaseResponse.cookies.set(name, value, options);
+        },
+      },
+    },
+  );
+
+  // Must be called immediately after createServerClient — no code in between.
+  const { data } = await supabase.auth.getClaims();
+  const user = data?.claims;
+
+  const { pathname } = request.nextUrl;
+
+  if (
+    !user
+    && pathname.startsWith('/collection')
+  ) {
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = '/login';
+    return NextResponse.redirect(loginUrl);
+  }
+
+  // IMPORTANT: return supabaseResponse unmodified to preserve cookie sync.
+  return supabaseResponse;
+}
+
+export const config = {
+  matcher: [
+    String.raw`/((?!_next/static|_next/image|favicon.ico|.*\.(?:svg|png|jpg|jpeg|gif|webp)$).*)`,
+  ],
+};

@@ -1,15 +1,15 @@
-const path = require('path');
+const path = require('node:path');
 const { merge } = require('webpack-merge');
 const commonConfig = require('./webpack.common');
 
 const config = {
   devServer: {
     static: {
-      directory: path.resolve('dist/browser')
+      directory: path.resolve('dist/browser'),
     },
-    port: 5001
+    port: 5001,
   },
-  mode: 'development'
+  mode: 'development',
 };
 
 module.exports = merge(commonConfig, config);

@@ -17,7 +17,8 @@ function useLocalStorage<T>({ key, defaultValue }: UseLocalStorageParameters<T>)
     if (storedValue === null) return defaultValue;
     try {
       return JSON.parse(storedValue) as T;
-    } catch {
+    }
+    catch {
       return storedValue as T;
     }
   });
@@ -25,12 +26,13 @@ function useLocalStorage<T>({ key, defaultValue }: UseLocalStorageParameters<T>)
     (newValue: T) => {
       if (typeof newValue === 'object' && newValue !== null) {
         localStorage.setItem(key, JSON.stringify(newValue));
-      } else {
+      }
+      else {
         localStorage.setItem(key, String(newValue));
       }
       setValue(newValue);
     },
-    [key]
+    [key],
   );
   return { value, saveValue };
 }
