@@ -1,0 +1,87 @@
+name: Deploy Collectstory
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - "apps/collectstory/**"
+    branches:
+      - main
+  push:
+    paths:
+      - "apps/collectstory/**"
+    branches:
+      - main
+
+env:
+  HUSKY: 0
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup JS
+        uses: ./.github/actions/setup-js
+
+      - name: Test
+        run: pnpm turbo run test --filter=@dezkareid/collectstory
+
+  migrate:
+    needs: test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup JS
+        uses: ./.github/actions/setup-js
+
+      - name: Apply Supabase migrations
+        run: npx supabase db push --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+  deploy:
+    needs: migrate
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup JS
+        uses: ./.github/actions/setup-js
+
+      # TODO(tech-debt): preview deployments share the production Supabase project.
+      # Risk: PR testing may pollute prod data. Fix: provision a separate Supabase
+      # project or branch for staging and set different env vars for preview deploys.
+      - name: Deploy to Vercel (preview)
+        if: github.event_name == 'pull_request'
+        run: npx vercel@latest deploy --token=${{ secrets.VERCEL_TOKEN }} --yes
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_COLLECTSTORY }}
+
+      - name: Deploy to Vercel (production)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: npx vercel@latest deploy --token=${{ secrets.VERCEL_TOKEN }} --prod --yes
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_COLLECTSTORY }}
