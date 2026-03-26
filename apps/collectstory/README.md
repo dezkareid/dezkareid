@@ -71,12 +71,14 @@ supabase db push
 In your Supabase project dashboard → Authentication → Providers, enable:
 
 - **Google** — requires Google Cloud OAuth app credentials
-- **Facebook** — requires Facebook App credentials
-- **Twitter/X** — requires Twitter Developer App credentials
 
-Set the OAuth callback URL to: `https://your-domain.com/auth/callback`
+Set the Supabase callback URL on the Google OAuth client to:
+`https://<project-ref>.supabase.co/auth/v1/callback`
 
-For local development, use a tunnel (e.g. `ngrok`) since Facebook and X require HTTPS callbacks.
+Add your deployed app URL to the Supabase Auth → URL Configuration → Redirect URLs:
+`https://<your-domain>/auth/callback`
+
+> Facebook and X (Twitter) providers are supported by the app but deferred — configure them when developer app credentials are available.
 
 ### 5. Start development
 
@@ -106,12 +108,61 @@ pnpm turbo run start --filter=@dezkareid/collectstory
 pnpm turbo run lint --filter=@dezkareid/collectstory
 ```
 
-## Vercel Deployment
+## Deployment
 
-1. Connect the monorepo repository to a Vercel project.
-2. Set the **Root Directory** to `apps/collectstory` in Vercel project settings.
-3. Vercel will use `vercel.json` to run the correct monorepo build command.
-4. Add all required environment variables in the Vercel dashboard.
+### Supabase Project Setup
+
+1. Create a Supabase project at [supabase.com](https://supabase.com).
+2. From **Project Settings → API**, collect:
+   - `NEXT_PUBLIC_SUPABASE_URL` (Project URL)
+   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (anon key)
+   - `SUPABASE_SERVICE_ROLE_KEY` (service_role key — keep secret)
+3. From **Project Settings → General**, note the **Project Reference ID**.
+4. Apply the initial schema migration:
+   ```bash
+   # From apps/collectstory/ — requires supabase CLI and SUPABASE_ACCESS_TOKEN env var
+   supabase link --project-ref <project-ref>
+   supabase db push
+   ```
+5. Enable **Google OAuth** in Supabase Auth → Providers → Google (see Local Setup §4 above).
+
+### Vercel Project Setup
+
+1. Import the GitHub repository into Vercel (personal account).
+2. Set **Root Directory** to `.` (the repo root — not `apps/collectstory/`).
+   Vercel picks up `apps/collectstory/vercel.json` automatically for the build command and output directory.
+3. Set the following **Environment Variables** on the Vercel project for both **Production** and **Preview** environments:
+
+   | Variable | Value |
+   |---|---|
+   | `NEXT_PUBLIC_SUPABASE_URL` | Supabase Project URL |
+   | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase anon key |
+   | `SUPABASE_SERVICE_ROLE_KEY` | Supabase service_role key |
+   | `CLOUDINARY_CLOUD_NAME` | `placeholder` (not yet provisioned) |
+
+4. After the first deploy, add the Vercel production URL to:
+   - Supabase Auth → URL Configuration → **Redirect URLs**: `https://<app>.vercel.app/auth/callback`
+   - Google Cloud Console → OAuth Client → **Authorized Redirect URIs**: same URL
+
+> **Tech debt**: Preview deployments (from PRs) share the production Supabase project. This risks polluting prod data during testing. A dedicated staging Supabase project should be provisioned in the future.
+
+### CI/CD (GitHub Actions)
+
+The workflow `.github/workflows/deploy-collectstory.yml` runs on every PR and push to `main` that touches `apps/collectstory/**`. It runs three sequential jobs: `test → migrate → deploy`.
+
+Add the following **GitHub repository secrets** (Settings → Secrets and variables → Actions):
+
+| Secret | Where to find it |
+|---|---|
+| `VERCEL_TOKEN` | Vercel → Account Settings → Tokens |
+| `VERCEL_ORG_ID` | Vercel → Account Settings → General → Your ID |
+| `VERCEL_PROJECT_ID_COLLECTSTORY` | Vercel → Project Settings → General → Project ID |
+| `SUPABASE_ACCESS_TOKEN` | [supabase.com/dashboard/account/tokens](https://supabase.com/dashboard/account/tokens) |
+| `SUPABASE_PROJECT_ID` | Supabase → Project Settings → General → Reference ID |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Project Settings → API → Project URL |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase → Project Settings → API → anon key |
+| `TURBO_TOKEN` | Vercel Remote Cache token (shared with other workflows) |
+| `TURBO_TEAM` | Vercel team slug (shared with other workflows) |
 
 ## Data Model
 

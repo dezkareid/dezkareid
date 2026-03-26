@@ -105,12 +105,45 @@ This app uses `@supabase/ssr` with the Next.js App Router middleware pattern:
 
 ## Environment Variables
 
-| Variable | Where used |
-|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | Client + Server |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Client + Server |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server only (not yet used, reserved for admin ops) |
-| `CLOUDINARY_CLOUD_NAME` | Server (future upload feature) |
+| Variable | Where used | Source |
+|---|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | Client + Server | Supabase → Project Settings → API → Project URL |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Client + Server | Supabase → Project Settings → API → anon key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server only (reserved for admin ops) | Supabase → Project Settings → API → service_role key |
+| `CLOUDINARY_CLOUD_NAME` | Server (future upload feature) | Not yet provisioned — use `placeholder` |
+
+For local development, copy `.env.local.example` to `.env.local` and fill in the values.
+
+## Local Setup
+
+### 1. Link the Supabase CLI
+
+From `apps/collectstory/`:
+
+```bash
+# Authenticate (stores token in native credentials storage)
+SUPABASE_ACCESS_TOKEN=<your-token> npx supabase link --project-ref <project-ref>
+
+# Apply migrations to the remote database
+npx supabase db push --project-ref <project-ref>
+```
+
+### 2. Configure Supabase MCP for Claude Code
+
+Add the following to the monorepo-level Claude Code settings (`.claude/settings.json`):
+
+```json
+{
+  "mcpServers": {
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=<project-ref>"
+    }
+  }
+}
+```
+
+Authentication is handled via OAuth in Claude Code — no token is stored in the config file. The MCP enables AI-assisted queries, schema inspection, and data management for the collectstory Supabase project.
 
 ## Monorepo Usage
 
