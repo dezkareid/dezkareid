@@ -1,3 +1,10 @@
+# [@dezkareid/components-v1.1.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.0.3...@dezkareid/components-v1.1.0) (2026-03-27)
+
+
+### Features
+
+* **components:** add react-server and react-client entry points for Next.js RSC compatibility ([4a32ac6](https://github.com/dezkareid/dezkareid/commit/4a32ac60d7123b4c7dd0faa9e2cc75afed1678d2))
+
 # [@dezkareid/components-v1.0.3](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.0.2...@dezkareid/components-v1.0.3) (2026-03-22)
 
 
