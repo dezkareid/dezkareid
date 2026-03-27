@@ -38,7 +38,7 @@ export default async function CollectionPage() {
     `)
     .order('created_at', { ascending: false });
 
-  const collectionItems = (items ?? []) as CollectionItem[];
+  const collectionItems = (items ?? []) as unknown as CollectionItem[];
 
   return (
     <div className={styles.page}>
