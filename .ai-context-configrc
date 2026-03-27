@@ -2,5 +2,31 @@
   "strategies": [
     "claude",
     "gemini-md"
-  ]
+  ],
+  "projects": {
+    "apps/collectstory": {
+      "strategies": [
+        "claude",
+        "gemini-md"
+      ]
+    },
+    "apps/main-website": {
+      "strategies": [
+        "claude",
+        "gemini-md"
+      ]
+    },
+    "design-system/components": {
+      "strategies": [
+        "claude",
+        "gemini-md"
+      ]
+    },
+    "design-system/design-tokens": {
+      "strategies": [
+        "claude",
+        "gemini-md"
+      ]
+    }
+  }
 }
