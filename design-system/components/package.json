@@ -14,6 +14,16 @@
       "import": "./dist/react.js",
       "default": "./dist/react.js"
     },
+    "./react-server": {
+      "types": "./dist/react-server/index.d.ts",
+      "import": "./dist/react-server/index.js",
+      "default": "./dist/react-server/index.js"
+    },
+    "./react-client": {
+      "types": "./dist/react-client/index.d.ts",
+      "import": "./dist/react-client/index.js",
+      "default": "./dist/react-client/index.js"
+    },
     "./astro": "./src/astro/index.ts",
     "./vue": "./src/vue/index.ts",
     "./css": {
@@ -25,6 +35,12 @@
     "*": {
       "react": [
         "./dist/react/index.d.ts"
+      ],
+      "react-server": [
+        "./dist/react-server/index.d.ts"
+      ],
+      "react-client": [
+        "./dist/react-client/index.d.ts"
       ]
     }
   },
