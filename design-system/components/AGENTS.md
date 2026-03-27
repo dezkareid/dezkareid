@@ -8,7 +8,9 @@ Always use Context7 MCP when I need external library/API documentation, code gen
 
 The following paths are the entry points to the different packages:
 
-- `src/react/`: React components (entry: `src/react/index.ts`)
+- `src/react/`: React components (entry: `src/react/index.ts`) — all components, for non-Next.js consumers
+- `src/react-server/`: Server-safe React entry (entry: `src/react-server/index.ts`) — re-exports `Button`, `Card`, `Tag` only
+- `src/react-client/`: Client React entry (entry: `src/react-client/index.ts`) — re-exports `ThemeToggle` only
 - `src/astro/`: Astro components (entry: `src/astro/index.ts`)
 - `src/vue/`: Vue components (entry: `src/vue/index.ts`)
 - `src/css/`: Shared CSS Modules (one file per component, `src/css/index.ts` imports all for the CSS bundle)
@@ -17,12 +19,14 @@ The following paths are the entry points to the different packages:
 
 ## Package Exports
 
-| Export | Points to | Compiled? |
-|---|---|---|
-| `@dezkareid/components/react` | `dist/react.js` | Yes — pre-compiled ES module via Rollup + `@rollup/plugin-typescript` |
-| `@dezkareid/components/astro` | `src/astro/index.ts` | No — compiled by the consuming Astro app |
-| `@dezkareid/components/vue` | `src/vue/index.ts` | No — compiled by the consuming Vite/Vue app |
-| `@dezkareid/components/css` | `dist/components.min.css` | Yes — CSS Modules processed and extracted via `rollup-plugin-postcss` |
+| Export | Points to | Compiled? | Notes |
+|---|---|---|---|
+| `@dezkareid/components/react` | `dist/react/index.js` | Yes — Rollup ESM, `preserveModules` | All components. For non-Next.js React consumers. |
+| `@dezkareid/components/react-server` | `dist/react-server/index.js` | Yes — Rollup ESM, `preserveModules` | `Button`, `Card`, `Tag` only. Safe for Next.js Server Components. No `'use client'`. |
+| `@dezkareid/components/react-client` | `dist/react-client/index.js` | Yes — Rollup ESM, `preserveModules` | `ThemeToggle` only. Every emitted file starts with `'use client'` (injected via Rollup `output.banner`). |
+| `@dezkareid/components/astro` | `src/astro/index.ts` | No — compiled by Astro | |
+| `@dezkareid/components/vue` | `src/vue/index.ts` | No — compiled by Vite/Vue | |
+| `@dezkareid/components/css` | `dist/components.min.css` | Yes — CSS Modules extracted via `rollup-plugin-postcss` | |
 
 ### Why Astro and Vue are not pre-compiled
 
@@ -33,16 +37,24 @@ The following paths are the entry points to the different packages:
 
 The build uses **Rollup** (`rollup.config.mjs`) — not Vite — because `rollup-plugin-postcss` handles CSS Modules extraction correctly in Rollup without conflicts.
 
+`rollup.config.mjs` exports an **array of three configs**, one per React entry point:
+
+1. **`react` config** — `input: src/react/index.ts`, extracts CSS to `dist/components.min.css`
+2. **`react-server` config** — `input: src/react-server/index.ts`, `postcss({ extract: false })` (no CSS duplication)
+3. **`react-client` config** — `input: src/react-client/index.ts`, `output.banner: "'use client';"`, `postcss({ extract: false })`
+
 The build produces:
-- `dist/react.js` — ES module barrel entry
-- `dist/react/**/*.js` — individual component chunks (tree-shakeable via `preserveModules`)
-- `dist/react/**/*.d.ts` — TypeScript declarations
-- `dist/components.min.css` — all CSS Modules processed, scoped, and bundled into one file
+- `dist/react/**/*.js` + `.d.ts` — all components (tree-shakeable via `preserveModules`)
+- `dist/react-server/**/*.js` + `.d.ts` — server-safe components only
+- `dist/react-client/**/*.js` + `.d.ts` — client components; every file starts with `'use client';`
+- `dist/components.min.css` — CSS Modules processed and bundled (emitted by the `react` config only)
 
 Key plugins:
-- `rollup-plugin-postcss` with `autoModules: true, extract: 'components.min.css', minimize: true` — processes CSS Modules and extracts to a single file
+- `rollup-plugin-postcss` with `autoModules: true, minimize: true` — processes CSS Modules; `extract: 'components.min.css'` on the `react` config only, `extract: false` on the others
 - `@rollup/plugin-typescript` with `declaration: true` — compiles TSX and emits `.d.ts` files
 - `@rollup/plugin-node-resolve` — resolves node_modules
+
+**`'use client'` injection:** Rollup 4 strips `"use client"` directive prologs by default. The `react-client` config uses `output.banner: "'use client';"` to prepend the directive to every file it emits. No additional plugin is needed.
 
 ### CSS Modules in the build
 

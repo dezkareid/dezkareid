@@ -12,7 +12,9 @@ pnpm add @dezkareid/components @dezkareid/design-tokens
 
 | Export | Points to | Notes |
 |---|---|---|
-| `@dezkareid/components/react` | `dist/react.js` | Pre-compiled ES module, includes `.d.ts` types |
+| `@dezkareid/components/react` | `dist/react/index.js` | Pre-compiled ES module, includes `.d.ts` types. For non-Next.js React consumers. |
+| `@dezkareid/components/react-server` | `dist/react-server/index.js` | Server-safe components only (`Button`, `Card`, `Tag`). Use in Next.js Server Components. |
+| `@dezkareid/components/react-client` | `dist/react-client/index.js` | Client components only (`ThemeToggle`). Ships with `'use client'` directive. Use in Next.js Client Components. |
 | `@dezkareid/components/astro` | `src/astro/index.ts` | Source — compiled by the consuming Astro app |
 | `@dezkareid/components/vue` | `src/vue/index.ts` | Source — compiled by the consuming Vite/Vue app |
 | `@dezkareid/components/css` | `dist/components.min.css` | Pre-compiled CSS Modules bundle |
@@ -38,6 +40,39 @@ import '@dezkareid/components/css';
 > **Note:** The component CSS uses CSS Modules scoped class names. The `@dezkareid/components/css` export is the processed bundle that matches the class names used by the compiled JS — do not import the raw source CSS files from `src/css/`.
 
 Both imports must come before any component usage.
+
+---
+
+## Next.js App Router
+
+When using this package in a Next.js App Router project, import from the entry point that matches the rendering context:
+
+```tsx
+// In a Server Component (no 'use client' needed in your file)
+import { Button, Card, Tag } from '@dezkareid/components/react-server';
+
+export default function Page() {
+  return (
+    <Card elevation="raised">
+      <Tag variant="success">Active</Tag>
+      <Button variant="primary">Get started</Button>
+    </Card>
+  );
+}
+```
+
+```tsx
+// In a Client Component (or a file that already has 'use client')
+import { ThemeToggle } from '@dezkareid/components/react-client';
+
+export default function Header() {
+  return <ThemeToggle />;
+}
+```
+
+> The `react-client` entry point ships with the `'use client'` directive already embedded in the compiled output — you do not need to add it yourself.
+
+For non-Next.js React consumers, `@dezkareid/components/react` continues to export all components unchanged.
 
 ---
 
