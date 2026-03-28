@@ -73,7 +73,8 @@
     "astro": ">=6.0.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
-    "vue": "^3.0.0"
+    "vue": "^3.0.0",
+    "@dezkareid/design-tokens": "^1.5.0"
   },
   "peerDependenciesMeta": {
     "astro": {
@@ -90,13 +91,13 @@
     }
   },
   "dependencies": {
-    "@dezkareid/design-tokens": "workspace:*",
+    "@dezkareid/design-tokens": "1.5.0",
     "classnames": "2.5.1"
   },
   "devDependencies": {
     "astro": "6.0.6",
     "@dezkareid/eslint-config-ts-base": "1.0.0",
-    "@dezkareid/eslint-plugin-web": "workspace:^",
+    "@dezkareid/eslint-plugin-web": "1.0.0",
     "@eslint-react/eslint-plugin": "2.13.0",
     "@eslint/js": "9.39.2",
     "@rollup/plugin-commonjs": "29.0.0",

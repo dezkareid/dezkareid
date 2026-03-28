@@ -24,11 +24,11 @@ importers:
   apps/collectstory:
     dependencies:
       '@dezkareid/components':
-        specifier: workspace:*
-        version: link:../../design-system/components
+        specifier: 1.1.1
+        version: 1.1.1(astro@6.0.6(@types/node@25.0.10)(jiti@2.6.0)(rollup@4.56.0)(terser@5.46.0)(typescript@5.9.3))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vue@3.5.29(typescript@5.9.3))
       '@dezkareid/design-tokens':
-        specifier: workspace:*
-        version: link:../../design-system/design-tokens
+        specifier: 1.5.0
+        version: 1.5.0
       '@supabase/ssr':
         specifier: 0.9.0
         version: 0.9.0(@supabase/supabase-js@2.100.0)
@@ -158,8 +158,8 @@ importers:
   design-system/components:
     dependencies:
       '@dezkareid/design-tokens':
-        specifier: workspace:*
-        version: link:../design-tokens
+        specifier: 1.5.0
+        version: 1.5.0
       classnames:
         specifier: 2.5.1
         version: 2.5.1
@@ -171,8 +171,8 @@ importers:
         specifier: 1.0.0
         version: 1.0.0(@eslint/js@9.39.2)(eslint@9.39.2(jiti@2.6.0))(typescript-eslint@8.57.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3))(typescript@5.9.3)
       '@dezkareid/eslint-plugin-web':
-        specifier: workspace:^
-        version: link:../../linters/eslint-plugin-web
+        specifier: 1.0.0
+        version: 1.0.0(@eslint-react/eslint-plugin@2.13.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3))(@eslint/js@9.39.2)(eslint-plugin-astro@1.6.0(eslint@9.39.2(jiti@2.6.0)))(eslint@9.39.2(jiti@2.6.0))(typescript-eslint@8.57.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3))(typescript@5.9.3)
       '@eslint-react/eslint-plugin':
         specifier: 2.13.0
         version: 2.13.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)
@@ -1640,6 +1640,30 @@ packages:
     resolution: {integrity: sha512-Vd/9EVDiu6PPJt9yAh6roZP6El1xHrdvIVGjyBsHR0RYwNHgL7FJPyIIW4fANJNG6FtyZfvlRPpFI4ZM/lubvw==}
     engines: {node: '>=18'}
 
+  '@dezkareid/components@1.1.1':
+    resolution: {integrity: sha512-ZMUTolvZyoWyIpjPLIkyphiigzChp0gttDELTJgHEoF8vPfuCrTaiOaN9ibVL1GeOs4K+Aw1oSuVJFPsplCWpQ==}
+    peerDependencies:
+      astro: '>=6.0.0'
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
+      vue: ^3.0.0
+    peerDependenciesMeta:
+      astro:
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+      vue:
+        optional: true
+
+  '@dezkareid/design-tokens@0.0.0':
+    resolution: {integrity: sha512-cnYjVCX+R6rb8b4zfisAPKzMxbfKuBJdsKg9/ezIRCWV5tXJu8w0jaNFjwDmGph6DcpfQ50WBHqwSPcwc1qjkw==}
+
+  '@dezkareid/design-tokens@1.5.0':
+    resolution: {integrity: sha512-31ygxZPyWrrcRHiZ6C8KS46DCVqxioERUCEb5eMchXjTzQf6wxGaH9Gh+MRWqdebSUVcxhtO1PQexAOVogUMNA==}
+    hasBin: true
+
   '@dezkareid/eslint-config-ts-base@1.0.0':
     resolution: {integrity: sha512-nCg9BBtl6nJW3QucEhbO5JrnLkVyzDDl4HV3seRB6hNULeEOzfTTO5Jda3a3kp8/pgozn3sr4eFy0oDKfuExcg==}
     engines: {node: '>=22'}
@@ -1648,6 +1672,19 @@ packages:
       eslint: 9.39.2
       typescript: 5.9.3
       typescript-eslint: 8.57.0
+
+  '@dezkareid/eslint-plugin-web@1.0.0':
+    resolution: {integrity: sha512-vVkBQAglKy5UdN+JhKHzz42TcE+pM6wx1cN8htrv0en6yTzgLo2ZyXGhpB5n3+sgbhWV4+te8Sn+jJOytr7N3Q==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      '@eslint-react/eslint-plugin': '>=2.13.0'
+      eslint: '>=9.39.2'
+      eslint-plugin-astro: '>=1.6.0'
+    peerDependenciesMeta:
+      '@eslint-react/eslint-plugin':
+        optional: true
+      eslint-plugin-astro:
+        optional: true
 
   '@dezkareid/react-hooks@1.3.1':
     resolution: {integrity: sha512-lHn4AFMttOXlTYjnPWDmF3NLiZlWmV/0mR77S6WfsdXQ3RN0jLDO0Vj3fggHQsuDlNKfhtXjH9GjoIJ1V5G8qw==}
@@ -11054,12 +11091,41 @@ snapshots:
 
   '@csstools/css-tokenizer@3.0.4': {}
 
+  '@dezkareid/components@1.1.1(astro@6.0.6(@types/node@25.0.10)(jiti@2.6.0)(rollup@4.56.0)(terser@5.46.0)(typescript@5.9.3))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vue@3.5.29(typescript@5.9.3))':
+    dependencies:
+      '@dezkareid/design-tokens': 0.0.0
+      classnames: 2.5.1
+    optionalDependencies:
+      astro: 6.0.6(@types/node@25.0.10)(jiti@2.6.0)(rollup@4.56.0)(terser@5.46.0)(typescript@5.9.3)
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
+      vue: 3.5.29(typescript@5.9.3)
+
+  '@dezkareid/design-tokens@0.0.0': {}
+
+  '@dezkareid/design-tokens@1.5.0': {}
+
   '@dezkareid/eslint-config-ts-base@1.0.0(@eslint/js@9.39.2)(eslint@9.39.2(jiti@2.6.0))(typescript-eslint@8.57.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
       '@eslint/js': 9.39.2
       eslint: 9.39.2(jiti@2.6.0)
       typescript: 5.9.3
       typescript-eslint: 8.57.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)
+
+  '@dezkareid/eslint-plugin-web@1.0.0(@eslint-react/eslint-plugin@2.13.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3))(@eslint/js@9.39.2)(eslint-plugin-astro@1.6.0(eslint@9.39.2(jiti@2.6.0)))(eslint@9.39.2(jiti@2.6.0))(typescript-eslint@8.57.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3))(typescript@5.9.3)':
+    dependencies:
+      '@dezkareid/eslint-config-ts-base': 1.0.0(@eslint/js@9.39.2)(eslint@9.39.2(jiti@2.6.0))(typescript-eslint@8.57.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3))(typescript@5.9.3)
+      '@eslint/css': 1.0.0
+      '@stylistic/eslint-plugin': 5.10.0(eslint@9.39.2(jiti@2.6.0))
+      eslint: 9.39.2(jiti@2.6.0)
+      eslint-plugin-unicorn: 63.0.0(eslint@9.39.2(jiti@2.6.0))
+    optionalDependencies:
+      '@eslint-react/eslint-plugin': 2.13.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)
+      eslint-plugin-astro: 1.6.0(eslint@9.39.2(jiti@2.6.0))
+    transitivePeerDependencies:
+      - '@eslint/js'
+      - typescript
+      - typescript-eslint
 
   '@dezkareid/react-hooks@1.3.1(react@19.2.4)':
     dependencies:
