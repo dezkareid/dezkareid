@@ -27,6 +27,12 @@
         "claude",
         "gemini-md"
       ]
+    },
+    "packages/ai-context-sync": {
+      "strategies": [
+        "claude",
+        "gemini-md"
+      ]
     }
   }
 }
