@@ -23,10 +23,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={ibmPlexSans.variable} suppressHydrationWarning>
-      {/* eslint-disable-next-line @next/next/no-sync-scripts */}
       <head>
         <script
           // biome-ignore lint: FOUC guard must be inline and synchronous
+          // eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('color-scheme');if(t==='dark'){document.documentElement.style.colorScheme='dark';document.documentElement.style.setProperty('--lightningcss-light',' ');document.documentElement.style.setProperty('--lightningcss-dark','initial');}else if(t==='light'){document.documentElement.style.colorScheme='light';document.documentElement.style.setProperty('--lightningcss-light','initial');document.documentElement.style.setProperty('--lightningcss-dark',' ');}}catch(_){}})();`,
           }}

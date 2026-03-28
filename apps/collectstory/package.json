@@ -9,8 +9,8 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@dezkareid/components": "workspace:*",
-    "@dezkareid/design-tokens": "workspace:*",
+    "@dezkareid/components": "1.1.1",
+    "@dezkareid/design-tokens": "1.5.0",
     "@supabase/ssr": "0.9.0",
     "@supabase/supabase-js": "2.100.0",
     "next": "16.2.1",
