@@ -69,7 +69,6 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: apps/collectstory
     steps:
       - name: Checkout
         uses: actions/checkout@v5
