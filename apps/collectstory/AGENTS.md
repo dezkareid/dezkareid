@@ -93,6 +93,13 @@ This app uses `@supabase/ssr` with the Next.js App Router middleware pattern:
 | Border radius | `--border-radius-{small,medium,large,pill}` | `var(--border-radius-large)` |
 | Shadow | `--shadow-{subtle,card,card-hover}` | `var(--shadow-card)` |
 
+## Linting
+
+This project uses `@dezkareid/eslint-plugin-web/next` for Next.js-specific linting.
+
+- **Config**: `eslint.config.mjs`
+- **Exceptions**: `unicorn/prefer-string-raw` is disabled globally via the plugin for `middleware.ts` and `proxy.ts` to allow regex matchers.
+
 ## Data Model Summary
 
 | Table | Key Columns | Notes |
