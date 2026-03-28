@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { createClient } from '@/lib/supabase/server';
 import { CollectionItemCard } from '@/components/CollectionItemCard';
 import styles from './page.module.css';
-
-export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'My Collection',
@@ -16,12 +15,12 @@ type CollectionItem = {
   image_url: string | null;
   description: string | null;
   date_acquired: string | null;
-  brands: { name: string } | null;
-  lines: { name: string } | null;
-  categories: { name: string } | null;
+  brands: { name: string }[];
+  lines: { name: string }[];
+  categories: { name: string }[];
 };
 
-export default async function CollectionPage() {
+async function CollectionItems() {
   const supabase = await createClient();
 
   const { data: items } = await supabase
@@ -40,43 +39,45 @@ export default async function CollectionPage() {
 
   const collectionItems = (items ?? []) as CollectionItem[];
 
+  if (collectionItems.length === 0) {
+    return (
+      <div className={styles.empty}>
+        <p className={styles.emptyTitle}>Your collection is empty</p>
+        <p className={styles.emptyDesc}>
+          Items you add to your collection will appear here.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <ul className={styles.grid} role="list">
+      {collectionItems.map(item => (
+        <li key={item.id}>
+          <CollectionItemCard
+            name={item.name}
+            imageUrl={item.image_url ?? undefined}
+            brand={item.brands[0]?.name ?? undefined}
+            line={item.lines[0]?.name ?? undefined}
+            category={item.categories[0]?.name ?? undefined}
+            description={item.description ?? undefined}
+            dateAcquired={item.date_acquired ?? undefined}
+          />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export default function CollectionPage() {
   return (
     <div className={styles.page}>
       <div className={styles.pageHeader}>
         <h1 className={styles.pageTitle}>My Collection</h1>
-        <span className={styles.itemCount}>
-          {collectionItems.length}
-          {' '}
-          {collectionItems.length === 1 ? 'item' : 'items'}
-        </span>
       </div>
-
-      {collectionItems.length === 0
-        ? (
-            <div className={styles.empty}>
-              <p className={styles.emptyTitle}>Your collection is empty</p>
-              <p className={styles.emptyDesc}>
-                Items you add to your collection will appear here.
-              </p>
-            </div>
-          )
-        : (
-            <ul className={styles.grid} role="list">
-              {collectionItems.map(item => (
-                <li key={item.id}>
-                  <CollectionItemCard
-                    name={item.name}
-                    imageUrl={item.image_url ?? undefined}
-                    brand={item.brands?.name ?? undefined}
-                    line={item.lines?.name ?? undefined}
-                    category={item.categories?.name ?? undefined}
-                    description={item.description ?? undefined}
-                    dateAcquired={item.date_acquired ?? undefined}
-                  />
-                </li>
-              ))}
-            </ul>
-          )}
+      <Suspense>
+        <CollectionItems />
+      </Suspense>
     </div>
   );
 }

@@ -3,8 +3,6 @@ import Link from 'next/link';
 import { SiteHeader } from '@/components/SiteHeader';
 import styles from './page.module.css';
 
-export const dynamic = 'force-static';
-
 export const metadata: Metadata = {
   title: 'Collectstory — Track Your Collection',
   description:
@@ -120,7 +118,7 @@ export default function HomePage() {
         <span className={styles.footerMeta}>
           &copy;
           {' '}
-          {new Date().getFullYear()}
+          2025
           {' '}
           Dezkareid
         </span>
