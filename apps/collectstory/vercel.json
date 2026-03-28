@@ -1,5 +1,5 @@
 {
   "framework": "nextjs",
   "buildCommand": "cd ../.. && pnpm turbo run build --filter=@dezkareid/collectstory",
-  "outputDirectory": "apps/collectstory/.next"
+  "outputDirectory": ".next"
 }
