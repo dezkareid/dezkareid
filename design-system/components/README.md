@@ -222,15 +222,46 @@ import { Card } from '@dezkareid/components/vue';
 
 A self-contained toggle that switches between light and dark colour schemes. Reads from and persists to `localStorage` (key: `color-scheme`), falling back to the OS `prefers-color-scheme` preference. Applies the theme by setting `color-scheme` on `<html>`.
 
-**Props**: none
+**Props**
 
-#### React
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `cssProcessor` | `'css' \| 'lightningcss'` | `'css'` | CSS processing mode. Use `'lightningcss'` for Next.js/Turbopack (see note below). |
+| `onChange` | `(theme: 'light' \| 'dark') => void` | — | Called after each theme change with the new value. |
+
+> **`cssProcessor` note:** Next.js/Turbopack processes CSS through [LightningCSS](https://lightningcss.dev/transpilation.html), which compiles `light-dark()` into `--lightningcss-light` / `--lightningcss-dark` toggle variables driven by `@media (prefers-color-scheme: dark)`. Setting only `color-scheme` on `<html>` has no effect in this case. Pass `cssProcessor="lightningcss"` so the component overrides those variables directly.
+
+#### React (non-Next.js)
 
 ```tsx
 import { ThemeToggle } from '@dezkareid/components/react';
 
 <ThemeToggle />
+
+// With onChange
+<ThemeToggle onChange={(theme) => console.log('theme changed:', theme)} />
 ```
+
+#### React (Next.js / Turbopack)
+
+```tsx
+import { ThemeToggle } from '@dezkareid/components/react-client';
+
+<ThemeToggle cssProcessor="lightningcss" />
+
+// With onChange
+<ThemeToggle cssProcessor="lightningcss" onChange={(theme) => console.log(theme)} />
+```
+
+> The `react-client` entry ships with `'use client'` already embedded — no need to add it yourself.
+
+> **FOUC prevention (Next.js):** Add this inline script to your root `layout.tsx` `<head>` and `suppressHydrationWarning` on `<html>` to avoid a flash of the wrong theme before hydration:
+> ```tsx
+> <html suppressHydrationWarning>
+>   <head>
+>     <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('color-scheme');if(t==='dark'){document.documentElement.style.colorScheme='dark';document.documentElement.style.setProperty('--lightningcss-light',' ');document.documentElement.style.setProperty('--lightningcss-dark','initial');}else if(t==='light'){document.documentElement.style.colorScheme='light';document.documentElement.style.setProperty('--lightningcss-light','initial');document.documentElement.style.setProperty('--lightningcss-dark',' ');}}catch(_){}})();` }} />
+>   </head>
+> ```
 
 #### Astro
 

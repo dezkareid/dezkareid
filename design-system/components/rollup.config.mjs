@@ -5,7 +5,7 @@ import postcss from 'rollup-plugin-postcss';
 
 const external = ['react', 'react/jsx-runtime'];
 
-const plugins = (cssExtract) => [
+const plugins = cssExtract => [
   resolve({ extensions: ['.ts', '.tsx'] }),
   commonjs(),
   postcss({
@@ -21,7 +21,7 @@ const plugins = (cssExtract) => [
   }),
 ];
 
-const output = (banner) => ({
+const output = banner => ({
   dir: 'dist',
   format: 'es',
   preserveModules: true,
@@ -51,6 +51,6 @@ export default [
     input: 'src/react-client/index.ts',
     external,
     plugins: plugins(false),
-    output: output("'use client';"),
+    output: output(`'use client';`),
   },
 ];
