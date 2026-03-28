@@ -17,7 +17,9 @@
         "^build"
       ],
       "outputs": [
-        "dist/**"
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**"
       ],
       "env": [
         "NODE_ENV",
