@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "description": "Common CSS tools and utilities for dezkareid",
   "main": "dist/index.css",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist",
     "src"
