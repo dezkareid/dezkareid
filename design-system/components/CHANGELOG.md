@@ -1,3 +1,10 @@
+# [@dezkareid/components-v1.1.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.1.0...@dezkareid/components-v1.1.1) (2026-03-28)
+
+
+### Bug Fixes
+
+* **design-system:** add theme support to toggle ([ed11731](https://github.com/dezkareid/dezkareid/commit/ed11731b8dc39cd5e49190d67ee28eb6a9e55ac9))
+
 # [@dezkareid/components-v1.1.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.0.3...@dezkareid/components-v1.1.0) (2026-03-27)
 
 
