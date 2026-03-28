@@ -1,3 +1,10 @@
+# [@dezkareid/eslint-plugin-web-v1.1.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/eslint-plugin-web-v1.0.0...@dezkareid/eslint-plugin-web-v1.1.0) (2026-03-28)
+
+
+### Features
+
+* **linter:** add linter for next ([e74b1e9](https://github.com/dezkareid/dezkareid/commit/e74b1e99ed0c606a7cd000ea234ba53ed5b9ac26))
+
 # @dezkareid/eslint-plugin-web-v1.0.0 (2026-03-22)
 
 
