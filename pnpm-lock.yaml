@@ -72,9 +72,6 @@ importers:
       '@dezkareid/components':
         specifier: workspace:*
         version: link:../../design-system/components
-      '@dezkareid/css':
-        specifier: workspace:*
-        version: link:../../design-system/css
       '@dezkareid/design-tokens':
         specifier: workspace:*
         version: link:../../design-system/design-tokens
@@ -301,6 +298,9 @@ importers:
       '@eslint/js':
         specifier: 9.39.2
         version: 9.39.2
+      '@next/eslint-plugin-next':
+        specifier: ^16.2.1
+        version: 16.2.1
       '@types/node':
         specifier: 25.0.10
         version: 25.0.10
@@ -310,9 +310,6 @@ importers:
       eslint-plugin-astro:
         specifier: 1.6.0
         version: 1.6.0(eslint@9.39.2(jiti@2.6.0))
-      eslint-plugin-next:
-        specifier: ^0.0.0
-        version: 0.0.0
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -2573,6 +2570,9 @@ packages:
 
   '@next/env@16.2.1':
     resolution: {integrity: sha512-n8P/HCkIWW+gVal2Z8XqXJ6aB3J0tuM29OcHpCsobWlChH/SITBs1DFBk/HajgrwDkqqBXPbuUuzgDvUekREPg==}
+
+  '@next/eslint-plugin-next@16.2.1':
+    resolution: {integrity: sha512-r0epZGo24eT4g08jJlg2OEryBphXqO8aL18oajoTKLzHJ6jVr6P6FI58DLMug04MwD3j8Fj0YK0slyzneKVyzA==}
 
   '@next/swc-darwin-arm64@16.2.1':
     resolution: {integrity: sha512-BwZ8w8YTaSEr2HIuXLMLxIdElNMPvY9fLqb20LX9A9OMGtJilhHLbCL3ggyd0TwjmMcTxi0XXt+ur1vWUoxj2Q==}
@@ -5323,9 +5323,6 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9
 
-  eslint-plugin-next@0.0.0:
-    resolution: {integrity: sha512-IldNDVb6WNduggwRbYzSGZhaskUwVecJ6fhmqwX01+S1aohwAWNzU4me6y47DDzpD/g0fdayNBGxEdt9vKkUtg==}
-
   eslint-plugin-prettier@4.2.1:
     resolution: {integrity: sha512-f/0rXLXUt0oFYs8ra4w49wYZBG5GKZpAYsJSm6rnYL5uVDjd+zowwMwVZHnAjf4edNrKpCDYfXDgmRE/Ak7QyQ==}
     engines: {node: '>=12.0.0'}
@@ -5602,6 +5599,10 @@ packages:
 
   fast-diff@1.3.0:
     resolution: {integrity: sha512-VxPP4NqbUjj6MaAOafWeUn2cXWLcCtljklUtZf0Ind4XQ+QPtmA0b18zZy0jIQx+ExRVCR/ZQpBmik5lXshNsw==}
+
+  fast-glob@3.3.1:
+    resolution: {integrity: sha512-kNFPyjhh5cKjrUltxs+wFx+ZkbRaxxmZ+X0ZU31SOsxCEtP9VPgtq2teZw1DebupL5GmDaNQ6yKMMVcM41iqDg==}
+    engines: {node: '>=8.6.0'}
 
   fast-glob@3.3.3:
     resolution: {integrity: sha512-7MptL8U0cqcFdzIzwOTHoilX9x5BrNqye7Z/LuC7kCMRio1EMSyqRK3BEAUD7sXRq4iT4AzTVuZdhgQ2TCvYLg==}
@@ -12234,6 +12235,10 @@ snapshots:
 
   '@next/env@16.2.1': {}
 
+  '@next/eslint-plugin-next@16.2.1':
+    dependencies:
+      fast-glob: 3.3.1
+
   '@next/swc-darwin-arm64@16.2.1':
     optional: true
 
@@ -15755,8 +15760,6 @@ snapshots:
       safe-regex-test: 1.1.0
       string.prototype.includes: 2.0.1
 
-  eslint-plugin-next@0.0.0: {}
-
   eslint-plugin-prettier@4.2.1(eslint-config-prettier@8.6.0(eslint@7.32.0))(eslint@7.32.0)(prettier@2.8.4):
     dependencies:
       eslint: 7.32.0
@@ -16344,6 +16347,14 @@ snapshots:
   fast-deep-equal@3.1.3: {}
 
   fast-diff@1.3.0: {}
+
+  fast-glob@3.3.1:
+    dependencies:
+      '@nodelib/fs.stat': 2.0.5
+      '@nodelib/fs.walk': 1.2.8
+      glob-parent: 5.1.2
+      merge2: 1.4.1
+      micromatch: 4.0.8
 
   fast-glob@3.3.3:
     dependencies:
