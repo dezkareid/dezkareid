@@ -50,9 +50,10 @@ jobs:
         uses: ./.github/actions/setup-js
 
       - name: Apply Supabase migrations
-        run: npx supabase db push --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: npx supabase db push --linked
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_ID }}
 
   deploy:
     needs: migrate
