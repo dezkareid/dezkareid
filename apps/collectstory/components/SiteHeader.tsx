@@ -1,10 +1,5 @@
-// TODO(perf): SiteHeader is 'use client' only because ThemeToggle requires it.
-// Extract ThemeToggle into its own isolated client component so SiteHeader can be an RSC,
-// avoiding a client boundary on the static homepage (force-static).
-'use client';
-
 import Link from 'next/link';
-import { ThemeToggle } from '@dezkareid/components/react';
+import { ThemeToggle } from '@dezkareid/components/react-client';
 import styles from './SiteHeader.module.css';
 
 export function SiteHeader() {
@@ -25,7 +20,7 @@ export function SiteHeader() {
         </nav>
 
         <div className={styles.actions}>
-          <ThemeToggle />
+          <ThemeToggle cssProcessor="lightningcss" />
           <Link href="/login" className={styles.signIn}>
             Sign In
           </Link>

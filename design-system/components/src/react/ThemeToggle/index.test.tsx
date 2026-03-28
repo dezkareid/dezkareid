@@ -19,7 +19,7 @@ function mockMatchMedia(prefersDark: boolean) {
 
 beforeEach(() => {
   localStorage.clear();
-  document.documentElement.removeAttribute('color-scheme');
+  document.documentElement.style.colorScheme = '';
   mockMatchMedia(false);
 });
 
@@ -35,7 +35,7 @@ describe('ThemeToggle', () => {
       render(<ThemeToggle />);
     });
     expect(screen.getByRole('button')).toHaveTextContent('Light');
-    expect(document.documentElement.getAttribute('color-scheme')).toBe('light');
+    expect(document.documentElement.style.colorScheme).toBe('light');
   });
 
   it('initialises to dark from OS preference when localStorage is empty', async () => {
@@ -44,7 +44,7 @@ describe('ThemeToggle', () => {
       render(<ThemeToggle />);
     });
     expect(screen.getByRole('button')).toHaveTextContent('Dark');
-    expect(document.documentElement.getAttribute('color-scheme')).toBe('dark');
+    expect(document.documentElement.style.colorScheme).toBe('dark');
   });
 
   it('initialises from localStorage over OS preference', async () => {
@@ -62,7 +62,7 @@ describe('ThemeToggle', () => {
     });
     await userEvent.click(screen.getByRole('button'));
     expect(screen.getByRole('button')).toHaveTextContent('Dark');
-    expect(document.documentElement.getAttribute('color-scheme')).toBe('dark');
+    expect(document.documentElement.style.colorScheme).toBe('dark');
   });
 
   it('toggles from dark to light on click', async () => {
@@ -72,7 +72,7 @@ describe('ThemeToggle', () => {
     });
     await userEvent.click(screen.getByRole('button'));
     expect(screen.getByRole('button')).toHaveTextContent('Light');
-    expect(document.documentElement.getAttribute('color-scheme')).toBe('light');
+    expect(document.documentElement.style.colorScheme).toBe('light');
   });
 
   it('persists theme to localStorage on toggle', async () => {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import cx from 'classnames';
-import type { Theme } from '../../shared/types/theme-toggle';
+import type { Theme, ThemeToggleProperties } from '../../shared/types/theme-toggle';
 import { getInitialTheme, applyTheme, persistTheme } from '../../shared/js/theme';
 import styles from '../../css/theme-toggle.module.css';
 
@@ -44,21 +44,22 @@ const MoonIcon = (
   </svg>
 );
 
-export function ThemeToggle() {
+export function ThemeToggle({ cssProcessor = 'css', onChange }: ThemeToggleProperties) {
   const [theme, setTheme] = useState<Theme>('light');
 
   useEffect(() => {
     const initial = getInitialTheme();
     // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
     setTheme(initial);
-    applyTheme(initial);
-  }, []);
+    applyTheme(initial, cssProcessor);
+  }, [cssProcessor]);
 
   function toggle() {
     const next: Theme = theme === 'light' ? 'dark' : 'light';
     setTheme(next);
-    applyTheme(next);
+    applyTheme(next, cssProcessor);
     persistTheme(next);
+    onChange?.(next);
   }
 
   const isDark = theme === 'dark';

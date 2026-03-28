@@ -189,11 +189,15 @@ File: `src/react/ThemeToggle/index.tsx` | `src/astro/ThemeToggle/index.astro` | 
 Types: `src/shared/types/theme-toggle.ts` | CSS: `src/css/theme-toggle.module.css`
 Shared logic: `src/shared/js/theme.ts`
 
-Props: none (self-contained stateful component)
+Props:
+- `cssProcessor?: 'css' | 'lightningcss'` — default `'css'`. Controls how `applyTheme` overrides the document theme.
+  - `'css'`: sets `document.documentElement.style.colorScheme`. Works with native `light-dark()` support (Astro, Vite).
+  - `'lightningcss'`: also flips `--lightningcss-light` / `--lightningcss-dark` CSS variables. Required for Next.js/Turbopack, which compiles `light-dark()` away. See https://lightningcss.dev/transpilation.html.
+- `onChange?: (theme: 'light' | 'dark') => void` — called after each toggle with the new theme value. Useful for syncing external state or analytics.
 
 Behaviour:
 - On mount: reads `localStorage.getItem('color-scheme')`; falls back to `window.matchMedia('(prefers-color-scheme: dark)')`
-- On toggle: flips theme, calls `applyTheme()` (sets `color-scheme` on `<html>`), calls `persistTheme()` (writes to `localStorage`)
+- On toggle: flips theme, calls `applyTheme(theme, cssProcessor)`, calls `persistTheme()` (writes to `localStorage`), then calls `onChange?.(next)`
 - Renders an inline SVG sun icon (light mode) or moon icon (dark mode) alongside the text label. SVGs have `aria-hidden="true"`.
 - A visually-hidden `<span aria-live="polite">` sibling outside the `<button>` announces the new theme to screen readers after each toggle.
 - Astro version includes an inline `<script is:inline>` for FOUC prevention

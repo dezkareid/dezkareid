@@ -3,8 +3,6 @@ import { redirect } from 'next/navigation';
 import { signInWithGoogle, signInWithFacebook, signInWithX } from './actions';
 import styles from './login.module.css';
 
-export const dynamic = 'force-static';
-
 export const metadata: Metadata = {
   title: 'Sign In',
   description: 'Sign in to Collectstory to manage your collection.',

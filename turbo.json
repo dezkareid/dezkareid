@@ -17,13 +17,20 @@
         "^build"
       ],
       "outputs": [
-        "dist/**"
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**"
       ],
       "env": [
-        "NODE_ENV"
+        "NODE_ENV",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "CLOUDINARY_CLOUD_NAME",
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"
       ]
     },
     "dev": {
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true,
       "outputs": []

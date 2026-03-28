@@ -1,10 +1,8 @@
 import type { Metadata } from 'next';
-import { createClient } from '@/lib/supabase/server';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { cacheLife } from 'next/cache';
 import { SiteHeader } from '@/components/SiteHeader';
 import styles from './page.module.css';
-
-export const dynamic = 'force-static';
-export const revalidate = 3600; // Revalidate every hour
 
 export const metadata: Metadata = {
   title: 'Stores Directory',
@@ -25,14 +23,23 @@ type Store = {
   city: string | null;
 };
 
-export default async function StoresPage() {
-  const supabase = await createClient();
+async function getStores() {
+  'use cache';
+  cacheLife('hours');
+
+  const supabase = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+  );
   const { data } = await supabase
     .from('stores')
     .select('id, name, url, country, city')
     .order('name', { ascending: true });
+  return (data ?? []) as Store[];
+}
 
-  const stores = (data ?? []) as Store[];
+export default async function StoresPage() {
+  const stores = await getStores();
 
   return (
     <>
