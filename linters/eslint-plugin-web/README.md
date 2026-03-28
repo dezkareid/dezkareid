@@ -67,6 +67,29 @@ export default [
 
 ---
 
+### `next`
+
+**Entrypoint**: `@dezkareid/eslint-plugin-web/next`
+
+Linting for Next.js projects. Extends [`react`](#react) and includes:
+- [`@next/eslint-plugin-next`](https://github.com/vercel/next.js/tree/canary/packages/next-eslint-plugin-next) recommended and `core-web-vitals` rules
+- Override for `unicorn/prefer-string-raw`: disabled for `middleware.ts` and `proxy.ts` (common Next.js middleware filenames)
+
+**Required peer**:
+```bash
+pnpm add -D @next/eslint-plugin-next @eslint-react/eslint-plugin
+```
+
+```js
+import nextConfig from '@dezkareid/eslint-plugin-web/next';
+
+export default [
+  ...nextConfig,
+];
+```
+
+---
+
 ### `astro`
 
 **Entrypoint**: `@dezkareid/eslint-plugin-web/astro`

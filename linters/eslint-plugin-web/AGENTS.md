@@ -14,6 +14,7 @@ linters/eslint-plugin-web/
 │   ├── configs/
 │   │   ├── typescript.ts           # Config: TypeScript (via eslint-config-ts-base)
 │   │   ├── react.ts                # Config: React (via @eslint-react/eslint-plugin)
+│   │   ├── next.ts                 # Config: Next.js (via @next/eslint-plugin-next)
 │   │   ├── astro.ts                # Config: Astro (via eslint-plugin-astro)
 │   │   └── css.ts                  # Config: CSS (via @eslint/css)
 │   └── rules/
@@ -43,6 +44,7 @@ Each config is a separate named export in `package.json`. Consumers import only 
 | Default (all) | `@dezkareid/eslint-plugin-web` | — |
 | typescript | `@dezkareid/eslint-plugin-web/typescript` | none |
 | react | `@dezkareid/eslint-plugin-web/react` | `@eslint-react/eslint-plugin` |
+| next | `@dezkareid/eslint-plugin-web/next` | `@next/eslint-plugin-next` |
 | astro | `@dezkareid/eslint-plugin-web/astro` | `eslint-plugin-astro` |
 | css | `@dezkareid/eslint-plugin-web/css` | none (`@eslint/css` is bundled) |
 
@@ -52,6 +54,7 @@ Each config is a separate named export in `package.json`. Consumers import only 
 |--------------|-----------------------|--------------------------------------------------------|--------------------|
 | `typescript` | `configs/typescript.ts` | `@dezkareid/eslint-config-ts-base`                   | `**/*.{ts,tsx}`    |
 | `react`      | `configs/react.ts`    | `@eslint-react/eslint-plugin`, `eslint-plugin-unicorn` | `**/*.{jsx,tsx}`   |
+| `next`       | `configs/next.ts`     | `@next/eslint-plugin-next`, `react` config            | `**/*.{jsx,tsx}`   |
 | `css`        | `configs/css.ts`      | `@eslint/css`                                          | `**/*.css`         |
 | `astro`      | `configs/astro.ts`    | `eslint-plugin-astro`, `eslint-plugin-unicorn`         | `**/*.astro`       |
 

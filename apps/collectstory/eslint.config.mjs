@@ -1,12 +1,12 @@
 import tsBase from '@dezkareid/eslint-config-ts-base';
-import reactConfig from '@dezkareid/eslint-plugin-web/react';
+import nextConfig from '@dezkareid/eslint-plugin-web/next';
 
 export default [
   {
     ignores: ['dist/', 'node_modules/', '.next/', 'next-env.d.ts'],
   },
   ...tsBase,
-  ...reactConfig,
+  ...nextConfig,
   {
     rules: {
       // Next.js App Router uses PascalCase for component files and lowercase for route files.

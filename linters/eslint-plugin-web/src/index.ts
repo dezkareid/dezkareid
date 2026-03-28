@@ -4,6 +4,7 @@ import noJquery from './rules/no-jquery.js';
 import noAllowedPackages from './rules/no-allowed-packages.js';
 import typescriptConfig from './configs/typescript.js';
 import reactConfig from './configs/react.js';
+import nextConfig from './configs/next.js';
 import cssConfig from './configs/css.js';
 import astroConfig from './configs/astro.js';
 
@@ -23,6 +24,7 @@ export const rules = {
 export const configs: Record<string, Linter.Config[]> = {
   typescript: typescriptConfig,
   react: reactConfig,
+  next: nextConfig,
   css: cssConfig,
   astro: astroConfig,
 };
