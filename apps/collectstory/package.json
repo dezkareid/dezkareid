@@ -15,7 +15,8 @@
     "@supabase/supabase-js": "2.100.0",
     "next": "16.2.1",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "server-only": "0.0.1"
   },
   "devDependencies": {
     "@dezkareid/eslint-config-ts-base": "1.0.0",
