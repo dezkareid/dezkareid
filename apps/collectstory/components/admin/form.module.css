@@ -1,0 +1,77 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-24);
+  max-width: 480px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.label {
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.input,
+.select {
+  font-size: var(--font-size-300);
+  color: var(--color-text-primary);
+  background-color: var(--color-background-primary);
+  border: 1px solid var(--color-text-secondary);
+  border-radius: var(--border-radius-medium);
+  padding: var(--spacing-8) var(--spacing-12);
+  width: 100%;
+  outline: none;
+}
+
+.input:focus,
+.select:focus {
+  border-color: var(--color-primary);
+}
+
+.error {
+  font-size: var(--font-size-200);
+  color: var(--color-text-primary);
+  background-color: var(--color-background-secondary);
+  border: 1px solid var(--color-text-secondary);
+  border-radius: var(--border-radius-small);
+  padding: var(--spacing-8) var(--spacing-12);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-16);
+}
+
+.submitButton {
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-inverse);
+  background-color: var(--color-primary);
+  border: none;
+  border-radius: var(--border-radius-medium);
+  padding: var(--spacing-8) var(--spacing-24);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cancelLink {
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+}
+
+.cancelLink:hover {
+  color: var(--color-text-primary);
+}

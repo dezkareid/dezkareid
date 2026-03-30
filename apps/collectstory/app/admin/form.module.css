@@ -1,0 +1,10 @@
+.container {
+  max-width: 560px;
+}
+
+.heading {
+  font-size: var(--font-size-700);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-32);
+}

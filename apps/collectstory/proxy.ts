@@ -28,13 +28,26 @@ export async function proxy(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  if (
-    !user
-    && pathname.startsWith('/collection')
-  ) {
+  if (!user && (pathname.startsWith('/collection') || pathname.startsWith('/admin'))) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = '/login';
     return NextResponse.redirect(loginUrl);
+  }
+
+  // For /admin routes, check the role — redirect non-admins to /collection.
+  // The admin layout performs a second server-side check as defense-in-depth.
+  if (user && pathname.startsWith('/admin')) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.sub)
+      .single();
+
+    if (profile?.role !== 'admin') {
+      const collectionUrl = request.nextUrl.clone();
+      collectionUrl.pathname = '/collection';
+      return NextResponse.redirect(collectionUrl);
+    }
   }
 
   // IMPORTANT: return supabaseResponse unmodified to preserve cookie sync.

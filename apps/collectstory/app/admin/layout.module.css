@@ -16,51 +16,58 @@
 .headerInner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: var(--spacing-16) var(--spacing-48);
   gap: var(--spacing-24);
+  padding: var(--spacing-16) var(--spacing-48);
 }
 
 @media (max-width: 768px) {
   .headerInner {
     padding: var(--spacing-16) var(--spacing-24);
+    flex-wrap: wrap;
+    gap: var(--spacing-12);
   }
 }
 
 .brand {
   font-size: var(--font-size-300);
   font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
+  color: var(--color-primary);
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  text-decoration: none;
+  margin-right: var(--spacing-8);
 }
 
 .nav {
   display: flex;
   align-items: center;
-  gap: var(--spacing-16);
+  gap: var(--spacing-8);
+  flex: 1;
 }
 
-.userEmail {
-  font-size: var(--font-size-200);
-  color: var(--color-text-secondary);
-}
-
-@media (max-width: 480px) {
-  .userEmail {
-    display: none;
-  }
-}
-
-.adminLink {
+.navLink {
   font-size: var(--font-size-200);
   font-weight: var(--font-weight-medium);
-  color: var(--color-primary);
+  color: var(--color-text-primary);
   text-decoration: none;
+  padding: var(--spacing-4) var(--spacing-8);
+  border-radius: var(--border-radius-small);
+  transition: background-color 0.15s ease;
 }
 
-.adminLink:hover {
-  text-decoration: underline;
+.navLink:hover {
+  background-color: var(--color-background-secondary);
+}
+
+.backLink {
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.backLink:hover {
+  color: var(--color-text-primary);
 }
 
 .main {

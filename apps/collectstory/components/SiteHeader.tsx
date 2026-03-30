@@ -2,7 +2,11 @@ import Link from 'next/link';
 import { ThemeToggle } from '@dezkareid/components/react-client';
 import styles from './SiteHeader.module.css';
 
-export function SiteHeader() {
+interface SiteHeaderProperties {
+  isAdmin?: boolean;
+}
+
+export function SiteHeader({ isAdmin }: SiteHeaderProperties) {
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
@@ -17,6 +21,11 @@ export function SiteHeader() {
           <Link href="/stores" className={styles.navLink}>
             Stores
           </Link>
+          {isAdmin && (
+            <Link href="/admin" className={styles.navLink}>
+              Admin
+            </Link>
+          )}
         </nav>
 
         <div className={styles.actions}>

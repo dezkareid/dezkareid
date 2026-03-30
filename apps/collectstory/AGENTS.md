@@ -61,8 +61,17 @@ apps/collectstory/
 | `/auth/callback` | Route Handler | Public (OAuth callback) |
 | `/stores` | SSG (ISR 1h) | Public |
 | `/collection` | SSR | Authenticated only |
+| `/admin` | PPR | `admin` role only |
+| `/admin/brands` | PPR | `admin` role only |
+| `/admin/lines` | PPR | `admin` role only |
+| `/admin/categories` | PPR | `admin` role only |
+| `/admin/stores` | PPR | `admin` role only |
 
-The middleware redirects all unauthenticated requests to `/collection` → `/login`.
+The middleware redirects:
+- Unauthenticated requests to `/collection` or `/admin/*` → `/login`
+- Authenticated non-admin requests to `/admin/*` → `/collection`
+
+The `app/admin/layout.tsx` performs a secondary server-side role check (defense-in-depth via `AdminGuard` async Server Component wrapped in `<Suspense>`).
 
 ## Auth Pattern
 
@@ -104,11 +113,50 @@ This project uses `@dezkareid/eslint-plugin-web/next` for Next.js-specific linti
 
 | Table | Key Columns | Notes |
 |---|---|---|
-| `brands` | `id, name, slug` | Public read |
-| `lines` | `id, brand_id, name, slug` | Belongs to one brand; public read |
-| `categories` | `id, name, slug` | Public read |
-| `stores` | `id, name, url, country, city, lat, lng` | Public read |
+| `profiles` | `id, role` | One row per auth user; `role` is `'admin'` or `'user'`; auto-created on signup via trigger |
+| `brands` | `id, name, slug` | Public read; admin write |
+| `lines` | `id, brand_id, name, slug` | Belongs to one brand; public read; admin write |
+| `categories` | `id, name, slug` | Public read; admin write |
+| `stores` | `id, name, url, country, city, lat, lng` | Public read; admin write |
 | `collection_items` | `id, user_id, name, image_url, brand_id, line_id, category_id, description, date_acquired` | RLS: user-scoped CRUD only |
+
+## Admin Infrastructure
+
+### Promoting the First Admin
+
+After signing in for the first time, run the following SQL in Supabase (or via the MCP) to promote your user to admin:
+
+```sql
+insert into public.profiles (id, role)
+select id, 'admin'
+from auth.users
+where email = 'your-email@example.com'
+on conflict (id) do update set role = 'admin';
+```
+
+The migration `003_bootstrap_admin.sql` is idempotent and also handles this on first apply if the user exists at migration time.
+
+### `createAdminClient`
+
+Use `lib/supabase/admin.ts` → `createAdminClient()` for any Server Action or Server Component that needs to bypass RLS (admin writes). This client uses `SUPABASE_SERVICE_ROLE_KEY` and is protected by `import 'server-only'` — it cannot be imported in Client Components.
+
+```ts
+import { createAdminClient } from '@/lib/supabase/admin';
+
+const supabase = createAdminClient();
+await supabase.from('brands').insert({ name, slug });
+```
+
+### `getSessionAndRole`
+
+Use `lib/auth/role.ts` → `getSessionAndRole()` in Server Components and Server Actions to check the current user's role:
+
+```ts
+import { getSessionAndRole } from '@/lib/auth/role';
+
+const session = await getSessionAndRole();
+if (!session || session.role !== 'admin') throw new Error('Forbidden');
+```
 
 ## Environment Variables
 
