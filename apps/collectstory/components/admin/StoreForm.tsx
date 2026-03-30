@@ -100,8 +100,9 @@ export function StoreForm({ action, defaultValues, submitLabel }: StoreFormPrope
   const [, formAction, pending] = useActionState(
     async (_previous: undefined, formData: FormData) => {
       await action(formData);
-      return;
+      return undefined;
     },
+    undefined,
   );
 
   return (
