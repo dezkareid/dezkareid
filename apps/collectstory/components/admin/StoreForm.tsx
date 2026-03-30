@@ -98,9 +98,8 @@ function StoreFields({ defaultValues }: { defaultValues?: StoreDefaults }) {
 
 export function StoreForm({ action, defaultValues, submitLabel }: StoreFormProperties) {
   const [, formAction, pending] = useActionState(
-    async (_previous: undefined, formData: FormData) => {
+    async (_previous: undefined | void, formData: FormData) => {
       await action(formData);
-      return undefined;
     },
     undefined,
   );
