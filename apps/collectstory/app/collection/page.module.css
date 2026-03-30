@@ -6,8 +6,10 @@
 
 .pageHeader {
   display: flex;
-  align-items: baseline;
+  align-items: center;
+  justify-content: space-between;
   gap: var(--spacing-16);
+  flex-wrap: wrap;
 }
 
 .pageTitle {
@@ -55,4 +57,37 @@
   font-size: var(--font-size-300);
   color: var(--color-text-secondary);
   margin: 0;
+}
+
+/* Last Additions */
+
+.lastAdditions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-400);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: var(--font-size-100);
+}
+
+.strip {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: var(--spacing-16);
+  overflow-x: auto;
+  padding-bottom: var(--spacing-8);
+  scrollbar-width: thin;
+}
+
+.stripItem {
+  flex: 0 0 220px;
 }

@@ -183,6 +183,23 @@ SUPABASE_ACCESS_TOKEN=<your-token> npx supabase link --project-ref <project-ref>
 npx supabase db push --project-ref <project-ref>
 ```
 
+### Creating Migrations
+
+**Always** create migration files using the Supabase CLI — never create them manually with a hand-crafted timestamp:
+
+```bash
+# From apps/collectstory/
+npx supabase migration new <migration_name>
+```
+
+This generates a file with the exact timestamp the CLI will record in the remote `supabase_migrations` history table. If you create a file manually with a different timestamp, `supabase db push` will fail with:
+
+```
+Remote migration versions not found in local migrations directory.
+```
+
+Because the remote history and local filenames won't match. If this happens, rename the local files to match the versions reported by the error (or run `supabase db pull` to sync).
+
 ### 2. Configure Supabase MCP for Claude Code
 
 Add the following to the monorepo-level Claude Code settings (`.claude/settings.json`):
