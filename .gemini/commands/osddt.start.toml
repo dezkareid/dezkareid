@@ -87,13 +87,24 @@ npx @dezkareid/osddt start-worktree <feature-name> --dir <package-path>
 
 4. Parse the command output to extract `worktreePath` and `workingDir`.
 
-5. Navigate into the worktree directory to locate the project:
+5. Copy environment files into the new worktree. Read `bare-path` and `mainBranch` from `.osddtrc` to construct the source path:
+   - Single repo (`repoType: "single"`):
+     ```
+     npx @dezkareid/osddt copy-env --source <bare-path>/<mainBranch> --target <worktreePath>
+     ```
+   - Monorepo (`repoType: "monorepo"`):
+     ```
+     npx @dezkareid/osddt copy-env --source <bare-path>/<mainBranch>/<package-path> --target <worktreePath>/<package-path>
+     ```
+   If the command finds no files, it exits silently — this is not an error.
+
+6. Navigate into the worktree directory to locate the project:
    - Enter `<worktreePath>` — this is the isolated git worktree for this feature.
    - If `repoType` is `"single"`: the project root is `<worktreePath>`.
    - If `repoType` is `"monorepo"`: the project root is `<worktreePath>/<package-path>`.
    - The planning files will live under `<workingDir>` (i.e. `<project-root>/working-on/<feature-name>/`).
 
-6. Report the branch name, worktree path, project root, and working directory.
+7. Report the branch name, worktree path, project root, and working directory.
 
 ---
 

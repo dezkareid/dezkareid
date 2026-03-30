@@ -92,6 +92,17 @@ npx @dezkareid/osddt start-worktree <feature-name> --dir <package-path>
 
 4. Parse the command output to extract `worktreePath` and `workingDir`. Navigate into `<worktreePath>` to locate the project root.
 
+5. Copy environment files into the new worktree. Read `bare-path` and `mainBranch` from `.osddtrc` to construct the source path:
+   - Single repo (`repoType: "single"`):
+     ```
+     npx @dezkareid/osddt copy-env --source <bare-path>/<mainBranch> --target <worktreePath>
+     ```
+   - Monorepo (`repoType: "monorepo"`):
+     ```
+     npx @dezkareid/osddt copy-env --source <bare-path>/<mainBranch>/<package-path> --target <worktreePath>/<package-path>
+     ```
+   If the command finds no files, it exits silently — this is not an error.
+
 #### If `worktree-repository` is **absent** — Standard workflow
 
 3. Check whether the branch already exists locally or remotely:
