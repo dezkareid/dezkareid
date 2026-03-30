@@ -1,0 +1,103 @@
+.container {
+  max-width: 900px;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-32);
+  gap: var(--spacing-16);
+}
+
+.heading {
+  font-size: var(--font-size-700);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.newButton {
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-inverse);
+  background-color: var(--color-primary);
+  border-radius: var(--border-radius-medium);
+  padding: var(--spacing-8) var(--spacing-16);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.15s ease;
+}
+
+.newButton:hover {
+  opacity: 0.85;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--color-background-primary);
+  border-radius: var(--border-radius-large);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.th {
+  text-align: left;
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  padding: var(--spacing-12) var(--spacing-16);
+  border-bottom: 1px solid var(--color-background-secondary);
+}
+
+.tr:not(:last-child) {
+  border-bottom: 1px solid var(--color-background-secondary);
+}
+
+.td {
+  font-size: var(--font-size-300);
+  color: var(--color-text-primary);
+  padding: var(--spacing-12) var(--spacing-16);
+}
+
+.tdMuted {
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+  padding: var(--spacing-12) var(--spacing-16);
+  font-family: monospace;
+}
+
+.tdActions {
+  padding: var(--spacing-8) var(--spacing-16);
+  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--spacing-8);
+}
+
+.editLink {
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary);
+  text-decoration: none;
+  padding: var(--spacing-4) var(--spacing-8);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--border-radius-small);
+  transition: opacity 0.15s ease;
+}
+
+.editLink:hover {
+  opacity: 0.75;
+}
+
+.empty {
+  font-size: var(--font-size-300);
+  color: var(--color-text-secondary);
+  padding: var(--spacing-32) 0;
+}
+
+.empty a {
+  color: var(--color-primary);
+}

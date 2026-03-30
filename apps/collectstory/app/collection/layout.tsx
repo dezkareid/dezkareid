@@ -1,20 +1,22 @@
 import { Suspense } from 'react';
+import Link from 'next/link';
 import { SignOutButton } from '@/components/SignOutButton';
-import { createClient } from '@/lib/supabase/server';
+import { getSessionAndRole } from '@/lib/auth/role';
 import styles from './layout.module.css';
 
 async function CollectionHeader() {
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getUser();
-  const user = data.user;
+  const session = await getSessionAndRole();
 
   return (
     <header className={styles.header}>
       <div className={styles.headerInner}>
         <span className={styles.brand}>Collectstory</span>
         <nav className={styles.nav} aria-label="Collection navigation">
-          {user && (
-            <span className={styles.userEmail}>{user.email}</span>
+          {session && (
+            <span className={styles.userEmail}>{session.user.email}</span>
+          )}
+          {session?.role === 'admin' && (
+            <Link href="/admin" className={styles.adminLink}>Admin</Link>
           )}
           <SignOutButton />
         </nav>
