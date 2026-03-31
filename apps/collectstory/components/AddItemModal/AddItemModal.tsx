@@ -6,14 +6,13 @@ import { AddItemForm } from '@/components/AddItemForm/AddItemForm';
 import styles from './AddItemModal.module.css';
 
 type Brand = { id: string; name: string };
-type Category = { id: string; name: string };
 
 type Properties = {
   brands: Brand[];
-  categories: Category[];
+  collectionId: string;
 };
 
-export function AddItemModal({ brands, categories }: Properties) {
+export function AddItemModal({ brands, collectionId }: Properties) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const router = useRouter();
 
@@ -58,7 +57,7 @@ export function AddItemModal({ brands, categories }: Properties) {
           <div className={styles.body}>
             <AddItemForm
               brands={brands}
-              categories={categories}
+              collectionId={collectionId}
               onSuccess={handleSuccess}
             />
           </div>

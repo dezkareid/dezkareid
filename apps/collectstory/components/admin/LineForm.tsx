@@ -9,15 +9,23 @@ interface Brand {
   name: string;
 }
 
+interface Category {
+  id: string;
+  name: string;
+}
+
 interface LineFormProperties {
   action: (formData: FormData) => Promise<{ error: string } | void>;
   brands: Brand[];
+  categories: Category[];
   defaultName?: string;
   defaultBrandId?: string;
+  defaultCategoryId?: string;
+  defaultImageUrl?: string;
   submitLabel: string;
 }
 
-export function LineForm({ action, brands, defaultName, defaultBrandId, submitLabel }: LineFormProperties) {
+export function LineForm({ action, brands, categories, defaultName, defaultBrandId, defaultCategoryId, defaultImageUrl, submitLabel }: LineFormProperties) {
   const [state, formAction, pending] = useActionState(
     async (_previous: { error: string } | undefined, formData: FormData) => {
       const result = await action(formData);
@@ -48,6 +56,32 @@ export function LineForm({ action, brands, defaultName, defaultBrandId, submitLa
           defaultValue={defaultName}
           className={styles.input}
           autoFocus
+        />
+      </div>
+      <div className={styles.field}>
+        <label htmlFor="category_id" className={styles.label}>
+          Category
+          <span className={styles.optional}>(optional)</span>
+        </label>
+        <select id="category_id" name="category_id" defaultValue={defaultCategoryId ?? ''} className={styles.select}>
+          <option value="">— none —</option>
+          {categories.map(c => (
+            <option key={c.id} value={c.id}>{c.name}</option>
+          ))}
+        </select>
+      </div>
+      <div className={styles.field}>
+        <label htmlFor="image_url" className={styles.label}>
+          Image URL
+          <span className={styles.optional}>(optional)</span>
+        </label>
+        <input
+          id="image_url"
+          name="image_url"
+          type="url"
+          defaultValue={defaultImageUrl}
+          className={styles.input}
+          placeholder="https://…"
         />
       </div>
       <div className={styles.actions}>

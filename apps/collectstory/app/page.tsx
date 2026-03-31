@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { SiteHeader } from '@/components/SiteHeader';
+import { HomeCTA } from '@/components/HomeCta';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -58,9 +60,15 @@ export default function HomePage() {
             </p>
 
             <div className={styles.heroActions}>
-              <Link href="/login" className={styles.ctaPrimary}>
-                Sign In to Your Collection
-              </Link>
+              <Suspense
+                fallback={(
+                  <Link href="/login" className={styles.ctaPrimary}>
+                    Sign In to Your Collection
+                  </Link>
+                )}
+              >
+                <HomeCTA primaryClassName={styles.ctaPrimary} />
+              </Suspense>
               <Link href="/stores" className={styles.ctaSecondary}>
                 Explore Stores
               </Link>

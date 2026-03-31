@@ -1,0 +1,123 @@
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+import { connection } from 'next/server';
+import { getPublicCollectionsByUsername } from '@/lib/collections';
+import { UserProfileActions } from '@/components/username/UserProfileActions';
+import styles from './page.module.css';
+
+type Properties = {
+  params: Promise<{ username: string }>;
+};
+
+export async function generateMetadata({ params }: Properties): Promise<Metadata> {
+  const { username } = await params;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
+
+  return {
+    title: `${username}'s Collections`,
+    description: `Browse ${username}'s collectible collections on Collectstory.`,
+    alternates: { canonical: `${baseUrl}/${username}` },
+    openGraph: {
+      title: `${username}'s Collections — Collectstory`,
+      description: `Browse ${username}'s collectible collections on Collectstory.`,
+      url: `${baseUrl}/${username}`,
+      type: 'profile',
+    },
+  };
+}
+
+async function ProfileContent({ username }: { username: string }) {
+  await connection();
+  const result = await getPublicCollectionsByUsername(username);
+  if (!result) notFound();
+
+  const { collections } = result;
+
+  return (
+    <>
+      <div className={styles.grid}>
+        {collections.length === 0
+          ? (
+              <div className={styles.empty}>
+                <p className={styles.emptyTitle}>No public collections yet</p>
+                <p className={styles.emptyDesc}>
+                  {username}
+                  {' '}
+                  hasn&apos;t made any collections public yet.
+                </p>
+              </div>
+            )
+          : collections.map(col => (
+              <Link
+                key={col.id}
+                href={`/${username}/${col.slug}`}
+                className={styles.collectionCard}
+              >
+                <p className={styles.collectionName}>{col.name}</p>
+                {col.description && (
+                  <p className={styles.collectionDesc}>{col.description}</p>
+                )}
+                <p className={styles.collectionMeta}>
+                  {col.item_count}
+                  {' '}
+                  {col.item_count === 1 ? 'item' : 'items'}
+                </p>
+              </Link>
+            ))}
+      </div>
+    </>
+  );
+}
+
+async function ProfileHeader({ params }: { params: Promise<{ username: string }> }) {
+  const { username } = await params;
+
+  return (
+    <header className={styles.header}>
+      <div className={styles.avatar}>
+        <Image
+          src={`https://api.dicebear.com/7.x/initials/svg?seed=${username}`}
+          alt={username}
+          width={72}
+          height={72}
+          style={{ borderRadius: '50%' }}
+        />
+      </div>
+      <div className={styles.headerText}>
+        <h1 className={styles.username}>
+          @
+          {username}
+        </h1>
+      </div>
+      <div className={styles.ownerActions}>
+        <Suspense fallback={undefined}>
+          <UserProfileActions username={username} />
+        </Suspense>
+      </div>
+    </header>
+  );
+}
+
+async function ProfileCollections({ params }: { params: Promise<{ username: string }> }) {
+  const { username } = await params;
+  return <ProfileContent username={username} />;
+}
+
+export default function UserProfilePage({ params }: Properties) {
+  return (
+    <main className={styles.page}>
+      <Suspense>
+        <ProfileHeader params={params} />
+      </Suspense>
+
+      <p className={styles.sectionLabel}>Collections</p>
+
+      <Suspense>
+        <ProfileCollections params={params} />
+      </Suspense>
+    </main>
+  );
+}

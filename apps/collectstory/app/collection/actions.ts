@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import { generateUniqueSlug } from '@/lib/slug';
+import { generateUniqueSlug, generateUniqueCollectionSlug } from '@/lib/slug';
 
 export async function signOut() {
   const supabase = await createClient();
@@ -34,14 +34,16 @@ export async function createCollectionItem(
 
   const slug = await generateUniqueSlug(supabase, user.id, name);
 
+  const collection_id = getOptional(formData, 'collection_id');
+  if (!collection_id) return { error: 'Collection is required.' };
+
   const { error } = await supabase.from('collection_items').insert({
     user_id: user.id,
+    collection_id,
     name,
     slug,
     image_url: getOptional(formData, 'image_url'),
-    brand_id: getOptional(formData, 'brand_id'),
     line_id: getOptional(formData, 'line_id'),
-    category_id: getOptional(formData, 'category_id'),
     description: getOptional(formData, 'description'),
     date_acquired: getOptional(formData, 'date_acquired'),
     visibility: getOptional(formData, 'visibility') ?? 'public',
@@ -50,6 +52,73 @@ export async function createCollectionItem(
   if (error) return { error: 'Failed to save item. Please try again.' };
 
   revalidatePath('/collection');
+  return { success: true };
+}
+
+type CollectionState
+  = | { error: string }
+    | { success: true; slug: string }
+    | undefined;
+
+export async function createCollection(
+  _previousState: CollectionState,
+  formData: FormData,
+): Promise<CollectionState> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated.' };
+
+  const name = getOptional(formData, 'name') ?? '';
+  if (!name) return { error: 'Name is required.' };
+
+  const slug = await generateUniqueCollectionSlug(supabase, user.id, name);
+
+  const { error } = await supabase.from('collections').insert({
+    user_id: user.id,
+    name,
+    slug,
+    description: getOptional(formData, 'description'),
+    visibility: getOptional(formData, 'visibility') ?? 'public',
+  });
+
+  if (error) return { error: 'Failed to create collection. Please try again.' };
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('username')
+    .eq('id', user.id)
+    .single();
+
+  if (profile?.username) {
+    revalidatePath(`/${profile.username}`);
+  }
+
+  return { success: true, slug };
+}
+
+export async function deleteCollection(collectionId: string): Promise<{ error: string } | { success: true }> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated.' };
+
+  const { error } = await supabase
+    .from('collections')
+    .delete()
+    .eq('id', collectionId)
+    .eq('user_id', user.id);
+
+  if (error) return { error: 'Failed to delete collection.' };
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('username')
+    .eq('id', user.id)
+    .single();
+
+  if (profile?.username) {
+    revalidatePath(`/${profile.username}`);
+  }
+
   return { success: true };
 }
 
@@ -95,12 +164,17 @@ export async function updateItemImage(
 
 export async function getLinesByBrand(
   brandId: string,
-): Promise<{ id: string; name: string }[]> {
+): Promise<{ id: string; name: string; categoryName: string | undefined }[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from('lines')
-    .select('id, name')
+    .select('id, name, categories ( name )')
     .eq('brand_id', brandId)
     .order('name');
-  return data ?? [];
+
+  return (data ?? []).map(l => ({
+    id: l.id,
+    name: l.name,
+    categoryName: (l.categories as unknown as { name: string } | undefined)?.name ?? undefined,
+  }));
 }

@@ -34,3 +34,28 @@ export async function generateUniqueSlug(
 
   return `${base}-${suffix}`;
 }
+
+export async function generateUniqueCollectionSlug(
+  supabase: SupabaseClient,
+  userId: string,
+  name: string,
+): Promise<string> {
+  const base = toSlug(name);
+
+  const { data: existing } = await supabase
+    .from('collections')
+    .select('slug')
+    .eq('user_id', userId)
+    .like('slug', `${base}%`);
+
+  const taken = new Set((existing ?? []).map(r => r.slug));
+
+  if (!taken.has(base)) return base;
+
+  let suffix = 2;
+  while (taken.has(`${base}-${suffix}`)) {
+    suffix++;
+  }
+
+  return `${base}-${suffix}`;
+}

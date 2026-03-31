@@ -1,7 +1,40 @@
+/* ─── Item Detail Page ─────────────────────────────────────────────────────── */
+
 .page {
   max-width: 960px;
   margin: 0 auto;
   padding: var(--spacing-48) var(--spacing-24);
+}
+
+/* Breadcrumb */
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+  margin-bottom: var(--spacing-32);
+  font-size: var(--font-size-200);
+}
+
+.breadcrumbLink {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.breadcrumbLink:hover {
+  color: var(--color-primary);
+}
+
+.breadcrumbSep {
+  color: var(--color-text-secondary);
+  opacity: 0.4;
+  font-size: var(--font-size-100);
+}
+
+/* Two-column layout */
+
+.layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-64);
@@ -9,14 +42,13 @@
 }
 
 @media (max-width: 680px) {
-  .page {
+  .layout {
     grid-template-columns: 1fr;
     gap: var(--spacing-32);
-    padding: var(--spacing-24) var(--spacing-16);
   }
 }
 
-/* Image */
+/* Image section */
 
 .imageSection {
   position: sticky;
@@ -97,21 +129,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-24);
-}
-
-.owner {
-  margin: 0;
-}
-
-.ownerLink {
-  font-size: var(--font-size-200);
-  color: var(--color-text-secondary);
-  text-decoration: none;
-  letter-spacing: 0.02em;
-}
-
-.ownerLink:hover {
-  color: var(--color-primary);
+  padding-top: var(--spacing-8);
 }
 
 .name {

@@ -10,9 +10,22 @@ export async function GET(request: NextRequest) {
 
   if (code) {
     const supabase = await createClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    const { data: { user }, error } = await supabase.auth.exchangeCodeForSession(code);
 
-    if (!error) {
+    if (!error && user) {
+      // If no explicit `next`, redirect to the user's public profile.
+      // Fall back to profile edit if they haven't set a username yet.
+      if (nextParameter === '/collection') {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('username')
+          .eq('id', user.id)
+          .single();
+
+        const destination = profile?.username ? `/${profile.username}` : '/collection/edit';
+        return NextResponse.redirect(`${origin}${destination}`);
+      }
+
       return NextResponse.redirect(`${origin}${next}`);
     }
   }
