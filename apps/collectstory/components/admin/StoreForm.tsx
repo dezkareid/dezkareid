@@ -101,7 +101,6 @@ export function StoreForm({ action, defaultValues, submitLabel }: StoreFormPrope
     async (_previous: undefined | void, formData: FormData) => {
       await action(formData);
     },
-    undefined,
   );
 
   return (
