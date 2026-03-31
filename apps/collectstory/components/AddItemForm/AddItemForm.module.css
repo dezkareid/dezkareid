@@ -156,6 +156,15 @@
   50% { opacity: 0.3; }
 }
 
+.derivedValue {
+  font-size: var(--font-size-300);
+  color: var(--color-text-secondary);
+  padding: var(--spacing-8) var(--spacing-12);
+  background-color: var(--color-background-secondary);
+  border-radius: var(--border-radius-medium);
+  margin: 0;
+}
+
 /* Actions */
 
 .actions {

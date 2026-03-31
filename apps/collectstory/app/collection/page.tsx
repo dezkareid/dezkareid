@@ -13,12 +13,14 @@ export const metadata: Metadata = {
 type CollectionItem = {
   id: string;
   name: string;
-  image_url: string | null;
-  description: string | null;
-  date_acquired: string | null;
-  brands: { name: string }[];
-  lines: { name: string }[];
-  categories: { name: string }[];
+  image_url: string | undefined;
+  description: string | undefined;
+  date_acquired: string | undefined;
+  lines: {
+    name: string;
+    brands: { name: string } | undefined;
+    categories: { name: string } | undefined;
+  } | undefined;
 };
 
 const ITEM_SELECT = `
@@ -27,9 +29,11 @@ const ITEM_SELECT = `
   image_url,
   description,
   date_acquired,
-  brands ( name ),
-  lines ( name ),
-  categories ( name )
+  lines (
+    name,
+    brands ( name ),
+    categories ( name )
+  )
 `;
 
 async function LastAdditions() {
@@ -41,7 +45,7 @@ async function LastAdditions() {
     .order('created_at', { ascending: false })
     .limit(6);
 
-  const recentItems = (items ?? []) as CollectionItem[];
+  const recentItems = (items ?? []) as unknown as CollectionItem[];
 
   if (recentItems.length === 0) return;
 
@@ -54,9 +58,9 @@ async function LastAdditions() {
             <CollectionItemCard
               name={item.name}
               imageUrl={item.image_url ?? undefined}
-              brand={item.brands[0]?.name ?? undefined}
-              line={item.lines[0]?.name ?? undefined}
-              category={item.categories[0]?.name ?? undefined}
+              brand={item.lines?.brands?.name ?? undefined}
+              line={item.lines?.name ?? undefined}
+              category={item.lines?.categories?.name ?? undefined}
               description={item.description ?? undefined}
               dateAcquired={item.date_acquired ?? undefined}
             />
@@ -75,7 +79,7 @@ async function AllItems() {
     .select(ITEM_SELECT)
     .order('created_at', { ascending: false });
 
-  const collectionItems = (items ?? []) as CollectionItem[];
+  const collectionItems = (items ?? []) as unknown as CollectionItem[];
 
   if (collectionItems.length === 0) {
     return (
@@ -95,9 +99,9 @@ async function AllItems() {
           <CollectionItemCard
             name={item.name}
             imageUrl={item.image_url ?? undefined}
-            brand={item.brands[0]?.name ?? undefined}
-            line={item.lines[0]?.name ?? undefined}
-            category={item.categories[0]?.name ?? undefined}
+            brand={item.lines?.brands?.name ?? undefined}
+            line={item.lines?.name ?? undefined}
+            category={item.lines?.categories?.name ?? undefined}
             description={item.description ?? undefined}
             dateAcquired={item.date_acquired ?? undefined}
           />
@@ -109,15 +113,26 @@ async function AllItems() {
 
 async function AddItemSection() {
   const supabase = await createClient();
-  const [{ data: brands }, { data: categories }] = await Promise.all([
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  const [{ data: brands }, { data: collections }] = await Promise.all([
     supabase.from('brands').select('id, name').order('name'),
-    supabase.from('categories').select('id, name').order('name'),
+    supabase
+      .from('collections')
+      .select('id, name')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: true })
+      .limit(1),
   ]);
+
+  const defaultCollection = collections?.[0];
+  if (!defaultCollection) return;
 
   return (
     <AddItemModal
       brands={(brands ?? []) as { id: string; name: string }[]}
-      categories={(categories ?? []) as { id: string; name: string }[]}
+      collectionId={defaultCollection.id}
     />
   );
 }

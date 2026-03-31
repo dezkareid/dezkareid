@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useState, useTransition } from 'react';
+import { useActionState, useEffect, useState, useTransition } from 'react';
 import { createCollectionItem, getLinesByBrand } from '@/app/collection/actions';
 import styles from './AddItemForm.module.css';
 
@@ -8,12 +8,11 @@ const ALLOWED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 const MAX_BYTES = 5 * 1024 * 1024;
 
 type Brand = { id: string; name: string };
-type Line = { id: string; name: string };
-type Category = { id: string; name: string };
+type Line = { id: string; name: string; categoryName: string | undefined };
 
 type Properties = {
   brands: Brand[];
-  categories: Category[];
+  collectionId: string;
   onSuccess: () => void;
 };
 
@@ -26,46 +25,46 @@ async function uploadFile(file: File): Promise<{ url: string } | { error: string
   return { url: result.url };
 }
 
-export function AddItemForm({ brands, categories, onSuccess }: Properties) {
+function validateImageFile(file: File): string | undefined {
+  if (!ALLOWED_TYPES.has(file.type)) return 'Only JPEG, PNG, and WebP images are allowed.';
+  if (file.size > MAX_BYTES) return 'Image must be 5 MB or smaller.';
+  return undefined;
+}
+
+export function AddItemForm({ brands, collectionId, onSuccess }: Properties) {
   const [state, formAction, pending] = useActionState(createCollectionItem, undefined);
   const [fileError, setFileError] = useState<string>();
   const [preview, setPreview] = useState<string>();
   const [uploadedUrl, setUploadedUrl] = useState<string>();
   const [uploading, setUploading] = useState(false);
   const [lines, setLines] = useState<Line[]>([]);
+  const [selectedLine, setSelectedLine] = useState<Line | undefined>(undefined);
   const [loadingLines, startLoadingLines] = useTransition();
   const [, startTransition] = useTransition();
 
-  if (state && 'success' in state) {
-    onSuccess();
-  }
+  useEffect(() => {
+    if (state && 'success' in state) onSuccess();
+  }, [state, onSuccess]);
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     setFileError(undefined);
     setPreview(undefined);
     setUploadedUrl(undefined);
-
     if (!file) return;
-
-    if (!ALLOWED_TYPES.has(file.type)) {
-      setFileError('Only JPEG, PNG, and WebP images are allowed.');
+    const error = validateImageFile(file);
+    if (error) {
+      setFileError(error);
       event.target.value = '';
       return;
     }
-
-    if (file.size > MAX_BYTES) {
-      setFileError('Image must be 5 MB or smaller.');
-      event.target.value = '';
-      return;
-    }
-
     setPreview(URL.createObjectURL(file));
   }
 
   async function handleBrandChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const brandId = event.target.value;
     setLines([]);
+    setSelectedLine(undefined);
     if (!brandId) return;
     startLoadingLines(async () => {
       const result = await getLinesByBrand(brandId);
@@ -73,22 +72,21 @@ export function AddItemForm({ brands, categories, onSuccess }: Properties) {
     });
   }
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (fileError) return;
+  function handleLineChange(event: React.ChangeEvent<HTMLSelectElement>) {
+    const lineId = event.target.value;
+    setSelectedLine(lines.find(l => l.id === lineId));
+  }
 
-    const form = event.currentTarget;
-    const data = new FormData(form);
+  async function resolveImageUrl(form: HTMLFormElement, data: FormData): Promise<boolean> {
     const fileInput = form.elements.namedItem('image') as HTMLInputElement;
     const file = fileInput?.files?.[0];
-
     if (file && !uploadedUrl) {
       setUploading(true);
       const result = await uploadFile(file).catch(() => ({ error: 'Upload failed. Please try again.' }));
       setUploading(false);
       if ('error' in result) {
         setFileError(result.error);
-        return;
+        return false;
       }
       setUploadedUrl(result.url);
       data.set('image_url', result.url);
@@ -96,8 +94,16 @@ export function AddItemForm({ brands, categories, onSuccess }: Properties) {
     else if (uploadedUrl) {
       data.set('image_url', uploadedUrl);
     }
+    return true;
+  }
 
-    startTransition(() => formAction(data));
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (fileError) return;
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const ok = await resolveImageUrl(form, data);
+    if (ok) startTransition(() => formAction(data));
   }
 
   const isBusy = pending || uploading;
@@ -108,6 +114,8 @@ export function AddItemForm({ brands, categories, onSuccess }: Properties) {
       className={styles.form}
       noValidate
     >
+      <input type="hidden" name="collection_id" value={collectionId} />
+
       {state && 'error' in state && (
         <p className={styles.formError} role="alert">{state.error}</p>
       )}
@@ -162,7 +170,6 @@ export function AddItemForm({ brands, categories, onSuccess }: Properties) {
           <label className={styles.label} htmlFor="item-brand">Brand</label>
           <select
             id="item-brand"
-            name="brand_id"
             className={styles.select}
             onChange={handleBrandChange}
             defaultValue=""
@@ -185,6 +192,7 @@ export function AddItemForm({ brands, categories, onSuccess }: Properties) {
             className={styles.select}
             disabled={lines.length === 0}
             defaultValue=""
+            onChange={handleLineChange}
           >
             <option value="">— none —</option>
             {lines.map(l => (
@@ -194,20 +202,14 @@ export function AddItemForm({ brands, categories, onSuccess }: Properties) {
         </div>
       </div>
 
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor="item-category">Category</label>
-        <select
-          id="item-category"
-          name="category_id"
-          className={styles.select}
-          defaultValue=""
-        >
-          <option value="">— none —</option>
-          {categories.map(c => (
-            <option key={c.id} value={c.id}>{c.name}</option>
-          ))}
-        </select>
-      </div>
+      {selectedLine && (
+        <div className={styles.field}>
+          <label className={styles.label}>Category</label>
+          <p className={styles.derivedValue}>
+            {selectedLine.categoryName ?? '—'}
+          </p>
+        </div>
+      )}
 
       <div className={styles.field}>
         <label className={styles.label} htmlFor="item-description">Description</label>
