@@ -70,7 +70,8 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ url: result.secure_url });
   }
-  catch {
+  catch (error) {
+    console.error('[/api/upload] Cloudinary upload error:', error);
     return NextResponse.json({ error: 'Upload failed. Please try again.' }, { status: 500 });
   }
 }
