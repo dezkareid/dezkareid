@@ -23,6 +23,7 @@ export function LineForm({ action, brands, defaultName, defaultBrandId, submitLa
       const result = await action(formData);
       return result ?? undefined;
     },
+    undefined,
   );
 
   return (

@@ -43,6 +43,14 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/client/**"]
     },
+    "typecheck": {
+      "inputs": [
+        "**/*.tsx",
+        "**/*.ts",
+        "tsconfig.json"
+      ],
+      "outputs": []
+    },
     "lint": {
       "inputs": [
         "src/**/*.tsx",
@@ -70,15 +78,6 @@
       "outputs": []
     },
     "test": {
-      "outputs": [],
-      "inputs": [
-        "src/**/*.tsx",
-        "src/**/*.ts",
-        "src/**/*.jsx",
-        "src/**/*.js"
-      ]
-    },
-    "lint": {
       "outputs": [],
       "inputs": [
         "src/**/*.tsx",

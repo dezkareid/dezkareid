@@ -5,3 +5,4 @@ keys.js
 coverage
 .next
 .env.local
+tsconfig.tsbuildinfo

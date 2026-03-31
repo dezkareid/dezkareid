@@ -27,7 +27,7 @@ async function uploadFile(file: File): Promise<{ url: string } | { error: string
 }
 
 export function AddItemForm({ brands, categories, onSuccess }: Properties) {
-  const [state, formAction, pending] = useActionState(createCollectionItem);
+  const [state, formAction, pending] = useActionState(createCollectionItem, undefined);
   const [fileError, setFileError] = useState<string>();
   const [preview, setPreview] = useState<string>();
   const [uploadedUrl, setUploadedUrl] = useState<string>();
