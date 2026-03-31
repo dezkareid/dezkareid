@@ -17,6 +17,7 @@ export function NameOnlyForm({ action, cancelHref, defaultName, submitLabel }: N
       const result = await action(formData);
       return result ?? undefined;
     },
+    undefined,
   );
 
   return (

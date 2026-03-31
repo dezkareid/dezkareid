@@ -204,7 +204,7 @@ function UsernameField({
 }
 
 export function EditProfileForm({ currentUsername, currentAvatarUrl }: Properties) {
-  const [state, formAction, pending] = useActionState(updateProfile);
+  const [state, formAction, pending] = useActionState(updateProfile, undefined);
   const [, startTransition] = useTransition();
   const [fileError, setFileError] = useState<string>();
   const [avatarPreview, setAvatarPreview] = useState<string | undefined>(currentAvatarUrl);
