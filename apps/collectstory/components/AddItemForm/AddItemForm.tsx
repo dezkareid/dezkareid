@@ -34,6 +34,7 @@ export function AddItemForm({ brands, categories, onSuccess }: Properties) {
   const [uploading, setUploading] = useState(false);
   const [lines, setLines] = useState<Line[]>([]);
   const [loadingLines, startLoadingLines] = useTransition();
+  const [, startTransition] = useTransition();
 
   if (state && 'success' in state) {
     onSuccess();
@@ -96,7 +97,7 @@ export function AddItemForm({ brands, categories, onSuccess }: Properties) {
       data.set('image_url', uploadedUrl);
     }
 
-    formAction(data);
+    startTransition(() => formAction(data));
   }
 
   const isBusy = pending || uploading;
