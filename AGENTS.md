@@ -28,7 +28,8 @@ The monorepo is managed by `pnpm` and `turbo` across 6 workspace directories:
 │   ├── design-tokens/             # Style Dictionary tokens (colors, spacing, etc.)
 │   └── components/                # Multi-framework UI component library
 ├── ui-tools/                      # Development tools
-│   └── storybook-react/           # Storybook for React component development
+│   ├── storybook-react/           # Storybook for React component development
+│   └── auditor/                   # Web Quality Auditor (NestJS + Angular)
 ├── AGENTS.md                      # This file
 ├── turbo.json                     # Turbo workspace configuration
 └── pnpm-workspace.yaml            # pnpm workspace configuration
@@ -125,6 +126,15 @@ Storybook 10 instance for developing and documenting React components. **Private
 - **Dependencies**: `@dezkareid/components`, `@dezkareid/design-tokens`
 - **Addons**: a11y, docs, vitest, Chromatic (visual regression)
 - **Scripts**: `storybook` (port 6006), `build-storybook`
+
+#### `auditor` (`@dezkareid/auditor`) — `ui-tools/auditor/`
+Internal tool to systematically measure, monitor, and ensure high standards of performance and accessibility across the product portfolio. **Private (not published).**
+- **Backend**: NestJS 11 + Prisma 7 + SQLite
+- **Frontend**: Angular 21 (Standalone, Signals, OnPush) + Chart.js
+- **Audit Engine**: Lighthouse 13 + Headless Chrome (Puppeteer)
+- **Scripts**: `dev:server` (NestJS watch), `dev:client` (Angular serve), `build:server`, `build:client`
+- **Turbo tasks**: `pnpm turbo run dev:server --filter=@dezkareid/auditor`, `pnpm turbo run dev:client --filter=@dezkareid/auditor`
+- **Database**: SQLite at `ui-tools/auditor/dev.db`; initialize with `npx prisma migrate dev --name init` from `ui-tools/auditor/`
 
 ## Development
 
