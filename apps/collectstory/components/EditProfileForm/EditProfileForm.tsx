@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useRef, useState } from 'react';
+import { useActionState, useRef, useState, useTransition } from 'react';
 import Image from 'next/image';
 import { updateProfile, checkUsernameAvailable } from '@/app/profile/edit/actions';
 import styles from './EditProfileForm.module.css';
@@ -78,6 +78,7 @@ async function onSubmit(
   setUploading: SetBool,
   setFileError: SetString,
   setUploadedAvatarUrl: SetString,
+  startTransition: (callback: () => void) => void,
   formAction: (data: FormData) => void,
 ) {
   event.preventDefault();
@@ -100,7 +101,7 @@ async function onSubmit(
   else if (uploadedAvatarUrl) {
     data.set('avatar_url', uploadedAvatarUrl);
   }
-  formAction(data);
+  startTransition(() => formAction(data));
 }
 
 function AvatarPreviewSection({
@@ -204,6 +205,7 @@ function UsernameField({
 
 export function EditProfileForm({ currentUsername, currentAvatarUrl }: Properties) {
   const [state, formAction, pending] = useActionState(updateProfile, undefined);
+  const [, startTransition] = useTransition();
   const [fileError, setFileError] = useState<string>();
   const [avatarPreview, setAvatarPreview] = useState<string | undefined>(currentAvatarUrl);
   const [uploadedAvatarUrl, setUploadedAvatarUrl] = useState<string>();
@@ -215,7 +217,7 @@ export function EditProfileForm({ currentUsername, currentAvatarUrl }: Propertie
 
   return (
     <form
-      onSubmit={event => onSubmit(event, fileError, uploadedAvatarUrl, setUploading, setFileError, setUploadedAvatarUrl, formAction)}
+      onSubmit={event => onSubmit(event, fileError, uploadedAvatarUrl, setUploading, setFileError, setUploadedAvatarUrl, startTransition, formAction)}
       className={styles.form}
       noValidate
     >
