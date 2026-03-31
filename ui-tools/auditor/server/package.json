@@ -1,0 +1,9 @@
+{
+	"dependencies": {
+		"@nestjs/schedule": "^6.1.1",
+		"cron": "^4.4.0"
+	},
+	"devDependencies": {
+		"@types/cron": "^2.4.3"
+	}
+}

@@ -11,7 +11,9 @@
         "src/**/*.json",
         "src/**/*.css",
         "src/**/*.scss",
-        "public/**"
+        "public/**",
+        "server/src/**/*.ts",
+        "client/src/**/*.ts"
       ],
       "dependsOn": [
         "^build"
@@ -29,6 +31,36 @@
         "CLOUDINARY_API_SECRET",
         "NEXT_PUBLIC_SUPABASE_URL",
         "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"
+      ]
+    },
+    "build:server": {
+      "inputs": ["server/src/**/*.ts"],
+      "dependsOn": ["^build"],
+      "outputs": ["dist/server/**"]
+    },
+    "build:client": {
+      "inputs": ["client/src/**/*.ts"],
+      "dependsOn": ["^build"],
+      "outputs": ["dist/client/**"]
+    },
+    "lint": {
+      "inputs": [
+        "src/**/*.tsx",
+        "src/**/*.ts",
+        "src/**/*.jsx",
+        "src/**/*.js",
+        "server/src/**/*.ts",
+        "client/src/**/*.ts"
+      ]
+    },
+    "lint:fix": {
+      "inputs": [
+        "src/**/*.tsx",
+        "src/**/*.ts",
+        "src/**/*.jsx",
+        "src/**/*.js",
+        "server/src/**/*.ts",
+        "client/src/**/*.ts"
       ]
     },
     "dev": {

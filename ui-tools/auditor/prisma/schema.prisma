@@ -1,0 +1,81 @@
+datasource db {
+  provider = "sqlite"
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../server/src/generated/prisma"
+}
+
+model Domain {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  urls        Url[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Url {
+  id          String     @id @default(uuid())
+  address     String     // e.g. "https://dezkareid.dev" or "/about"
+  description String?
+  domain      Domain     @relation(fields: [domainId], references: [id])
+  domainId    String
+  audits      AuditRun[]
+  budgets     Budget[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@unique([address, domainId])
+}
+
+model Environment {
+  id          String     @id @default(uuid())
+  name        String     @unique // e.g. "Production", "Development", "Local"
+  urlPrefix   String?    // e.g. "http://localhost:4321"
+  description String?
+  audits      AuditRun[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model AuditRun {
+  id            String      @id @default(uuid())
+  url           Url         @relation(fields: [urlId], references: [id])
+  urlId         String
+  environment   Environment @relation(fields: [environmentId], references: [id])
+  environmentId String
+  status        String      // "PENDING", "COMPLETED", "FAILED"
+  inBudget      Boolean     @default(true)
+  metrics       Metric[]
+  reportPath    String?     // Path to full JSON report if kept
+  scheduledAt   DateTime?
+  startedAt     DateTime?
+  completedAt   DateTime?
+  createdAt     DateTime    @default(now())
+}
+
+model Metric {
+  id         String   @id @default(uuid())
+  auditRun   AuditRun @relation(fields: [auditRunId], references: [id], onDelete: Cascade)
+  auditRunId String
+  name       String   // e.g. "LCP", "TBT", "performance-score", "accessibility-score"
+  value      Float
+  unit       String?  // "ms", "s", "score", "bytes"
+  category   String   // "performance", "accessibility", "best-practices", "seo"
+  createdAt  DateTime @default(now())
+}
+
+model Budget {
+  id         String   @id @default(uuid())
+  url        Url      @relation(fields: [urlId], references: [id])
+  urlId      String
+  metricName String   // e.g. "LCP"
+  threshold  Float
+  operator   String   // "LT", "GT", "LTE", "GTE"
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([urlId, metricName])
+}
