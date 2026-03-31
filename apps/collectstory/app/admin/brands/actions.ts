@@ -13,6 +13,11 @@ async function requireAdmin() {
   }
 }
 
+function parseOptionalString(formData: FormData, key: string): string | undefined {
+  const value = formData.get(key);
+  return (typeof value === 'string' && value.trim()) ? value.trim() : undefined;
+}
+
 export async function createBrand(formData: FormData) {
   await requireAdmin();
 
@@ -22,7 +27,7 @@ export async function createBrand(formData: FormData) {
   const supabase = createAdminClient();
   const { error } = await supabase
     .from('brands')
-    .insert({ name, slug: slugify(name) });
+    .insert({ name, slug: slugify(name), image_url: parseOptionalString(formData, 'image_url') });
 
   if (error?.code === '23505') {
     return { error: 'A brand with that name already exists.' };
@@ -40,9 +45,13 @@ export async function updateBrand(id: string, formData: FormData) {
   if (!name) throw new Error('Name is required');
 
   const supabase = createAdminClient();
+  const updates: Record<string, string | undefined> = { name, slug: slugify(name) };
+  const imageUrl = parseOptionalString(formData, 'image_url');
+  if (imageUrl !== undefined) updates.image_url = imageUrl;
+
   const { error } = await supabase
     .from('brands')
-    .update({ name, slug: slugify(name) })
+    .update(updates)
     .eq('id', id);
 
   if (error?.code === '23505') {

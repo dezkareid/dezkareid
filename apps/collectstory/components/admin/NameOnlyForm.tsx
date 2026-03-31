@@ -8,10 +8,11 @@ interface NameOnlyFormProperties {
   action: (formData: FormData) => Promise<{ error: string } | void>;
   cancelHref: string;
   defaultName?: string;
+  defaultImageUrl?: string;
   submitLabel: string;
 }
 
-export function NameOnlyForm({ action, cancelHref, defaultName, submitLabel }: NameOnlyFormProperties) {
+export function NameOnlyForm({ action, cancelHref, defaultName, defaultImageUrl, submitLabel }: NameOnlyFormProperties) {
   const [state, formAction, pending] = useActionState(
     async (_previous: { error: string } | undefined, formData: FormData) => {
       const result = await action(formData);
@@ -33,6 +34,20 @@ export function NameOnlyForm({ action, cancelHref, defaultName, submitLabel }: N
           defaultValue={defaultName}
           className={styles.input}
           autoFocus
+        />
+      </div>
+      <div className={styles.field}>
+        <label htmlFor="image_url" className={styles.label}>
+          Image URL
+          <span className={styles.optional}>(optional)</span>
+        </label>
+        <input
+          id="image_url"
+          name="image_url"
+          type="url"
+          defaultValue={defaultImageUrl}
+          className={styles.input}
+          placeholder="https://…"
         />
       </div>
       <div className={styles.actions}>

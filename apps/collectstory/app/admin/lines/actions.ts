@@ -13,6 +13,11 @@ async function requireAdmin() {
   }
 }
 
+function parseOptionalString(formData: FormData, key: string): string | undefined {
+  const value = formData.get(key);
+  return (typeof value === 'string' && value.trim()) ? value.trim() : undefined;
+}
+
 export async function createLine(formData: FormData) {
   await requireAdmin();
 
@@ -24,7 +29,14 @@ export async function createLine(formData: FormData) {
   const supabase = createAdminClient();
   const { error } = await supabase
     .from('lines')
-    .insert({ name, slug: slugify(name), brand_id: brandId });
+    .insert({
+      name,
+      slug: slugify(name),
+      brand_id: brandId,
+      // eslint-disable-next-line unicorn/no-null -- null required to clear FK in database
+      category_id: parseOptionalString(formData, 'category_id') ?? null,
+      image_url: parseOptionalString(formData, 'image_url'),
+    });
 
   if (error?.code === '23505') {
     return { error: 'A line with that name already exists.' };
@@ -44,9 +56,19 @@ export async function updateLine(id: string, formData: FormData) {
   if (!brandId) throw new Error('Brand is required');
 
   const supabase = createAdminClient();
+  const updates: Record<string, string | null | undefined> = {
+    name,
+    slug: slugify(name),
+    brand_id: brandId,
+    // eslint-disable-next-line unicorn/no-null -- null required to clear FK in database
+    category_id: parseOptionalString(formData, 'category_id') ?? null,
+  };
+  const imageUrl = parseOptionalString(formData, 'image_url');
+  if (imageUrl !== undefined) updates.image_url = imageUrl;
+
   const { error } = await supabase
     .from('lines')
-    .update({ name, slug: slugify(name), brand_id: brandId })
+    .update(updates)
     .eq('id', id);
 
   if (error?.code === '23505') {
