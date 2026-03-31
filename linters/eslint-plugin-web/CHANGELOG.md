@@ -1,3 +1,10 @@
+# [@dezkareid/eslint-plugin-web-v1.1.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/eslint-plugin-web-v1.1.0...@dezkareid/eslint-plugin-web-v1.1.1) (2026-03-31)
+
+
+### Bug Fixes
+
+* **eslint-web-plugin:** ignore conflict rules with react applications ([9097df7](https://github.com/dezkareid/dezkareid/commit/9097df7bd692e9b2064d6588baf0386e07cbafd9))
+
 # [@dezkareid/eslint-plugin-web-v1.1.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/eslint-plugin-web-v1.0.0...@dezkareid/eslint-plugin-web-v1.1.0) (2026-03-28)
 
 
