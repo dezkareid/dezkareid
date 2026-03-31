@@ -1,0 +1,53 @@
+{
+  "name": "@dezkareid/auditor",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build:server": "nest build",
+    "dev:server": "nest start --watch",
+    "start:server": "nest start",
+    "build:client": "pnpm ng build client",
+    "dev:client": "pnpm ng serve client",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@angular/common": "21.2.0",
+    "@angular/compiler": "21.2.0",
+    "@angular/core": "21.2.0",
+    "@angular/forms": "21.2.0",
+    "@angular/platform-browser": "21.2.0",
+    "@angular/router": "21.2.0",
+    "@nestjs/common": "11.1.17",
+    "@nestjs/core": "11.1.17",
+    "@nestjs/mapped-types": "2.1.0",
+    "@nestjs/platform-express": "11.1.17",
+    "@prisma/client": "7.6.0",
+    "chart.js": "^4.5.1",
+    "chrome-launcher": "1.2.1",
+    "class-transformer": "0.5.1",
+    "class-validator": "0.15.1",
+    "lighthouse": "13.0.3",
+    "ng2-charts": "^10.0.0",
+    "puppeteer": "24.40.0",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2",
+    "tslib": "2.8.1"
+  },
+  "devDependencies": {
+    "@angular/build": "21.2.5",
+    "@angular/cli": "21.2.5",
+    "@angular/compiler-cli": "21.2.0",
+    "@dezkareid/eslint-config-ts-base": "workspace:*",
+    "@nestjs/cli": "11.0.16",
+    "@nestjs/schematics": "11.0.9",
+    "@nestjs/testing": "11.1.17",
+    "@types/express": "5.0.0",
+    "@types/node": "25.0.10",
+    "eslint": "9.39.2",
+    "jsdom": "28.0.0",
+    "prisma": "7.6.0",
+    "typescript": "5.9.3",
+    "vitest": "4.0.8"
+  }
+}
