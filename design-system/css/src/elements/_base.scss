@@ -1,7 +1,17 @@
 /* Base Elements: Typography & Links */
 
 html {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+  font-family: var(--font-family-base, system-ui, sans-serif);
+  font-size: var(--font-size-300, 1rem);
+  line-height: var(--font-line-height-normal, 1.5);
+  color: var(--color-text-primary);
+  background-color: var(--color-background-primary);
+}
+
+body {
+  /* DS NOTE: body-specific layouts should go in objects,
+     but foundations here */
+  min-height: 100vh;
 }
 
 h1,
@@ -10,16 +20,24 @@ h3,
 h4,
 h5,
 h6 {
-  line-height: 1.1;
+  font-weight: var(--font-weight-bold, 700);
+  line-height: var(--font-line-height-tight, 1.1);
+  letter-spacing: var(--font-letter-spacing-tight, -0.01em);
   text-wrap: balance;
 }
 
 a {
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 0.2ex;
+  color: var(--color-primary, inherit);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
 
   &:hover {
-    text-decoration: none;
+    text-decoration: underline;
   }
+}
+
+/* Global focus-visible ring */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
 }
