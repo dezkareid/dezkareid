@@ -1,3 +1,10 @@
+# [@dezkareid/css-v1.0.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/css-v1.0.0...@dezkareid/css-v1.0.1) (2026-04-01)
+
+
+### Bug Fixes
+
+* **css:** change repository url ([942948f](https://github.com/dezkareid/dezkareid/commit/942948f0f23ec6624d36f6685bb552d6882d4250))
+
 # @dezkareid/css-v1.0.0 (2026-04-01)
 
 
