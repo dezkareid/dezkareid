@@ -22,6 +22,12 @@
         "gemini-md"
       ]
     },
+    "design-system/css": {
+      "strategies": [
+        "claude",
+        "gemini-md"
+      ]
+    },
     "design-system/design-tokens": {
       "strategies": [
         "claude",
