@@ -1,8 +1,9 @@
 {
   "name": "@dezkareid/css",
   "version": "0.0.0",
+  "type": "module",
   "description": "Common CSS tools and utilities for dezkareid",
-  "main": "dist/index.css",
+  "main": "dist/main.css",
   "publishConfig": {
     "access": "public"
   },
@@ -11,11 +12,11 @@
     "src"
   ],
   "scripts": {
-    "build": "pnpm run build:scss && pnpm run build:css && pnpm run copy:scss",
-    "build:scss": "npx sass src/main.scss dist/index.css --no-source-map",
-    "build:css": "npx lightningcss --bundle dist/index.css -o dist/index.css --minify",
-    "copy:scss": "mkdir -p dist/scss && cp -R src/* dist/scss/",
-    "lint": "echo \"No linting defined for CSS yet\""
+    "build": "pnpm run build:scss && pnpm run build:css",
+    "build:scss": "npx sass src:dist --no-source-map",
+    "build:css": "node scripts/build-css.js",
+    "test": "pnpm run build",
+    "lint": "echo \"No linting defined for SCSS yet\""
   },
   "keywords": [
     "css",
@@ -31,8 +32,7 @@
     "@dezkareid/design-tokens": "1.5.0"
   },
   "devDependencies": {
-    "lightningcss-cli": "1.32.0",
-    "lightningcss-cli-darwin-arm64": "^1.32.0",
+    "lightningcss": "1.29.1",
     "sass": "1.85.1"
   }
 }

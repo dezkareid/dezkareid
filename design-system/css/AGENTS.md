@@ -4,10 +4,10 @@ This package provides common CSS tools, resets, layout objects, and utilities fo
 
 ## Architecture: ITCSS
 
-The package follows the **ITCSS** (Inverted Triangle CSS) methodology to manage specificity and order.
+The package follows the **ITCSS** (Inverted Triangle CSS) methodology to manage specificity and order. Every folder contains an `index.scss` that serves as the entry point for that layer.
 
-1. **settings/**: Global variables and feature flags (e.g., `_themes.scss`).
-2. **tools/**: Mixins and functions (e.g., `_breakpoints.scss`).
+1. **tools/**: SASS Mixins and functions (e.g., `_breakpoints.scss`).
+2. **settings/**: Global variables and feature flags (e.g., `_themes.scss`).
 3. **generic/**: Low-specificity resets (e.g., `_reset.scss`).
 4. **elements/**: Base HTML element styling (e.g., `_base.scss`).
 5. **objects/**: Class-based, non-cosmetic layout objects (e.g., `_container.scss`, `_stack.scss`).
@@ -17,16 +17,33 @@ The package follows the **ITCSS** (Inverted Triangle CSS) methodology to manage 
 ## Usage
 
 ### Bundled CSS
-Import the main bundle in your application entry point:
-```css
-@import "@dezkareid/css/dist/index.css";
+Import the main bundle (contains all layers) in your application entry point:
+```javascript
+import "@dezkareid/css/dist/main.css";
+```
+
+### Individual CSS Modules
+Import specific layers if you don't need the full bundle:
+```javascript
+import "@dezkareid/css/dist/generic.css";
+import "@dezkareid/css/dist/objects.css";
 ```
 
 ### Modular SCSS
-If using Sass, you can import specific modules for better control:
+If using Sass, you can import the `index` of specific folders for better control and access to mixins:
 ```scss
-@use "@dezkareid/css/src/generic/reset";
-@use "@dezkareid/css/src/objects/container";
+// Import tools for mixins (no CSS output)
+@use "@dezkareid/css/src/tools";
+
+// Import layers (generates CSS output)
+@use "@dezkareid/css/src/generic";
+@use "@dezkareid/css/src/objects";
+
+.my-element {
+  @include tools.media-up('md') {
+    @extend .o-container;
+  }
+}
 ```
 
 ## Key Features
