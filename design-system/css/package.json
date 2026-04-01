@@ -5,7 +5,13 @@
   "description": "Common CSS tools and utilities for dezkareid",
   "main": "dist/main.css",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dezkareid/dezkareid.git",
+    "directory": "design-system/css"
   },
   "files": [
     "dist",
