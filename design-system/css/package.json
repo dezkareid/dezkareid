@@ -15,7 +15,8 @@
     "build:scss": "npx sass src/main.scss dist/index.css --no-source-map",
     "build:css": "npx lightningcss --bundle dist/index.css -o dist/index.css --minify",
     "copy:scss": "mkdir -p dist/scss && cp -R src/* dist/scss/",
-    "lint": "echo \"No linting defined for CSS yet\""
+    "test": "pnpm run build",
+    "lint": "echo \"No linting defined for SCSS yet\""
   },
   "keywords": [
     "css",
@@ -32,7 +33,6 @@
   },
   "devDependencies": {
     "lightningcss-cli": "1.32.0",
-    "lightningcss-cli-darwin-arm64": "^1.32.0",
     "sass": "1.85.1"
   }
 }
