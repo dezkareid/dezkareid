@@ -5,17 +5,10 @@
   box-sizing: border-box;
 }
 
-body,
-h1,
-h2,
-h3,
-h4,
-p,
-figure,
-blockquote,
-dl,
-dd {
+/* Remove default margins for all elements */
+* {
   margin: 0;
+  padding: 0;
 }
 
 ul[role='list'],
@@ -23,7 +16,9 @@ ol[role='list'] {
   list-style: none;
 }
 
-html:focus-within {
+html {
+  -webkit-text-size-adjust: none; /* Prevent font-size inflation in landscape on iOS */
+  text-size-adjust: none;
   scroll-behavior: smooth;
 }
 
@@ -31,18 +26,24 @@ body {
   min-height: 100vh;
   text-rendering: optimizeSpeed;
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
 a:not([class]) {
   text-decoration-skip-ink: auto;
 }
 
+/* Media resets */
 img,
-picture {
-  max-width: 100%;
+picture,
+video,
+canvas,
+svg {
   display: block;
+  max-width: 100%;
 }
 
+/* Inherit fonts for inputs and buttons */
 input,
 button,
 textarea,
@@ -50,8 +51,19 @@ select {
   font: inherit;
 }
 
+/* Avoid text overflow */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  html:focus-within {
+  html {
     scroll-behavior: auto;
   }
 

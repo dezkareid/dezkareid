@@ -1,0 +1,22 @@
+/* Layout Objects: Container */
+
+.o-container {
+  max-width: var(--breakpoint-large-min, 1200px);
+  margin-inline: auto;
+  padding-inline: var(--spacing-24, 1.5rem);
+
+  /* Alternative for smaller contexts or components */
+  &--narrow {
+    max-width: var(--breakpoint-medium-max, 960px);
+  }
+
+  &--wide {
+    max-width: var(--breakpoint-extra-large-min, 1440px);
+  }
+}
+
+/* Maintain backward compatibility with old name if needed, 
+   but encourage new naming */
+.max-page-size {
+  @extend .o-container;
+}

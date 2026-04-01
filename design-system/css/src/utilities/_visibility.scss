@@ -1,0 +1,33 @@
+/* Utility: Visibility */
+
+.u-hidden {
+  display: none !important;
+}
+
+.u-visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Utility: Spacing & Alignment */
+
+.u-text-center { text-align: center !important; }
+.u-text-left   { text-align: left !important; }
+.u-text-right  { text-align: right !important; }
+
+.u-bg-alt {
+  background-color: var(--color-background-secondary) !important;
+}
+
+.u-flex { display: flex !important; }
+.u-flex-column { flex-direction: column !important; }
+.u-items-center { align-items: center !important; }
+.u-justify-center { justify-content: center !important; }
+.u-justify-between { justify-content: space-between !important; }
