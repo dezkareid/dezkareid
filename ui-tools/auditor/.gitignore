@@ -1,5 +1,12 @@
 node_modules
+/.angular
 # Keep environment variables out of version control
 .env
 
 /generated/prisma
+
+# SQLite database
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
