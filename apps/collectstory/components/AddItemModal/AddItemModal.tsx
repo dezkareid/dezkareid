@@ -31,25 +31,27 @@ export function AddItemModal({ brands, collectionId }: Properties) {
 
   return (
     <>
-      <button type="button" className={styles.trigger} onClick={open}>
+      <button type="button" className={styles.trigger} onClick={open} aria-haspopup="dialog">
         + Add Item
       </button>
 
       <dialog
         ref={dialogRef}
         className={styles.dialog}
+        aria-modal="true"
+        aria-labelledby="add-item-dialog-title"
         onClick={(event) => {
           if (event.target === dialogRef.current) close();
         }}
       >
         <div className={styles.panel}>
           <div className={styles.header}>
-            <h2 className={styles.title}>Add to Collection</h2>
+            <h2 id="add-item-dialog-title" className={styles.title}>Add to Collection</h2>
             <button
               type="button"
               className={styles.closeButton}
               onClick={close}
-              aria-label="Close"
+              aria-label="Close dialog"
             >
               ✕
             </button>

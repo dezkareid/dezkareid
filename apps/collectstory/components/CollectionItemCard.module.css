@@ -55,6 +55,9 @@
 }
 
 .tags {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-4);
@@ -87,10 +90,7 @@
   color: var(--color-text-secondary);
   line-height: var(--font-line-height-normal);
   margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  /* truncation handled by .u-truncate-2 utility class */
 }
 
 .date {

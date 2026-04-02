@@ -80,3 +80,17 @@
   font-weight: var(--font-weight-regular);
   color: var(--color-text-secondary);
 }
+
+.fieldCheckbox {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--color-primary);
+  flex-shrink: 0;
+}

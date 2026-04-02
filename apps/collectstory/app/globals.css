@@ -1,5 +1,6 @@
 @import '@dezkareid/design-tokens/dist/css/variables.css';
 @import '@dezkareid/components/css';
+@import '@dezkareid/css/dist/utilities.css';
 
 *,
 *::before,

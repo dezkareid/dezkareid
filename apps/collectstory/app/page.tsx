@@ -28,11 +28,6 @@ const features = [
     description:
       'Action figures, statues, diecast, plush — assign categories to filter and surface exactly what you need.',
   },
-  {
-    label: 'Stores Directory',
-    description:
-      'Discover where to find the pieces you want. Browse a curated directory of stores and locations worldwide.',
-  },
 ];
 
 export default function HomePage() {
@@ -69,9 +64,6 @@ export default function HomePage() {
               >
                 <HomeCTA primaryClassName={styles.ctaPrimary} />
               </Suspense>
-              <Link href="/stores" className={styles.ctaSecondary}>
-                Explore Stores
-              </Link>
             </div>
           </div>
 
@@ -115,7 +107,7 @@ export default function HomePage() {
             Ready to catalog your collection?
           </h2>
           <Link href="/login" className={styles.ctaPrimary}>
-            Get Started
+            Get Started — it&rsquo;s free
           </Link>
         </section>
 

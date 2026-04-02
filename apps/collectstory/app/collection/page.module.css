@@ -4,35 +4,62 @@
   gap: var(--spacing-32);
 }
 
+/* ─── Page Header ────────────────────────────────────────────── */
+
 .pageHeader {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
   gap: var(--spacing-16);
-  flex-wrap: wrap;
+}
+
+@media (min-width: 640px) {
+  .pageHeader {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
 
 .pageTitle {
-  font-size: var(--font-size-800);
+  font-size: clamp(var(--font-size-600), 6vw, var(--font-size-800));
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   letter-spacing: -0.02em;
   margin: 0;
 }
 
-.itemCount {
-  font-size: var(--font-size-200);
-  color: var(--color-text-secondary);
+/* ─── Collection Content (live region) ──────────────────────── */
+
+.collectionContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-32);
 }
+
+/* ─── Item Grid ──────────────────────────────────────────────── */
 
 .grid {
   list-style: none;
   padding: 0;
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: 1fr;
   gap: var(--spacing-24);
 }
+
+@media (min-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+}
+
+/* ─── Empty State ────────────────────────────────────────────── */
 
 .empty {
   display: flex;
@@ -57,9 +84,11 @@
   font-size: var(--font-size-300);
   color: var(--color-text-secondary);
   margin: 0;
+  max-width: 40ch;
+  line-height: var(--font-line-height-relaxed);
 }
 
-/* Last Additions */
+/* ─── Last Additions Strip ───────────────────────────────────── */
 
 .lastAdditions {
   display: flex;
@@ -68,26 +97,35 @@
 }
 
 .sectionTitle {
-  font-size: var(--font-size-400);
+  font-size: var(--font-size-100);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  font-size: var(--font-size-100);
 }
 
 .strip {
   list-style: none;
   padding: 0;
+  padding-inline: var(--spacing-4);
+  padding-bottom: var(--spacing-8);
   margin: 0;
   display: flex;
   gap: var(--spacing-16);
   overflow-x: auto;
-  padding-bottom: var(--spacing-8);
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
 }
 
 .stripItem {
-  flex: 0 0 220px;
+  flex: 0 0 200px;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 480px) {
+  .stripItem {
+    flex: 0 0 220px;
+  }
 }

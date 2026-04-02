@@ -5,6 +5,8 @@
   background-color: var(--color-background-secondary);
 }
 
+/* ─── Header ─────────────────────────────────────────────────── */
+
 .header {
   background-color: var(--color-background-primary);
   border-bottom: 1px solid var(--color-text-secondary);
@@ -17,13 +19,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--spacing-16) var(--spacing-48);
-  gap: var(--spacing-24);
+  padding: var(--spacing-16) var(--spacing-24);
+  gap: var(--spacing-16);
 }
 
-@media (max-width: 768px) {
+@media (min-width: 768px) {
   .headerInner {
-    padding: var(--spacing-16) var(--spacing-24);
+    padding: var(--spacing-16) var(--spacing-48);
+    gap: var(--spacing-24);
   }
 }
 
@@ -35,24 +38,25 @@
   text-transform: uppercase;
 }
 
+/* ─── Nav ────────────────────────────────────────────────────── */
+
 .nav {
   display: flex;
   align-items: center;
-  gap: var(--spacing-16);
+  gap: var(--spacing-8);
 }
 
-.userEmail {
-  font-size: var(--font-size-200);
-  color: var(--color-text-secondary);
-}
-
-@media (max-width: 480px) {
-  .userEmail {
-    display: none;
+@media (min-width: 640px) {
+  .nav {
+    gap: var(--spacing-16);
   }
 }
 
 .adminLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--spacing-8);
   font-size: var(--font-size-200);
   font-weight: var(--font-weight-medium);
   color: var(--color-primary);
@@ -63,10 +67,19 @@
   text-decoration: underline;
 }
 
+.adminLink:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: var(--border-radius-small);
+}
+
+/* ─── Profile Link ───────────────────────────────────────────── */
+
 .profileLink {
   display: flex;
   align-items: center;
   gap: var(--spacing-8);
+  min-height: 44px;
   text-decoration: none;
   color: var(--color-text-primary);
   border-radius: var(--border-radius-pill);
@@ -76,6 +89,11 @@
 
 .profileLink:hover {
   background-color: var(--color-background-secondary);
+}
+
+.profileLink:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
 }
 
 .avatar {
@@ -101,23 +119,26 @@
 }
 
 .profileLinkLabel {
+  display: none;
   font-size: var(--font-size-200);
   font-weight: var(--font-weight-medium);
 }
 
-@media (max-width: 480px) {
+@media (min-width: 480px) {
   .profileLinkLabel {
-    display: none;
+    display: block;
   }
 }
 
+/* ─── Main ───────────────────────────────────────────────────── */
+
 .main {
   flex: 1;
-  padding: var(--spacing-48);
+  padding: var(--spacing-24);
 }
 
-@media (max-width: 768px) {
+@media (min-width: 768px) {
   .main {
-    padding: var(--spacing-24);
+    padding: var(--spacing-48);
   }
 }

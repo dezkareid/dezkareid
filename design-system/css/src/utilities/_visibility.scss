@@ -31,3 +31,28 @@
 .u-items-center { align-items: center !important; }
 .u-justify-center { justify-content: center !important; }
 .u-justify-between { justify-content: space-between !important; }
+
+/* Utility: Focus Ring */
+
+.u-focus-ring {
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+  }
+}
+
+/* Utility: Touch Target (WCAG 2.5.5) */
+
+.u-touch-target {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* Utility: Text Truncation */
+
+.u-truncate-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
