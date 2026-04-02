@@ -1,3 +1,10 @@
+# [@dezkareid/css-v1.1.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/css-v1.0.1...@dezkareid/css-v1.1.0) (2026-04-02)
+
+
+### Features
+
+* **collectstory:** improve UI design, accessibility, error handling, and item links ([02d40e7](https://github.com/dezkareid/dezkareid/commit/02d40e7348a89feaab3ee3e7521b01f434ad3b15))
+
 # [@dezkareid/css-v1.0.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/css-v1.0.0...@dezkareid/css-v1.0.1) (2026-04-01)
 
 
