@@ -1,0 +1,39 @@
+/* Layout Objects: Grid and General Layout Structures */
+
+.o-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns, 1), minmax(0, 1fr));
+  gap: var(--spacing-24, 1.5rem);
+
+  /* Common responsive patterns */
+  &--2-col {
+    --grid-columns: 2;
+  }
+
+  &--3-col {
+    --grid-columns: 3;
+  }
+
+  &--4-col {
+    --grid-columns: 4;
+  }
+
+  &--auto-fill {
+    grid-template-columns: repeat(auto-fill, minmax(var(--grid-min-item-size, 280px), 1fr));
+  }
+
+  &--auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(var(--grid-min-item-size, 280px), 1fr));
+  }
+}
+
+/* Page Shell (from collectstory pattern) */
+.o-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.o-main {
+  flex: 1 0 auto;
+}

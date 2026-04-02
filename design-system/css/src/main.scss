@@ -1,3 +1,6 @@
-@use "generic/reset";
-@use "elements/base";
-@use "objects/page";
+@use "tools/index" as tools;
+@use "settings/index" as settings;
+@use "generic/index" as generic;
+@use "elements/index" as elements;
+@use "objects/index" as objects;
+@use "utilities/index" as utilities;

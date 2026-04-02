@@ -1,0 +1,22 @@
+/* Automatic Theming Foundations */
+
+:root {
+  /* Ensure light-dark() has a foundation to work with */
+  color-scheme: light dark;
+}
+
+/* 
+   Manual overrides using classes.
+   Setting color-scheme triggers the light-dark() CSS function
+   to pick the appropriate color value.
+*/
+
+.light,
+[data-theme='light'] {
+  color-scheme: light;
+}
+
+.dark,
+[data-theme='dark'] {
+  color-scheme: dark;
+}
