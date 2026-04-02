@@ -49,4 +49,8 @@ export default definePreview({
       test: 'todo'
     }
   },
+
+  initialGlobals: {
+    colorScheme: 'light',
+  }
 });
