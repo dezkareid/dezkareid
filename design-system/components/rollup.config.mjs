@@ -10,6 +10,9 @@ const plugins = cssExtract => [
   commonjs(),
   postcss({
     autoModules: true,
+    modules: {
+      generateScopedName: '[local]',
+    },
     extract: cssExtract,
     minimize: true,
   }),

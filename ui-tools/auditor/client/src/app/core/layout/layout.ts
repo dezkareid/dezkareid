@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme-toggle.ts';
+import { ThemeToggleComponent } from '@dezkareid/components/angular';
 
 @Component({
   selector: 'app-layout',
@@ -19,7 +19,7 @@ import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme
           <a routerLink="/settings" routerLinkActive="active" class="sidebar__link">Settings</a>
         </nav>
         <div class="sidebar__footer">
-          <app-theme-toggle></app-theme-toggle>
+          <db-theme-toggle></db-theme-toggle>
         </div>
       </aside>
       <main class="main-content">

@@ -13,6 +13,7 @@ The following paths are the entry points to the different packages:
 - `src/react-client/`: Client React entry (entry: `src/react-client/index.ts`) — re-exports `ThemeToggle` only
 - `src/astro/`: Astro components (entry: `src/astro/index.ts`)
 - `src/vue/`: Vue components (entry: `src/vue/index.ts`)
+- `src/angular/`: Angular components (entry: `src/angular/index.ts`)
 - `src/css/`: Shared CSS Modules (one file per component, `src/css/index.ts` imports all for the CSS bundle)
 - `src/shared/js/`: Framework-agnostic JS utilities
 - `src/shared/types/`: Shared TypeScript interfaces for all components
@@ -26,6 +27,7 @@ The following paths are the entry points to the different packages:
 | `@dezkareid/components/react-client` | `dist/react-client/index.js` | Yes — Rollup ESM, `preserveModules` | `ThemeToggle` only. Every emitted file starts with `'use client'` (injected via Rollup `output.banner`). |
 | `@dezkareid/components/astro` | `src/astro/index.ts` | No — compiled by Astro | |
 | `@dezkareid/components/vue` | `src/vue/index.ts` | No — compiled by Vite/Vue | |
+| `@dezkareid/components/angular` | `dist/angular/index.d.ts` | Yes — Angular Package Format (APF) | Pre-compiled for Angular 21+ |
 | `@dezkareid/components/css` | `dist/components.min.css` | Yes — CSS Modules extracted via `rollup-plugin-postcss` | |
 
 ### Why Astro and Vue are not pre-compiled
@@ -83,6 +85,7 @@ A component set should include:
 - `src/react/<Component>/index.test.tsx` — Vitest + RTL tests (React only)
 - `src/astro/<Component>/index.astro` — Astro implementation
 - `src/vue/<Component>/index.vue` — Vue SFC implementation
+- `src/angular/<Component>/<component>.component.ts` — Angular implementation
 
 ### CSS conventions
 
@@ -97,7 +100,7 @@ A component set should include:
 
 #### Button
 
-File: `src/react/Button/index.tsx` | `src/astro/Button/index.astro` | `src/vue/Button/index.vue`
+File: `src/react/Button/index.tsx` | `src/astro/Button/index.astro` | `src/vue/Button/index.vue` | `src/angular/Button/button.component.ts`
 Types: `src/shared/types/button.ts` | CSS: `src/css/button.module.css`
 
 Props:
@@ -135,7 +138,7 @@ Usage example:
 
 #### Tag
 
-File: `src/react/Tag/index.tsx` | `src/astro/Tag/index.astro` | `src/vue/Tag/index.vue`
+File: `src/react/Tag/index.tsx` | `src/astro/Tag/index.astro` | `src/vue/Tag/index.vue` | `src/angular/Tag/tag.component.ts`
 Types: `src/shared/types/tag.ts` | CSS: `src/css/tag.module.css`
 
 Props:
@@ -171,7 +174,7 @@ Note: `--color-warning` token is proposed but not yet in `@dezkareid/design-toke
 
 #### Card
 
-File: `src/react/Card/index.tsx` | `src/astro/Card/index.astro` | `src/vue/Card/index.vue`
+File: `src/react/Card/index.tsx` | `src/astro/Card/index.astro` | `src/vue/Card/index.vue` | `src/angular/Card/card.component.ts`
 Types: `src/shared/types/card.ts` | CSS: `src/css/card.module.css`
 
 Props:
@@ -185,7 +188,7 @@ Note: `--shadow-raised` and `--color-border` tokens are proposed but not yet in 
 
 #### ThemeToggle
 
-File: `src/react/ThemeToggle/index.tsx` | `src/astro/ThemeToggle/index.astro` | `src/vue/ThemeToggle/index.vue`
+File: `src/react/ThemeToggle/index.tsx` | `src/astro/ThemeToggle/index.astro` | `src/vue/ThemeToggle/index.vue` | `src/angular/ThemeToggle/theme-toggle.component.ts`
 Types: `src/shared/types/theme-toggle.ts` | CSS: `src/css/theme-toggle.module.css`
 Shared logic: `src/shared/js/theme.ts`
 

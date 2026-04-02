@@ -17,6 +17,7 @@ pnpm add @dezkareid/components @dezkareid/design-tokens
 | `@dezkareid/components/react-client` | `dist/react-client/index.js` | Client components only (`ThemeToggle`). Ships with `'use client'` directive. Use in Next.js Client Components. |
 | `@dezkareid/components/astro` | `src/astro/index.ts` | Source — compiled by the consuming Astro app |
 | `@dezkareid/components/vue` | `src/vue/index.ts` | Source — compiled by the consuming Vite/Vue app |
+| `@dezkareid/components/angular` | `dist/angular/index.d.ts` | Pre-compiled — Angular Package Format (APF) |
 | `@dezkareid/components/css` | `dist/components.min.css` | Pre-compiled CSS Modules bundle |
 
 ## Setup
@@ -121,6 +122,14 @@ import { Button } from '@dezkareid/components/vue';
 </template>
 ```
 
+#### Angular
+
+```html
+<!-- Import { ButtonComponent } from '@dezkareid/components/angular' -->
+<button db-button variant="primary" size="md">Click me</button>
+<a db-button variant="secondary" href="/contact">Link button</a>
+```
+
 ---
 
 ### Tag
@@ -163,6 +172,13 @@ import { Tag } from '@dezkareid/components/vue';
 <template>
   <Tag variant="danger">Error</Tag>
 </template>
+```
+
+#### Angular
+
+```html
+<!-- Import { TagComponent } from '@dezkareid/components/angular' -->
+<span db-tag variant="success">Published</span>
 ```
 
 ---
@@ -214,6 +230,16 @@ import { Card } from '@dezkareid/components/vue';
     <p>Content</p>
   </Card>
 </template>
+```
+
+#### Angular
+
+```html
+<!-- Import { CardComponent } from '@dezkareid/components/angular' -->
+<div db-card elevation="raised">
+  <h2>Title</h2>
+  <p>Body</p>
+</div>
 ```
 
 ---
@@ -284,6 +310,13 @@ import { ThemeToggle } from '@dezkareid/components/vue';
 <template>
   <ThemeToggle />
 </template>
+```
+
+#### Angular
+
+```html
+<!-- Import { ThemeToggleComponent } from '@dezkareid/components/angular' -->
+<db-theme-toggle (onChange)="onThemeChange($event)"></db-theme-toggle>
 ```
 
 ---

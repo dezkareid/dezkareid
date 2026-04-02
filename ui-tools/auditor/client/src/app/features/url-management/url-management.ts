@@ -2,9 +2,7 @@ import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service.ts';
-import { CardComponent } from '../../shared/components/card/card.ts';
-import { ButtonComponent } from '../../shared/components/button/button.ts';
-import { TagComponent } from '../../shared/components/tag/tag.ts';
+import { CardComponent, ButtonComponent, TagComponent } from '@dezkareid/components/angular';
 
 @Component({
   selector: 'app-url-management',
@@ -18,7 +16,7 @@ import { TagComponent } from '../../shared/components/tag/tag.ts';
 
       <div class="grid">
         <section class="section">
-          <app-card>
+          <div db-card>
             <h2>Add Domain</h2>
             <form [formGroup]="domainForm" (ngSubmit)="addDomain()" class="form">
               <div class="form-field">
@@ -29,11 +27,11 @@ import { TagComponent } from '../../shared/components/tag/tag.ts';
                 <label for="domain-desc">Description</label>
                 <input id="domain-desc" formControlName="description" placeholder="Optional" />
               </div>
-              <app-button type="submit" [disabled]="domainForm.invalid">Add Domain</app-button>
+              <button db-button type="submit" [disabled]="domainForm.invalid">Add Domain</button>
             </form>
-          </app-card>
+          </div>
 
-          <app-card class="mt-24">
+          <div db-card class="mt-24">
             <h2>Domains</h2>
             <ul class="list">
               <li *ngFor="let domain of api.domains()">
@@ -41,11 +39,11 @@ import { TagComponent } from '../../shared/components/tag/tag.ts';
                 <p class="text-secondary">{{ domain.description }}</p>
               </li>
             </ul>
-          </app-card>
+          </div>
         </section>
 
         <section class="section">
-          <app-card>
+          <div db-card>
             <h2>Add Environment</h2>
             <form [formGroup]="envForm" (ngSubmit)="addEnvironment()" class="form">
               <div class="form-field">
@@ -56,23 +54,23 @@ import { TagComponent } from '../../shared/components/tag/tag.ts';
                 <label for="env-prefix">URL Prefix</label>
                 <input id="env-prefix" formControlName="urlPrefix" placeholder="e.g. https://dezkareid.dev" />
               </div>
-              <app-button type="submit" [disabled]="envForm.invalid">Add Environment</app-button>
+              <button db-button type="submit" [disabled]="envForm.invalid">Add Environment</button>
             </form>
-          </app-card>
+          </div>
 
-          <app-card class="mt-24">
+          <div db-card class="mt-24">
             <h2>Environments</h2>
             <ul class="list">
               <li *ngFor="let env of api.environments()">
-                <app-tag variant="success">{{ env.name }}</app-tag>
+                <span db-tag variant="success">{{ env.name }}</span>
                 <span class="ml-8 text-secondary">{{ env.urlPrefix }}</span>
               </li>
             </ul>
-          </app-card>
+          </div>
         </section>
 
         <section class="section full-width">
-          <app-card>
+          <div db-card>
             <h2>Add URL</h2>
             <form [formGroup]="urlForm" (ngSubmit)="addUrl()" class="form horizontal">
               <div class="form-field">
@@ -86,11 +84,11 @@ import { TagComponent } from '../../shared/components/tag/tag.ts';
                   <option *ngFor="let domain of api.domains()" [value]="domain.id">{{ domain.name }}</option>
                 </select>
               </div>
-              <app-button type="submit" [disabled]="urlForm.invalid" class="align-bottom">Add URL</app-button>
+              <button db-button type="submit" [disabled]="urlForm.invalid" class="align-bottom">Add URL</button>
             </form>
-          </app-card>
+          </div>
 
-          <app-card class="mt-24">
+          <div db-card class="mt-24">
             <h2>URLs</h2>
             <table class="table">
               <thead>
@@ -106,20 +104,21 @@ import { TagComponent } from '../../shared/components/tag/tag.ts';
                   <td>{{ url.domain?.name }}</td>
                   <td>
                     <div class="flex gap-8">
-                      <app-button 
+                      <button 
+                        db-button
                         *ngFor="let env of api.environments()" 
                         size="sm" 
                         variant="secondary"
                         (click)="triggerAudit(url.id, env.id)"
                       >
                         Audit {{ env.name }}
-                      </app-button>
+                      </button>
                     </div>
                   </td>
                 </tr>
               </tbody>
             </table>
-          </app-card>
+          </div>
         </section>
       </div>
     </div>
