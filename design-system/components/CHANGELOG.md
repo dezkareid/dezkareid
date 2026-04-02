@@ -1,3 +1,10 @@
+# [@dezkareid/components-v1.2.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.1.1...@dezkareid/components-v1.2.0) (2026-04-02)
+
+
+### Features
+
+* **components:** add angular components (Button, Card, Tag, ThemeToggle) with tests ([fc4a01a](https://github.com/dezkareid/dezkareid/commit/fc4a01ab4e0c3cea61f8dfbfc17317b4c1d5be50))
+
 # [@dezkareid/components-v1.1.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.1.0...@dezkareid/components-v1.1.1) (2026-03-28)
 
 
