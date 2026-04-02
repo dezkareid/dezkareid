@@ -1,8 +1,7 @@
 import { Component, inject, OnInit, ChangeDetectionStrategy, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../core/services/api.service.ts';
-import { CardComponent } from '../../shared/components/card/card.ts';
-import { TagComponent } from '../../shared/components/tag/tag.ts';
+import { CardComponent, TagComponent } from '@dezkareid/components/angular';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 
@@ -23,15 +22,15 @@ import { ChartConfiguration, ChartOptions } from 'chart.js';
       </header>
 
       <div class="grid" *ngIf="selectedUrlId()">
-        <app-card class="full-width">
+        <div db-card class="full-width">
           <h3>Environment Comparison (Latest Scores)</h3>
           <div class="comparison-grid">
             <div class="env-card" *ngFor="let envData of comparisonData()">
               <div class="env-header">
                 <h4>{{ envData.envName }}</h4>
-                <app-tag *ngIf="envData.hasData" [variant]="envData.inBudget ? 'success' : 'danger'">
+                <span db-tag *ngIf="envData.hasData" [variant]="envData.inBudget ? 'success' : 'danger'">
                   {{ envData.inBudget ? 'In Budget' : 'Out of Budget' }}
-                </app-tag>
+                </span>
               </div>
               <div class="score" [style.color]="getScoreColor(envData.score)">
                 {{ envData.score | number:'1.0-0' }}
@@ -52,9 +51,9 @@ import { ChartConfiguration, ChartOptions } from 'chart.js';
               </div>
             </div>
           </div>
-        </app-card>
+        </div>
 
-        <app-card>
+        <div db-card>
           <h3>Largest Contentful Paint (LCP)</h3>
           <div class="chart-container">
             <canvas baseChart
@@ -63,9 +62,9 @@ import { ChartConfiguration, ChartOptions } from 'chart.js';
               [type]="'line'">
             </canvas>
           </div>
-        </app-card>
+        </div>
 
-        <app-card>
+        <div db-card>
           <h3>Total Blocking Time (TBT)</h3>
           <div class="chart-container">
             <canvas baseChart
@@ -74,9 +73,9 @@ import { ChartConfiguration, ChartOptions } from 'chart.js';
               [type]="'line'">
             </canvas>
           </div>
-        </app-card>
+        </div>
 
-        <app-card>
+        <div db-card>
           <h3>Cumulative Layout Shift (CLS)</h3>
           <div class="chart-container">
             <canvas baseChart
@@ -85,9 +84,9 @@ import { ChartConfiguration, ChartOptions } from 'chart.js';
               [type]="'line'">
             </canvas>
           </div>
-        </app-card>
+        </div>
 
-        <app-card>
+        <div db-card>
           <h3>Performance Score</h3>
           <div class="chart-container">
             <canvas baseChart
@@ -96,12 +95,12 @@ import { ChartConfiguration, ChartOptions } from 'chart.js';
               [type]="'line'">
             </canvas>
           </div>
-        </app-card>
+        </div>
       </div>
 
-      <app-card *ngIf="!selectedUrlId()" class="empty-state">
+      <div db-card *ngIf="!selectedUrlId()" class="empty-state">
         <p>Please select a URL to view historical performance data and environment comparisons.</p>
-      </app-card>
+      </div>
     </div>
   `,
   styles: [`
