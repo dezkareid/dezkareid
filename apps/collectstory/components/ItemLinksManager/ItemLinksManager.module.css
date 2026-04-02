@@ -1,0 +1,171 @@
+/* ─── ItemLinksManager ───────────────────────────────────────────────────── */
+
+.manager {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+}
+
+/* Links list */
+
+.linkList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.linkItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-8);
+  padding: var(--spacing-8) var(--spacing-12);
+  background-color: var(--color-background-secondary);
+  border-radius: var(--border-radius-medium);
+}
+
+.linkAnchor {
+  font-size: var(--font-size-300);
+  color: var(--color-primary);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.linkAnchor:hover {
+  text-decoration: underline;
+}
+
+.linkAnchor:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--border-radius-small);
+}
+
+.removeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: var(--border-radius-small);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-200);
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.removeButton:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-background-primary);
+}
+
+.removeButton:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Add form */
+
+.addForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.label {
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.optional {
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-secondary);
+  opacity: 0.7;
+}
+
+.input {
+  width: 100%;
+  padding: var(--spacing-8) var(--spacing-12);
+  background-color: var(--color-background-secondary);
+  border: 1px solid transparent;
+  border-radius: var(--border-radius-medium);
+  font-size: var(--font-size-300);
+  font-family: inherit;
+  color: var(--color-text-primary);
+  transition: border-color 0.15s ease;
+  min-height: 40px;
+}
+
+.input::placeholder {
+  color: var(--color-text-secondary);
+  opacity: 0.7;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.input[aria-invalid='true'] {
+  /* TODO(design-system): needs token for --color-error (semantic error border) */
+  border-color: #c0392b;
+}
+
+/* Add button */
+
+.addButton {
+  align-self: flex-start;
+  padding: var(--spacing-8) var(--spacing-16);
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+  border: none;
+  border-radius: var(--border-radius-medium);
+  font-size: var(--font-size-300);
+  font-family: inherit;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  min-height: 40px;
+  transition: opacity 0.15s ease;
+}
+
+.addButton:hover {
+  opacity: 0.9;
+}
+
+.addButton:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+/* Error messages */
+
+.fieldError {
+  font-size: var(--font-size-200);
+  /* TODO(design-system): needs token for --color-error */
+  color: #c0392b;
+  margin: 0;
+}
+
+.actionError {
+  font-size: var(--font-size-200);
+  /* TODO(design-system): needs token for --color-error */
+  color: #c0392b;
+  margin: 0;
+}

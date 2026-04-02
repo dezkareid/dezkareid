@@ -11,6 +11,7 @@ interface StoreDefaults {
   city?: string | undefined;
   lat?: number | undefined;
   lng?: number | undefined;
+  verified?: boolean;
 }
 
 interface StoreFormProperties {
@@ -19,35 +20,9 @@ interface StoreFormProperties {
   submitLabel: string;
 }
 
-function StoreFields({ defaultValues }: { defaultValues?: StoreDefaults }) {
+function StoreLocationFields({ defaultValues }: { defaultValues?: StoreDefaults }) {
   return (
     <>
-      <div className={styles.field}>
-        <label htmlFor="name" className={styles.label}>
-          {'Name '}
-          <span aria-hidden="true">*</span>
-        </label>
-        <input
-          id="name"
-          name="name"
-          type="text"
-          required
-          defaultValue={defaultValues?.name}
-          className={styles.input}
-          autoFocus
-        />
-      </div>
-      <div className={styles.field}>
-        <label htmlFor="url" className={styles.label}>URL</label>
-        <input
-          id="url"
-          name="url"
-          type="url"
-          defaultValue={defaultValues?.url ?? ''}
-          className={styles.input}
-          placeholder="https://"
-        />
-      </div>
       <div className={styles.field}>
         <label htmlFor="country" className={styles.label}>Country</label>
         <input
@@ -91,6 +66,51 @@ function StoreFields({ defaultValues }: { defaultValues?: StoreDefaults }) {
           className={styles.input}
           placeholder="e.g. 139.6503"
         />
+      </div>
+    </>
+  );
+}
+
+function StoreFields({ defaultValues }: { defaultValues?: StoreDefaults }) {
+  return (
+    <>
+      <div className={styles.field}>
+        <label htmlFor="name" className={styles.label}>
+          {'Name '}
+          <span aria-hidden="true">*</span>
+        </label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          required
+          defaultValue={defaultValues?.name}
+          className={styles.input}
+          autoFocus
+        />
+      </div>
+      <div className={styles.field}>
+        <label htmlFor="url" className={styles.label}>URL</label>
+        <input
+          id="url"
+          name="url"
+          type="url"
+          defaultValue={defaultValues?.url ?? ''}
+          className={styles.input}
+          placeholder="https://"
+        />
+      </div>
+      <StoreLocationFields defaultValues={defaultValues} />
+      <div className={styles.fieldCheckbox}>
+        <input
+          id="verified"
+          name="verified"
+          type="checkbox"
+          defaultChecked={defaultValues?.verified ?? false}
+          className={styles.checkbox}
+          value="true"
+        />
+        <label htmlFor="verified" className={styles.label}>Verified store</label>
       </div>
     </>
   );

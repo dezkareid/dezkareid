@@ -6,6 +6,7 @@
 
 .formError {
   padding: var(--spacing-12) var(--spacing-16);
+  /* TODO(design-system): needs token --color-error (semantic error color, fallback #e53e3e) */
   background-color: color-mix(in srgb, var(--color-error, #e53e3e) 10%, transparent);
   border: 1px solid var(--color-error, #e53e3e);
   border-radius: var(--border-radius-medium);
@@ -22,13 +23,13 @@
 
 .row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: var(--spacing-16);
 }
 
-@media (max-width: 480px) {
+@media (min-width: 480px) {
   .row {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
 }
 
@@ -137,8 +138,13 @@
 
 .fieldError {
   font-size: var(--font-size-100);
+  /* TODO(design-system): needs token --color-error (semantic error color, fallback #e53e3e) */
   color: var(--color-error, #e53e3e);
   margin: 0;
+}
+
+.retryHint {
+  font-style: italic;
 }
 
 .loadingDot {
@@ -173,6 +179,7 @@
 
 .submitButton {
   width: 100%;
+  min-height: 44px;
   padding: var(--spacing-16);
   background-color: var(--color-primary);
   color: var(--color-text-inverse);
@@ -187,6 +194,11 @@
 
 .submitButton:hover:not(:disabled) {
   opacity: 0.88;
+}
+
+.submitButton:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
 }
 
 .submitButton:disabled {

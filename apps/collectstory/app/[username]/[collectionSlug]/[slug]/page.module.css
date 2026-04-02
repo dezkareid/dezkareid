@@ -179,3 +179,53 @@
   font-size: var(--font-size-200);
   color: var(--color-text-secondary);
 }
+
+/* Where acquired section */
+
+.storesSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+}
+
+.storesSectionLabel {
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+/* Read-only store list (non-owner view) */
+
+.storeReadList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-8);
+}
+
+.storeReadItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4) var(--spacing-12);
+  background-color: var(--color-background-secondary);
+  border-radius: var(--border-radius-pill);
+  font-size: var(--font-size-200);
+  color: var(--color-text-primary);
+}
+
+.verifiedIcon {
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.emptyPrompt {
+  font-size: var(--font-size-300);
+  color: var(--color-text-secondary);
+  margin: 0;
+}

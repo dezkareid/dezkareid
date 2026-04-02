@@ -50,8 +50,8 @@ async function LastAdditions() {
   if (recentItems.length === 0) return;
 
   return (
-    <section className={styles.lastAdditions}>
-      <h2 className={styles.sectionTitle}>Last Additions</h2>
+    <section className={styles.lastAdditions} aria-labelledby="last-additions-heading">
+      <h2 id="last-additions-heading" className={styles.sectionTitle}>Last Additions</h2>
       <ul className={styles.strip} role="list">
         {recentItems.map(item => (
           <li key={item.id} className={styles.stripItem}>
@@ -83,31 +83,38 @@ async function AllItems() {
 
   if (collectionItems.length === 0) {
     return (
-      <div className={styles.empty}>
-        <p className={styles.emptyTitle}>Your collection is empty</p>
+      <div className={styles.empty} role="status">
+        <h2 className={styles.emptyTitle}>Your collection is empty</h2>
         <p className={styles.emptyDesc}>
-          Items you add to your collection will appear here.
+          Start building your archive — add your first item to get started.
         </p>
       </div>
     );
   }
 
   return (
-    <ul className={styles.grid} role="list">
-      {collectionItems.map(item => (
-        <li key={item.id}>
-          <CollectionItemCard
-            name={item.name}
-            imageUrl={item.image_url ?? undefined}
-            brand={item.lines?.brands?.name ?? undefined}
-            line={item.lines?.name ?? undefined}
-            category={item.lines?.categories?.name ?? undefined}
-            description={item.description ?? undefined}
-            dateAcquired={item.date_acquired ?? undefined}
-          />
-        </li>
-      ))}
-    </ul>
+    <section aria-labelledby="all-items-heading">
+      <h2 id="all-items-heading" className={styles.sectionTitle}>All Items</h2>
+      <ul
+        className={styles.grid}
+        role="list"
+        aria-label="Your collection"
+      >
+        {collectionItems.map(item => (
+          <li key={item.id}>
+            <CollectionItemCard
+              name={item.name}
+              imageUrl={item.image_url ?? undefined}
+              brand={item.lines?.brands?.name ?? undefined}
+              line={item.lines?.name ?? undefined}
+              category={item.lines?.categories?.name ?? undefined}
+              description={item.description ?? undefined}
+              dateAcquired={item.date_acquired ?? undefined}
+            />
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
@@ -146,12 +153,14 @@ export default function CollectionPage() {
           <AddItemSection />
         </Suspense>
       </div>
-      <Suspense>
-        <LastAdditions />
-      </Suspense>
-      <Suspense>
-        <AllItems />
-      </Suspense>
+      <div aria-live="polite" aria-atomic="false" className={styles.collectionContent}>
+        <Suspense>
+          <LastAdditions />
+        </Suspense>
+        <Suspense>
+          <AllItems />
+        </Suspense>
+      </div>
     </div>
   );
 }

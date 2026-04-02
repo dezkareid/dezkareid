@@ -20,8 +20,10 @@ export function CollectionItemCard({
   description,
   dateAcquired,
 }: Properties) {
+  const hasTags = brand ?? line ?? category;
+
   return (
-    <article className={styles.card}>
+    <article className={styles.card} aria-label={name}>
       <div className={styles.imageWrapper}>
         {imageUrl
           ? (
@@ -29,7 +31,7 @@ export function CollectionItemCard({
                 src={imageUrl}
                 alt={name}
                 fill
-                sizes="(max-width: 768px) 100vw, 300px"
+                sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 300px"
                 className={styles.image}
               />
             )
@@ -41,22 +43,24 @@ export function CollectionItemCard({
       </div>
 
       <div className={styles.body}>
-        <h2 className={styles.name}>{name}</h2>
+        <h3 className={styles.name}>{name}</h3>
 
-        <div className={styles.tags}>
-          {brand && (
-            <span className={styles.tag}>{brand}</span>
-          )}
-          {line && (
-            <span className={styles.tagSecondary}>{line}</span>
-          )}
-          {category && (
-            <span className={styles.tagSecondary}>{category}</span>
-          )}
-        </div>
+        {hasTags && (
+          <ul className={styles.tags} role="list" aria-label="Tags">
+            {brand && (
+              <li className={styles.tag}>{brand}</li>
+            )}
+            {line && (
+              <li className={styles.tagSecondary}>{line}</li>
+            )}
+            {category && (
+              <li className={styles.tagSecondary}>{category}</li>
+            )}
+          </ul>
+        )}
 
         {description && (
-          <p className={styles.description}>{description}</p>
+          <p className={`${styles.description} u-truncate-2`}>{description}</p>
         )}
 
         {dateAcquired && (

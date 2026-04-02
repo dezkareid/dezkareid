@@ -5,6 +5,66 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { generateUniqueSlug, generateUniqueCollectionSlug } from '@/lib/slug';
 
+export type Store = {
+  id: string;
+  name: string;
+  verified: boolean;
+  url: string | undefined;
+};
+
+export type ItemLink = {
+  id: string;
+  item_id: string;
+  url: string;
+  label: string | undefined;
+  created_at: string;
+};
+
+export async function addItemLink(
+  itemId: string,
+  url: string,
+  label?: string,
+): Promise<{ success: true } | { error: string }> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated.' };
+
+  const trimmedUrl = url.trim();
+  try {
+    new URL(trimmedUrl);
+  }
+  catch {
+    return { error: 'Please enter a valid URL (e.g. https://example.com).' };
+  }
+
+  const trimmedLabel = label?.trim() || undefined;
+
+  const { error } = await supabase
+    .from('item_links')
+    .insert({ item_id: itemId, url: trimmedUrl, label: trimmedLabel });
+
+  if (error) return { error: 'Failed to add link. Please try again.' };
+
+  return { success: true };
+}
+
+export async function removeItemLink(
+  linkId: string,
+): Promise<{ success: true } | { error: string }> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated.' };
+
+  const { error } = await supabase
+    .from('item_links')
+    .delete()
+    .eq('id', linkId);
+
+  if (error) return { error: 'Failed to remove link. Please try again.' };
+
+  return { success: true };
+}
+
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
@@ -49,7 +109,11 @@ export async function createCollectionItem(
     visibility: getOptional(formData, 'visibility') ?? 'public',
   });
 
-  if (error) return { error: 'Failed to save item. Please try again.' };
+  if (error) {
+    if (error.code === '23505') return { error: 'An item with this name already exists in your collection.' };
+    if (error.code === '23503') return { error: 'The selected brand or line no longer exists. Please refresh and try again.' };
+    return { error: 'Failed to save item. Please try again.' };
+  }
 
   revalidatePath('/collection');
   return { success: true };

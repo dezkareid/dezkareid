@@ -31,9 +31,63 @@ function validateImageFile(file: File): string | undefined {
   return undefined;
 }
 
+function ImageUploadField({
+  preview,
+  fileError,
+  uploadFailed,
+  uploading,
+  onFileChange,
+}: {
+  preview: string | undefined;
+  fileError: string | undefined;
+  uploadFailed: boolean;
+  uploading: boolean;
+  onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}) {
+  return (
+    <div className={styles.field}>
+      <label className={styles.label} htmlFor="item-image">
+        Image
+      </label>
+      <div className={styles.uploadArea}>
+        {preview
+          ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={preview} alt="Preview" className={styles.preview} />
+            )
+          : (
+              <div className={styles.uploadPlaceholder}>
+                <span className={styles.uploadIcon}>↑</span>
+                <span className={styles.uploadHint}>JPEG, PNG or WebP · max 5 MB</span>
+              </div>
+            )}
+        <input
+          id="item-image"
+          name="image"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          className={styles.fileInput}
+          onChange={onFileChange}
+          aria-describedby={fileError ? 'image-error' : undefined}
+          disabled={uploading}
+        />
+      </div>
+      {fileError && (
+        <p id="image-error" className={styles.fieldError} role="alert">
+          {fileError}
+          {uploadFailed && (
+            <span className={styles.retryHint}> — choose the file again to retry.</span>
+          )}
+        </p>
+      )}
+    </div>
+  );
+}
+
 export function AddItemForm({ brands, collectionId, onSuccess }: Properties) {
   const [state, formAction, pending] = useActionState(createCollectionItem, undefined);
   const [fileError, setFileError] = useState<string>();
+  const [uploadFailed, setUploadFailed] = useState(false);
   const [preview, setPreview] = useState<string>();
   const [uploadedUrl, setUploadedUrl] = useState<string>();
   const [uploading, setUploading] = useState(false);
@@ -49,6 +103,7 @@ export function AddItemForm({ brands, collectionId, onSuccess }: Properties) {
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     setFileError(undefined);
+    setUploadFailed(false);
     setPreview(undefined);
     setUploadedUrl(undefined);
     if (!file) return;
@@ -86,6 +141,7 @@ export function AddItemForm({ brands, collectionId, onSuccess }: Properties) {
       setUploading(false);
       if ('error' in result) {
         setFileError(result.error);
+        setUploadFailed(true);
         return false;
       }
       setUploadedUrl(result.url);
@@ -117,7 +173,7 @@ export function AddItemForm({ brands, collectionId, onSuccess }: Properties) {
       <input type="hidden" name="collection_id" value={collectionId} />
 
       {state && 'error' in state && (
-        <p className={styles.formError} role="alert">{state.error}</p>
+        <p id="form-error" className={styles.formError} role="alert">{state.error}</p>
       )}
 
       <div className={styles.field}>
@@ -134,36 +190,17 @@ export function AddItemForm({ brands, collectionId, onSuccess }: Properties) {
           required
           autoComplete="off"
           placeholder="e.g. S.H. Figuarts Spider-Man"
+          aria-describedby={state && 'error' in state ? 'form-error' : undefined}
         />
       </div>
 
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor="item-image">
-          Image
-        </label>
-        <div className={styles.uploadArea}>
-          {preview
-            ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={preview} alt="Preview" className={styles.preview} />
-              )
-            : (
-                <div className={styles.uploadPlaceholder}>
-                  <span className={styles.uploadIcon}>↑</span>
-                  <span className={styles.uploadHint}>JPEG, PNG or WebP · max 5 MB</span>
-                </div>
-              )}
-          <input
-            id="item-image"
-            name="image"
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            className={styles.fileInput}
-            onChange={handleFileChange}
-          />
-        </div>
-        {fileError && <p className={styles.fieldError} role="alert">{fileError}</p>}
-      </div>
+      <ImageUploadField
+        preview={preview}
+        fileError={fileError}
+        uploadFailed={uploadFailed}
+        uploading={uploading}
+        onFileChange={handleFileChange}
+      />
 
       <div className={styles.row}>
         <div className={styles.field}>

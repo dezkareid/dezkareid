@@ -1,4 +1,8 @@
 .trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
   padding: var(--spacing-12) var(--spacing-24);
   background-color: var(--color-primary);
   color: var(--color-text-inverse);
@@ -14,6 +18,11 @@
 
 .trigger:hover {
   opacity: 0.88;
+}
+
+.trigger:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
 }
 
 .dialog {
@@ -56,8 +65,8 @@
 }
 
 .closeButton {
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -74,6 +83,11 @@
 .closeButton:hover {
   background-color: var(--color-background-secondary);
   color: var(--color-text-primary);
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
 }
 
 .body {

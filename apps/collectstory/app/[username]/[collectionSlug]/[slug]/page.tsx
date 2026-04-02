@@ -7,6 +7,9 @@ import { createClient } from '@/lib/supabase/server';
 import { getPublicCollectionBySlug, getPublicItemBySlug, type PublicItemDetail } from '@/lib/collections';
 import { ItemImageSection } from './ItemImageSection';
 import { ItemActions } from '@/components/username/ItemActions';
+import { ItemLinksManager } from '@/components/ItemLinksManager/ItemLinksManager';
+import { VerifiedBadge } from '@/components/VerifiedBadge';
+import type { Store, ItemLink } from '@/app/collection/actions';
 import styles from './page.module.css';
 
 type Properties = {
@@ -45,28 +48,86 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
   };
 }
 
+function WhereToFindSection({
+  itemId,
+  isOwner,
+  linkedStores,
+  initialLinks,
+}: {
+  itemId: string;
+  isOwner: boolean;
+  linkedStores: Store[];
+  initialLinks: ItemLink[];
+}) {
+  const hasStores = linkedStores.length > 0;
+  const hasLinks = initialLinks.length > 0;
+
+  return (
+    <section className={styles.storesSection} aria-labelledby="where-to-find-heading">
+      <h2 id="where-to-find-heading" className={styles.storesSectionLabel}>
+        Where to find it
+      </h2>
+
+      {hasStores && (
+        <ul className={styles.storeReadList} role="list" aria-label="Stores">
+          {linkedStores.map(store => (
+            <li key={store.id} className={styles.storeReadItem}>
+              {store.name}
+              {store.verified && (
+                <VerifiedBadge className={styles.verifiedIcon} />
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {isOwner && (
+        <>
+          {!hasStores && !hasLinks && (
+            <p className={styles.emptyPrompt}>
+              Add a link to where this item can be found.
+            </p>
+          )}
+          <ItemLinksManager itemId={itemId} initialLinks={initialLinks} />
+        </>
+      )}
+    </section>
+  );
+}
+
+function ItemTags({ item }: { item: PublicItemDetail }) {
+  const brand = item.lines?.brands?.name;
+  const line = item.lines?.name;
+  const category = item.lines?.categories?.name;
+  return (
+    <div className={styles.tags}>
+      {brand && <span className={styles.tag}>{brand}</span>}
+      {line && <span className={styles.tagSecondary}>{line}</span>}
+      {category && <span className={styles.tagSecondary}>{category}</span>}
+    </div>
+  );
+}
+
 function ItemMeta({
   item,
   username,
   collectionSlug,
   isOwner,
+  linkedStores,
+  initialLinks,
 }: {
   item: PublicItemDetail;
   username: string;
   collectionSlug: string;
   isOwner: boolean;
+  linkedStores: Store[];
+  initialLinks: ItemLink[];
 }) {
-  const brand = item.lines?.brands?.name;
-  const line = item.lines?.name;
-  const category = item.lines?.categories?.name;
+  const showWhereToFind = linkedStores.length > 0 || isOwner;
 
   return (
     <div className={styles.details}>
-      <div className={styles.tags}>
-        {brand && <span className={styles.tag}>{brand}</span>}
-        {line && <span className={styles.tagSecondary}>{line}</span>}
-        {category && <span className={styles.tagSecondary}>{category}</span>}
-      </div>
+      <ItemTags item={item} />
 
       <h1 className={styles.name}>{item.name}</h1>
 
@@ -84,6 +145,15 @@ function ItemMeta({
             day: 'numeric',
           })}
         </time>
+      )}
+
+      {showWhereToFind && (
+        <WhereToFindSection
+          itemId={item.id}
+          isOwner={isOwner}
+          linkedStores={linkedStores}
+          initialLinks={initialLinks}
+        />
       )}
 
       {isOwner && (
@@ -117,6 +187,33 @@ async function ItemDetail({
   const { data: { user } } = await supabase.auth.getUser();
   const isOwner = user?.id === item.user_id;
 
+  const { data: storeRows } = await supabase
+    .from('collection_item_stores')
+    .select('stores ( id, name, verified, url )')
+    .eq('item_id', item.id);
+
+  const linkedStores: Store[] = (storeRows ?? []).flatMap((row) => {
+    const s = (row as unknown as { stores: { id: string; name: string; verified: boolean; url: string | null } | null }).stores;
+    if (!s) return [];
+    return [{ id: s.id, name: s.name, verified: s.verified, url: s.url ?? undefined }];
+  });
+
+  let initialLinks: ItemLink[] = [];
+  if (isOwner) {
+    const { data: linkRows } = await supabase
+      .from('item_links')
+      .select('id, item_id, url, label, created_at')
+      .eq('item_id', item.id)
+      .order('created_at');
+    initialLinks = (linkRows ?? []).map(l => ({
+      id: l.id,
+      item_id: l.item_id,
+      url: l.url,
+      label: (l.label as string | null) ?? undefined,
+      created_at: l.created_at,
+    }));
+  }
+
   return (
     <div className={styles.layout}>
       <ItemImageSection
@@ -130,6 +227,8 @@ async function ItemDetail({
         username={username}
         collectionSlug={collectionSlug}
         isOwner={isOwner}
+        linkedStores={linkedStores}
+        initialLinks={initialLinks}
       />
     </div>
   );

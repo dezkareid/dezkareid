@@ -26,6 +26,9 @@ importers:
       '@dezkareid/components':
         specifier: 1.1.1
         version: 1.1.1(astro@6.0.6(@types/node@25.0.10)(jiti@2.6.0)(less@4.6.4)(lightningcss@1.29.1)(rollup@4.56.0)(sass@1.97.3)(terser@5.46.0)(typescript@5.9.3))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vue@3.5.29(typescript@5.9.3))
+      '@dezkareid/css':
+        specifier: workspace:0.0.0
+        version: link:../../design-system/css
       '@dezkareid/design-tokens':
         specifier: 1.5.0
         version: 1.5.0
@@ -10803,6 +10806,7 @@ packages:
     engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
     deprecated: |-
       You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
+
       (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
 
   qs@6.14.1:
@@ -14415,7 +14419,7 @@ snapshots:
   '@commitlint/config-validator@19.8.1':
     dependencies:
       '@commitlint/types': 19.8.1
-      ajv: 8.18.0
+      ajv: 8.17.1
 
   '@commitlint/ensure@19.8.1':
     dependencies:
@@ -16319,7 +16323,7 @@ snapshots:
       detect-libc: 2.1.2
       is-glob: 4.0.3
       node-addon-api: 7.1.1
-      picomatch: 4.0.3
+      picomatch: 4.0.4
     optionalDependencies:
       '@parcel/watcher-android-arm64': 2.5.6
       '@parcel/watcher-darwin-arm64': 2.5.6

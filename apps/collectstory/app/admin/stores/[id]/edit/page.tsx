@@ -12,7 +12,7 @@ export default async function EditStorePage({ params }: { params: Promise<{ id: 
   const supabase = await createClient();
   const { data: store } = await supabase
     .from('stores')
-    .select('id, name, url, country, city, lat, lng')
+    .select('id, name, url, country, city, lat, lng, verified')
     .eq('id', id)
     .single();
 
@@ -32,6 +32,7 @@ export default async function EditStorePage({ params }: { params: Promise<{ id: 
           city: store.city ?? undefined,
           lat: store.lat ?? undefined,
           lng: store.lng ?? undefined,
+          verified: store.verified ?? false,
         }}
         submitLabel="Save Changes"
       />
