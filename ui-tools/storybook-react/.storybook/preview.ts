@@ -1,10 +1,16 @@
+import * as githubUiStorybookAddonPerformancePanel from "@github-ui/storybook-addon-performance-panel/preview";
+import addonA11y from "@storybook/addon-a11y";
 import { definePreview } from '@storybook/react-vite'
 import addonPerformancePanel from '@github-ui/storybook-addon-performance-panel'
 import '@dezkareid/design-tokens/dist/css/variables.css'
 import '@dezkareid/components/css'
 
 export default definePreview({
-  addons: [addonPerformancePanel()],
+  addons: [
+    addonPerformancePanel(),
+    addonA11y(),
+    githubUiStorybookAddonPerformancePanel
+  ],
 
   globals: {
     colorScheme: 'light',

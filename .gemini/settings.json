@@ -1,3 +1,8 @@
 {
-  "context": {}
+  "context": {},
+  "mcpServers": {
+    "yolo-sb-server": {
+      "httpUrl": "http://localhost:6006/mcp"
+    }
+  }
 }
