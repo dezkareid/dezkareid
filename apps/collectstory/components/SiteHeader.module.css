@@ -92,3 +92,29 @@
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
+
+.userAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--border-radius-pill);
+  background-color: var(--color-background-secondary);
+  border: 1px solid var(--color-text-secondary);
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: border-color 0.15s ease;
+}
+
+.userAvatar:hover {
+  border-color: var(--color-text-primary);
+}
+
+.userAvatar:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}

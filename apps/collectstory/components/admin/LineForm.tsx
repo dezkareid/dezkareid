@@ -1,8 +1,18 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useState, useTransition } from 'react';
 import Link from 'next/link';
+import { ImageField } from './ImageField';
 import styles from './form.module.css';
+
+async function uploadFile(file: File): Promise<{ url: string } | { error: string }> {
+  const data = new FormData();
+  data.set('file', file);
+  const response = await fetch('/api/upload', { method: 'POST', body: data });
+  const result = (await response.json()) as { url?: string; error?: string };
+  if (!response.ok || !result.url) return { error: result.error ?? 'Upload failed. Please try again.' };
+  return { url: result.url };
+}
 
 interface Brand {
   id: string;
@@ -34,8 +44,43 @@ export function LineForm({ action, brands, categories, defaultName, defaultBrand
     undefined,
   );
 
+  const [uploading, setUploading] = useState(false);
+  const [uploadedUrl, setUploadedUrl] = useState<string | undefined>();
+  const [fileError, setFileError] = useState<string | undefined>();
+  const [, startTransition] = useTransition();
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (fileError) return;
+
+    const form = event.currentTarget;
+    const data = new FormData(form);
+
+    const fileInput = form.elements.namedItem('image_file') as HTMLInputElement;
+    const file = fileInput?.files?.[0];
+
+    if (file && !uploadedUrl) {
+      setUploading(true);
+      const result = await uploadFile(file).catch(() => ({ error: 'Upload failed. Please try again.' }));
+      setUploading(false);
+      if ('error' in result) {
+        setFileError(result.error);
+        return;
+      }
+      setUploadedUrl(result.url);
+      data.set('image_url', result.url);
+    }
+    else if (uploadedUrl) {
+      data.set('image_url', uploadedUrl);
+    }
+
+    startTransition(() => formAction(data));
+  }
+
+  const isBusy = pending || uploading;
+
   return (
-    <form action={formAction} className={styles.form}>
+    <form onSubmit={handleSubmit} className={styles.form}>
       {state?.error && <p className={styles.error}>{state.error}</p>}
       <div className={styles.field}>
         <label htmlFor="brand_id" className={styles.label}>Brand</label>
@@ -70,23 +115,16 @@ export function LineForm({ action, brands, categories, defaultName, defaultBrand
           ))}
         </select>
       </div>
-      <div className={styles.field}>
-        <label htmlFor="image_url" className={styles.label}>
-          Image URL
-          <span className={styles.optional}>(optional)</span>
-        </label>
-        <input
-          id="image_url"
-          name="image_url"
-          type="url"
-          defaultValue={defaultImageUrl}
-          className={styles.input}
-          placeholder="https://…"
-        />
-      </div>
+      <ImageField
+        defaultImageUrl={defaultImageUrl}
+        uploading={uploading}
+        onUploadedUrl={setUploadedUrl}
+        onFileError={setFileError}
+        fileError={fileError}
+      />
       <div className={styles.actions}>
-        <button type="submit" disabled={pending} className={styles.submitButton}>
-          {pending ? 'Saving…' : submitLabel}
+        <button type="submit" disabled={isBusy} className={styles.submitButton}>
+          {uploading ? 'Uploading…' : (pending ? 'Saving…' : submitLabel)}
         </button>
         <Link href="/admin/lines" className={styles.cancelLink}>Cancel</Link>
       </div>
