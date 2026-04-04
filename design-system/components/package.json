@@ -11,8 +11,8 @@
   "exports": {
     "./react": {
       "types": "./dist/react/index.d.ts",
-      "import": "./dist/react.js",
-      "default": "./dist/react.js"
+      "import": "./dist/react/index.js",
+      "default": "./dist/react/index.js"
     },
     "./react-server": {
       "types": "./dist/react-server/index.d.ts",
