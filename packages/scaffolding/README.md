@@ -4,7 +4,7 @@ A CLI tool to standardize and automate the creation of new software projects wit
 
 ## Installation
 
-You don't need to install this globally. You can use it via `npx` or `pnpm create`.
+You don't need to install this globally. You can use it via `npx`.
 
 ## Usage
 
@@ -12,12 +12,6 @@ You don't need to install this globally. You can use it via `npx` or `pnpm creat
 
 ```bash
 npx @dezkareid/scaffolding create my-new-project
-```
-
-### Using pnpm create
-
-```bash
-pnpm create @dezkareid/scaffolding my-new-project
 ```
 
 ## Options
