@@ -1,0 +1,51 @@
+{
+  "name": "@dezkareid/icons",
+  "version": "0.0.0",
+  "description": "collections of icons for applications",
+  "exports": {
+    "./react": {
+      "import": "./dist/react.mjs",
+      "types": "./dist/react.d.mts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dezkareid/icons.git"
+  },
+  "homepage": "https://github.com/dezkareid/icons#readme",
+  "bugs": {
+    "url": "https://github.com/dezkareid/icons/issues"
+  },
+  "scripts": {
+    "generate": "tsx scripts/build-icons.ts",
+    "build": "tsx scripts/build-icons.ts && tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run"
+  },
+  "keywords": [],
+  "author": "Joel Humberto Gomez Paredes <elmaildeldezkareid@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@dezkareid/eslint-plugin-web": "1.1.1",
+    "@testing-library/react": "16.3.2",
+    "@types/react": "19.2.9",
+    "eslint": "10.2.0",
+    "jsdom": "29.0.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "svgo": "4.0.1",
+    "tsup": "8.5.1",
+    "tsx": "4.21.0",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.58.0",
+    "vitest": "4.1.2"
+  }
+}
