@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { connection } from 'next/server';
 import { StoreForm } from '@/components/admin/StoreForm';
 import { updateStore } from '../../actions';
 import styles from '../../../form.module.css';
@@ -9,6 +10,7 @@ export const metadata: Metadata = { title: 'Edit Store' };
 
 export default async function EditStorePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  await connection();
   const supabase = await createClient();
   const { data: store } = await supabase
     .from('stores')

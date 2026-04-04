@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import { connection } from 'next/server';
 import { DeleteButton } from '@/components/admin/DeleteButton';
 import { deleteCategory } from './actions';
 import styles from '../list.module.css';
@@ -8,6 +9,7 @@ import styles from '../list.module.css';
 export const metadata: Metadata = { title: 'Categories' };
 
 export default async function CategoriesPage() {
+  await connection();
   const supabase = await createClient();
   const { data: categories } = await supabase
     .from('categories')

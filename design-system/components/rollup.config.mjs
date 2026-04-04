@@ -3,9 +3,9 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import postcss from 'rollup-plugin-postcss';
 
-const external = ['react', 'react/jsx-runtime'];
+const external = ['react', 'react/jsx-runtime', 'classnames'];
 
-const plugins = cssExtract => [
+const plugins = (cssExtract, cssInject = true) => [
   resolve({ extensions: ['.ts', '.tsx'] }),
   commonjs(),
   postcss({
@@ -14,6 +14,7 @@ const plugins = cssExtract => [
       generateScopedName: '[local]',
     },
     extract: cssExtract,
+    inject: cssInject,
     minimize: true,
   }),
   typescript({
@@ -42,18 +43,18 @@ export default [
     plugins: plugins('components.min.css'),
     output: output(),
   },
-  // React Server Components — server-safe components only, no CSS extraction
+  // React Server Components — server-safe components only, no CSS (inject: false prevents style-inject)
   {
     input: 'src/react-server/index.ts',
     external,
-    plugins: plugins(false),
+    plugins: plugins(false, false),
     output: output(),
   },
-  // React Client Components — client-only components, "use client" injected via banner
+  // React Client Components — client-only components, "use client" injected via banner, no CSS
   {
     input: 'src/react-client/index.ts',
     external,
-    plugins: plugins(false),
+    plugins: plugins(false, false),
     output: output(`'use client';`),
   },
 ];

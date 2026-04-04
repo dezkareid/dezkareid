@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
+import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { EditProfileForm } from '@/components/EditProfileForm/EditProfileForm';
 import styles from './page.module.css';
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 };
 
 async function ProfileFormLoader() {
+  await connection();
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 

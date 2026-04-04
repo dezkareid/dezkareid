@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { cacheLife } from 'next/cache';
 import { SiteHeader } from '@/components/SiteHeader';
@@ -43,7 +44,9 @@ export default async function StoresPage() {
 
   return (
     <>
-      <SiteHeader />
+      <Suspense>
+        <SiteHeader />
+      </Suspense>
       <main className={styles.main}>
         <div className={styles.pageHeader}>
           <div className={styles.eyebrow}>

@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import cx from 'classnames';
 import type { Theme, ThemeToggleProperties } from '../../shared/types/theme-toggle';

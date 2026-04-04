@@ -1,0 +1,145 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: var(--spacing-48) var(--spacing-24);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (min-width: 60rem) {
+  .hero {
+    padding: var(--spacing-64) var(--spacing-24);
+  }
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-48);
+  align-items: center;
+}
+
+@media (min-width: 60rem) {
+  .container {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-64);
+  }
+}
+
+.badge {
+  display: inline-block;
+  padding: var(--spacing-4) var(--spacing-16);
+  margin-bottom: var(--spacing-24);
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  background-color: var(--color-background-secondary);
+  border-radius: var(--border-radius-pill);
+}
+
+.title {
+  font-size: var(--font-size-700);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--font-line-height-tight);
+  margin-bottom: var(--spacing-24);
+  color: var(--color-text-primary);
+}
+
+@media (min-width: 37.5rem) {
+  .title {
+    font-size: var(--font-size-900);
+  }
+}
+
+.description {
+  font-size: var(--font-size-400);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-32);
+  max-width: 480px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+}
+
+@media (min-width: 37.5rem) {
+  .actions {
+    flex-direction: row;
+  }
+}
+
+.visuals {
+  position: relative;
+}
+
+.bentoGrid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(2, 200px);
+  gap: var(--spacing-16);
+}
+
+@media (min-width: 60rem) {
+  .bentoGrid {
+    grid-template-rows: repeat(2, 250px);
+  }
+}
+
+.bentoMain {
+  grid-column: span 8;
+  grid-row: span 2;
+  position: relative;
+  border-radius: var(--border-radius-large);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.bentoSideTop {
+  grid-column: span 4;
+  grid-row: span 1;
+  position: relative;
+  border-radius: var(--border-radius-large);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.bentoSideBottom {
+  grid-column: span 4;
+  grid-row: span 1;
+  position: relative;
+  border-radius: var(--border-radius-large);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.image {
+  object-fit: cover;
+}
+
+.blob1 {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 256px;
+  height: 256px;
+  background-color: var(--color-primary);
+  border-radius: var(--border-radius-pill);
+  filter: blur(80px);
+  opacity: 0.1;
+  z-index: -1;
+}
+
+.blob2 {
+  position: absolute;
+  bottom: -40px;
+  left: -40px;
+  width: 256px;
+  height: 256px;
+  background-color: var(--color-primary);
+  border-radius: var(--border-radius-pill);
+  filter: blur(80px);
+  opacity: 0.1;
+  z-index: -1;
+}
