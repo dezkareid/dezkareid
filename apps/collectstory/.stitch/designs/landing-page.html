@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>collectstory - Your Digital Showcase</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#2563eb",
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    fontFamily: {
+                        "headline": ["IBM Plex Sans"],
+                        "body": ["IBM Plex Sans"],
+                        "label": ["IBM Plex Sans"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'IBM Plex Sans', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+<!-- TopAppBar -->
+<header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md fixed top-0 w-full z-50 border-b border-gray-100 dark:border-gray-800 shadow-sm font-['IBM_Plex_Sans'] antialiased">
+<div class="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-blue-600 dark:text-blue-400 text-2xl" data-icon="shelves">shelves</span>
+<span class="text-xl font-bold tracking-tight text-blue-600 dark:text-blue-400">collectstory</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined" data-icon="dark_mode">dark_mode</span>
+</button>
+<button class="px-5 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 active:scale-95 duration-150 transition-all shadow-md shadow-blue-500/20">
+                    Sign In
+                </button>
+</div>
+</div>
+</header>
+<main class="pt-20">
+<!-- Hero Section -->
+<section class="relative overflow-hidden px-6 py-12 md:py-24 max-w-7xl mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+<div class="z-10">
+<span class="inline-block px-4 py-1.5 mb-6 text-sm font-semibold tracking-wide text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-300 rounded-full">
+                        New: Catalog your 2024 sets
+                    </span>
+<h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent leading-tight">
+                        Every piece has a story.
+                    </h1>
+<p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-10 max-w-lg leading-relaxed">
+                        The modern home for collectors. Organise, track, and showcase your trading cards, action figures, and rare finds in a delightful digital vault.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="px-8 py-4 bg-blue-600 text-white rounded-lg font-bold text-lg hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-500/30 transition-all active:scale-95">
+                            Start your collection
+                        </button>
+<button class="px-8 py-4 bg-white dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 rounded-lg font-bold text-lg hover:border-blue-600 dark:hover:border-blue-400 transition-all active:scale-95">
+                            Explore Vault
+                        </button>
+</div>
+</div>
+<div class="relative">
+<!-- Bento Grid Hero Visuals -->
+<div class="grid grid-cols-12 gap-4 h-[500px]">
+<div class="col-span-8 row-span-2 rounded-lg overflow-hidden shadow-2xl">
+<img alt="Collectible figures" class="w-full h-full object-cover" data-alt="Close-up of premium designer vinyl toys and action figures arranged neatly on a clean white shelf with soft studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAg37WXfsmjqMas3FmkwWwF5CEXvdfc2_d6vqRdqUScid7nlID9XIhX3W7AbQCZnPz7FQ61pyAGWxUvf8JwKPAYMzbOl2IuIk7c2D2_PQvnp5jioM93yKjrM34G8S8_9l06Bo9BoMIJQS6busUsIztCPbfz9fKNh5x-Fz13syBshiY1JEoH-j0kwPCT61TrLh4AJNeO0Uh9F1ovZStPMEw-KiTsKGqc1Zg8gfk9RewY892soMa4uhs8YZ-G_c_bvYkcHZyS8gnrLDJV"/>
+</div>
+<div class="col-span-4 row-span-1 rounded-lg overflow-hidden shadow-xl">
+<img alt="Trading cards" class="w-full h-full object-cover" data-alt="Rare holographic trading cards displayed in protective plastic sleeves with shimmering rainbow reflections from overhead light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLvEveCIoJ9DXQwPMvgV0H0Dwi81YyiBbC6MLK3_7HEdJECb79b49Aaa90U7JQJ_EEFOmpUymH9pqxjbpV1z-_v2CUgL0fhGRCFFniUx0Xx2COMH_Pz8vGrkOKZq7yKx06J5gUADooYNrulvQtsbJWnpboaqwlaJwGQ2ptBcpiCJ_7DU6BIQVDrnSzgXxHsgHY_pEU3LY2o_QQ08E8RPsHEBKTpS2YW_q85yQCkbQ0F5avuh0JIfqcceLA4zXnvhHzrO0exGNGcoed"/>
+</div>
+<div class="col-span-4 row-span-1 rounded-lg overflow-hidden shadow-xl">
+<img alt="Gaming figures" class="w-full h-full object-cover" data-alt="Vibrant anime character figure with intricate details standing on a colorful base against a soft pastel background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtaLm2JddE8p-BkLrN3HxrDh3XIJMisoycg-U9EMclIxFhVzJR3R8GGnJglZk4vVRsZ6Vs6NodVAl0nOnXxGp73hmN-BvIm_OKNp_WDxIPu2YZOJz2eCaFocUiTwsC-hkxQBCjSPRzdqJF1-67SHg7tsqRVzEXCRhllfXo0INIkDU2abqsYmK3Kn4MdQ04Y56LR9XU37zaft4rORcEO6TZkLefKpDEIPHFdN7XLccWatAGrSWVTAm7mnY9DOSnH0FUvXWPvdgaK3Rt"/>
+</div>
+</div>
+<!-- Decorative Elements -->
+<div class="absolute -z-10 -top-10 -right-10 w-64 h-64 bg-blue-100 dark:bg-blue-900/20 rounded-full blur-3xl opacity-50"></div>
+<div class="absolute -z-10 -bottom-10 -left-10 w-64 h-64 bg-indigo-100 dark:bg-indigo-900/20 rounded-full blur-3xl opacity-50"></div>
+</div>
+</div>
+</section>
+<!-- Stats Section (Asymmetric) -->
+<section class="bg-gray-50 dark:bg-gray-800/50 py-16">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+<div class="text-center md:text-left">
+<p class="text-3xl font-bold text-blue-600 mb-1">500k+</p>
+<p class="text-sm text-gray-500 uppercase tracking-widest font-semibold">Items Cataloged</p>
+</div>
+<div class="text-center md:text-left">
+<p class="text-3xl font-bold text-blue-600 mb-1">12k+</p>
+<p class="text-sm text-gray-500 uppercase tracking-widest font-semibold">Active Vaults</p>
+</div>
+<div class="text-center md:text-left">
+<p class="text-3xl font-bold text-blue-600 mb-1">98%</p>
+<p class="text-sm text-gray-500 uppercase tracking-widest font-semibold">Match Rate</p>
+</div>
+<div class="text-center md:text-left">
+<p class="text-3xl font-bold text-blue-600 mb-1">24/7</p>
+<p class="text-sm text-gray-500 uppercase tracking-widest font-semibold">Price Tracking</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Last Items Added Section -->
+<section class="py-24 max-w-7xl mx-auto px-6">
+<div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+<div>
+<h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-4">Latest Arrivals</h2>
+<p class="text-gray-500 dark:text-gray-400">Discover what the community is adding to their vaults today.</p>
+</div>
+<div class="flex gap-2">
+<button class="p-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="p-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Showcase Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Card Item -->
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 relative mb-4">
+<img alt="Pokemon Card" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A rare vintage trading card with a holographic illustration of a dragon, resting on a clean minimalist surface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5N7yb1M21rko1J8uelSGKHWqnsR6OfLAE7l6S4scZsz6tiQM7fZXYo37c-V5nMuPnrjcGL88pnHaX79EaCqEgr-ARaF_m6u9Pqfrziu8UwqV9releKOp_xqQLa8KRKCFeerx6KNpHcOJgotaucSVBGslzAAzleX4zDLYOV6YhmGN8xGDbrNDgXX52mSdh64miX3S-nknzj6Npzb_Rx1vgFo879vc_m9uLitKQvhhCMO4k-RAV6_nuSxEeR2Ig97wOvpPf7UxVw9ww"/>
+<div class="absolute top-4 right-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-blue-600 shadow-sm">
+                            TCG
+                        </div>
+</div>
+<h3 class="font-bold text-lg group-hover:text-blue-600 transition-colors">Charizard Base Set</h3>
+<p class="text-sm text-gray-500">Added by @PokeMaster99</p>
+</div>
+<!-- Figure Item -->
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 relative mb-4">
+<img alt="Iron Man Figure" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Highly detailed action figure of a superhero in metallic red and gold armor, captured in a dramatic cinematic pose." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBH4APoKk3KBu3bd38omVdawFZ6mGP-YUzC5pYrVvlKPOh5T9qSqEIsHmVvFhhmgyJofvHXuBh7EC5URPgrd6n-2uveqE1rRH4XQ10ZKcDxbgn98LiTgxtrhPQARas-Ip5oGcjjanywgJHULgNwn7M9A3h7rgxu-SioKAZtAxHbD-xKQY4Ncvk7PzO8Xhg4obyKb0TbR4Oa67i74ly6k9yO8_GWiHwveQ41NM1zLZwAjjKJmU1sD5iULhTPRCs9-3hUIMP3ouE73NR9"/>
+<div class="absolute top-4 right-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-blue-600 shadow-sm">
+                            FIGURE
+                        </div>
+</div>
+<h3 class="font-bold text-lg group-hover:text-blue-600 transition-colors">Hot Toys Iron Man MK85</h3>
+<p class="text-sm text-gray-500">Added by @MarvelFanatic</p>
+</div>
+<!-- Statue Item -->
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 relative mb-4">
+<img alt="Vinyl Toy" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A designer vinyl toy with expressive oversized eyes and vibrant blue patterns, set against a soft bokeh background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3KphpLKgJYwEIYJRGEcmXq7bFh9-nFYGUXHhaKdAZVaMrd-P3uLlGzeTppf4b5LeRRBHyzO118FvVnhyjxLvfWaO7mb9i1whZ8NNGopiGYKV92zusMXK7lW-7Os3ri9mVnQ-DXGJWL9j-F-79jORmMkzyxPruF5wc-ULsGzd-5aTzs_U8rZj3sZWgepxoSJ60TenJYapox28z8sMAw2Afu9-QjD1n5AVnfkActTnJSd6_iMszV4HD2GezlHlqo59vIR8QuRO0t1HD"/>
+<div class="absolute top-4 right-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-blue-600 shadow-sm">
+                            VINYL
+                        </div>
+</div>
+<h3 class="font-bold text-lg group-hover:text-blue-600 transition-colors">Kaws Companion Open Edition</h3>
+<p class="text-sm text-gray-500">Added by @HypeBeast88</p>
+</div>
+<!-- Comic Item -->
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 relative mb-4">
+<img alt="Comic Book" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Close-up of a vintage comic book cover with vibrant hand-drawn illustrations and a distressed textured paper aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5IItgmxF5KJBubAYh5rwPMPOFafUbl9KnqLsKe6eQR7gairdrpOyI-Zaa20BoQdIAi13TpWlJGR4YmtBGs-dtCQY1fKfBJfudGpGOPTEQZBQrzc6ccYyEq507pbzwGIRR1KMo5dHjL1PaA94hM6wwrQyP0xjdResCGKn0zSs9KN1M57Aw3RuTqR6kDEYR6hyLfMB8tPggj-S0KfLvW4DG4lCTQnX4wHR42CN1b1yM9KU2XDq0jeyEQnHqm9--tDwV7LqxCecNsgK3"/>
+<div class="absolute top-4 right-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-blue-600 shadow-sm">
+                            COMIC
+                        </div>
+</div>
+<h3 class="font-bold text-lg group-hover:text-blue-600 transition-colors">Amazing Fantasy #15</h3>
+<p class="text-sm text-gray-500">Added by @SpideyCollector</p>
+</div>
+</div>
+</section>
+<!-- Feature Grid (Glassmorphism inspired) -->
+<section class="py-24 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800">
+<div class="max-w-7xl mx-auto px-6">
+<div class="text-center mb-16">
+<h2 class="text-4xl font-bold tracking-tight mb-4">Collectors Love Us</h2>
+<p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Everything you need to turn your hobby into a legacy.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl p-8 rounded-lg border border-white/20 dark:border-gray-700 shadow-lg">
+<div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/50 rounded-lg flex items-center justify-center text-blue-600 mb-6">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+</div>
+<h4 class="text-xl font-bold mb-3">AI Inventory</h4>
+<p class="text-gray-600 dark:text-gray-400 leading-relaxed">Snap a photo and let our AI recognize and catalog your item instantly with market data.</p>
+</div>
+<div class="bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl p-8 rounded-lg border border-white/20 dark:border-gray-700 shadow-lg">
+<div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg flex items-center justify-center text-indigo-600 mb-6">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+</div>
+<h4 class="text-xl font-bold mb-3">Value Tracking</h4>
+<p class="text-gray-600 dark:text-gray-400 leading-relaxed">Stay updated with real-time price trends from major marketplaces and auction houses.</p>
+</div>
+<div class="bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl p-8 rounded-lg border border-white/20 dark:border-gray-700 shadow-lg">
+<div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/50 rounded-lg flex items-center justify-center text-purple-600 mb-6">
+<span class="material-symbols-outlined" data-icon="share">share</span>
+</div>
+<h4 class="text-xl font-bold mb-3">Public Vaults</h4>
+<p class="text-gray-600 dark:text-gray-400 leading-relaxed">Share your curated collection with the world through a beautiful, customizable landing page.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-24 max-w-7xl mx-auto px-6 text-center">
+<div class="bg-blue-600 rounded-lg p-12 md:p-20 text-white relative overflow-hidden">
+<div class="z-10 relative">
+<h2 class="text-4xl md:text-5xl font-bold mb-6">Ready to showcase your journey?</h2>
+<p class="text-blue-100 text-lg mb-10 max-w-xl mx-auto opacity-90">Join over 100,000 collectors who trust collectstory with their most prized possessions.</p>
+<button class="px-10 py-4 bg-white text-blue-600 rounded-lg font-bold text-lg hover:bg-blue-50 transition-all active:scale-95 shadow-xl">
+                        Join Now
+                    </button>
+</div>
+<!-- Abstract background shapes -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-blue-500 rounded-full -mr-20 -mt-20 blur-3xl opacity-50"></div>
+<div class="absolute bottom-0 left-0 w-96 h-96 bg-blue-400 rounded-full -ml-32 -mb-32 blur-3xl opacity-30"></div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full rounded-t-[1rem] bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 font-['IBM_Plex_Sans'] text-sm">
+<div class="flex flex-col md:flex-row justify-between items-center px-8 py-12 max-w-7xl mx-auto gap-4">
+<div class="flex flex-col items-center md:items-start gap-2">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-blue-600" data-icon="shelves">shelves</span>
+<span class="font-bold text-gray-900 dark:text-white text-lg">collectstory</span>
+</div>
+<p class="text-gray-500 dark:text-gray-400">© 2024 collectstory. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all opacity-100 hover:opacity-80" href="#">Privacy Policy</a>
+<a class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all opacity-100 hover:opacity-80" href="#">Terms of Service</a>
+<a class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all opacity-100 hover:opacity-80" href="#">Contact</a>
+<a class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all opacity-100 hover:opacity-80" href="#">Community</a>
+</div>
+<div class="flex gap-4">
+<button class="p-2 text-gray-400 hover:text-blue-600 transition-colors">
+<span class="material-symbols-outlined" data-icon="share">share</span>
+</button>
+<button class="p-2 text-gray-400 hover:text-blue-600 transition-colors">
+<span class="material-symbols-outlined" data-icon="public">public</span>
+</button>
+</div>
+</div>
+</footer>
+</body></html>

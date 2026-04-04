@@ -1,28 +1,33 @@
 import Link from 'next/link';
-import { ThemeToggle } from '@dezkareid/components/react-client';
+import Image from 'next/image';
+import { ThemeToggleWrapper } from './ThemeToggleWrapper';
+import { ShelvesIcon } from './icons/ShelvesIcon';
 import { getSessionAndRole } from '@/lib/auth/role';
 import { createClient } from '@/lib/supabase/server';
+import { siteData } from '@/lib/mock-data';
 import styles from './SiteHeader.module.css';
 
-async function getUserProfile(userId: string) {
+async function getHeaderData() {
+  const session = await getSessionAndRole();
+  if (!session) return { session: undefined, profile: undefined };
   const supabase = await createClient();
-  const { data } = await supabase
+  const { data: profile } = await supabase
     .from('profiles')
-    .select('username')
-    .eq('id', userId)
+    .select('username, avatar_url')
+    .eq('id', session.user.id)
     .single();
-  return data;
+  return { session, profile };
 }
 
 export async function SiteHeader() {
-  const session = await getSessionAndRole();
-  const profile = session ? await getUserProfile(session.user.id) : undefined;
+  const { session, profile } = await getHeaderData();
 
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
         <Link href="/" className={styles.brand} aria-label="Collectstory home">
-          Collectstory
+          <ShelvesIcon size={24} />
+          <span className={styles.brandName}>{siteData.name}</span>
         </Link>
 
         <nav className={styles.nav} aria-label="Main navigation">
@@ -40,7 +45,7 @@ export async function SiteHeader() {
         </nav>
 
         <div className={styles.actions}>
-          <ThemeToggle cssProcessor="lightningcss" />
+          <ThemeToggleWrapper />
           {session
             ? (
                 <Link
@@ -48,7 +53,19 @@ export async function SiteHeader() {
                   className={styles.userAvatar}
                   aria-label="My profile"
                 >
-                  {session.user.email?.[0]?.toUpperCase() ?? '?'}
+                  {profile?.avatar_url
+                    ? (
+                        <Image
+                          src={profile.avatar_url}
+                          alt={profile.username ?? 'User avatar'}
+                          width={32}
+                          height={32}
+                          className={styles.avatarImage}
+                        />
+                      )
+                    : (
+                        session.user.email?.[0]?.toUpperCase() ?? '?'
+                      )}
                 </Link>
               )
             : (

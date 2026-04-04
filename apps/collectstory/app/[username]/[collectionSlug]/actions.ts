@@ -88,6 +88,23 @@ export async function updateCollection(
   return { success: true, slug: updated.slug };
 }
 
+// eslint-disable-next-line unicorn/no-null -- Supabase distinguishes null (clear) from undefined (skip)
+const orNull = (value: string | undefined) => value ?? null;
+
+async function fetchItemSlug(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  itemId: string,
+  userId: string,
+) {
+  const { data, error } = await supabase
+    .from('collection_items')
+    .select('slug')
+    .eq('id', itemId)
+    .eq('user_id', userId)
+    .single();
+  return error ? undefined : data;
+}
+
 export async function updateItem(
   _previousState: ItemState,
   formData: FormData,
@@ -102,23 +119,17 @@ export async function updateItem(
   const name = getOptional(formData, 'name') ?? '';
   if (!name) return { error: 'Name is required.' };
 
-  const { data: item, error: fetchError } = await supabase
-    .from('collection_items')
-    .select('slug')
-    .eq('id', itemId)
-    .eq('user_id', user.id)
-    .single();
-
-  if (fetchError || !item) return { error: 'Item not found.' };
+  const item = await fetchItemSlug(supabase, itemId, user.id);
+  if (!item) return { error: 'Item not found.' };
 
   const { error } = await supabase
     .from('collection_items')
     .update({
       name,
-      image_url: getOptional(formData, 'image_url') ?? null,
-      line_id: getOptional(formData, 'line_id') ?? null,
-      description: getOptional(formData, 'description') ?? null,
-      date_acquired: getOptional(formData, 'date_acquired') ?? null,
+      image_url: orNull(getOptional(formData, 'image_url')),
+      line_id: orNull(getOptional(formData, 'line_id')),
+      description: orNull(getOptional(formData, 'description')),
+      date_acquired: orNull(getOptional(formData, 'date_acquired')),
       visibility: getOptional(formData, 'visibility') ?? 'public',
     })
     .eq('id', itemId)

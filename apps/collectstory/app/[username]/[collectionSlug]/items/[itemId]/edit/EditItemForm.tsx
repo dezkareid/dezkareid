@@ -25,6 +25,12 @@ type Properties = {
 const ALLOWED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 const MAX_BYTES = 5 * 1024 * 1024;
 
+function validateFile(file: File): string | undefined {
+  if (!ALLOWED_TYPES.has(file.type)) return 'Only JPEG, PNG, and WebP images are allowed.';
+  if (file.size > MAX_BYTES) return 'Image must be 5 MB or smaller.';
+  return undefined;
+}
+
 async function uploadFile(file: File): Promise<{ url: string } | { error: string }> {
   const uploadData = new FormData();
   uploadData.set('file', file);
@@ -34,19 +40,40 @@ async function uploadFile(file: File): Promise<{ url: string } | { error: string
   return { url: result.url };
 }
 
-export function EditItemForm({
-  itemId,
-  currentName,
-  currentImageUrl,
-  currentDescription,
-  currentDateAcquired,
-  currentVisibility,
-  currentLineId,
-  currentBrandId,
-  brands,
-  username,
-  collectionSlug,
-}: Properties) {
+type ImageUploadHandlers = {
+  setUploading: (v: boolean) => void;
+  setFileError: (v: string) => void;
+  setUploadFailed: (v: boolean) => void;
+  setUploadedUrl: (v: string) => void;
+};
+
+async function resolveImageUrl(
+  form: HTMLFormElement,
+  data: FormData,
+  uploadedUrl: string | undefined,
+  handlers: ImageUploadHandlers,
+): Promise<boolean> {
+  const fileInput = form.elements.namedItem('image') as HTMLInputElement;
+  const file = fileInput?.files?.[0];
+  if (file && !uploadedUrl) {
+    handlers.setUploading(true);
+    const result = await uploadFile(file).catch(() => ({ error: 'Upload failed. Please try again.' }));
+    handlers.setUploading(false);
+    if ('error' in result) {
+      handlers.setFileError(result.error);
+      handlers.setUploadFailed(true);
+      return false;
+    }
+    handlers.setUploadedUrl(result.url);
+    data.set('image_url', result.url);
+  }
+  else if (uploadedUrl) {
+    data.set('image_url', uploadedUrl);
+  }
+  return true;
+}
+
+function useEditItemForm(currentImageUrl: string | undefined, currentBrandId: string | undefined) {
   const [state, formAction, pending] = useActionState(updateItem, undefined);
   const [fileError, setFileError] = useState<string>();
   const [uploadFailed, setUploadFailed] = useState(false);
@@ -63,13 +90,9 @@ export function EditItemForm({
     setFileError(undefined);
     setUploadFailed(false);
     if (!file) return;
-    if (!ALLOWED_TYPES.has(file.type)) {
-      setFileError('Only JPEG, PNG, and WebP images are allowed.');
-      event.target.value = '';
-      return;
-    }
-    if (file.size > MAX_BYTES) {
-      setFileError('Image must be 5 MB or smaller.');
+    const validationError = validateFile(file);
+    if (validationError) {
+      setFileError(validationError);
       event.target.value = '';
       return;
     }
@@ -93,29 +116,63 @@ export function EditItemForm({
     if (fileError) return;
     const form = event.currentTarget;
     const data = new FormData(form);
-
-    const fileInput = form.elements.namedItem('image') as HTMLInputElement;
-    const file = fileInput?.files?.[0];
-    if (file && !uploadedUrl) {
-      setUploading(true);
-      const result = await uploadFile(file).catch(() => ({ error: 'Upload failed. Please try again.' }));
-      setUploading(false);
-      if ('error' in result) {
-        setFileError(result.error);
-        setUploadFailed(true);
-        return;
-      }
-      setUploadedUrl(result.url);
-      data.set('image_url', result.url);
-    }
-    else if (uploadedUrl) {
-      data.set('image_url', uploadedUrl);
-    }
-
+    const ok = await resolveImageUrl(form, data, uploadedUrl, { setUploading, setFileError, setUploadFailed, setUploadedUrl });
+    if (!ok) return;
     startTransition(() => formAction(data));
   }
 
-  const isBusy = pending || uploading;
+  return {
+    state, formAction: handleSubmit, pending,
+    fileError, uploadFailed, preview, uploading,
+    lines, loadingLines, selectedBrand,
+    handleFileChange, handleBrandChange,
+    isBusy: pending || uploading,
+  };
+}
+
+function FileErrorMessage({ error, uploadFailed, styles }: { error: string | undefined; uploadFailed: boolean; styles: Record<string, string> }) {
+  if (!error) return;
+  return (
+    <p className={styles.fieldError} role="alert">
+      {error}
+      {uploadFailed && <span className={styles.retryHint}> — choose the file again to retry.</span>}
+    </p>
+  );
+}
+
+export function EditItemForm({
+  itemId,
+  currentName,
+  currentImageUrl,
+  currentDescription,
+  currentDateAcquired,
+  currentVisibility,
+  currentLineId,
+  currentBrandId,
+  brands,
+  username,
+  collectionSlug,
+}: Properties) {
+  const {
+    state, formAction: handleSubmit,
+    fileError, uploadFailed, preview, uploading,
+    lines, loadingLines, selectedBrand,
+    handleFileChange, handleBrandChange,
+    pending,
+  } = useEditItemForm(currentImageUrl, currentBrandId);
+
+  const submitLabel = uploading ? 'Uploading…' : 'Save Changes';
+  const submitDisabled = pending || uploading;
+
+  const imagePreview = preview
+    // eslint-disable-next-line @next/next/no-img-element -- preview is a local blob URL, next/image doesn't support blob URLs
+    ? <img src={preview} alt="Preview" className={styles.preview} />
+    : (
+        <div className={styles.uploadPlaceholder}>
+          <span className={styles.uploadIcon}>↑</span>
+          <span className={styles.uploadHint}>JPEG, PNG or WebP · max 5 MB</span>
+        </div>
+      );
 
   return (
     <form onSubmit={handleSubmit} className={styles.form} noValidate>
@@ -147,17 +204,7 @@ export function EditItemForm({
       <div className={styles.field}>
         <label className={styles.label} htmlFor="item-image">Image</label>
         <div className={styles.uploadArea}>
-          {preview
-            ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={preview} alt="Preview" className={styles.preview} />
-              )
-            : (
-                <div className={styles.uploadPlaceholder}>
-                  <span className={styles.uploadIcon}>↑</span>
-                  <span className={styles.uploadHint}>JPEG, PNG or WebP · max 5 MB</span>
-                </div>
-              )}
+          {imagePreview}
           <input
             id="item-image"
             name="image"
@@ -168,12 +215,7 @@ export function EditItemForm({
             disabled={uploading}
           />
         </div>
-        {fileError && (
-          <p className={styles.fieldError} role="alert">
-            {fileError}
-            {uploadFailed && <span className={styles.retryHint}> — choose the file again to retry.</span>}
-          </p>
-        )}
+        <FileErrorMessage error={fileError} uploadFailed={uploadFailed} styles={styles} />
       </div>
 
       <div className={styles.row}>
@@ -251,8 +293,8 @@ export function EditItemForm({
       </div>
 
       <div className={styles.actions}>
-        <button type="submit" className={styles.submitButton} disabled={isBusy}>
-          {uploading ? 'Uploading…' : (pending ? 'Saving…' : 'Save Changes')}
+        <button type="submit" className={styles.submitButton} disabled={submitDisabled}>
+          {submitLabel}
         </button>
       </div>
     </form>

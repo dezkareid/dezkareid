@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { Suspense } from 'react';
 import { SiteHeader } from '@/components/SiteHeader';
-import { HomeCTA } from '@/components/HomeCta';
-import styles from './page.module.css';
+import { Hero } from '@/components/landing/Hero';
+import { Stats } from '@/components/landing/Stats';
+import { LatestArrivals } from '@/components/landing/LatestArrivals';
+import { Features } from '@/components/landing/Features';
+import { CallToAction } from '@/components/landing/CallToAction';
+import { Footer } from '@/components/landing/Footer';
 
 export const metadata: Metadata = {
   title: 'Collectstory — Track Your Collection',
@@ -17,112 +19,18 @@ export const metadata: Metadata = {
   },
 };
 
-const features = [
-  {
-    label: 'Brands & Lines',
-    description:
-      'Organize your figures by brand and product line. From Bandai S.H. Figuarts to Hasbro Marvel Legends — every series cataloged.',
-  },
-  {
-    label: 'Categories',
-    description:
-      'Action figures, statues, diecast, plush — assign categories to filter and surface exactly what you need.',
-  },
-];
-
 export default function HomePage() {
   return (
     <>
       <SiteHeader />
-      <main className={styles.main}>
-
-        {/* Hero */}
-        <section className={styles.hero} aria-labelledby="hero-heading">
-          <div className={styles.heroInner}>
-            <div className={styles.heroEyebrow}>
-              <span className={styles.eyebrowLine} aria-hidden="true" />
-              <span className={styles.eyebrowText}>Your collection. Cataloged.</span>
-            </div>
-
-            <h1 id="hero-heading" className={styles.heroTitle}>
-              <span className={styles.heroTitleTop}>Collect</span>
-              <span className={styles.heroTitleBottom}>story</span>
-            </h1>
-
-            <p className={styles.heroSubtitle}>
-              The collector&rsquo;s companion for serious enthusiasts.
-              Track every figure, discover new releases, and showcase your archive.
-            </p>
-
-            <div className={styles.heroActions}>
-              <Suspense
-                fallback={(
-                  <Link href="/login" className={styles.ctaPrimary}>
-                    Sign In to Your Collection
-                  </Link>
-                )}
-              >
-                <HomeCTA primaryClassName={styles.ctaPrimary} />
-              </Suspense>
-            </div>
-          </div>
-
-          <div className={styles.heroDeco} aria-hidden="true">
-            <div className={styles.decoGrid}>
-              {Array.from({ length: 9 }).map((_, index) => (
-                // eslint-disable-next-line @eslint-react/no-array-index-key -- decorative static grid, never reorders
-                <div key={index} className={styles.decoCell} />
-              ))}
-            </div>
-            <div className={styles.decoRing} />
-            <div className={styles.decoAccent} />
-          </div>
-        </section>
-
-        {/* Features */}
-        <section className={styles.features} aria-labelledby="features-heading">
-          <div className={styles.featuresHeader}>
-            <h2 id="features-heading" className={styles.sectionLabel}>
-              What you get
-            </h2>
-          </div>
-          <ul className={styles.featureList} role="list">
-            {features.map((f, index) => (
-              <li key={f.label} className={styles.featureItem}>
-                <span className={styles.featureIndex} aria-hidden="true">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <div className={styles.featureBody}>
-                  <h3 className={styles.featureLabel}>{f.label}</h3>
-                  <p className={styles.featureDesc}>{f.description}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        {/* CTA Banner */}
-        <section className={styles.banner} aria-labelledby="banner-heading">
-          <h2 id="banner-heading" className={styles.bannerTitle}>
-            Ready to catalog your collection?
-          </h2>
-          <Link href="/login" className={styles.ctaPrimary}>
-            Get Started — it&rsquo;s free
-          </Link>
-        </section>
-
+      <main>
+        <Hero />
+        <Stats />
+        <LatestArrivals />
+        <Features />
+        <CallToAction />
       </main>
-
-      <footer className={styles.footer}>
-        <span className={styles.footerBrand}>Collectstory</span>
-        <span className={styles.footerMeta}>
-          &copy;
-          {' '}
-          2025
-          {' '}
-          Dezkareid
-        </span>
-      </footer>
+      <Footer />
     </>
   );
 }

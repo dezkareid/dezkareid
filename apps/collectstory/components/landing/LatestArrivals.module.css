@@ -1,0 +1,128 @@
+.latestArrivals {
+  padding: var(--spacing-64) var(--spacing-24);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.container {
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-24);
+  margin-bottom: var(--spacing-48);
+}
+
+@media (min-width: 37.5rem) {
+  .header {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+}
+
+.title {
+  font-size: var(--font-size-600);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-8);
+  color: var(--color-text-primary);
+}
+
+.subtitle {
+  color: var(--color-text-secondary);
+}
+
+.controls {
+  display: flex;
+  gap: var(--spacing-8);
+}
+
+.controlBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--border-radius-pill);
+  border: 1px solid var(--color-background-secondary);
+  background: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.controlBtn:hover {
+  background-color: var(--color-background-secondary);
+  color: var(--color-text-primary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-32);
+}
+
+@media (min-width: 37.5rem) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 60rem) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+}
+
+.imageWrapper {
+  position: relative;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.tag {
+  position: absolute;
+  top: var(--spacing-12);
+  right: var(--spacing-12);
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+  border: none;
+}
+
+.info {
+  padding: var(--spacing-16);
+}
+
+.itemTitle {
+  font-size: var(--font-size-300);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-4);
+  color: var(--color-text-primary);
+}
+
+.itemAuthor {
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+}

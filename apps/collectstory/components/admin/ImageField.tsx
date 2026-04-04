@@ -89,7 +89,7 @@ export function ImageField({
               className={styles.input}
               placeholder="https://…"
               value={urlValue}
-              onChange={e => setUrlValue(e.target.value)}
+              onChange={event => setUrlValue(event.target.value)}
             />
           )
         : (

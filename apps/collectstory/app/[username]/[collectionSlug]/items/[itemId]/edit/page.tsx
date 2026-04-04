@@ -15,37 +15,45 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
   return { title: `Edit Item — ${collectionSlug}` };
 }
 
-export default async function EditItemPage({ params }: Properties) {
-  const { username, collectionSlug, itemId } = await params;
-
-  const supabase = await createClient();
+async function getAuthorizedUser(supabase: Awaited<ReturnType<typeof createClient>>, username: string) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
-
   const { data: profile } = await supabase
     .from('profiles')
     .select('username')
     .eq('id', user.id)
     .single();
-
   if (profile?.username !== username) notFound();
+  return user;
+}
+
+async function fetchEditPageData(supabase: Awaited<ReturnType<typeof createClient>>, itemId: string, userId: string) {
+  const [{ data: item }, { data: brands }] = await Promise.all([
+    supabase
+      .from('collection_items')
+      .select('id, name, image_url, description, date_acquired, visibility, line_id, lines ( id, name, brand_id, brands ( id, name ) )')
+      .eq('id', itemId)
+      .eq('user_id', userId)
+      .single(),
+    supabase
+      .from('brands')
+      .select('id, name')
+      .order('name'),
+  ]);
+  return { item, brands };
+}
+
+export default async function EditItemPage({ params }: Properties) {
+  const { username, collectionSlug, itemId } = await params;
+
+  const supabase = await createClient();
+  const user = await getAuthorizedUser(supabase, username);
 
   const result = await getPublicCollectionBySlug(username, collectionSlug);
   if (!result) notFound();
 
-  const { data: item } = await supabase
-    .from('collection_items')
-    .select('id, name, image_url, description, date_acquired, visibility, line_id, lines ( id, name, brand_id, brands ( id, name ) )')
-    .eq('id', itemId)
-    .eq('user_id', user.id)
-    .single();
-
+  const { item, brands } = await fetchEditPageData(supabase, itemId, user.id);
   if (!item) notFound();
-
-  const { data: brands } = await supabase
-    .from('brands')
-    .select('id, name')
-    .order('name');
 
   return (
     <main className={styles.page}>
