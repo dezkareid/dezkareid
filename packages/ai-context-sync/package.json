@@ -2,6 +2,7 @@
   "name": "@dezkareid/ai-context-sync",
   "version": "0.0.0",
   "description": "CLI utility to synchronize AI agent context files from AGENTS.md",
+  "type": "module",
   "main": "dist/index.js",
   "bin": {
     "ai-context-sync": "./dist/index.js"
