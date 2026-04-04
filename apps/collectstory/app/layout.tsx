@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { IBM_Plex_Sans } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -14,6 +15,10 @@ export const metadata: Metadata = {
     default: 'Collectstory',
   },
   description: 'Track and showcase your collectibles collection.',
+  other: {
+    rel: 'stylesheet',
+    url: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap',
+  },
 };
 
 export default function RootLayout({
@@ -23,16 +28,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={ibmPlexSans.variable} suppressHydrationWarning>
-      <head>
-        <script
+      <body>
+        <Script
+          id="theme-strategy"
+          strategy="beforeInteractive"
           // biome-ignore lint: FOUC guard must be inline and synchronous
           // eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('color-scheme');if(t==='dark'){document.documentElement.style.colorScheme='dark';document.documentElement.style.setProperty('--lightningcss-light',' ');document.documentElement.style.setProperty('--lightningcss-dark','initial');}else if(t==='light'){document.documentElement.style.colorScheme='light';document.documentElement.style.setProperty('--lightningcss-light','initial');document.documentElement.style.setProperty('--lightningcss-dark',' ');}}catch(_){}})();`,
           }}
         />
-      </head>
-      <body>{children}</body>
+        {children}
+      </body>
     </html>
   );
 }

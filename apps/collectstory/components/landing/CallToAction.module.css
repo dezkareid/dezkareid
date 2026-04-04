@@ -1,0 +1,84 @@
+.cta {
+  padding: var(--spacing-64) var(--spacing-24);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card {
+  background-color: var(--color-primary);
+  border-radius: var(--border-radius-large);
+  padding: var(--spacing-64) var(--spacing-24);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  color: var(--color-text-inverse);
+  box-shadow: 0 20px 40px rgba(37, 99, 235, 0.2);
+}
+
+@media (min-width: 37.5rem) {
+  .card {
+    padding: var(--spacing-96) var(--spacing-48);
+  }
+}
+
+.content {
+  position: relative;
+  z-index: 10;
+}
+
+.title {
+  font-size: var(--font-size-700);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-24);
+}
+
+@media (min-width: 37.5rem) {
+  .title {
+    font-size: var(--font-size-800);
+  }
+}
+
+.description {
+  font-size: var(--font-size-400);
+  margin-bottom: var(--spacing-48);
+  max-width: 600px;
+  margin-inline: auto;
+  opacity: 0.9;
+}
+
+.button {
+  background-color: var(--color-background-primary) !important;
+  color: var(--color-primary) !important;
+  font-weight: var(--font-weight-bold);
+  padding-inline: var(--spacing-48);
+}
+
+.button:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+.blob1 {
+  position: absolute;
+  top: -64px;
+  right: -64px;
+  width: 256px;
+  height: 256px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius-pill);
+  filter: blur(64px);
+}
+
+.blob2 {
+  position: absolute;
+  bottom: -64px;
+  left: -64px;
+  width: 256px;
+  height: 256px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius-pill);
+  filter: blur(64px);
+}

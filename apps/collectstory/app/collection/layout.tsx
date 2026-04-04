@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { connection } from 'next/server';
 import { SignOutButton } from '@/components/SignOutButton';
 import { getSessionAndRole } from '@/lib/auth/role';
 import { createClient } from '@/lib/supabase/server';
@@ -44,6 +45,7 @@ function AvatarDisplay({
 }
 
 async function CollectionHeader() {
+  await connection();
   const session = await getSessionAndRole();
   const profile = session ? await getUserProfile(session.user.id) : undefined;
 

@@ -3,31 +3,44 @@
   top: 0;
   z-index: 100;
   background-color: var(--color-background-primary);
-  border-bottom: 1px solid var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-background-secondary);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  /* Use alpha transparency if possible, but our tokens are opaque. 
+     For now, we'll stick to opaque or rely on lightningcss to handle transparency if needed. */
 }
 
 .inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--spacing-16) var(--spacing-48);
-  gap: var(--spacing-24);
+  padding: var(--spacing-16) var(--spacing-24);
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 60rem) {
   .inner {
-    padding: var(--spacing-16) var(--spacing-24);
+    padding: var(--spacing-16) var(--spacing-48);
   }
 }
 
 .brand {
-  font-size: var(--font-size-300);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-12);
   text-decoration: none;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  flex-shrink: 0;
+  color: var(--color-primary);
+}
+
+.brand span[class*="material-symbols-outlined"] {
+  font-size: 24px;
+}
+
+.brandName {
+  font-size: var(--font-size-400);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--font-letter-spacing-tight, -0.02em);
 }
 
 .brand:focus-visible {
@@ -60,35 +73,58 @@
   color: var(--color-text-primary);
 }
 
-.navLink:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-  border-radius: var(--border-radius-small);
-}
-
 .actions {
   display: flex;
   align-items: center;
   gap: var(--spacing-16);
-  flex-shrink: 0;
 }
 
 .signIn {
   font-size: var(--font-size-200);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-primary);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-inverse);
+  background-color: var(--color-primary);
   text-decoration: none;
-  padding: var(--spacing-8) var(--spacing-16);
-  border: 1px solid var(--color-text-secondary);
+  padding: var(--spacing-8) var(--spacing-24);
   border-radius: var(--border-radius-medium);
-  transition: border-color 0.15s ease;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
 .signIn:hover {
-  border-color: var(--color-text-primary);
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
 }
 
-.signIn:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+.signIn:active {
+  transform: translateY(0);
+}
+
+.userAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--border-radius-pill);
+  background-color: var(--color-background-secondary);
+  border: 2px solid var(--color-primary);
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.userAvatar:hover {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--border-radius-pill);
 }

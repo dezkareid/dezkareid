@@ -74,17 +74,28 @@ async function ProfileContent({ username }: { username: string }) {
 
 async function ProfileHeader({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params;
+  await connection();
+  const result = await getPublicCollectionsByUsername(username);
+  const avatarUrl = result?.avatarUrl;
 
   return (
     <header className={styles.header}>
       <div className={styles.avatar}>
-        <Image
-          src={`https://api.dicebear.com/7.x/initials/svg?seed=${username}`}
-          alt={username}
-          width={72}
-          height={72}
-          style={{ borderRadius: '50%' }}
-        />
+        {avatarUrl
+          ? (
+              <Image
+                src={avatarUrl}
+                alt={username}
+                width={72}
+                height={72}
+                className={styles.avatarImage}
+              />
+            )
+          : (
+              <span className={styles.avatarInitial} aria-hidden="true">
+                {username[0].toUpperCase()}
+              </span>
+            )}
       </div>
       <div className={styles.headerText}>
         <h1 className={styles.username}>

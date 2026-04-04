@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
+import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { CollectionItemCard } from '@/components/CollectionItemCard';
 import { AddItemModal } from '@/components/AddItemModal/AddItemModal';
@@ -37,6 +38,7 @@ const ITEM_SELECT = `
 `;
 
 async function LastAdditions() {
+  await connection();
   const supabase = await createClient();
 
   const { data: items } = await supabase
@@ -72,6 +74,7 @@ async function LastAdditions() {
 }
 
 async function AllItems() {
+  await connection();
   const supabase = await createClient();
 
   const { data: items } = await supabase
@@ -119,6 +122,7 @@ async function AllItems() {
 }
 
 async function AddItemSection() {
+  await connection();
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return;

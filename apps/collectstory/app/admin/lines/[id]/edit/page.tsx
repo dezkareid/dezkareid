@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { connection } from 'next/server';
 import { LineForm } from '@/components/admin/LineForm';
 import { updateLine } from '../../actions';
 import styles from '../../../form.module.css';
@@ -9,6 +10,7 @@ export const metadata: Metadata = { title: 'Edit Line' };
 
 export default async function EditLinePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  await connection();
   const supabase = await createClient();
 
   const [{ data: line }, { data: brands }, { data: categories }] = await Promise.all([

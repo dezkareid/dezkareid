@@ -36,12 +36,12 @@ export type PublicItemDetail = PublicItem & {
 
 export async function getPublicCollectionsByUsername(
   username: string,
-): Promise<{ collections: PublicCollection[]; userId: string } | undefined> {
+): Promise<{ collections: PublicCollection[]; userId: string; avatarUrl: string | undefined } | undefined> {
   const supabase = createPublicClient();
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('id')
+    .select('id, avatar_url')
     .eq('username', username)
     .single();
 
@@ -54,7 +54,7 @@ export async function getPublicCollectionsByUsername(
     .eq('visibility', 'public')
     .order('created_at', { ascending: false });
 
-  if (!collections) return { collections: [], userId: profile.id };
+  if (!collections) return { collections: [], userId: profile.id, avatarUrl: profile.avatar_url ?? undefined };
 
   // Count public items per collection
   const collectionsWithCount = await Promise.all(
@@ -68,7 +68,7 @@ export async function getPublicCollectionsByUsername(
     }),
   );
 
-  return { collections: collectionsWithCount, userId: profile.id };
+  return { collections: collectionsWithCount, userId: profile.id, avatarUrl: profile.avatar_url ?? undefined };
 }
 
 export async function getPublicCollectionBySlug(

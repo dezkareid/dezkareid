@@ -1,3 +1,10 @@
+# [@dezkareid/components-v1.2.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.2.0...@dezkareid/components-v1.2.1) (2026-04-04)
+
+
+### Bug Fixes
+
+* build for server components ([5d31eaf](https://github.com/dezkareid/dezkareid/commit/5d31eaf9b169c6927749c358c48396927844d900))
+
 # [@dezkareid/components-v1.2.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.1.1...@dezkareid/components-v1.2.0) (2026-04-02)
 
 

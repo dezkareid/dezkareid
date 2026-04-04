@@ -4,5 +4,6 @@ keys.js
 .turbo
 coverage
 .next
+.env
 .env.local
 tsconfig.tsbuildinfo

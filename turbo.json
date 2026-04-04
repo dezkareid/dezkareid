@@ -13,7 +13,10 @@
         "src/**/*.scss",
         "public/**",
         "server/src/**/*.ts",
-        "client/src/**/*.ts"
+        "client/src/**/*.ts",
+        "*.config.js",
+        "*.config.mjs",
+        "*.config.ts"
       ],
       "dependsOn": [
         "^build"
@@ -34,14 +37,26 @@
       ]
     },
     "build:server": {
-      "inputs": ["server/src/**/*.ts"],
-      "dependsOn": ["^build"],
-      "outputs": ["dist/server/**"]
+      "inputs": [
+        "server/src/**/*.ts"
+      ],
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/server/**"
+      ]
     },
     "build:client": {
-      "inputs": ["client/src/**/*.ts"],
-      "dependsOn": ["^build"],
-      "outputs": ["dist/client/**"]
+      "inputs": [
+        "client/src/**/*.ts"
+      ],
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/client/**"
+      ]
     },
     "typecheck": {
       "inputs": [
@@ -72,7 +87,9 @@
       ]
     },
     "dev": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "cache": false,
       "persistent": true,
       "outputs": []
@@ -87,7 +104,9 @@
       ]
     },
     "storybook": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "cache": false,
       "persistent": true,
       "outputs": []
