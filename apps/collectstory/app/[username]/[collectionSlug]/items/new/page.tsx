@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
+import { Suspense } from 'react';
+import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { AddItemPageForm } from './AddItemPageForm';
-
-export const dynamic = 'force-dynamic';
 import styles from './page.module.css';
 
 type Properties = {
@@ -16,7 +16,8 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
   return { title: `Add Item to ${collectionSlug}` };
 }
 
-export default async function AddItemPage({ params }: Properties) {
+async function AddItemContent({ params }: Properties) {
+  await connection();
   const { username, collectionSlug } = await params;
 
   const supabase = await createClient();
@@ -44,30 +45,38 @@ export default async function AddItemPage({ params }: Properties) {
   if (!collection) notFound();
 
   return (
+    <div className={styles.card}>
+      <nav className={styles.breadcrumb} aria-label="Breadcrumb">
+        <Link href={`/${username}`} className={styles.breadcrumbLink}>
+          @
+          {username}
+        </Link>
+        <span className={styles.breadcrumbSep} aria-hidden="true">/</span>
+        <Link href={`/${username}/${collectionSlug}`} className={styles.breadcrumbLink}>
+          {collectionSlug}
+        </Link>
+        <span className={styles.breadcrumbSep} aria-hidden="true">/</span>
+        <span>Add Item</span>
+      </nav>
+
+      <h1 className={styles.title}>Add Item</h1>
+
+      <AddItemPageForm
+        brands={(brands ?? []) as { id: string; name: string }[]}
+        collectionId={collection.id}
+        username={username}
+        collectionSlug={collectionSlug}
+      />
+    </div>
+  );
+}
+
+export default function AddItemPage({ params }: Properties) {
+  return (
     <main className={styles.page}>
-      <div className={styles.card}>
-        <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-          <Link href={`/${username}`} className={styles.breadcrumbLink}>
-            @
-            {username}
-          </Link>
-          <span className={styles.breadcrumbSep} aria-hidden="true">/</span>
-          <Link href={`/${username}/${collectionSlug}`} className={styles.breadcrumbLink}>
-            {collectionSlug}
-          </Link>
-          <span className={styles.breadcrumbSep} aria-hidden="true">/</span>
-          <span>Add Item</span>
-        </nav>
-
-        <h1 className={styles.title}>Add Item</h1>
-
-        <AddItemPageForm
-          brands={(brands ?? []) as { id: string; name: string }[]}
-          collectionId={collection.id}
-          username={username}
-          collectionSlug={collectionSlug}
-        />
-      </div>
+      <Suspense>
+        <AddItemContent params={params} />
+      </Suspense>
     </main>
   );
 }

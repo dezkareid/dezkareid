@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
+import { Suspense } from 'react';
+import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getPublicCollectionBySlug } from '@/lib/collections';
-
-export const dynamic = 'force-dynamic';
 import { EditItemForm } from './EditItemForm';
 import styles from './page.module.css';
 
@@ -45,7 +45,8 @@ async function fetchEditPageData(supabase: Awaited<ReturnType<typeof createClien
   return { item, brands };
 }
 
-export default async function EditItemPage({ params }: Properties) {
+async function EditItemContent({ params }: Properties) {
+  await connection();
   const { username, collectionSlug, itemId } = await params;
 
   const supabase = await createClient();
@@ -58,37 +59,45 @@ export default async function EditItemPage({ params }: Properties) {
   if (!item) notFound();
 
   return (
+    <div className={styles.card}>
+      <nav className={styles.breadcrumb} aria-label="Breadcrumb">
+        <Link href={`/${username}`} className={styles.breadcrumbLink}>
+          @
+          {username}
+        </Link>
+        <span className={styles.breadcrumbSep} aria-hidden="true">/</span>
+        <Link href={`/${username}/${collectionSlug}`} className={styles.breadcrumbLink}>
+          {collectionSlug}
+        </Link>
+        <span className={styles.breadcrumbSep} aria-hidden="true">/</span>
+        <span>Edit Item</span>
+      </nav>
+
+      <h1 className={styles.title}>Edit Item</h1>
+
+      <EditItemForm
+        itemId={item.id}
+        currentName={item.name}
+        currentImageUrl={(item.image_url as string | null) ?? undefined}
+        currentDescription={(item.description as string | null) ?? undefined}
+        currentDateAcquired={(item.date_acquired as string | null) ?? undefined}
+        currentVisibility={(item.visibility as string | null) ?? 'public'}
+        currentLineId={(item.line_id as string | null) ?? undefined}
+        currentBrandId={((item.lines as unknown as { brand_id: string } | null)?.brand_id) ?? undefined}
+        brands={(brands ?? []) as { id: string; name: string }[]}
+        username={username}
+        collectionSlug={collectionSlug}
+      />
+    </div>
+  );
+}
+
+export default function EditItemPage({ params }: Properties) {
+  return (
     <main className={styles.page}>
-      <div className={styles.card}>
-        <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-          <Link href={`/${username}`} className={styles.breadcrumbLink}>
-            @
-            {username}
-          </Link>
-          <span className={styles.breadcrumbSep} aria-hidden="true">/</span>
-          <Link href={`/${username}/${collectionSlug}`} className={styles.breadcrumbLink}>
-            {collectionSlug}
-          </Link>
-          <span className={styles.breadcrumbSep} aria-hidden="true">/</span>
-          <span>Edit Item</span>
-        </nav>
-
-        <h1 className={styles.title}>Edit Item</h1>
-
-        <EditItemForm
-          itemId={item.id}
-          currentName={item.name}
-          currentImageUrl={(item.image_url as string | null) ?? undefined}
-          currentDescription={(item.description as string | null) ?? undefined}
-          currentDateAcquired={(item.date_acquired as string | null) ?? undefined}
-          currentVisibility={(item.visibility as string | null) ?? 'public'}
-          currentLineId={(item.line_id as string | null) ?? undefined}
-          currentBrandId={((item.lines as unknown as { brand_id: string } | null)?.brand_id) ?? undefined}
-          brands={(brands ?? []) as { id: string; name: string }[]}
-          username={username}
-          collectionSlug={collectionSlug}
-        />
-      </div>
+      <Suspense>
+        <EditItemContent params={params} />
+      </Suspense>
     </main>
   );
 }
