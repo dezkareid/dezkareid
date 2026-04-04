@@ -1,6 +1,7 @@
 design-tokens: "./design-system/design-tokens/**"
 css: "./design-system/css/**"
 components: "./design-system/components/**"
+icons: "./design-system/icons/**"
 ai-context-sync: "./packages/ai-context-sync/**"
 react-components: "./packages/react-components/**"
 react-hooks: "./packages/react-hooks/**"

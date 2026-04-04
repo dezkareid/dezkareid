@@ -11,6 +11,7 @@
         "src/**/*.json",
         "src/**/*.css",
         "src/**/*.scss",
+        "src/**/*.svg",
         "public/**",
         "server/src/**/*.ts",
         "client/src/**/*.ts",
