@@ -1,0 +1,41 @@
+{
+  "name": "{{name}}",
+  "version": "1.0.0",
+  "description": "{{description}}",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/{{author-username}}/{{name}}.git"
+  },
+  "homepage": "https://github.com/{{author-username}}/{{name}}#readme",
+  "bugs": {
+    "url": "https://github.com/{{author-username}}/{{name}}/issues"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run"
+  },
+  "keywords": [],
+  "author": "{{author}}",
+  "license": "MIT",
+  "devDependencies": {
+    "@dezkareid/eslint-plugin-web": "1.1.1",
+    "eslint": "10.2.0",
+    "typescript-eslint": "8.58.0",
+    "tsup": "8.5.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.2"
+  }
+}
