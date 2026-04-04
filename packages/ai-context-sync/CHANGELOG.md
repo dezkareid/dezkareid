@@ -1,3 +1,10 @@
+# [@dezkareid/ai-context-sync-v1.5.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/ai-context-sync-v1.4.0...@dezkareid/ai-context-sync-v1.5.0) (2026-04-04)
+
+
+### Features
+
+* **scaffolding:** add project scaffolding cli with templates, linters and documentation ([ffa82a0](https://github.com/dezkareid/dezkareid/commit/ffa82a0b865173a4c5406bab2c6ce5801997b746))
+
 # [@dezkareid/ai-context-sync-v1.4.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/ai-context-sync-v1.3.0...@dezkareid/ai-context-sync-v1.4.0) (2026-03-23)
 
 
