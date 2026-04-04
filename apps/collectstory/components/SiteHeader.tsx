@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { connection } from 'next/server';
 import { ThemeToggleWrapper } from './ThemeToggleWrapper';
 import { ShelvesIcon } from './icons/ShelvesIcon';
 import { getSessionAndRole } from '@/lib/auth/role';
@@ -8,6 +9,7 @@ import { siteData } from '@/lib/mock-data';
 import styles from './SiteHeader.module.css';
 
 async function getHeaderData() {
+  await connection();
   const session = await getSessionAndRole();
   if (!session) return { session: undefined, profile: undefined };
   const supabase = await createClient();

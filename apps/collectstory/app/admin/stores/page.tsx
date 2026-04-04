@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import { connection } from 'next/server';
 import { DeleteButton } from '@/components/admin/DeleteButton';
 import { VerifiedToggle } from '@/components/admin/VerifiedToggle';
 import { softDeleteStore, toggleStoreVerified } from './actions';
@@ -9,6 +10,7 @@ import styles from '../list.module.css';
 export const metadata: Metadata = { title: 'Stores' };
 
 export default async function StoresPage() {
+  await connection();
   const supabase = await createClient();
   const { data: stores } = await supabase
     .from('stores')

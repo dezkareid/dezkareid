@@ -1,10 +1,12 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { connection } from 'next/server';
 import { getSessionAndRole } from '@/lib/auth/role';
 import styles from './layout.module.css';
 
 async function AdminGuard({ children }: { children: React.ReactNode }) {
+  await connection();
   const session = await getSessionAndRole();
 
   if (!session) {

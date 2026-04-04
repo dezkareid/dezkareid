@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
+import { connection } from 'next/server';
 import { LineForm } from '@/components/admin/LineForm';
 import { createLine } from '../actions';
 import styles from '../../form.module.css';
@@ -7,6 +8,7 @@ import styles from '../../form.module.css';
 export const metadata: Metadata = { title: 'New Line' };
 
 export default async function NewLinePage() {
+  await connection();
   const supabase = await createClient();
   const [{ data: brands }, { data: categories }] = await Promise.all([
     supabase.from('brands').select('id, name').order('name'),
