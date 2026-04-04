@@ -28,7 +28,7 @@
     "dev": "tsup --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "vitest run"
+    "test": "tsx scripts/build-icons.ts && vitest run"
   },
   "keywords": [],
   "author": "Joel Humberto Gomez Paredes <elmaildeldezkareid@gmail.com>",
