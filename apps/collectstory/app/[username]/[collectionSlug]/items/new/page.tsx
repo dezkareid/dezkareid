@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { AddItemPageForm } from './AddItemPageForm';
+
+export const dynamic = 'force-dynamic';
 import styles from './page.module.css';
 
 type Properties = {

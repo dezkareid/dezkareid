@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { getPublicCollectionBySlug } from '@/lib/collections';
+
+export const dynamic = 'force-dynamic';
 import { EditItemForm } from './EditItemForm';
 import styles from './page.module.css';
 

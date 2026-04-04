@@ -5,6 +5,8 @@ import { createClient } from '@/lib/supabase/server';
 import { EditCollectionForm } from './EditCollectionForm';
 import styles from './page.module.css';
 
+export const dynamic = 'force-dynamic';
+
 type Properties = {
   params: Promise<{ username: string; collectionSlug: string }>;
 };
