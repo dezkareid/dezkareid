@@ -16,11 +16,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dezkareid/icons.git"
+    "url": "git+https://github.com/dezkareid/dezkareid.git",
+    "directory": "design-system/icons"
   },
-  "homepage": "https://github.com/dezkareid/icons#readme",
+  "homepage": "https://github.com/dezkareid/dezkareid/tree/main/design-system/icons#readme",
   "bugs": {
-    "url": "https://github.com/dezkareid/icons/issues"
+    "url": "https://github.com/dezkareid/dezkareid/issues"
   },
   "scripts": {
     "generate": "tsx scripts/build-icons.ts",
