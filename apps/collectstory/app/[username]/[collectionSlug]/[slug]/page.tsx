@@ -99,11 +99,17 @@ function ItemTags({ item }: { item: PublicItemDetail }) {
   const brand = item.lines?.brands?.name;
   const line = item.lines?.name;
   const category = item.lines?.categories?.name;
+  const franchise = item.franchises;
   return (
     <div className={styles.tags}>
       {brand && <span className={styles.tag}>{brand}</span>}
       {line && <span className={styles.tagSecondary}>{line}</span>}
       {category && <span className={styles.tagSecondary}>{category}</span>}
+      {franchise && (
+        <Link href={`/franchises/${franchise.slug}`} className={styles.tagFranchise}>
+          {franchise.name}
+        </Link>
+      )}
     </div>
   );
 }

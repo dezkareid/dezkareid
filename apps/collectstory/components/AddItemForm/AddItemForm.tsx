@@ -2,6 +2,8 @@
 
 import { useActionState, useEffect, useState, useTransition } from 'react';
 import { createCollectionItem, getLinesByBrand } from '@/app/collection/actions';
+
+type Franchise = { id: string; name: string };
 import styles from './AddItemForm.module.css';
 
 const ALLOWED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
@@ -12,6 +14,7 @@ type Line = { id: string; name: string; categoryName: string | undefined };
 
 type Properties = {
   brands: Brand[];
+  franchises: Franchise[];
   collectionId: string;
   onSuccess: () => void;
 };
@@ -84,7 +87,7 @@ function ImageUploadField({
   );
 }
 
-export function AddItemForm({ brands, collectionId, onSuccess }: Properties) {
+export function AddItemForm({ brands, franchises, collectionId, onSuccess }: Properties) {
   const [state, formAction, pending] = useActionState(createCollectionItem, undefined);
   const [fileError, setFileError] = useState<string>();
   const [uploadFailed, setUploadFailed] = useState(false);
@@ -247,6 +250,21 @@ export function AddItemForm({ brands, collectionId, onSuccess }: Properties) {
           </p>
         </div>
       )}
+
+      <div className={styles.field}>
+        <label className={styles.label} htmlFor="item-franchise">Franchise</label>
+        <select
+          id="item-franchise"
+          name="franchise_id"
+          className={styles.select}
+          defaultValue=""
+        >
+          <option value="">— none —</option>
+          {franchises.map(f => (
+            <option key={f.id} value={f.id}>{f.name}</option>
+          ))}
+        </select>
+      </div>
 
       <div className={styles.field}>
         <label className={styles.label} htmlFor="item-description">Description</label>
