@@ -1,3 +1,10 @@
+# [@dezkareid/icons-v1.2.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/icons-v1.1.0...@dezkareid/icons-v1.2.0) (2026-04-05)
+
+
+### Features
+
+* **icons:** add Astro entry point and social/theme SVGs ([f067c10](https://github.com/dezkareid/dezkareid/commit/f067c10f9c5ebef9929f1b71265b22e315fc205d))
+
 # [@dezkareid/icons-v1.1.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/icons-v1.0.0...@dezkareid/icons-v1.1.0) (2026-04-05)
 
 
