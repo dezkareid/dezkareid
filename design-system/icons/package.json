@@ -6,10 +6,15 @@
     "./react": {
       "import": "./dist/react.mjs",
       "types": "./dist/react.d.mts"
+    },
+    "./astro": {
+      "types": "./src/astro/index.ts",
+      "default": "./src/astro/index.ts"
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "src/astro"
   ],
   "publishConfig": {
     "access": "public"
