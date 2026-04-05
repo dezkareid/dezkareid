@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@dezkareid/components": "workspace:*",
+    "@dezkareid/icons": "workspace:*",
     "@dezkareid/css": "workspace:*",
     "@dezkareid/design-tokens": "workspace:*",
     "@supabase/ssr": "0.9.0",

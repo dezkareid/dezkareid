@@ -32,6 +32,9 @@ importers:
       '@dezkareid/design-tokens':
         specifier: workspace:*
         version: link:../../design-system/design-tokens
+      '@dezkareid/icons':
+        specifier: workspace:*
+        version: link:../../design-system/icons
       '@supabase/ssr':
         specifier: 0.9.0
         version: 0.9.0(@supabase/supabase-js@2.100.0)

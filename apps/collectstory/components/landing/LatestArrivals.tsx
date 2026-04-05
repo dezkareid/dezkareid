@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { Card, Tag } from '@dezkareid/components/react-server';
+import { ChevronLeft, ChevronRight } from '@dezkareid/icons/react';
 import { latestArrivals } from '@/lib/mock-data';
 import styles from './LatestArrivals.module.css';
 
@@ -14,15 +15,15 @@ export function LatestArrivals() {
           </div>
           <div className={styles.controls}>
             <button className={styles.controlBtn} aria-label="Previous">
-              <span className="material-symbols-outlined">chevron_left</span>
+              <ChevronLeft aria-hidden />
             </button>
             <button className={styles.controlBtn} aria-label="Next">
-              <span className="material-symbols-outlined">chevron_right</span>
+              <ChevronRight aria-hidden />
             </button>
           </div>
         </div>
         <div className={styles.grid}>
-          {latestArrivals.map(item => (
+          {latestArrivals.map((item, index) => (
             <div key={item.title} className={styles.item}>
               <Card elevation="raised" className={styles.card}>
                 <div className={styles.imageWrapper}>
@@ -30,6 +31,8 @@ export function LatestArrivals() {
                     src={item.image}
                     alt={item.title}
                     fill
+                    sizes="(min-width: 60rem) 25vw, (min-width: 37.5rem) 50vw, 100vw"
+                    loading={index === 0 ? 'eager' : undefined}
                     className={styles.image}
                   />
                   <Tag className={styles.tag}>{item.category}</Tag>

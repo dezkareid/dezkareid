@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { connection } from 'next/server';
 import { ThemeToggleWrapper } from './ThemeToggleWrapper';
-import { ShelvesIcon } from './icons/ShelvesIcon';
+import { Shelves } from '@dezkareid/icons/react';
 import { getSessionAndRole } from '@/lib/auth/role';
 import { createClient } from '@/lib/supabase/server';
 import { siteData } from '@/lib/mock-data';
@@ -28,7 +28,7 @@ export async function SiteHeader() {
     <header className={styles.header}>
       <div className={styles.inner}>
         <Link href="/" className={styles.brand} aria-label="Collectstory home">
-          <ShelvesIcon size={24} />
+          <Shelves aria-hidden style={{ '--icon-size': '24px' } as React.CSSProperties} />
           <span className={styles.brandName}>{siteData.name}</span>
         </Link>
 
