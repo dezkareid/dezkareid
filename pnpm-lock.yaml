@@ -56,6 +56,9 @@ importers:
       server-only:
         specifier: 0.0.1
         version: 0.0.1
+      sharp:
+        specifier: 0.34.5
+        version: 0.34.5
     devDependencies:
       '@dezkareid/eslint-config-ts-base':
         specifier: 1.0.0
@@ -72,6 +75,9 @@ importers:
       '@types/react-dom':
         specifier: 19.2.3
         version: 19.2.3(@types/react@19.2.9)
+      '@types/sharp':
+        specifier: 0.32.0
+        version: 0.32.0
       eslint:
         specifier: 9.39.2
         version: 9.39.2(jiti@2.6.0)
@@ -5212,6 +5218,10 @@ packages:
 
   '@types/serve-static@1.15.10':
     resolution: {integrity: sha512-tRs1dB+g8Itk72rlSI2ZrW6vZg0YrLI81iQSTkMmOqnqCaNr/8Ek4VwWcN5vZgCYWbg/JJSGBlUaYGAOP73qBw==}
+
+  '@types/sharp@0.32.0':
+    resolution: {integrity: sha512-OOi3kL+FZDnPhVzsfD37J88FNeZh6gQsGcLc95NbeURRGvmSjeXiDcyWzF2o3yh/gQAUn2uhh/e+CPCa5nwAxw==}
+    deprecated: This is a stub types definition. sharp provides its own type definitions, so you do not need this installed.
 
   '@types/shimmer@1.2.0':
     resolution: {integrity: sha512-UE7oxhQLLd9gub6JKIAhDq06T0F6FnztwMNRvYgjeQSBeMc1ZG/tA47EwfduvkuQS8apbkM/lpLpWsaCeYsXVg==}
@@ -18478,6 +18488,10 @@ snapshots:
       '@types/node': 25.0.10
       '@types/send': 0.17.6
 
+  '@types/sharp@0.32.0':
+    dependencies:
+      sharp: 0.34.5
+
   '@types/shimmer@1.2.0': {}
 
   '@types/sockjs@0.3.36':
@@ -19210,7 +19224,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vitest: 4.0.18(@opentelemetry/api@1.9.1)(@types/node@24.10.1)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.0)(jsdom@29.0.1)(less@4.6.4)(lightningcss@1.29.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)
+      vitest: 4.0.18(@opentelemetry/api@1.9.1)(@types/node@25.5.2)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.0)(jsdom@28.0.0)(less@4.6.4)(lightningcss@1.29.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)
 
   '@vitest/utils@3.2.4':
     dependencies:
