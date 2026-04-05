@@ -22,12 +22,14 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "cloudinary": "2.9.0",
-    "server-only": "0.0.1"
+    "server-only": "0.0.1",
+    "sharp": "0.34.5"
   },
   "devDependencies": {
     "@dezkareid/eslint-config-ts-base": "1.0.0",
     "@dezkareid/eslint-plugin-web": "workspace:*",
     "@types/node": "25.0.10",
+    "@types/sharp": "0.32.0",
     "@types/react": "19.2.9",
     "@types/react-dom": "19.2.3",
     "eslint": "9.39.2",

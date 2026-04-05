@@ -59,6 +59,9 @@ importers:
       server-only:
         specifier: 0.0.1
         version: 0.0.1
+      sharp:
+        specifier: 0.34.5
+        version: 0.34.5
     devDependencies:
       '@dezkareid/eslint-config-ts-base':
         specifier: 1.0.0
@@ -75,6 +78,9 @@ importers:
       '@types/react-dom':
         specifier: 19.2.3
         version: 19.2.3(@types/react@19.2.9)
+      '@types/sharp':
+        specifier: 0.32.0
+        version: 0.32.0
       eslint:
         specifier: 9.39.2
         version: 9.39.2(jiti@2.6.0)
@@ -5218,6 +5224,10 @@ packages:
 
   '@types/serve-static@1.15.10':
     resolution: {integrity: sha512-tRs1dB+g8Itk72rlSI2ZrW6vZg0YrLI81iQSTkMmOqnqCaNr/8Ek4VwWcN5vZgCYWbg/JJSGBlUaYGAOP73qBw==}
+
+  '@types/sharp@0.32.0':
+    resolution: {integrity: sha512-OOi3kL+FZDnPhVzsfD37J88FNeZh6gQsGcLc95NbeURRGvmSjeXiDcyWzF2o3yh/gQAUn2uhh/e+CPCa5nwAxw==}
+    deprecated: This is a stub types definition. sharp provides its own type definitions, so you do not need this installed.
 
   '@types/shimmer@1.2.0':
     resolution: {integrity: sha512-UE7oxhQLLd9gub6JKIAhDq06T0F6FnztwMNRvYgjeQSBeMc1ZG/tA47EwfduvkuQS8apbkM/lpLpWsaCeYsXVg==}
@@ -18483,6 +18493,10 @@ snapshots:
       '@types/http-errors': 2.0.5
       '@types/node': 25.0.10
       '@types/send': 0.17.6
+
+  '@types/sharp@0.32.0':
+    dependencies:
+      sharp: 0.34.5
 
   '@types/shimmer@1.2.0': {}
 
