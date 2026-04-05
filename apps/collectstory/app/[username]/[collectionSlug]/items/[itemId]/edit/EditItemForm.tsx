@@ -3,6 +3,7 @@
 import { useActionState, useState, useTransition } from 'react';
 import { updateItem } from '../../../actions';
 import { getLinesByBrand } from '@/app/collection/actions';
+import { stripMetadata } from '@/lib/image/strip-metadata';
 import styles from '@/components/AddItemForm/AddItemForm.module.css';
 
 type Brand = { id: string; name: string };
@@ -22,6 +23,7 @@ type Properties = {
   collectionSlug: string;
 };
 
+// Keep in sync with UPLOAD_CONFIG.item in app/api/upload/route.ts
 const ALLOWED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 const MAX_BYTES = 5 * 1024 * 1024;
 
@@ -32,8 +34,9 @@ function validateFile(file: File): string | undefined {
 }
 
 async function uploadFile(file: File): Promise<{ url: string } | { error: string }> {
+  const stripped = await stripMetadata(file);
   const uploadData = new FormData();
-  uploadData.set('file', file);
+  uploadData.set('file', stripped);
   const response = await fetch('/api/upload', { method: 'POST', body: uploadData });
   const result = (await response.json()) as { url?: string; error?: string };
   if (!response.ok || !result.url) return { error: result.error ?? 'Upload failed. Please try again.' };

@@ -1,6 +1,6 @@
 # @dezkareid/icons
 
-SVG icon library for the dezkareid design system. Icons are authored from scratch, optimized with SVGO, and compiled to typed React components.
+SVG icon library for the dezkareid design system. Icons are authored from scratch, optimized with SVGO, and compiled to typed React and Astro components.
 
 ## Installation
 
@@ -25,20 +25,53 @@ import { ArrowRight, Search, Close } from '@dezkareid/icons/react';
 <Close style={{ '--icon-size': '32px' } as React.CSSProperties} />
 ```
 
+### Astro
+
+```astro
+---
+import { ArrowRight, Search, Github } from '@dezkareid/icons/astro';
+---
+
+<!-- Decorative icon (aria-hidden by default) -->
+<ArrowRight />
+
+<!-- Accessible icon with a label -->
+<Search label="Search" />
+
+<!-- Custom class for sizing/styling -->
+<Github class="social-icon" />
+```
+
+#### Astro icon props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | `undefined` | Accessible name. When set: `aria-label` + `role="img"`. When omitted: `aria-hidden="true"`. |
+| `class` | `string` | `undefined` | CSS class forwarded to the `<svg>` element. |
+
 ### Controlling size
 
 Use the `--icon-size` CSS custom property. The default is `1em` (inherits from the surrounding text size).
 
 ```css
-/* Set size on the icon directly */
+/* Set size on a parent or class */
 .my-icon {
   --icon-size: 20px;
 }
 
-/* Or set it on a parent */
 .icon-container {
   --icon-size: 24px;
 }
+```
+
+In Astro, scope via `:global()` when targeting generated icon SVGs:
+
+```astro
+<style>
+  :global(.social-icon) {
+    --icon-size: 1.125rem;
+  }
+</style>
 ```
 
 ### Controlling color
@@ -47,12 +80,8 @@ Icons use `currentColor` for stroke/fill. Set `color` on the icon or any ancesto
 
 ```css
 .danger-icon {
-  color: var(--color-error); /* or any CSS color */
+  color: var(--color-error);
 }
-```
-
-```tsx
-<Close style={{ color: 'red' }} />
 ```
 
 ### TypeScript — icon name autocomplete
@@ -73,6 +102,8 @@ const icon: IconName = 'arrow-right'; // autocomplete works
 | Actions    | `close`, `check`, `plus`, `minus`, `edit`, `trash`, `search`, `filter`, `menu` |
 | Status     | `info`, `warning`, `error`, `success` |
 | Media      | `play`, `pause`, `stop` |
+| Social     | `github`, `linkedin`, `twitter-x`, `mail`, `rss` |
+| Theme      | `sun`, `moon` |
 
 ## Adding a new icon
 
@@ -83,7 +114,7 @@ const icon: IconName = 'arrow-right'; // autocomplete works
    - No `width` or `height` attributes — size is controlled via CSS
    - No `id`, `class`, or `style` attributes (SVGO removes them anyway)
 3. Run `pnpm --filter @dezkareid/icons generate` (or `pnpm build`) to regenerate components
-4. The new icon is immediately available as `MyIcon` from `@dezkareid/icons/react`
+4. The new icon is immediately available as `MyIcon` from both `@dezkareid/icons/react` and `@dezkareid/icons/astro`
 
 ## Accessibility
 
@@ -95,8 +126,8 @@ const icon: IconName = 'arrow-right'; // autocomplete works
 ## Build
 
 The build pipeline:
-1. `scripts/build-icons.ts` — reads `src/svg/*.svg`, runs SVGO in-memory, emits typed React components to `src/react/`
-2. `tsup` — bundles `src/react/index.ts` → `dist/react.mjs` + `dist/react.d.mts`
+1. `scripts/build-icons.ts` — reads `src/svg/*.svg`, runs SVGO in-memory, emits typed React components to `src/react/` and Astro components to `src/astro/`
+2. `tsup` — bundles `src/react/index.ts` → `dist/react.mjs` + `dist/react.d.mts` (Astro ships as source files)
 
 ```bash
 # From the monorepo root:

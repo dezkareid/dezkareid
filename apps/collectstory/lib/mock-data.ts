@@ -1,3 +1,8 @@
+import type { ComponentType, SVGProps } from 'react';
+import { Box, Chart, Share } from '@dezkareid/icons/react';
+
+type IconComponent = ComponentType<SVGProps<SVGSVGElement> & { label?: string }>;
+
 export const siteData = {
   name: 'collectstory',
   logoIcon: 'shelves',
@@ -66,23 +71,23 @@ export const latestArrivals = [
   },
 ];
 
-export const features = [
+export const features: Array<{ title: string; description: string; icon: IconComponent; color: string }> = [
   {
     title: 'AI Inventory',
     description: 'Snap a photo and let our AI recognize and catalog your item instantly with market data.',
-    icon: 'inventory_2',
+    icon: Box,
     color: 'blue',
   },
   {
     title: 'Value Tracking',
     description: 'Stay updated with real-time price trends from major marketplaces and auction houses.',
-    icon: 'monitoring',
+    icon: Chart,
     color: 'indigo',
   },
   {
     title: 'Public Vaults',
     description: 'Share your curated collection with the world through a beautiful, customizable landing page.',
-    icon: 'share',
+    icon: Share,
     color: 'purple',
   },
 ];
