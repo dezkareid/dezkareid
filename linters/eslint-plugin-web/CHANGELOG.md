@@ -1,3 +1,10 @@
+# [@dezkareid/eslint-plugin-web-v1.1.2](https://github.com/dezkareid/dezkareid/compare/@dezkareid/eslint-plugin-web-v1.1.1...@dezkareid/eslint-plugin-web-v1.1.2) (2026-04-05)
+
+
+### Bug Fixes
+
+* **collectstory:** fix lint errors and add generateStaticParams allowlist to eslint-plugin-web next config ([9f95979](https://github.com/dezkareid/dezkareid/commit/9f95979ddd0188bdf0b00a6f99e693b2e0792c2d))
+
 # [@dezkareid/eslint-plugin-web-v1.1.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/eslint-plugin-web-v1.1.0...@dezkareid/eslint-plugin-web-v1.1.1) (2026-03-31)
 
 
