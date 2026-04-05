@@ -32,6 +32,9 @@ importers:
       '@dezkareid/design-tokens':
         specifier: workspace:*
         version: link:../../design-system/design-tokens
+      '@dezkareid/icons':
+        specifier: workspace:*
+        version: link:../../design-system/icons
       '@supabase/ssr':
         specifier: 0.9.0
         version: 0.9.0(@supabase/supabase-js@2.100.0)
@@ -93,6 +96,9 @@ importers:
       '@dezkareid/design-tokens':
         specifier: workspace:*
         version: link:../../design-system/design-tokens
+      '@dezkareid/icons':
+        specifier: workspace:*
+        version: link:../../design-system/icons
       astro:
         specifier: 6.0.6
         version: 6.0.6(@types/node@25.5.2)(jiti@2.6.0)(less@4.6.4)(lightningcss@1.29.1)(rollup@4.56.0)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(typescript@5.9.3)
@@ -16501,7 +16507,7 @@ snapshots:
       tsconfig-paths: 4.2.0
       tsconfig-paths-webpack-plugin: 4.2.0
       typescript: 5.9.3
-      webpack: 5.104.1(webpack-cli@6.0.1)
+      webpack: 5.104.1(webpack-cli@4.10.0)
       webpack-node-externals: 3.0.0
     transitivePeerDependencies:
       - '@types/node'
@@ -22610,7 +22616,7 @@ snapshots:
       semver: 7.7.4
       tapable: 2.3.0
       typescript: 5.9.3
-      webpack: 5.104.1(webpack-cli@6.0.1)
+      webpack: 5.104.1(webpack-cli@4.10.0)
 
   form-data@3.0.4:
     dependencies:
@@ -27809,7 +27815,7 @@ snapshots:
       schema-utils: 4.3.3
       serialize-javascript: 6.0.2
       terser: 5.46.0
-      webpack: 5.104.1(webpack-cli@4.10.0)
+      webpack: 5.104.1(webpack-cli@6.0.1)
 
   terser@5.46.0:
     dependencies:

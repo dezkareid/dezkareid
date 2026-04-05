@@ -33,10 +33,6 @@
   color: var(--color-primary);
 }
 
-.brand span[class*="material-symbols-outlined"] {
-  font-size: 24px;
-}
-
 .brandName {
   font-size: var(--font-size-400);
   font-weight: var(--font-weight-bold);

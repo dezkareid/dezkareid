@@ -1,6 +1,19 @@
 import { features } from '@/lib/mock-data';
 import styles from './Features.module.css';
 
+function FeatureItem({ feature }: { feature: (typeof features)[number] }) {
+  const Icon = feature.icon;
+  return (
+    <div className={styles.feature}>
+      <div className={`${styles.iconWrapper} ${styles[`icon--${feature.color}`]}`}>
+        <Icon aria-hidden />
+      </div>
+      <h3 className={styles.featureTitle}>{feature.title}</h3>
+      <p className={styles.featureDescription}>{feature.description}</p>
+    </div>
+  );
+}
+
 export function Features() {
   return (
     <section className={styles.features}>
@@ -11,13 +24,7 @@ export function Features() {
         </div>
         <div className={styles.grid}>
           {features.map(feature => (
-            <div key={feature.title} className={styles.feature}>
-              <div className={`${styles.iconWrapper} ${styles[`icon--${feature.color}`]}`}>
-                <span className="material-symbols-outlined">{feature.icon}</span>
-              </div>
-              <h3 className={styles.featureTitle}>{feature.title}</h3>
-              <p className={styles.featureDescription}>{feature.description}</p>
-            </div>
+            <FeatureItem key={feature.title} feature={feature} />
           ))}
         </div>
       </div>

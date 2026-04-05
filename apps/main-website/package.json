@@ -25,6 +25,7 @@
   "dependencies": {
     "@dezkareid/components": "workspace:*",
     "@dezkareid/design-tokens": "workspace:*",
+    "@dezkareid/icons": "workspace:*",
     "astro": "6.0.6",
     "sharp": "0.34.5"
   }
