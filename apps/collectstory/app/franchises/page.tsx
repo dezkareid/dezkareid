@@ -6,8 +6,6 @@ import { SiteHeader } from '@/components/SiteHeader';
 import { getAllPublicFranchises } from '@/lib/franchises';
 import styles from './page.module.css';
 
-export const revalidate = 3600;
-
 export const metadata: Metadata = {
   title: 'Franchise Catalog — Collectstory',
   description:

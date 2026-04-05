@@ -11,8 +11,6 @@ import {
 } from '@/lib/franchises';
 import styles from './page.module.css';
 
-export const revalidate = 3600;
-
 type Properties = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {

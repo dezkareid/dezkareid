@@ -1,4 +1,5 @@
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { cacheLife } from 'next/cache';
 
 function createPublicClient() {
   return createSupabaseClient(
@@ -37,6 +38,8 @@ export type FranchiseDetail = FranchiseCard & {
 };
 
 export async function getAllPublicFranchises(): Promise<FranchiseCard[]> {
+  'use cache';
+  cacheLife('hours');
   const supabase = createPublicClient();
   const { data } = await supabase
     .from('franchises')
@@ -54,6 +57,8 @@ export async function getAllPublicFranchises(): Promise<FranchiseCard[]> {
 }
 
 export async function getFranchiseBySlug(slug: string): Promise<FranchiseDetail | undefined> {
+  'use cache';
+  cacheLife('hours');
   const supabase = createPublicClient();
 
   const { data: franchise } = await supabase
@@ -94,6 +99,8 @@ export async function getFranchiseBySlug(slug: string): Promise<FranchiseDetail 
 }
 
 export async function getOfficialSlugByLocalizedSlug(localizedSlug: string): Promise<string | undefined> {
+  'use cache';
+  cacheLife('hours');
   const supabase = createPublicClient();
 
   const { data } = await supabase
