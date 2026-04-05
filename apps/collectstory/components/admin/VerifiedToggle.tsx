@@ -1,6 +1,7 @@
 'use client';
 
 import { useTransition } from 'react';
+import { Check } from '@dezkareid/icons/react';
 import styles from './verified-toggle.module.css';
 
 interface VerifiedToggleProperties {
@@ -31,22 +32,7 @@ export function VerifiedToggle({ id, verified, toggleAction }: VerifiedTogglePro
       {!pending && (verified
         ? (
             <>
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 14 14"
-                fill="none"
-                aria-hidden="true"
-              >
-                <circle cx="7" cy="7" r="7" fill="currentColor" opacity="0.2" />
-                <path
-                  d="M4 7l2 2 4-4"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <Check aria-hidden style={{ '--icon-size': '12px' } as React.CSSProperties} />
               {' Verified'}
             </>
           )

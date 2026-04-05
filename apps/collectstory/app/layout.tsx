@@ -15,10 +15,6 @@ export const metadata: Metadata = {
     default: 'Collectstory',
   },
   description: 'Track and showcase your collectibles collection.',
-  other: {
-    rel: 'stylesheet',
-    url: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap',
-  },
 };
 
 export default function RootLayout({
