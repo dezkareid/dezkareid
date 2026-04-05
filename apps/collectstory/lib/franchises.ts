@@ -53,7 +53,7 @@ export async function getAllPublicFranchises(): Promise<FranchiseCard[]> {
   }));
 }
 
-export async function getFranchiseBySlug(slug: string): Promise<FranchiseDetail | null> {
+export async function getFranchiseBySlug(slug: string): Promise<FranchiseDetail | undefined> {
   const supabase = createPublicClient();
 
   const { data: franchise } = await supabase
@@ -62,7 +62,7 @@ export async function getFranchiseBySlug(slug: string): Promise<FranchiseDetail 
     .eq('slug', slug)
     .single();
 
-  if (!franchise) return null;
+  if (!franchise) return undefined;
 
   const { data: items } = await supabase
     .from('collection_items')
@@ -78,9 +78,9 @@ export async function getFranchiseBySlug(slug: string): Promise<FranchiseDetail 
     description: franchise.description ?? undefined,
     image_url: franchise.image_url,
     localized_names: (franchise.franchise_localized_names as unknown as FranchiseLocalizedName[]) ?? [],
-    items: (items ?? []).map(item => {
-      const col = item.collections as unknown as { slug: string } | null;
-      const prof = item.profiles as unknown as { username: string } | null;
+    items: (items ?? []).map((item) => {
+      const col = item.collections as unknown as { slug: string } | undefined;
+      const prof = item.profiles as unknown as { username: string } | undefined;
       return {
         id: item.id,
         name: item.name,
@@ -93,7 +93,7 @@ export async function getFranchiseBySlug(slug: string): Promise<FranchiseDetail 
   };
 }
 
-export async function getOfficialSlugByLocalizedSlug(localizedSlug: string): Promise<string | null> {
+export async function getOfficialSlugByLocalizedSlug(localizedSlug: string): Promise<string | undefined> {
   const supabase = createPublicClient();
 
   const { data } = await supabase
@@ -102,9 +102,9 @@ export async function getOfficialSlugByLocalizedSlug(localizedSlug: string): Pro
     .eq('slug', localizedSlug)
     .single();
 
-  if (!data) return null;
-  const franchise = data.franchises as unknown as { slug: string } | null;
-  return franchise?.slug ?? null;
+  if (!data) return undefined;
+  const franchise = data.franchises as unknown as { slug: string } | undefined;
+  return franchise?.slug ?? undefined;
 }
 
 export async function getAllFranchiseSlugs(): Promise<string[]> {

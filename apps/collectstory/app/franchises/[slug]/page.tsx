@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
 export default async function FranchiseDetailPage({ params }: Properties) {
   const { slug } = await params;
 
-  let franchise = await getFranchiseBySlug(slug);
+  const franchise = await getFranchiseBySlug(slug);
 
   if (!franchise) {
     // Try to resolve as a localised slug → 301 redirect to canonical
@@ -113,7 +113,7 @@ export default async function FranchiseDetailPage({ params }: Properties) {
           {franchise.items.length > 0
             ? (
                 <ul className={styles.itemsGrid} role="list">
-                  {franchise.items.map(item => {
+                  {franchise.items.map((item) => {
                     const href = item.username && item.collectionSlug
                       ? `/${item.username}/${item.collectionSlug}/${item.slug}`
                       : undefined;

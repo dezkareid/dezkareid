@@ -27,7 +27,8 @@ export default async function NewLocalizedNamePage({ params }: { params: Promise
     <div className={styles.container}>
       <h1 className={styles.heading}>Add Localised Name</h1>
       <p style={{ marginBottom: 'var(--spacing-24)', color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-300)' }}>
-        Franchise: <strong>{franchise.name}</strong>
+        {'Franchise: '}
+        <strong>{franchise.name}</strong>
       </p>
       <LocalizedNameForm
         action={action}

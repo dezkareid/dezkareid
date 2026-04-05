@@ -14,6 +14,14 @@ const config: Linter.Config[] = [
     },
   },
   {
+    // generateStaticParams is a Next.js App Router reserved export name that cannot be renamed.
+    rules: {
+      'unicorn/prevent-abbreviations': ['error', {
+        allowList: { Ref: true, ref: true, generateStaticParams: true },
+      }],
+    },
+  },
+  {
     files: ['middleware.ts', 'proxy.ts'],
     rules: {
       'unicorn/prefer-string-raw': 'off',

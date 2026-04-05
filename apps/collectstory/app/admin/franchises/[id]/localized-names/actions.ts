@@ -91,7 +91,8 @@ export async function deleteLocalizedName(id: string) {
   if (record?.franchise_id) {
     revalidatePath(`/admin/franchises/${record.franchise_id}/edit`);
     redirect(`/admin/franchises/${record.franchise_id}/edit`);
-  } else {
+  }
+  else {
     revalidatePath('/admin/franchises');
     redirect('/admin/franchises');
   }

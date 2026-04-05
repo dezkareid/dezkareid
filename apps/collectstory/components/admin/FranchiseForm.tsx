@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useEffect, useState, useTransition } from 'react';
+import { useActionState, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { ImageField } from './ImageField';
 import styles from './form.module.css';
@@ -50,19 +50,15 @@ export function FranchiseForm({
   );
 
   const [name, setName] = useState(defaultName ?? '');
-  const [slug, setSlug] = useState(defaultSlug ?? '');
+  const [customSlug, setCustomSlug] = useState(defaultSlug ?? '');
   const [slugEdited, setSlugEdited] = useState(!!defaultSlug);
+
+  const slug = slugEdited ? customSlug : toSlug(name);
 
   const [uploading, setUploading] = useState(false);
   const [uploadedUrl, setUploadedUrl] = useState<string | undefined>(defaultImageUrl);
   const [fileError, setFileError] = useState<string | undefined>();
   const [, startTransition] = useTransition();
-
-  useEffect(() => {
-    if (!slugEdited) {
-      setSlug(toSlug(name));
-    }
-  }, [name, slugEdited]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -84,7 +80,8 @@ export function FranchiseForm({
       }
       setUploadedUrl(result.url);
       data.set('image_url', result.url);
-    } else if (uploadedUrl) {
+    }
+    else if (uploadedUrl) {
       data.set('image_url', uploadedUrl);
     }
 
@@ -105,7 +102,7 @@ export function FranchiseForm({
           type="text"
           required
           value={name}
-          onChange={e => setName(e.target.value)}
+          onChange={event => setName(event.target.value)}
           className={styles.input}
           autoFocus
         />
@@ -122,7 +119,10 @@ export function FranchiseForm({
           type="text"
           required
           value={slug}
-          onChange={e => { setSlug(e.target.value); setSlugEdited(true); }}
+          onChange={(event) => {
+            setCustomSlug(event.target.value);
+            setSlugEdited(true);
+          }}
           className={styles.input}
           pattern="[a-z0-9][a-z0-9\-]*[a-z0-9]"
           title="Lowercase letters, digits, and hyphens only"
