@@ -1,3 +1,10 @@
+# [@dezkareid/icons-v1.1.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/icons-v1.0.0...@dezkareid/icons-v1.1.0) (2026-04-05)
+
+
+### Features
+
+* **collectstory:** replace hardcoded icons with @dezkareid/icons ([67a5e96](https://github.com/dezkareid/dezkareid/commit/67a5e96dab2b576cc253aec98363ba4fdd84ebf1))
+
 # @dezkareid/icons-v1.0.0 (2026-04-04)
 
 
