@@ -32,6 +32,7 @@ export type PublicItem = {
 export type PublicItemDetail = PublicItem & {
   visibility: string;
   user_id: string;
+  franchises: { name: string; slug: string } | undefined;
 };
 
 export async function getPublicCollectionsByUsername(
@@ -152,7 +153,8 @@ export async function getPublicItemBySlug(
         name,
         brands ( name ),
         categories ( name )
-      )
+      ),
+      franchises ( name, slug )
     `)
     .eq('collection_id', collectionId)
     .eq('slug', itemSlug)

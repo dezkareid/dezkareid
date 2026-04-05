@@ -104,6 +104,7 @@ export async function createCollectionItem(
     slug,
     image_url: getOptional(formData, 'image_url'),
     line_id: getOptional(formData, 'line_id'),
+    franchise_id: getOptional(formData, 'franchise_id'),
     description: getOptional(formData, 'description'),
     date_acquired: getOptional(formData, 'date_acquired'),
     visibility: getOptional(formData, 'visibility') ?? 'public',
@@ -224,6 +225,15 @@ export async function updateItemImage(
   }
 
   return { success: true };
+}
+
+export async function getAllFranchises(): Promise<{ id: string; name: string }[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('franchises')
+    .select('id, name')
+    .order('name');
+  return data ?? [];
 }
 
 export async function getLinesByBrand(

@@ -9,6 +9,7 @@ const resources = [
   { href: '/admin/lines', label: 'Lines', description: 'Manage product lines by brand' },
   { href: '/admin/categories', label: 'Categories', description: 'Manage collection categories' },
   { href: '/admin/stores', label: 'Stores', description: 'Manage store directory' },
+  { href: '/admin/franchises', label: 'Franchises', description: 'Manage IP franchise catalog' },
 ];
 
 export default function AdminPage() {

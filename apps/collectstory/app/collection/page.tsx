@@ -4,6 +4,7 @@ import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { CollectionItemCard } from '@/components/CollectionItemCard';
 import { AddItemModal } from '@/components/AddItemModal/AddItemModal';
+import { getAllFranchises } from '@/app/collection/actions';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -127,7 +128,7 @@ async function AddItemSection() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return;
 
-  const [{ data: brands }, { data: collections }] = await Promise.all([
+  const [{ data: brands }, { data: collections }, franchises] = await Promise.all([
     supabase.from('brands').select('id, name').order('name'),
     supabase
       .from('collections')
@@ -135,6 +136,7 @@ async function AddItemSection() {
       .eq('user_id', user.id)
       .order('created_at', { ascending: true })
       .limit(1),
+    getAllFranchises(),
   ]);
 
   const defaultCollection = collections?.[0];
@@ -143,6 +145,7 @@ async function AddItemSection() {
   return (
     <AddItemModal
       brands={(brands ?? []) as { id: string; name: string }[]}
+      franchises={franchises}
       collectionId={defaultCollection.id}
     />
   );
