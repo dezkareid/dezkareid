@@ -32,6 +32,7 @@ export function Hero() {
                 src={heroData.images[0].src}
                 alt={heroData.images[0].alt}
                 fill
+                sizes="(min-width: 60rem) 33vw, 66vw"
                 className={styles.image}
                 priority
               />
@@ -41,6 +42,7 @@ export function Hero() {
                 src={heroData.images[1].src}
                 alt={heroData.images[1].alt}
                 fill
+                sizes="(min-width: 60rem) 17vw, 33vw"
                 className={styles.image}
               />
             </div>
@@ -49,6 +51,7 @@ export function Hero() {
                 src={heroData.images[2].src}
                 alt={heroData.images[2].alt}
                 fill
+                sizes="(min-width: 60rem) 17vw, 33vw"
                 className={styles.image}
               />
             </div>
