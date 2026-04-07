@@ -66,4 +66,10 @@ describe('Button', () => {
     render(<Button>Enabled</Button>);
     expect(screen.getByRole('button')).toHaveAttribute('aria-disabled', 'false');
   });
+
+  it('forwards ref correctly', () => {
+    const ref = vi.fn();
+    render(<Button ref={ref}>Ref</Button>);
+    expect(ref).toHaveBeenCalledWith(expect.any(HTMLButtonElement));
+  });
 });
