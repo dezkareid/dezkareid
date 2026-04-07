@@ -128,6 +128,8 @@ export async function updateItem(
       name,
       image_url: orNull(getOptional(formData, 'image_url')),
       line_id: orNull(getOptional(formData, 'line_id')),
+      franchise_id: orNull(getOptional(formData, 'franchise_id')),
+      variant: orNull(getOptional(formData, 'variant')),
       description: orNull(getOptional(formData, 'description')),
       date_acquired: orNull(getOptional(formData, 'date_acquired')),
       visibility: getOptional(formData, 'visibility') ?? 'public',

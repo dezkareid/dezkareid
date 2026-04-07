@@ -15,6 +15,8 @@ export type PublicCollection = {
   item_count: number;
 };
 
+export type LineVariant = { value: string; display_name: string };
+
 export type PublicItem = {
   id: string;
   name: string;
@@ -26,12 +28,14 @@ export type PublicItem = {
     name: string;
     brands: { name: string } | undefined;
     categories: { name: string } | undefined;
+    variants: LineVariant[];
   } | undefined;
 };
 
 export type PublicItemDetail = PublicItem & {
   visibility: string;
   user_id: string;
+  variant: string | undefined;
   franchises: { name: string; slug: string } | undefined;
 };
 
@@ -149,8 +153,10 @@ export async function getPublicItemBySlug(
       date_acquired,
       visibility,
       user_id,
+      variant,
       lines (
         name,
+        variants,
         brands ( name ),
         categories ( name )
       ),

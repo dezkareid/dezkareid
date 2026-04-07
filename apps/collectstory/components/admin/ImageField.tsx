@@ -14,6 +14,8 @@ interface ImageFieldProperties {
   onUploadedUrl: (url: string | undefined) => void;
   onFileError: (error: string | undefined) => void;
   fileError: string | undefined;
+  label?: string;
+  required?: boolean;
 }
 
 export function ImageField({
@@ -22,6 +24,8 @@ export function ImageField({
   onUploadedUrl,
   onFileError,
   fileError,
+  label = 'Image',
+  required = false,
 }: ImageFieldProperties) {
   const [mode, setMode] = useState<Mode>(defaultImageUrl ? 'url' : 'url');
   const [preview, setPreview] = useState<string | undefined>(
@@ -59,8 +63,8 @@ export function ImageField({
     <div className={styles.field}>
       <div className={styles.labelRow}>
         <span className={styles.label}>
-          Image
-          <span className={styles.optional}>(optional)</span>
+          {label}
+          {!required && <span className={styles.optional}>(optional)</span>}
         </span>
         <div className={styles.toggle} role="group" aria-label="Image input method">
           <button

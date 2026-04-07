@@ -5,6 +5,7 @@ import { Suspense } from 'react';
 import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getPublicCollectionBySlug } from '@/lib/collections';
+import { getAllFranchises } from '@/app/collection/actions';
 import { EditItemForm } from './EditItemForm';
 import styles from './page.module.css';
 
@@ -30,10 +31,10 @@ async function getAuthorizedUser(supabase: Awaited<ReturnType<typeof createClien
 }
 
 async function fetchEditPageData(supabase: Awaited<ReturnType<typeof createClient>>, itemId: string, userId: string) {
-  const [{ data: item }, { data: brands }] = await Promise.all([
+  const [{ data: item }, { data: brands }, franchises] = await Promise.all([
     supabase
       .from('collection_items')
-      .select('id, name, image_url, description, date_acquired, visibility, line_id, lines ( id, name, brand_id, brands ( id, name ) )')
+      .select('id, name, image_url, description, date_acquired, visibility, line_id, franchise_id, variant, lines ( id, name, brand_id, variants, brands ( id, name ) )')
       .eq('id', itemId)
       .eq('user_id', userId)
       .single(),
@@ -41,8 +42,30 @@ async function fetchEditPageData(supabase: Awaited<ReturnType<typeof createClien
       .from('brands')
       .select('id, name')
       .order('name'),
+    getAllFranchises(),
   ]);
-  return { item, brands };
+  return { item, brands, franchises };
+}
+
+type LineWithVariants = { brand_id: string; variants: { value: string; display_name: string }[] } | null;
+
+function buildFormProperties(
+  item: Awaited<ReturnType<typeof fetchEditPageData>>['item'],
+) {
+  const lineData = item!.lines as unknown as LineWithVariants;
+  return {
+    itemId: item!.id,
+    currentName: item!.name,
+    currentImageUrl: (item!.image_url as string | null) ?? undefined,
+    currentDescription: (item!.description as string | null) ?? undefined,
+    currentDateAcquired: (item!.date_acquired as string | null) ?? undefined,
+    currentVisibility: (item!.visibility as string | null) ?? 'public',
+    currentLineId: (item!.line_id as string | null) ?? undefined,
+    currentBrandId: lineData?.brand_id ?? undefined,
+    currentFranchiseId: (item!.franchise_id as string | null) ?? undefined,
+    currentVariant: (item!.variant as string | null) ?? undefined,
+    currentLineVariants: Array.isArray(lineData?.variants) ? lineData!.variants : [],
+  };
 }
 
 async function EditItemContent({ params }: Properties) {
@@ -55,8 +78,10 @@ async function EditItemContent({ params }: Properties) {
   const result = await getPublicCollectionBySlug(username, collectionSlug);
   if (!result) notFound();
 
-  const { item, brands } = await fetchEditPageData(supabase, itemId, user.id);
+  const { item, brands, franchises } = await fetchEditPageData(supabase, itemId, user.id);
   if (!item) notFound();
+
+  const formProperties = buildFormProperties(item);
 
   return (
     <div className={styles.card}>
@@ -76,14 +101,8 @@ async function EditItemContent({ params }: Properties) {
       <h1 className={styles.title}>Edit Item</h1>
 
       <EditItemForm
-        itemId={item.id}
-        currentName={item.name}
-        currentImageUrl={(item.image_url as string | null) ?? undefined}
-        currentDescription={(item.description as string | null) ?? undefined}
-        currentDateAcquired={(item.date_acquired as string | null) ?? undefined}
-        currentVisibility={(item.visibility as string | null) ?? 'public'}
-        currentLineId={(item.line_id as string | null) ?? undefined}
-        currentBrandId={((item.lines as unknown as { brand_id: string } | null)?.brand_id) ?? undefined}
+        {...formProperties}
+        franchises={franchises}
         brands={(brands ?? []) as { id: string; name: string }[]}
         username={username}
         collectionSlug={collectionSlug}

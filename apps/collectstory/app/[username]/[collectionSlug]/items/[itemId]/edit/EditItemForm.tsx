@@ -7,7 +7,8 @@ import { stripMetadata } from '@/lib/image/strip-metadata';
 import styles from '@/components/AddItemForm/AddItemForm.module.css';
 
 type Brand = { id: string; name: string };
-type Line = { id: string; name: string; categoryName: string | undefined };
+type LineVariant = { value: string; display_name: string };
+type Line = { id: string; name: string; categoryName: string | undefined; variants: LineVariant[] };
 
 type Properties = {
   itemId: string;
@@ -18,6 +19,10 @@ type Properties = {
   currentVisibility: string;
   currentLineId: string | undefined;
   currentBrandId: string | undefined;
+  currentFranchiseId: string | undefined;
+  currentVariant: string | undefined;
+  currentLineVariants: LineVariant[];
+  franchises: { id: string; name: string }[];
   brands: Brand[];
   username: string;
   collectionSlug: string;
@@ -76,7 +81,12 @@ async function resolveImageUrl(
   return true;
 }
 
-function useEditItemForm(currentImageUrl: string | undefined, currentBrandId: string | undefined) {
+function useEditItemForm(
+  currentImageUrl: string | undefined,
+  currentBrandId: string | undefined,
+  currentLineVariants: LineVariant[],
+  currentVariant: string | undefined,
+) {
   const [state, formAction, pending] = useActionState(updateItem, undefined);
   const [fileError, setFileError] = useState<string>();
   const [uploadFailed, setUploadFailed] = useState(false);
@@ -84,6 +94,8 @@ function useEditItemForm(currentImageUrl: string | undefined, currentBrandId: st
   const [uploadedUrl, setUploadedUrl] = useState<string | undefined>(currentImageUrl);
   const [uploading, setUploading] = useState(false);
   const [lines, setLines] = useState<Line[]>([]);
+  const [lineVariants, setLineVariants] = useState<LineVariant[]>(currentLineVariants);
+  const [selectedVariant, setSelectedVariant] = useState(currentVariant ?? '');
   const [loadingLines, startLoadingLines] = useTransition();
   const [, startTransition] = useTransition();
   const [selectedBrand, setSelectedBrand] = useState(currentBrandId ?? '');
@@ -107,11 +119,20 @@ function useEditItemForm(currentImageUrl: string | undefined, currentBrandId: st
     const brandId = event.target.value;
     setSelectedBrand(brandId);
     setLines([]);
+    setLineVariants([]);
+    setSelectedVariant('');
     if (!brandId) return;
     startLoadingLines(async () => {
       const result = await getLinesByBrand(brandId);
       setLines(result);
     });
+  }
+
+  function handleLineChange(event: React.ChangeEvent<HTMLSelectElement>) {
+    const lineId = event.target.value;
+    const line = lines.find(l => l.id === lineId);
+    setLineVariants(line?.variants ?? []);
+    setSelectedVariant('');
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -127,8 +148,8 @@ function useEditItemForm(currentImageUrl: string | undefined, currentBrandId: st
   return {
     state, formAction: handleSubmit, pending,
     fileError, uploadFailed, preview, uploading,
-    lines, loadingLines, selectedBrand,
-    handleFileChange, handleBrandChange,
+    lines, loadingLines, selectedBrand, lineVariants, selectedVariant, setSelectedVariant,
+    handleFileChange, handleBrandChange, handleLineChange,
     isBusy: pending || uploading,
   };
 }
@@ -143,6 +164,19 @@ function FileErrorMessage({ error, uploadFailed, styles }: { error: string | und
   );
 }
 
+function ImagePreview({ preview, styles }: { preview: string | undefined; styles: Record<string, string> }) {
+  if (preview) {
+    // eslint-disable-next-line @next/next/no-img-element -- preview is a local blob URL, next/image doesn't support blob URLs
+    return <img src={preview} alt="Preview" className={styles.preview} />;
+  }
+  return (
+    <div className={styles.uploadPlaceholder}>
+      <span className={styles.uploadIcon}>↑</span>
+      <span className={styles.uploadHint}>JPEG, PNG or WebP · max 5 MB</span>
+    </div>
+  );
+}
+
 export function EditItemForm({
   itemId,
   currentName,
@@ -152,6 +186,10 @@ export function EditItemForm({
   currentVisibility,
   currentLineId,
   currentBrandId,
+  currentFranchiseId,
+  currentVariant,
+  currentLineVariants,
+  franchises,
   brands,
   username,
   collectionSlug,
@@ -159,23 +197,13 @@ export function EditItemForm({
   const {
     state, formAction: handleSubmit,
     fileError, uploadFailed, preview, uploading,
-    lines, loadingLines, selectedBrand,
-    handleFileChange, handleBrandChange,
+    lines, loadingLines, selectedBrand, lineVariants, selectedVariant, setSelectedVariant,
+    handleFileChange, handleBrandChange, handleLineChange,
     pending,
-  } = useEditItemForm(currentImageUrl, currentBrandId);
+  } = useEditItemForm(currentImageUrl, currentBrandId, currentLineVariants, currentVariant);
 
-  const submitLabel = uploading ? 'Uploading…' : 'Save Changes';
   const submitDisabled = pending || uploading;
-
-  const imagePreview = preview
-    // eslint-disable-next-line @next/next/no-img-element -- preview is a local blob URL, next/image doesn't support blob URLs
-    ? <img src={preview} alt="Preview" className={styles.preview} />
-    : (
-        <div className={styles.uploadPlaceholder}>
-          <span className={styles.uploadIcon}>↑</span>
-          <span className={styles.uploadHint}>JPEG, PNG or WebP · max 5 MB</span>
-        </div>
-      );
+  const submitLabel = uploading ? 'Uploading…' : 'Save Changes';
 
   return (
     <form onSubmit={handleSubmit} className={styles.form} noValidate>
@@ -207,7 +235,7 @@ export function EditItemForm({
       <div className={styles.field}>
         <label className={styles.label} htmlFor="item-image">Image</label>
         <div className={styles.uploadArea}>
-          {imagePreview}
+          <ImagePreview preview={preview} styles={styles} />
           <input
             id="item-image"
             name="image"
@@ -248,6 +276,7 @@ export function EditItemForm({
             className={styles.select}
             disabled={lines.length === 0 && !currentLineId}
             defaultValue={currentLineId ?? ''}
+            onChange={handleLineChange}
           >
             <option value="">— none —</option>
             {lines.map(l => (
@@ -255,6 +284,39 @@ export function EditItemForm({
             ))}
           </select>
         </div>
+      </div>
+
+      {lineVariants.length > 0 && (
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor="item-variant">Variant</label>
+          <select
+            id="item-variant"
+            name="variant"
+            className={styles.select}
+            value={selectedVariant}
+            onChange={event => setSelectedVariant(event.target.value)}
+          >
+            <option value="">— none —</option>
+            {lineVariants.map(v => (
+              <option key={v.value} value={v.value}>{v.display_name}</option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      <div className={styles.field}>
+        <label className={styles.label} htmlFor="item-franchise">Franchise</label>
+        <select
+          id="item-franchise"
+          name="franchise_id"
+          className={styles.select}
+          defaultValue={currentFranchiseId ?? ''}
+        >
+          <option value="">— none —</option>
+          {franchises.map(f => (
+            <option key={f.id} value={f.id}>{f.name}</option>
+          ))}
+        </select>
       </div>
 
       <div className={styles.field}>

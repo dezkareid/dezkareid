@@ -4,6 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { getAllFranchises } from '@/app/collection/actions';
 import { AddItemPageForm } from './AddItemPageForm';
 import styles from './page.module.css';
 
@@ -32,7 +33,7 @@ async function AddItemContent({ params }: Properties) {
 
   if (profile?.username !== username) notFound();
 
-  const [{ data: collection }, { data: brands }] = await Promise.all([
+  const [{ data: collection }, { data: brands }, franchises] = await Promise.all([
     supabase
       .from('collections')
       .select('id')
@@ -40,6 +41,7 @@ async function AddItemContent({ params }: Properties) {
       .eq('slug', collectionSlug)
       .single(),
     supabase.from('brands').select('id, name').order('name'),
+    getAllFranchises(),
   ]);
 
   if (!collection) notFound();
@@ -63,6 +65,7 @@ async function AddItemContent({ params }: Properties) {
 
       <AddItemPageForm
         brands={(brands ?? []) as { id: string; name: string }[]}
+        franchises={franchises}
         collectionId={collection.id}
         username={username}
         collectionSlug={collectionSlug}

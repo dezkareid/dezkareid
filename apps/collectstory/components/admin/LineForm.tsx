@@ -24,6 +24,17 @@ interface Category {
   name: string;
 }
 
+interface LineVariant {
+  key: string;
+  value: string;
+  display_name: string;
+}
+
+interface StoredVariant {
+  value: string;
+  display_name: string;
+}
+
 interface LineFormProperties {
   action: (formData: FormData) => Promise<{ error: string } | void>;
   brands: Brand[];
@@ -32,10 +43,11 @@ interface LineFormProperties {
   defaultBrandId?: string;
   defaultCategoryId?: string;
   defaultImageUrl?: string;
+  defaultVariants?: StoredVariant[];
   submitLabel: string;
 }
 
-export function LineForm({ action, brands, categories, defaultName, defaultBrandId, defaultCategoryId, defaultImageUrl, submitLabel }: LineFormProperties) {
+export function LineForm({ action, brands, categories, defaultName, defaultBrandId, defaultCategoryId, defaultImageUrl, defaultVariants, submitLabel }: LineFormProperties) {
   const [state, formAction, pending] = useActionState(
     async (_previous: { error: string } | undefined, formData: FormData) => {
       const result = await action(formData);
@@ -47,7 +59,22 @@ export function LineForm({ action, brands, categories, defaultName, defaultBrand
   const [uploading, setUploading] = useState(false);
   const [uploadedUrl, setUploadedUrl] = useState<string | undefined>();
   const [fileError, setFileError] = useState<string | undefined>();
+  const [variants, setVariants] = useState<LineVariant[]>(
+    (defaultVariants ?? []).map(v => ({ ...v, key: crypto.randomUUID() })),
+  );
   const [, startTransition] = useTransition();
+
+  function addVariant() {
+    setVariants(previous => [...previous, { key: crypto.randomUUID(), value: '', display_name: '' }]);
+  }
+
+  function removeVariant(index: number) {
+    setVariants(previous => previous.filter((_, index_) => index_ !== index));
+  }
+
+  function updateVariant(index: number, field: 'value' | 'display_name', value: string) {
+    setVariants(previous => previous.map((variant, index_) => index_ === index ? { ...variant, [field]: value } : variant));
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -81,6 +108,7 @@ export function LineForm({ action, brands, categories, defaultName, defaultBrand
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
+      <input type="hidden" name="variants_json" value={JSON.stringify(variants.map(({ value, display_name }) => ({ value, display_name })))} />
       {state?.error && <p className={styles.error}>{state.error}</p>}
       <div className={styles.field}>
         <label htmlFor="brand_id" className={styles.label}>Brand</label>
@@ -122,6 +150,34 @@ export function LineForm({ action, brands, categories, defaultName, defaultBrand
         onFileError={setFileError}
         fileError={fileError}
       />
+      <div className={styles.field}>
+        <label className={styles.label}>Variants</label>
+        {variants.map((variant, index) => (
+          <div key={variant.key} className={styles.variantRow}>
+            <input
+              type="text"
+              placeholder="value (e.g. oce)"
+              value={variant.value}
+              onChange={event => updateVariant(index, 'value', event.target.value)}
+              className={styles.input}
+            />
+            <input
+              type="text"
+              placeholder="display name (e.g. OCE - Original Color Edition)"
+              value={variant.display_name}
+              onChange={event => updateVariant(index, 'display_name', event.target.value)}
+              className={styles.input}
+            />
+            <button type="button" onClick={() => removeVariant(index)} className={styles.removeButton}>
+              Remove
+            </button>
+          </div>
+        ))}
+        <button type="button" onClick={addVariant} className={styles.addVariantButton}>
+          + Add Variant
+        </button>
+      </div>
+
       <div className={styles.actions}>
         <button type="submit" disabled={isBusy} className={styles.submitButton}>
           {uploading ? 'Uploading…' : (pending ? 'Saving…' : submitLabel)}

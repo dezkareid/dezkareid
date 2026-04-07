@@ -62,12 +62,43 @@ export type Database = {
         };
         Relationships: [];
       };
+      collection_item_stores: {
+        Row: {
+          item_id: string;
+          store_id: string;
+        };
+        Insert: {
+          item_id: string;
+          store_id: string;
+        };
+        Update: {
+          item_id?: string;
+          store_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'collection_item_stores_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: false;
+            referencedRelation: 'collection_items';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'collection_item_stores_store_id_fkey';
+            columns: ['store_id'];
+            isOneToOne: false;
+            referencedRelation: 'stores';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       collection_items: {
         Row: {
           collection_id: string;
           created_at: string;
           date_acquired: string | null;
           description: string | null;
+          franchise_id: string | null;
           id: string;
           image_url: string | null;
           line_id: string | null;
@@ -75,6 +106,7 @@ export type Database = {
           slug: string;
           updated_at: string;
           user_id: string;
+          variant: string | null;
           visibility: string;
         };
         Insert: {
@@ -82,6 +114,7 @@ export type Database = {
           created_at?: string;
           date_acquired?: string | null;
           description?: string | null;
+          franchise_id?: string | null;
           id?: string;
           image_url?: string | null;
           line_id?: string | null;
@@ -89,6 +122,7 @@ export type Database = {
           slug?: string;
           updated_at?: string;
           user_id: string;
+          variant?: string | null;
           visibility?: string;
         };
         Update: {
@@ -96,6 +130,7 @@ export type Database = {
           created_at?: string;
           date_acquired?: string | null;
           description?: string | null;
+          franchise_id?: string | null;
           id?: string;
           image_url?: string | null;
           line_id?: string | null;
@@ -103,6 +138,7 @@ export type Database = {
           slug?: string;
           updated_at?: string;
           user_id?: string;
+          variant?: string | null;
           visibility?: string;
         };
         Relationships: [
@@ -114,6 +150,13 @@ export type Database = {
             referencedColumns: ['id'];
           },
           {
+            foreignKeyName: 'collection_items_franchise_id_fkey';
+            columns: ['franchise_id'];
+            isOneToOne: false;
+            referencedRelation: 'franchises';
+            referencedColumns: ['id'];
+          },
+          {
             foreignKeyName: 'collection_items_line_id_fkey';
             columns: ['line_id'];
             isOneToOne: false;
@@ -121,6 +164,68 @@ export type Database = {
             referencedColumns: ['id'];
           },
         ];
+      };
+      franchise_localized_names: {
+        Row: {
+          created_at: string;
+          franchise_id: string;
+          id: string;
+          locale: string;
+          name: string;
+          slug: string;
+        };
+        Insert: {
+          created_at?: string;
+          franchise_id: string;
+          id?: string;
+          locale: string;
+          name: string;
+          slug: string;
+        };
+        Update: {
+          created_at?: string;
+          franchise_id?: string;
+          id?: string;
+          locale?: string;
+          name?: string;
+          slug?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'franchise_localized_names_franchise_id_fkey';
+            columns: ['franchise_id'];
+            isOneToOne: false;
+            referencedRelation: 'franchises';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      franchises: {
+        Row: {
+          created_at: string;
+          description: string | null;
+          id: string;
+          image_url: string;
+          name: string;
+          slug: string;
+        };
+        Insert: {
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          image_url: string;
+          name: string;
+          slug: string;
+        };
+        Update: {
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          image_url?: string;
+          name?: string;
+          slug?: string;
+        };
+        Relationships: [];
       };
       collections: {
         Row: {
@@ -164,6 +269,7 @@ export type Database = {
           image_url: string | null;
           name: string;
           slug: string;
+          variants: Json;
         };
         Insert: {
           brand_id: string;
@@ -173,6 +279,7 @@ export type Database = {
           image_url?: string | null;
           name: string;
           slug: string;
+          variants?: Json;
         };
         Update: {
           brand_id?: string;
@@ -182,6 +289,7 @@ export type Database = {
           image_url?: string | null;
           name?: string;
           slug?: string;
+          variants?: Json;
         };
         Relationships: [
           {
@@ -237,6 +345,8 @@ export type Database = {
           lng: number | null;
           name: string;
           url: string | null;
+          verified: boolean;
+          visible: boolean;
         };
         Insert: {
           city?: string | null;
@@ -247,6 +357,8 @@ export type Database = {
           lng?: number | null;
           name: string;
           url?: string | null;
+          verified?: boolean;
+          visible?: boolean;
         };
         Update: {
           city?: string | null;
@@ -257,6 +369,8 @@ export type Database = {
           lng?: number | null;
           name?: string;
           url?: string | null;
+          verified?: boolean;
+          visible?: boolean;
         };
         Relationships: [];
       };

@@ -12,6 +12,11 @@ export type Store = {
   url: string | undefined;
 };
 
+export type LineVariant = {
+  value: string;
+  display_name: string;
+};
+
 export type ItemLink = {
   id: string;
   item_id: string;
@@ -105,6 +110,7 @@ export async function createCollectionItem(
     image_url: getOptional(formData, 'image_url'),
     line_id: getOptional(formData, 'line_id'),
     franchise_id: getOptional(formData, 'franchise_id'),
+    variant: getOptional(formData, 'variant') ?? null, // eslint-disable-line unicorn/no-null -- null required to clear value in database
     description: getOptional(formData, 'description'),
     date_acquired: getOptional(formData, 'date_acquired'),
     visibility: getOptional(formData, 'visibility') ?? 'public',
@@ -238,11 +244,11 @@ export async function getAllFranchises(): Promise<{ id: string; name: string }[]
 
 export async function getLinesByBrand(
   brandId: string,
-): Promise<{ id: string; name: string; categoryName: string | undefined }[]> {
+): Promise<{ id: string; name: string; categoryName: string | undefined; variants: LineVariant[] }[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from('lines')
-    .select('id, name, categories ( name )')
+    .select('id, name, variants, categories ( name )')
     .eq('brand_id', brandId)
     .order('name');
 
@@ -250,5 +256,6 @@ export async function getLinesByBrand(
     id: l.id,
     name: l.name,
     categoryName: (l.categories as unknown as { name: string } | undefined)?.name ?? undefined,
+    variants: Array.isArray(l.variants) ? (l.variants as LineVariant[]) : [],
   }));
 }

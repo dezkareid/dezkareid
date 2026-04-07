@@ -14,7 +14,7 @@ export default async function EditLinePage({ params }: { params: Promise<{ id: s
   const supabase = await createClient();
 
   const [{ data: line }, { data: brands }, { data: categories }] = await Promise.all([
-    supabase.from('lines').select('id, name, brand_id, category_id, image_url').eq('id', id).single(),
+    supabase.from('lines').select('id, name, brand_id, category_id, image_url, variants').eq('id', id).single(),
     supabase.from('brands').select('id, name').order('name'),
     supabase.from('categories').select('id, name').order('name'),
   ]);
@@ -34,6 +34,7 @@ export default async function EditLinePage({ params }: { params: Promise<{ id: s
         defaultBrandId={line.brand_id}
         defaultCategoryId={line.category_id ?? undefined}
         defaultImageUrl={line.image_url ?? undefined}
+        defaultVariants={Array.isArray(line.variants) ? (line.variants as { value: string; display_name: string }[]) : []}
         submitLabel="Save Changes"
       />
     </div>

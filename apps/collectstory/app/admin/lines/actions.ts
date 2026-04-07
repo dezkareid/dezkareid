@@ -18,6 +18,18 @@ function parseOptionalString(formData: FormData, key: string): string | undefine
   return (typeof value === 'string' && value.trim()) ? value.trim() : undefined;
 }
 
+function parseVariantsJson(formData: FormData): { value: string; display_name: string }[] {
+  const raw = formData.get('variants_json');
+  if (typeof raw !== 'string' || !raw.trim()) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  }
+  catch {
+    return [];
+  }
+}
+
 export async function createLine(formData: FormData) {
   await requireAdmin();
 
@@ -36,6 +48,7 @@ export async function createLine(formData: FormData) {
       // eslint-disable-next-line unicorn/no-null -- null required to clear FK in database
       category_id: parseOptionalString(formData, 'category_id') ?? null,
       image_url: parseOptionalString(formData, 'image_url'),
+      variants: parseVariantsJson(formData),
     });
 
   if (error?.code === '23505') {
@@ -56,12 +69,13 @@ export async function updateLine(id: string, formData: FormData) {
   if (!brandId) throw new Error('Brand is required');
 
   const supabase = createAdminClient();
-  const updates: Record<string, string | null | undefined> = {
+  const updates: Record<string, unknown> = {
     name,
     slug: slugify(name),
     brand_id: brandId,
     // eslint-disable-next-line unicorn/no-null -- null required to clear FK in database
     category_id: parseOptionalString(formData, 'category_id') ?? null,
+    variants: parseVariantsJson(formData),
   };
   const imageUrl = parseOptionalString(formData, 'image_url');
   if (imageUrl !== undefined) updates.image_url = imageUrl;
