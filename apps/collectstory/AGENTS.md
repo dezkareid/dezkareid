@@ -6,6 +6,8 @@ This file provides context for AI agents working on the `apps/collectstory` pack
 
 Next.js 16 (App Router) web application for tracking collectibles collections. Registered in the monorepo as `@dezkareid/collectstory`.
 
+For implementation we should use react best practices and next best practices skills.
+
 ## Directory Structure
 
 ```

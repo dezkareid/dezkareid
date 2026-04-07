@@ -1,6 +1,5 @@
 import Image from 'next/image';
-import Link from 'next/link';
-import { Button } from '@dezkareid/components/react-server';
+import { HomeCTA } from '@/components/HomeCta';
 import { heroData } from '@/lib/mock-data';
 import styles from './Hero.module.css';
 
@@ -13,16 +12,7 @@ export function Hero() {
           <h1 className={styles.title}>{heroData.title}</h1>
           <p className={styles.description}>{heroData.description}</p>
           <div className={styles.actions}>
-            <Link href="/login">
-              <Button size="large" className={styles.ctaPrimary}>
-                {heroData.ctaPrimary.label}
-              </Button>
-            </Link>
-            <Link href="/stores">
-              <Button variant="outline" size="large" className={styles.ctaSecondary}>
-                {heroData.ctaSecondary.label}
-              </Button>
-            </Link>
+            <HomeCTA primaryClassName={styles.ctaPrimary} />
           </div>
         </div>
         <div className={styles.visuals}>

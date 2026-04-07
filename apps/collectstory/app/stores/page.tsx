@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
-import { Suspense } from 'react';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { cacheLife } from 'next/cache';
-import { SiteHeader } from '@/components/SiteHeader';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -43,57 +41,52 @@ export default async function StoresPage() {
   const stores = await getStores();
 
   return (
-    <>
-      <Suspense>
-        <SiteHeader />
-      </Suspense>
-      <main className={styles.main}>
-        <div className={styles.pageHeader}>
-          <div className={styles.eyebrow}>
-            <span className={styles.eyebrowLine} aria-hidden="true" />
-            <span className={styles.eyebrowText}>Find your next piece</span>
-          </div>
-          <h1 className={styles.title}>Stores Directory</h1>
-          <p className={styles.subtitle}>
-            A curated list of collectibles stores and retailers worldwide.
-          </p>
+    <div className={`container ${styles.main}`}>
+      <div className={styles.pageHeader}>
+        <div className={styles.eyebrow}>
+          <span className={styles.eyebrowLine} aria-hidden="true" />
+          <span className={styles.eyebrowText}>Find your next piece</span>
         </div>
+        <h1 className={styles.title}>Stores Directory</h1>
+        <p className={styles.subtitle}>
+          A curated list of collectibles stores and retailers worldwide.
+        </p>
+      </div>
 
-        {stores.length === 0
-          ? (
-              <div className={styles.empty}>
-                <p className={styles.emptyTitle}>No stores listed yet</p>
-                <p className={styles.emptyDesc}>Check back soon as we add more stores.</p>
-              </div>
-            )
-          : (
-              <ul className={styles.list} role="list">
-                {stores.map(store => (
-                  <li key={store.id} className={styles.storeItem}>
-                    <div className={styles.storeInfo}>
-                      <h2 className={styles.storeName}>{store.name}</h2>
-                      {(store.city || store.country) && (
-                        <span className={styles.storeLocation}>
-                          {[store.city, store.country].filter(Boolean).join(', ')}
-                        </span>
-                      )}
-                    </div>
-                    {store.url && (
-                      <a
-                        href={store.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.storeLink}
-                      >
-                        Visit store
-                        <span aria-hidden="true"> →</span>
-                      </a>
+      {stores.length === 0
+        ? (
+            <div className={styles.empty}>
+              <p className={styles.emptyTitle}>No stores listed yet</p>
+              <p className={styles.emptyDesc}>Check back soon as we add more stores.</p>
+            </div>
+          )
+        : (
+            <ul className={styles.list} role="list">
+              {stores.map(store => (
+                <li key={store.id} className={styles.storeItem}>
+                  <div className={styles.storeInfo}>
+                    <h2 className={styles.storeName}>{store.name}</h2>
+                    {(store.city || store.country) && (
+                      <span className={styles.storeLocation}>
+                        {[store.city, store.country].filter(Boolean).join(', ')}
+                      </span>
                     )}
-                  </li>
-                ))}
-              </ul>
-            )}
-      </main>
-    </>
+                  </div>
+                  {store.url && (
+                    <a
+                      href={store.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.storeLink}
+                    >
+                      Visit store
+                      <span aria-hidden="true"> →</span>
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+    </div>
   );
 }

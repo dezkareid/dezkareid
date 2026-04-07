@@ -20,7 +20,6 @@ export const heroData = {
   title: 'Every piece has a story.',
   description: 'The modern home for collectors. Organise, track, and showcase your trading cards, action figures, and rare finds in a delightful digital vault.',
   ctaPrimary: { label: 'Start your collection', href: '#' },
-  ctaSecondary: { label: 'Explore Vault', href: '#' },
   images: [
     {
       src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAg37WXfsmjqMas3FmkwWwF5CEXvdfc2_d6vqRdqUScid7nlID9XIhX3W7AbQCZnPz7FQ61pyAGWxUvf8JwKPAYMzbOl2IuIk7c2D2_PQvnp5jioM93yKjrM34G8S8_9l06Bo9BoMIJQS6busUsIztCPbfz9fKNh5x-Fz13syBshiY1JEoH-j0kwPCT61TrLh4AJNeO0Uh9F1ovZStPMEw-KiTsKGqc1Zg8gfk9RewY892soMa4uhs8YZ-G_c_bvYkcHZyS8gnrLDJV',

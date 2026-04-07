@@ -71,10 +71,10 @@ async function EditCollectionContent({ params }: Properties) {
 
 export default function EditCollectionPage({ params }: Properties) {
   return (
-    <main className={styles.page}>
+    <div className={styles.page}>
       <Suspense>
         <EditCollectionContent params={params} />
       </Suspense>
-    </main>
+    </div>
   );
 }

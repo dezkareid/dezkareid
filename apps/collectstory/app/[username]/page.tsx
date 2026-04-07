@@ -119,7 +119,7 @@ async function ProfileCollections({ params }: { params: Promise<{ username: stri
 
 export default function UserProfilePage({ params }: Properties) {
   return (
-    <main className={styles.page}>
+    <div className={`container ${styles.page}`}>
       <Suspense>
         <ProfileHeader params={params} />
       </Suspense>
@@ -129,6 +129,6 @@ export default function UserProfilePage({ params }: Properties) {
       <Suspense>
         <ProfileCollections params={params} />
       </Suspense>
-    </main>
+    </div>
   );
 }

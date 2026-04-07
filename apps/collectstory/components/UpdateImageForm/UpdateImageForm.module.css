@@ -17,8 +17,10 @@
   transition: border-color 0.15s ease;
 }
 
-.uploadArea:hover {
+.uploadArea:hover,
+.uploadArea:focus-visible {
   border-color: var(--color-primary);
+  outline: none;
 }
 
 .placeholder {

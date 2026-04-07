@@ -4,7 +4,13 @@ import { useState } from 'react';
 import { updateItemImage } from '@/app/collection/actions';
 import styles from './UpdateImageForm.module.css';
 
-const ALLOWED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+const ALLOWED_TYPES = new Set([
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/heic',
+  'image/heif',
+]);
 const MAX_BYTES = 5 * 1024 * 1024;
 
 type Properties = {
@@ -12,50 +18,86 @@ type Properties = {
   onSuccess: (newUrl: string) => void;
 };
 
+function isHeicFile(file: File) {
+  return file.type === 'image/heic' || file.type === 'image/heif'
+    || /\.heic$/i.test(file.name) || /\.heif$/i.test(file.name);
+}
+
+async function toUploadBlob(file: File): Promise<{ blob: Blob; error?: never } | { blob?: never; error: string }> {
+  if (isHeicFile(file)) {
+    try {
+      const heic2anyModule = await import('heic2any');
+      const heic2any = heic2anyModule.default ?? heic2anyModule;
+      const result = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.9 });
+      const blob = Array.isArray(result) ? result[0] : result;
+      return { blob };
+    }
+    catch {
+      return { error: 'Could not convert HEIC image. Please try a different format.' };
+    }
+  }
+  return { blob: file };
+}
+
 export function UpdateImageForm({ itemId, onSuccess }: Properties) {
   const [fileError, setFileError] = useState<string>();
   const [preview, setPreview] = useState<string>();
+  const [pendingBlob, setPendingBlob] = useState<Blob>();
   const [status, setStatus] = useState<'idle' | 'uploading' | 'saving' | 'done' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState<string>();
 
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFile(file: File) {
     setFileError(undefined);
     setPreview(undefined);
+    setPendingBlob(undefined);
     setStatus('idle');
 
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    if (!ALLOWED_TYPES.has(file.type)) {
-      setFileError('Only JPEG, PNG, and WebP images are allowed.');
-      event.target.value = '';
+    if (!ALLOWED_TYPES.has(file.type) && !isHeicFile(file)) {
+      setFileError('Only JPEG, PNG, WebP, or HEIC images are allowed.');
       return;
     }
 
     if (file.size > MAX_BYTES) {
       setFileError('Image must be 5 MB or smaller.');
-      event.target.value = '';
       return;
     }
 
-    setPreview(URL.createObjectURL(file));
+    const result = await toUploadBlob(file);
+    if (result.error) {
+      setFileError(result.error);
+      return;
+    }
+
+    const blob = result.blob as Blob;
+    setPendingBlob(blob);
+    setPreview(URL.createObjectURL(blob));
+  }
+
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    handleFile(file);
+  }
+
+  function handlePaste(event: React.ClipboardEvent<HTMLDivElement>) {
+    const file = [...event.clipboardData.items]
+      .find(item => item.kind === 'file' && item.type.startsWith('image/'))
+      ?.getAsFile();
+    if (!file) return;
+    handleFile(file);
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (fileError) return;
-
-    const form = event.currentTarget;
-    const fileInput = form.elements.namedItem('image') as HTMLInputElement;
-    const file = fileInput?.files?.[0];
-    if (!file) return;
+    if (fileError || !pendingBlob) return;
 
     setStatus('uploading');
     setErrorMessage(undefined);
 
     try {
       const uploadData = new FormData();
-      uploadData.set('file', file);
+      uploadData.set('file', pendingBlob, 'image.jpg');
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: uploadData,
@@ -90,7 +132,11 @@ export function UpdateImageForm({ itemId, onSuccess }: Properties) {
 
   return (
     <form onSubmit={handleSubmit} className={styles.form} noValidate>
-      <div className={styles.uploadArea}>
+      <div
+        className={styles.uploadArea}
+        tabIndex={0}
+        onPaste={handlePaste}
+      >
         {preview
           ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -99,13 +145,13 @@ export function UpdateImageForm({ itemId, onSuccess }: Properties) {
           : (
               <div className={styles.placeholder}>
                 <span className={styles.placeholderIcon}>↑</span>
-                <span className={styles.placeholderHint}>Replace image</span>
+                <span className={styles.placeholderHint}>Replace image · or paste</span>
               </div>
             )}
         <input
           name="image"
           type="file"
-          accept="image/jpeg,image/png,image/webp"
+          accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
           className={styles.fileInput}
           onChange={handleFileChange}
           disabled={isBusy}

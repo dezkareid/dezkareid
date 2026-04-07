@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { SiteHeader } from '@/components/SiteHeader';
 import { getAllPublicFranchises } from '@/lib/franchises';
 import styles from './page.module.css';
 
@@ -64,25 +63,20 @@ async function FranchiseGrid() {
 
 export default function FranchisesPage() {
   return (
-    <>
-      <Suspense>
-        <SiteHeader />
-      </Suspense>
-      <main className={styles.main}>
-        <div className={styles.pageHeader}>
-          <div className={styles.eyebrow}>
-            <span className={styles.eyebrowLine} aria-hidden="true" />
-            <span className={styles.eyebrowText}>Franchise Catalog</span>
-          </div>
-          <h1 className={styles.title}>Browse by Franchise</h1>
-          <p className={styles.subtitle}>
-            Explore figures and collectibles organized by the IP series they belong to.
-          </p>
+    <div className={`container ${styles.main}`}>
+      <div className={styles.pageHeader}>
+        <div className={styles.eyebrow}>
+          <span className={styles.eyebrowLine} aria-hidden="true" />
+          <span className={styles.eyebrowText}>Franchise Catalog</span>
         </div>
-        <Suspense>
-          <FranchiseGrid />
-        </Suspense>
-      </main>
-    </>
+        <h1 className={styles.title}>Browse by Franchise</h1>
+        <p className={styles.subtitle}>
+          Explore figures and collectibles organized by the IP series they belong to.
+        </p>
+      </div>
+      <Suspense>
+        <FranchiseGrid />
+      </Suspense>
+    </div>
   );
 }

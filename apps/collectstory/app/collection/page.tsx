@@ -153,7 +153,7 @@ async function AddItemSection() {
 
 export default function CollectionPage() {
   return (
-    <div className={styles.page}>
+    <div className={`container ${styles.page}`}>
       <div className={styles.pageHeader}>
         <h1 className={styles.pageTitle}>My Collection</h1>
         <Suspense>

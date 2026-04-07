@@ -1,6 +1,4 @@
 import type { Metadata } from 'next';
-import { Suspense } from 'react';
-import { SiteHeader } from '@/components/SiteHeader';
 import { Hero } from '@/components/landing/Hero';
 import { Stats } from '@/components/landing/Stats';
 import { LatestArrivals } from '@/components/landing/LatestArrivals';
@@ -23,16 +21,13 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
-      <Suspense>
-        <SiteHeader />
-      </Suspense>
-      <main>
+      <div>
         <Hero />
         <Stats />
         <LatestArrivals />
         <Features />
         <CallToAction />
-      </main>
+      </div>
       <Footer />
     </>
   );
