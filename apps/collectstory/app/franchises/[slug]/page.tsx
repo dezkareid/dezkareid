@@ -15,9 +15,9 @@ type Properties = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
   const slugs = await getAllFranchiseSlugs();
-  const params = slugs.map(slug => ({ slug }));
+  const parameters = slugs.map(slug => ({ slug }));
   // cacheComponents requires at least one entry; use a placeholder when the catalog is empty
-  return params.length > 0 ? params : [{ slug: '_placeholder' }];
+  return parameters.length > 0 ? parameters : [{ slug: '_placeholder' }];
 }
 
 export async function generateMetadata({ params }: Properties): Promise<Metadata> {

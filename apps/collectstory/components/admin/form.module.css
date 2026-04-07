@@ -94,3 +94,42 @@
   accent-color: var(--color-primary);
   flex-shrink: 0;
 }
+
+.variantRow {
+  display: flex;
+  gap: var(--spacing-8);
+  align-items: center;
+}
+
+.variantRow .input {
+  flex: 1;
+}
+
+.removeButton {
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+  background: none;
+  border: 1px solid var(--color-text-secondary);
+  border-radius: var(--border-radius-small);
+  padding: var(--spacing-4) var(--spacing-8);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.removeButton:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-text-primary);
+}
+
+.addVariantButton {
+  font-size: var(--font-size-200);
+  color: var(--color-primary);
+  background: none;
+  border: 1px dashed var(--color-primary);
+  border-radius: var(--border-radius-small);
+  padding: var(--spacing-8) var(--spacing-12);
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+}

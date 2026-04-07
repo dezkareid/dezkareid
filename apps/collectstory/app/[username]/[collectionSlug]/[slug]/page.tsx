@@ -95,15 +95,24 @@ function WhereToFindSection({
   );
 }
 
+function resolveVariantLabel(item: PublicItemDetail): string | undefined {
+  if (!item.variant) return undefined;
+  const match = item.lines?.variants?.find(v => v.value === item.variant);
+  return match?.display_name ?? item.variant;
+}
+
 function ItemTags({ item }: { item: PublicItemDetail }) {
   const brand = item.lines?.brands?.name;
   const line = item.lines?.name;
   const category = item.lines?.categories?.name;
   const franchise = item.franchises;
+  const variantLabel = resolveVariantLabel(item);
+
   return (
     <div className={styles.tags}>
       {brand && <span className={styles.tag}>{brand}</span>}
       {line && <span className={styles.tagSecondary}>{line}</span>}
+      {variantLabel && <span className={styles.tagSecondary}>{variantLabel}</span>}
       {category && <span className={styles.tagSecondary}>{category}</span>}
       {franchise && (
         <Link href={`/franchises/${franchise.slug}`} className={styles.tagFranchise}>

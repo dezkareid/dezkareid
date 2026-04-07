@@ -149,6 +149,8 @@ export function FranchiseForm({
         onUploadedUrl={url => setUploadedUrl(url)}
         onFileError={setFileError}
         fileError={fileError}
+        label="Cover"
+        required
       />
 
       <div className={styles.actions}>

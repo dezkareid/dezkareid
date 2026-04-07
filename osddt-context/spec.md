@@ -1,0 +1,1 @@
+Use ai-team mcp to get company outcomes and architecture principles. Add a section "### Business Context" to specification document to mark why this feature is being built, and how it aligns with company outcomes and architecture principles. If there is ambiguity, ask for clarification in Open Questions section.

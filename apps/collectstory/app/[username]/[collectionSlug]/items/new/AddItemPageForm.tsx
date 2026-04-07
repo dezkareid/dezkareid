@@ -6,11 +6,90 @@ import { getLinesByBrand } from '@/app/collection/actions';
 import { stripMetadata } from '@/lib/image/strip-metadata';
 import styles from '@/components/AddItemForm/AddItemForm.module.css';
 
+function ImageUploadArea({
+  preview,
+  fileError,
+  uploadFailed,
+  uploading,
+  onFileChange,
+}: {
+  preview: string | undefined;
+  fileError: string | undefined;
+  uploadFailed: boolean;
+  uploading: boolean;
+  onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}) {
+  return (
+    <div className={styles.field}>
+      <label className={styles.label} htmlFor="item-image">Image</label>
+      <div className={styles.uploadArea}>
+        {preview
+          ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={preview} alt="Preview" className={styles.preview} />
+            )
+          : (
+              <div className={styles.uploadPlaceholder}>
+                <span className={styles.uploadIcon}>↑</span>
+                <span className={styles.uploadHint}>JPEG, PNG or WebP · max 5 MB</span>
+              </div>
+            )}
+        <input
+          id="item-image"
+          name="image"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          className={styles.fileInput}
+          onChange={onFileChange}
+          disabled={uploading}
+        />
+      </div>
+      {fileError && (
+        <p className={styles.fieldError} role="alert">
+          {fileError}
+          {uploadFailed && <span className={styles.retryHint}> — choose the file again to retry.</span>}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function VariantSelect({
+  line,
+  selectedVariant,
+  onVariantChange,
+}: {
+  line: { variants: { value: string; display_name: string }[] } | undefined;
+  selectedVariant: string;
+  onVariantChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+}) {
+  if (!line || line.variants.length === 0) return;
+  return (
+    <div className={styles.field}>
+      <label className={styles.label} htmlFor="item-variant">Variant</label>
+      <select
+        id="item-variant"
+        name="variant"
+        className={styles.select}
+        value={selectedVariant}
+        onChange={onVariantChange}
+      >
+        <option value="">— none —</option>
+        {line.variants.map(v => (
+          <option key={v.value} value={v.value}>{v.display_name}</option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
 type Brand = { id: string; name: string };
-type Line = { id: string; name: string; categoryName: string | undefined };
+type LineVariant = { value: string; display_name: string };
+type Line = { id: string; name: string; categoryName: string | undefined; variants: LineVariant[] };
 
 type Properties = {
   brands: Brand[];
+  franchises: { id: string; name: string }[];
   collectionId: string;
   username: string;
   collectionSlug: string;
@@ -30,7 +109,7 @@ async function uploadFile(file: File): Promise<{ url: string } | { error: string
   return { url: result.url };
 }
 
-export function AddItemPageForm({ brands, collectionId, username, collectionSlug }: Properties) {
+export function AddItemPageForm({ brands, franchises, collectionId, username, collectionSlug }: Properties) {
   const [state, formAction, pending] = useActionState(addItem, undefined);
   const [fileError, setFileError] = useState<string>();
   const [uploadFailed, setUploadFailed] = useState(false);
@@ -39,6 +118,7 @@ export function AddItemPageForm({ brands, collectionId, username, collectionSlug
   const [uploading, setUploading] = useState(false);
   const [lines, setLines] = useState<Line[]>([]);
   const [selectedLine, setSelectedLine] = useState<Line | undefined>(undefined);
+  const [selectedVariant, setSelectedVariant] = useState('');
   const [loadingLines, startLoadingLines] = useTransition();
   const [, startTransition] = useTransition();
 
@@ -66,6 +146,7 @@ export function AddItemPageForm({ brands, collectionId, username, collectionSlug
     const brandId = event.target.value;
     setLines([]);
     setSelectedLine(undefined);
+    setSelectedVariant('');
     if (!brandId) return;
     startLoadingLines(async () => {
       const result = await getLinesByBrand(brandId);
@@ -76,6 +157,7 @@ export function AddItemPageForm({ brands, collectionId, username, collectionSlug
   function handleLineChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const lineId = event.target.value;
     setSelectedLine(lines.find(l => l.id === lineId));
+    setSelectedVariant('');
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -134,37 +216,13 @@ export function AddItemPageForm({ brands, collectionId, username, collectionSlug
         />
       </div>
 
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor="item-image">Image</label>
-        <div className={styles.uploadArea}>
-          {preview
-            ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={preview} alt="Preview" className={styles.preview} />
-              )
-            : (
-                <div className={styles.uploadPlaceholder}>
-                  <span className={styles.uploadIcon}>↑</span>
-                  <span className={styles.uploadHint}>JPEG, PNG or WebP · max 5 MB</span>
-                </div>
-              )}
-          <input
-            id="item-image"
-            name="image"
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            className={styles.fileInput}
-            onChange={handleFileChange}
-            disabled={uploading}
-          />
-        </div>
-        {fileError && (
-          <p className={styles.fieldError} role="alert">
-            {fileError}
-            {uploadFailed && <span className={styles.retryHint}> — choose the file again to retry.</span>}
-          </p>
-        )}
-      </div>
+      <ImageUploadArea
+        preview={preview}
+        fileError={fileError}
+        uploadFailed={uploadFailed}
+        uploading={uploading}
+        onFileChange={handleFileChange}
+      />
 
       <div className={styles.row}>
         <div className={styles.field}>
@@ -209,6 +267,27 @@ export function AddItemPageForm({ brands, collectionId, username, collectionSlug
           <p className={styles.derivedValue}>{selectedLine.categoryName ?? '—'}</p>
         </div>
       )}
+
+      <VariantSelect
+        line={selectedLine}
+        selectedVariant={selectedVariant}
+        onVariantChange={event => setSelectedVariant(event.target.value)}
+      />
+
+      <div className={styles.field}>
+        <label className={styles.label} htmlFor="item-franchise">Franchise</label>
+        <select
+          id="item-franchise"
+          name="franchise_id"
+          className={styles.select}
+          defaultValue=""
+        >
+          <option value="">— none —</option>
+          {franchises.map(f => (
+            <option key={f.id} value={f.id}>{f.name}</option>
+          ))}
+        </select>
+      </div>
 
       <div className={styles.field}>
         <label className={styles.label} htmlFor="item-description">Description</label>
