@@ -1,3 +1,10 @@
+# [@dezkareid/components-v1.2.3](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.2.2...@dezkareid/components-v1.2.3) (2026-04-07)
+
+
+### Bug Fixes
+
+* **components:** export for react component ([1fa297e](https://github.com/dezkareid/dezkareid/commit/1fa297e575f5bd8bec15935779c19708b99ea0fd))
+
 # [@dezkareid/components-v1.2.2](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.2.1...@dezkareid/components-v1.2.2) (2026-04-04)
 
 
