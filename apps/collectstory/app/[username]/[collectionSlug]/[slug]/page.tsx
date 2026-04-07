@@ -273,7 +273,7 @@ async function BreadcrumbNav({
 
 export default function ItemDetailPage({ params }: Properties) {
   return (
-    <main className={styles.page}>
+    <div className={styles.page}>
       <Suspense>
         <BreadcrumbNav params={params} />
       </Suspense>
@@ -281,6 +281,6 @@ export default function ItemDetailPage({ params }: Properties) {
       <Suspense>
         <ItemDetail params={params} />
       </Suspense>
-    </main>
+    </div>
   );
 }

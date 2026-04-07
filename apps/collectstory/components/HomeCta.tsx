@@ -10,7 +10,7 @@ type Properties = {
 
 export function HomeCTA({ primaryClassName }: Properties) {
   const [href, setHref] = useState('/login');
-  const [label, setLabel] = useState('Sign In to Your Collection');
+  const [label, setLabel] = useState('Start Your Collection');
 
   useEffect(() => {
     const supabase = createClient();
@@ -24,12 +24,11 @@ export function HomeCTA({ primaryClassName }: Properties) {
         .then(({ data }) => {
           if (data?.username) {
             setHref(`/${data.username}`);
-            setLabel('Go to My Collections');
           }
           else {
             setHref('/collection');
-            setLabel('Go to My Collection');
           }
+          setLabel('Explore Vault');
         });
     });
   }, []);

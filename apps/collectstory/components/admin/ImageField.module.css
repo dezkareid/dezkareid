@@ -89,8 +89,10 @@
   cursor: pointer;
 }
 
-.uploadArea:hover {
+.uploadArea:hover,
+.uploadArea:focus-visible {
   border-color: var(--color-primary);
+  outline: none;
 }
 
 .uploadPlaceholder {

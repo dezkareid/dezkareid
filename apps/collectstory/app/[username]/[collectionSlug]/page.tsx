@@ -135,7 +135,7 @@ async function BreadcrumbNav({
 
 export default function CollectionPage({ params }: Properties) {
   return (
-    <main className={styles.page}>
+    <div className={`container ${styles.page}`}>
       <Suspense>
         <BreadcrumbNav params={params} />
       </Suspense>
@@ -143,6 +143,6 @@ export default function CollectionPage({ params }: Properties) {
       <Suspense>
         <CollectionContent params={params} />
       </Suspense>
-    </main>
+    </div>
   );
 }

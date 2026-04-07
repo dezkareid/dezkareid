@@ -23,7 +23,8 @@
     "react-dom": "19.2.4",
     "cloudinary": "2.9.0",
     "server-only": "0.0.1",
-    "sharp": "0.34.5"
+    "sharp": "0.34.5",
+    "heic2any": "0.0.4"
   },
   "devDependencies": {
     "@dezkareid/eslint-config-ts-base": "1.0.0",

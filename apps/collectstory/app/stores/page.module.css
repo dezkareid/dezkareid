@@ -1,7 +1,5 @@
 .main {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: var(--spacing-64) var(--spacing-48);
+  padding-block: var(--spacing-64);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-48);
@@ -9,7 +7,7 @@
 
 @media (max-width: 768px) {
   .main {
-    padding: var(--spacing-48) var(--spacing-24);
+    padding-block: var(--spacing-48);
     gap: var(--spacing-32);
   }
 }

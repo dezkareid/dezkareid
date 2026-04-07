@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { connection } from 'next/server';
 import { getSessionAndRole } from '@/lib/auth/role';
@@ -27,27 +26,13 @@ export default function AdminLayout({
 }) {
   return (
     <div className={styles.shell}>
-      <header className={styles.header}>
-        <div className={styles.headerInner}>
-          <Link href="/admin" className={styles.brand}>
-            Admin
-          </Link>
-          <nav className={styles.nav} aria-label="Admin navigation">
-            <Link href="/admin/brands" className={styles.navLink}>Brands</Link>
-            <Link href="/admin/lines" className={styles.navLink}>Lines</Link>
-            <Link href="/admin/categories" className={styles.navLink}>Categories</Link>
-            <Link href="/admin/stores" className={styles.navLink}>Stores</Link>
-          </nav>
-          <Link href="/collection" className={styles.backLink}>← My Collection</Link>
-        </div>
-      </header>
-      <main className={styles.main}>
+      <div className={`container ${styles.main}`}>
         <Suspense>
           <AdminGuard>
             {children}
           </AdminGuard>
         </Suspense>
-      </main>
+      </div>
     </div>
   );
 }

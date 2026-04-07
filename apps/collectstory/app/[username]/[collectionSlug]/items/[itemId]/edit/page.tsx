@@ -113,10 +113,10 @@ async function EditItemContent({ params }: Properties) {
 
 export default function EditItemPage({ params }: Properties) {
   return (
-    <main className={styles.page}>
+    <div className={styles.page}>
       <Suspense>
         <EditItemContent params={params} />
       </Suspense>
-    </main>
+    </div>
   );
 }

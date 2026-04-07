@@ -1,9 +1,7 @@
 /* ─── Collection Page ──────────────────────────────────────────────────────── */
 
 .page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-48) var(--spacing-24);
+  padding-block: var(--spacing-48);
 }
 
 /* Breadcrumb */

@@ -76,10 +76,10 @@ async function AddItemContent({ params }: Properties) {
 
 export default function AddItemPage({ params }: Properties) {
   return (
-    <main className={styles.page}>
+    <div className={styles.page}>
       <Suspense>
         <AddItemContent params={params} />
       </Suspense>
-    </main>
+    </div>
   );
 }

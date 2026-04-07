@@ -45,3 +45,15 @@ h5,
 h6 {
   overflow-wrap: break-word;
 }
+
+.container {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: var(--spacing-16);
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-inline: var(--spacing-32);
+  }
+}

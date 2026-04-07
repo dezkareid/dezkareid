@@ -3,7 +3,13 @@
 import { useState } from 'react';
 import styles from './ImageField.module.css';
 
-const ALLOWED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+const ALLOWED_TYPES = new Set([
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/heic',
+  'image/heif',
+]);
 const MAX_BYTES = 5 * 1024 * 1024;
 
 type Mode = 'url' | 'upload';
@@ -16,6 +22,46 @@ interface ImageFieldProperties {
   fileError: string | undefined;
   label?: string;
   required?: boolean;
+}
+
+async function processFile(
+  file: File,
+  onFileError: (error: string | undefined) => void,
+  onUploadedUrl: (url: string | undefined) => void,
+  setPreview: (url: string | undefined) => void,
+): Promise<void> {
+  onFileError(undefined);
+  onUploadedUrl(undefined);
+  setPreview(undefined);
+
+  const isHeic = file.type === 'image/heic' || file.type === 'image/heif'
+    || /\.heic$/i.test(file.name) || /\.heif$/i.test(file.name);
+
+  if (!ALLOWED_TYPES.has(file.type) && !isHeic) {
+    onFileError('Only JPEG, PNG, WebP, or HEIC images are allowed.');
+    return;
+  }
+
+  if (file.size > MAX_BYTES) {
+    onFileError('Image must be 5 MB or smaller.');
+    return;
+  }
+
+  if (isHeic) {
+    try {
+      const heic2anyModule = await import('heic2any');
+      const heic2any = heic2anyModule.default ?? heic2anyModule;
+      const result = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.9 });
+      const blob = Array.isArray(result) ? result[0] : result;
+      setPreview(URL.createObjectURL(blob));
+    }
+    catch {
+      onFileError('Could not convert HEIC image. Please try a different format.');
+    }
+    return;
+  }
+
+  setPreview(URL.createObjectURL(file));
 }
 
 export function ImageField({
@@ -42,21 +88,17 @@ export function ImageField({
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
-    onFileError(undefined);
-    onUploadedUrl(undefined);
-    setPreview(undefined);
     if (!file) return;
-    if (!ALLOWED_TYPES.has(file.type)) {
-      onFileError('Only JPEG, PNG, and WebP images are allowed.');
-      event.target.value = '';
-      return;
-    }
-    if (file.size > MAX_BYTES) {
-      onFileError('Image must be 5 MB or smaller.');
-      event.target.value = '';
-      return;
-    }
-    setPreview(URL.createObjectURL(file));
+    processFile(file, onFileError, onUploadedUrl, setPreview);
+    event.target.value = '';
+  }
+
+  function handlePaste(event: React.ClipboardEvent<HTMLDivElement>) {
+    const file = [...event.clipboardData.items]
+      .find(item => item.kind === 'file' && item.type.startsWith('image/'))
+      ?.getAsFile();
+    if (!file) return;
+    processFile(file, onFileError, onUploadedUrl, setPreview);
   }
 
   return (
@@ -97,7 +139,11 @@ export function ImageField({
             />
           )
         : (
-            <div className={styles.uploadArea}>
+            <div
+              className={styles.uploadArea}
+              tabIndex={0}
+              onPaste={handlePaste}
+            >
               {preview
                 ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -106,14 +152,16 @@ export function ImageField({
                 : (
                     <div className={styles.uploadPlaceholder}>
                       <span className={styles.uploadIcon}>↑</span>
-                      <span className={styles.uploadHint}>JPEG, PNG or WebP · max 5 MB</span>
+                      <span className={styles.uploadHint}>
+                        JPEG, PNG, WebP or HEIC · max 5 MB · or paste
+                      </span>
                     </div>
                   )}
               <input
                 id="image_file"
                 name="image_file"
                 type="file"
-                accept="image/jpeg,image/png,image/webp"
+                accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
                 className={styles.fileInput}
                 onChange={handleFileChange}
                 disabled={uploading}
