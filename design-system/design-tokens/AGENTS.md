@@ -131,10 +131,7 @@ Tokens follow a multi-tier architecture to ensure maintainability:
 
 ### Skills
 The following skills/agents are essential for this project:
-- `design-tokens`: Authoritative reference for existing tokens.
 - `accessibility`: For validating color contrast and typography readability.
-- `chrome-devtools`: For debugging token application in the browser.
-
 ## Debugging
 - **Build Errors**: Check the console output during `pnpm build`. Style Dictionary provides detailed error messages for circular references or missing values.
 - **Output Inspection**: If a token isn't appearing as expected, inspect the relevant file in `dist/`.
