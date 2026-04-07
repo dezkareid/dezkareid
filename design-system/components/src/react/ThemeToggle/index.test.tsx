@@ -128,4 +128,12 @@ describe('ThemeToggle', () => {
     const svg = document.querySelector('svg[aria-hidden="true"]');
     expect(svg).toBeInTheDocument();
   });
+
+  it('forwards ref correctly', async () => {
+    const ref = vi.fn();
+    await act(async () => {
+      render(<ThemeToggle ref={ref} />);
+    });
+    expect(ref).toHaveBeenCalledWith(expect.any(HTMLSpanElement));
+  });
 });

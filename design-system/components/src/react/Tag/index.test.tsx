@@ -42,4 +42,10 @@ describe('Tag', () => {
     render(<Tag variant="success" aria-label="Success status">Active</Tag>);
     expect(screen.getByLabelText('Success status')).toBeInTheDocument();
   });
+
+  it('forwards ref correctly', () => {
+    const ref = vi.fn();
+    render(<Tag ref={ref}>Ref</Tag>);
+    expect(ref).toHaveBeenCalledWith(expect.any(HTMLSpanElement));
+  });
 });

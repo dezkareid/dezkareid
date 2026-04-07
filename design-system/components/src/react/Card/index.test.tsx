@@ -45,4 +45,10 @@ describe('Card', () => {
     const { container } = render(<Card elevation="flat">Content</Card>);
     expect((container.firstChild as HTMLElement).className).toMatch(/card--flat/);
   });
+
+  it('forwards ref correctly', () => {
+    const ref = vi.fn();
+    render(<Card ref={ref}>Ref</Card>);
+    expect(ref).toHaveBeenCalledWith(expect.any(HTMLDivElement));
+  });
 });

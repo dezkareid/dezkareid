@@ -1,10 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type HTMLAttributes, type Ref } from 'react';
 import cx from 'classnames';
 import type { Theme, ThemeToggleProperties } from '../../shared/types/theme-toggle';
 import { getInitialTheme, applyTheme, persistTheme } from '../../shared/js/theme';
 import styles from '../../css/theme-toggle.module.css';
+
+export interface Properties extends ThemeToggleProperties, HTMLAttributes<HTMLSpanElement> {
+  /**
+   * Optional ref forwarded to the wrapper span element.
+   * In React 19+, 'ref' is a standard prop and forwardRef is deprecated.
+   */
+  ref?: Ref<HTMLSpanElement>;
+}
 
 const SunIcon = (
   <svg
@@ -46,7 +54,13 @@ const MoonIcon = (
   </svg>
 );
 
-export function ThemeToggle({ cssProcessor = 'css', onChange }: ThemeToggleProperties) {
+export function ThemeToggle({
+  cssProcessor = 'css',
+  onChange,
+  className,
+  ref,
+  ...rest
+}: Properties) {
   const [theme, setTheme] = useState<Theme>('light');
 
   useEffect(() => {
@@ -68,7 +82,7 @@ export function ThemeToggle({ cssProcessor = 'css', onChange }: ThemeTogglePrope
   const label = isDark ? 'Dark' : 'Light';
 
   return (
-    <span className={styles['theme-toggle__wrapper']}>
+    <span ref={ref} className={cx(styles['theme-toggle__wrapper'], className)} {...rest}>
       <button
         type="button"
         className={cx(styles['theme-toggle'], isDark && styles['theme-toggle--dark'])}
