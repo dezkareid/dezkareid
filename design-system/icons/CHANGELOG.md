@@ -1,3 +1,11 @@
+# [@dezkareid/icons-v1.2.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/icons-v1.2.0...@dezkareid/icons-v1.2.1) (2026-04-08)
+
+
+### Bug Fixes
+
+* **icons:** export for astro ([3de3bb4](https://github.com/dezkareid/dezkareid/commit/3de3bb421aafb6e1b6f1e4145c5d9e9642e4bd75))
+* **icons:** export for react ([9719392](https://github.com/dezkareid/dezkareid/commit/9719392e83826e5c15b4725de3051de7418a0605))
+
 # [@dezkareid/icons-v1.2.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/icons-v1.1.0...@dezkareid/icons-v1.2.0) (2026-04-05)
 
 
