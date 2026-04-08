@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition, useId } from 'react';
-import { addItemLink, removeItemLink, type ItemLink } from '@/app/collection/actions';
+import { addItemLink, removeItemLink, type ItemLink } from '@/app/[username]/[collectionSlug]/actions';
 import styles from './ItemLinksManager.module.css';
 
 type Properties = {

@@ -2,7 +2,12 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export async function proxy(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
+  // Inject x-pathname so Server Components can read the current path
+  // without a Client Component (e.g. SiteHeader sign-in link).
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-pathname', request.nextUrl.pathname);
+
+  let supabaseResponse = NextResponse.next({ request: { headers: requestHeaders } });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -15,7 +20,7 @@ export async function proxy(request: NextRequest) {
         setAll(cookiesToSet) {
           for (const { name, value } of cookiesToSet) request.cookies.set(name, value);
 
-          supabaseResponse = NextResponse.next({ request });
+          supabaseResponse = NextResponse.next({ request: { headers: requestHeaders } });
           for (const { name, value, options } of cookiesToSet) supabaseResponse.cookies.set(name, value, options);
         },
       },
@@ -28,7 +33,7 @@ export async function proxy(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  if (!user && (pathname.startsWith('/collection') || pathname.startsWith('/admin'))) {
+  if (!user && pathname.startsWith('/admin')) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = '/login';
     return NextResponse.redirect(loginUrl);
@@ -44,9 +49,9 @@ export async function proxy(request: NextRequest) {
       .single();
 
     if (profile?.role !== 'admin') {
-      const collectionUrl = request.nextUrl.clone();
-      collectionUrl.pathname = '/collection';
-      return NextResponse.redirect(collectionUrl);
+      const homeUrl = request.nextUrl.clone();
+      homeUrl.pathname = '/';
+      return NextResponse.redirect(homeUrl);
     }
   }
 

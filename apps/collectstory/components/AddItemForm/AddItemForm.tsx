@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState, useEffect, useState, useTransition } from 'react';
-import { createCollectionItem, getLinesByBrand } from '@/app/collection/actions';
+import { createCollectionItem, getLinesByBrand } from '@/app/[username]/[collectionSlug]/actions';
 
 type Franchise = { id: string; name: string };
 import styles from './AddItemForm.module.css';

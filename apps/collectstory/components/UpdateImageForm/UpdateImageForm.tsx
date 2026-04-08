@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { updateItemImage } from '@/app/collection/actions';
+import { updateItemImage } from '@/app/[username]/[collectionSlug]/actions';
 import styles from './UpdateImageForm.module.css';
 
 const ALLOWED_TYPES = new Set([

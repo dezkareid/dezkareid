@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { connection } from 'next/server';
-import { getPublicCollectionBySlug, getPublicItemsInCollection } from '@/lib/collections';
+import { getCollectionFirstImage, getPublicCollectionBySlug, getPublicItemsInCollection } from '@/lib/collections';
+import { DataSchema } from '@/src/shared/ui/DataSchema';
+import { getCollectionSchema } from '@/src/entities/collection';
 import { CollectionActions } from '@/components/username/CollectionActions';
 import { SocialShare } from '@/src/features/social-share';
 import styles from './page.module.css';
@@ -21,6 +23,8 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
   if (!result) return {};
 
   const { collection } = result;
+  const firstImage = await getCollectionFirstImage(collection.id);
+  const ogImage = firstImage ?? `${baseUrl}/logo.png`; // Fallback to brand logo
 
   return {
     title: `${collection.name} by ${username}`,
@@ -31,6 +35,14 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
       description: `${collection.name} · collected by ${username} on Collectstory.`,
       url: `${baseUrl}/${username}/${collectionSlug}`,
       type: 'website',
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: collection.name,
+        },
+      ],
     },
   };
 }
@@ -48,9 +60,18 @@ async function CollectionContent({
 
   const { collection } = result;
   const items = await getPublicItemsInCollection(collection.id);
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
+
+  const schema = getCollectionSchema({
+    collection,
+    username,
+    items,
+    baseUrl,
+  });
 
   return (
     <>
+      <DataSchema schema={schema} />
       <header className={styles.header}>
         <div className={styles.headerLeft}>
           <div className={styles['header__name-wrapper']}>

@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { signOut } from '@/app/collection/actions';
+import { signOut } from '@/app/actions';
 import { DropdownMenu, DropdownMenuItem, DropdownDivider } from '@/src/shared/ui/dropdown-menu';
 import styles from './UserMenu.module.css';
 
@@ -48,9 +48,7 @@ export function UserMenu({ username, avatarUrl, email }: Properties) {
         </DropdownMenuItem>
       )}
       <DropdownDivider />
-      <form action={signOut}>
-        <DropdownMenuItem variant="action">Sign Out</DropdownMenuItem>
-      </form>
+      <DropdownMenuItem variant="action" onClick={() => signOut()}>Sign Out</DropdownMenuItem>
     </DropdownMenu>
   );
 }

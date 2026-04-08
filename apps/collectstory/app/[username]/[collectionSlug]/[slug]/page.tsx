@@ -5,12 +5,14 @@ import { Suspense } from 'react';
 import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getPublicCollectionBySlug, getPublicItemBySlug, type PublicItemDetail } from '@/lib/collections';
+import { DataSchema } from '@/src/shared/ui/DataSchema';
+import { getItemSchema } from '@/src/entities/item';
 import { ItemImageSection } from './ItemImageSection';
 import { ItemActions } from '@/components/username/ItemActions';
 import { ItemLinksManager } from '@/components/ItemLinksManager/ItemLinksManager';
 import { VerifiedBadge } from '@/components/VerifiedBadge';
 import { SocialShare } from '@/src/features/social-share';
-import type { Store, ItemLink } from '@/app/collection/actions';
+import type { Store, ItemLink } from '@/app/[username]/[collectionSlug]/actions';
 import styles from './page.module.css';
 
 type Properties = {
@@ -238,8 +240,17 @@ async function ItemDetail({
     }));
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
+  const schema = getItemSchema({
+    item,
+    username,
+    collectionSlug,
+    baseUrl,
+  });
+
   return (
     <div className={styles.layout}>
+      <DataSchema schema={schema} />
       <ItemImageSection
         itemId={item.id}
         imageUrl={item.image_url}
