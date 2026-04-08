@@ -8,6 +8,7 @@ import { getCollectionFirstImage, getPublicCollectionBySlug, getPublicItemsInCol
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { getCollectionSchema } from '@/src/entities/collection';
 import { CollectionActions } from '@/components/username/CollectionActions';
+import { SocialShare } from '@/src/features/social-share';
 import styles from './page.module.css';
 
 type Properties = {
@@ -73,7 +74,15 @@ async function CollectionContent({
       <DataSchema schema={schema} />
       <header className={styles.header}>
         <div className={styles.headerLeft}>
-          <h1 className={styles.collectionName}>{collection.name}</h1>
+          <div className={styles['header__name-wrapper']}>
+            <h1 className={styles.collectionName}>{collection.name}</h1>
+            <SocialShare
+              title={`${collection.name} by ${username} on Collectstory`}
+              text={`Check out this collection: ${collection.name}`}
+              baseUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/${username}/${collectionSlug}`}
+              entityType="collection"
+            />
+          </div>
           {collection.description && (
             <p className={styles.collectionDesc}>{collection.description}</p>
           )}

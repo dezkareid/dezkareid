@@ -8,6 +8,7 @@ import { getPublicCollectionsByUsername } from '@/lib/collections';
 import { createClient } from '@/lib/supabase/server';
 import { OnboardingEmptyState } from '@/src/features/quick-start-collection';
 import { UserProfileActions } from '@/components/username/UserProfileActions';
+import { SocialShare } from '@/src/features/social-share';
 import styles from './page.module.css';
 
 type Properties = {
@@ -109,10 +110,18 @@ async function ProfileHeader({ params }: { params: Promise<{ username: string }>
             )}
       </div>
       <div className={styles.headerText}>
-        <h1 className={styles.username}>
-          @
-          {username}
-        </h1>
+        <div className={styles['header__username-wrapper']}>
+          <h1 className={styles.username}>
+            @
+            {username}
+          </h1>
+          <SocialShare
+            title={`@${username}'s Profile on Collectstory`}
+            text={`Check out @${username}'s collectible collections!`}
+            baseUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/${username}`}
+            entityType="profile"
+          />
+        </div>
       </div>
       <div className={styles.ownerActions}>
         <Suspense fallback={undefined}>
