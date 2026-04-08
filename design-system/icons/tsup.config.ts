@@ -2,7 +2,10 @@ import { defineConfig } from 'tsup';
 
 export default defineConfig({
   entry: { react: 'src/react/index.ts' },
-  format: ['esm'],
+  format: ['esm', 'cjs'],
+  outExtension({ format }) {
+    return { js: format === 'esm' ? '.mjs' : '.js' };
+  },
   dts: true,
   splitting: true,
   treeshake: true,

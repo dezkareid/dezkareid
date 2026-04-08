@@ -1,0 +1,121 @@
+/* Structure */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-16);
+  padding-block: var(--spacing-16);
+}
+
+.site-header__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-12);
+  text-decoration: none;
+}
+
+.site-header__nav-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-16);
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.site-header__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-24);
+}
+
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-16);
+}
+
+.site-header__sign-in {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  padding: var(--spacing-8) var(--spacing-24);
+  border-radius: var(--border-radius-medium);
+  transition: filter 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.site-header__avatar-placeholder {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--border-radius-pill);
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .site-header__nav {
+    display: none;
+  }
+}
+
+/* Skin */
+.site-header {
+  background-color: var(--color-background-primary);
+  border-bottom: 1px solid var(--color-background-secondary);
+}
+
+.site-header__brand {
+  color: var(--color-primary);
+}
+
+.site-header__brand:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--border-radius-small);
+}
+
+.site-header__brand-name {
+  font-size: var(--font-size-400);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--font-letter-spacing-tight, -0.02em);
+}
+
+.site-header__nav-link {
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.site-header__nav-link:hover {
+  color: var(--color-text-primary);
+}
+
+.site-header__sign-in {
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-inverse);
+  background-color: var(--color-primary);
+  /* TODO(design-system): needs token for box-shadow with color-primary alpha */
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.site-header__sign-in:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
+.site-header__sign-in:active {
+  transform: translateY(0);
+}
+
+.site-header__avatar-placeholder {
+  background-color: var(--color-background-secondary);
+}

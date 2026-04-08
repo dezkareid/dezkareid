@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { CollectionItemCard } from '@/components/CollectionItemCard';
+import { CollectionItemCard } from '@/src/entities/item';
 import { AddItemModal } from '@/components/AddItemModal/AddItemModal';
 import { getAllFranchises } from '@/app/collection/actions';
 import styles from './page.module.css';

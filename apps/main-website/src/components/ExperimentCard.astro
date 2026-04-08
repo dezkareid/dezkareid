@@ -20,43 +20,47 @@ const statusLabel: Record<ExperimentMetadata['status'], string> = {
 <div class="experiment-card-wrapper reveal" style={`transition-delay: ${index * 80}ms`}>
   <Card class="experiment-card">
     <a
-      class="card-link"
+      class="experiment-card__link"
       href={`/experiments/${slug}`}
       aria-label={`View experiment: ${title}`}
     >
     </a>
 
-    <div class="card-header">
-      <span class="status-badge" data-status={status}>
-        <span class="status-dot" aria-hidden="true"></span>
+    <div class="experiment-card__header">
+      <span class="experiment-card__status-badge" data-status={status}>
+        <span class="experiment-card__status-dot" aria-hidden="true"></span>
         {statusLabel[status]}
       </span>
     </div>
 
-    <h2 class="experiment-title">{title}</h2>
-    <p class="experiment-description">{description}</p>
+    <h2 class="experiment-card__title">{title}</h2>
+    <p class="experiment-card__description">{description}</p>
 
-    <div class="experiment-footer">
-      <div class="api-tags">
+    <div class="experiment-card__footer">
+      <div class="experiment-card__api-tags">
         {webApis.map(api => (
-          <span class="api-tag">{api}</span>
+          <span class="experiment-card__api-tag">{api}</span>
         ))}
       </div>
-      <span class="card-arrow" aria-hidden="true">→</span>
+      <span class="experiment-card__arrow" aria-hidden="true">→</span>
     </div>
   </Card>
 </div>
 
 <style>
   .experiment-card-wrapper {
+    /* Layout */
     height: 100%;
   }
 
   .experiment-card {
+    /* Layout */
     height: 100%;
     display: flex;
     flex-direction: column;
     position: relative;
+    
+    /* Skin / Behavioral */
     cursor: pointer;
     /* subtle left accent line */
     border-left: 2px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
@@ -71,67 +75,77 @@ const statusLabel: Record<ExperimentMetadata['status'], string> = {
   }
 
   /* Stretched link */
-  .card-link {
+  .experiment-card__link {
+    /* Layout */
     position: absolute;
     inset: 0;
     z-index: 1;
+    
+    /* Skin */
     border-radius: inherit;
   }
 
-  .card-header {
+  .experiment-card__header {
+    /* Layout */
     display: flex;
     align-items: center;
     margin-bottom: var(--spacing-16);
   }
 
   /* ── Status badge ─────────────────────────────────────────────── */
-  .status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-4);
+  .experiment-card__status-badge {
+    /* Skin */
     font-size: var(--font-size-100);
     font-family: var(--font-family-mono);
     font-weight: var(--font-weight-medium);
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    padding: var(--spacing-4) var(--spacing-8);
     border-radius: var(--border-radius-pill, 9999px);
+    
+    /* Layout */
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    padding: var(--spacing-4) var(--spacing-8);
   }
 
-  .status-dot {
+  .experiment-card__status-dot {
+    /* Skin */
+    border-radius: 50%;
+    
+    /* Layout */
     width: 6px;
     height: 6px;
-    border-radius: 50%;
     flex-shrink: 0;
   }
 
-  .status-badge[data-status="experimental"] {
+  .experiment-card__status-badge[data-status="experimental"] {
     /* TODO(design-system): needs semantic token for warning/amber */
     background-color: color-mix(in srgb, #f59e0b 12%, transparent);
     color: light-dark(#92400e, #fcd34d);
     border: 1px solid color-mix(in srgb, #f59e0b 30%, transparent);
   }
-  .status-badge[data-status="experimental"] .status-dot {
+  .experiment-card__status-badge[data-status="experimental"] .experiment-card__status-dot {
     background-color: light-dark(#d97706, #fbbf24);
     /* pulsing dot for "experimental" */
     animation: pulse-dot 2s ease-in-out infinite;
   }
 
-  .status-badge[data-status="stable"] {
+  .experiment-card__status-badge[data-status="stable"] {
     background-color: color-mix(in srgb, var(--color-success) 12%, transparent);
     color: light-dark(#15803d, #86efac);
     border: 1px solid color-mix(in srgb, var(--color-success) 30%, transparent);
   }
-  .status-badge[data-status="stable"] .status-dot {
+  .experiment-card__status-badge[data-status="stable"] .experiment-card__status-dot {
     background-color: var(--color-success);
   }
 
-  .status-badge[data-status="deprecated"] {
+  .experiment-card__status-badge[data-status="deprecated"] {
     background-color: color-mix(in srgb, var(--color-base-gray-500) 12%, transparent);
     color: var(--color-base-gray-500);
     border: 1px solid color-mix(in srgb, var(--color-base-gray-500) 30%, transparent);
   }
-  .status-badge[data-status="deprecated"] .status-dot {
+  .experiment-card__status-badge[data-status="deprecated"] .experiment-card__status-dot {
     background-color: var(--color-base-gray-500);
   }
 
@@ -141,29 +155,36 @@ const statusLabel: Record<ExperimentMetadata['status'], string> = {
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .status-badge[data-status="experimental"] .status-dot {
+    .experiment-card__status-badge[data-status="experimental"] .experiment-card__status-dot {
       animation: none;
     }
   }
 
   /* ── Content ──────────────────────────────────────────────────── */
-  .experiment-title {
+  .experiment-card__title {
+    /* Skin */
     font-size: var(--font-size-500);
     color: var(--color-text-primary);
     letter-spacing: -0.02em;
     line-height: var(--font-line-height-tight);
+    
+    /* Layout */
     margin-bottom: var(--spacing-12);
   }
 
-  .experiment-description {
+  .experiment-card__description {
+    /* Skin */
     font-size: var(--font-size-300);
     color: var(--color-text-secondary, color-mix(in srgb, var(--color-text-primary) 65%, transparent));
     line-height: var(--font-line-height-relaxed);
+    
+    /* Layout */
     flex: 1;
     margin-bottom: var(--spacing-24);
   }
 
-  .experiment-footer {
+  .experiment-card__footer {
+    /* Layout */
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
@@ -171,34 +192,41 @@ const statusLabel: Record<ExperimentMetadata['status'], string> = {
     margin-top: auto;
   }
 
-  .api-tags {
+  .experiment-card__api-tags {
+    /* Layout */
     display: flex;
     flex-wrap: wrap;
     gap: var(--spacing-8);
     flex: 1;
   }
 
-  .api-tag {
+  .experiment-card__api-tag {
+    /* Skin */
     font-family: var(--font-family-mono);
     font-size: var(--font-size-100);
     font-weight: var(--font-weight-medium);
     letter-spacing: 0.03em;
-    padding: var(--spacing-4) var(--spacing-8);
     border-radius: var(--border-radius-pill, 9999px);
     background-color: color-mix(in srgb, var(--color-primary) 8%, var(--color-background-secondary));
     border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
     color: var(--color-primary);
+    
+    /* Layout */
+    padding: var(--spacing-4) var(--spacing-8);
   }
 
-  .card-arrow {
+  .experiment-card__arrow {
+    /* Skin */
     font-size: var(--font-size-400);
     color: color-mix(in srgb, var(--color-primary) 40%, transparent);
     transition: transform 0.2s ease, color 0.2s ease;
+    
+    /* Layout */
     line-height: 1;
     flex-shrink: 0;
   }
 
-  .experiment-card:hover .card-arrow {
+  .experiment-card:hover .experiment-card__arrow {
     transform: translateX(4px);
     color: var(--color-primary);
   }

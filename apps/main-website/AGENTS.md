@@ -1,6 +1,6 @@
 # Agent Instructions: main-website
 
-Astro 5 marketing website for Joel Gomez (dezkareid). Static site built with Astro content collections, design tokens, and a shared component library.
+Astro 6 marketing website for Joel Gomez (dezkareid). Static site built with Astro content collections, design tokens, and a shared component library.
 
 ## Overview
 
@@ -16,7 +16,34 @@ Production URL: https://dezkareid.dev
 - **Styling**: Scoped `<style>` per component + `src/styles/global.css`
 - **Linting**: ESLint 9 flat config via `@dezkareid/eslint-plugin-web` (`configs.astro`)
 
-### Project Structure
+## Architecture
+
+### Islands Architecture
+Currently, this project uses a pure static approach. Components from the `@dezkareid/components` library are server-rendered by Astro. Hydration (e.g., `client:load`) is only used for interactive elements like the `ThemeToggle`.
+
+### Content Collections
+All content is managed through the Astro 6 Content Layer API (see `src/content.config.ts`). Collections for `projects` and `services` use `glob` loaders to validate frontmatter and process markdown content.
+
+### Integrations
+- `@astrojs/sitemap`: Automatically generates a sitemap for search engine discovery.
+- `sharp`: Used for high-performance image processing and conversion to WebP/AVIF.
+
+### Deployment & Adapters
+The project is configured for static output (SSG). It is deployed as a static site (Cloudflare Pages or similar) using the default Astro static adapter.
+
+### Skills
+To develop this application effectively, the AI agent should activate the following skills:
+- `web-quality-audit` / `web-quality:web-quality-audit`: For auditing performance and accessibility.
+- `performance` / `web-quality:performance`: For optimizing asset delivery and LCP.
+- `seo` / `web-quality:seo`: For managing metadata and sitemap configuration.
+- `design-tokens` / `design-system:design-tokens`: For referencing authorized colors and spacing.
+- `accessibility` / `web-quality:accessibility`: For ensuring WCAG 2.2 compliance and screen reader support.
+- `styles-methodology` / `frontend-tools:styles-methodology`: Standard methodology for writing and organizing styles.
+
+### MCP Servers
+- `context7` / `mcp__context7__query-docs`: When you need documentation for any external library (Astro, Sharp, Vite, etc.) — do not rely on training data alone.
+
+## Project Structure
 
 ```
 src/
@@ -84,8 +111,9 @@ Projects (in order): dezkareid-design-system, sync-ai-context, platzi-frontend-m
 
 Services (in order): frontend-as-a-service, frontend-architecture, performance, consultory, mentory, speaker.
 
-## Component Conventions
+## Coding Standards & Style
 
+- **Styling Approach:** Use **BEM** (Block Element Modifier) for naming conventions and **OOCSS** (Object Oriented CSS) to split structural and skin responsibilities.
 - Props interface must be named `Properties` — the ESLint rule `varsIgnorePattern: '^Properties$'` suppresses the unused-vars warning since Astro types props implicitly via `Astro.props`.
 - All CSS uses `var(--*)` tokens from `@dezkareid/design-tokens`. Where a token is missing, add a comment: `/* DS NOTE: --token-name: description */`
 - Stretched card links: use `position: absolute; inset: 0; z-index: 1` on a plain `<a>`. Interactive elements inside the card (e.g. project links) must have `position: relative; z-index: 2` to sit above it.

@@ -131,7 +131,10 @@ Tokens follow a multi-tier architecture to ensure maintainability:
 
 ### Skills
 The following skills/agents are essential for this project:
-- `accessibility`: For validating color contrast and typography readability.
+- `accessibility` / `web-quality:accessibility`: For validating color contrast and typography readability.
+
+### MCP Servers
+- `context7` : When you need documentation for Style Dictionary, Vitest, or any other external library — do not rely on training data alone.
 ## Debugging
 - **Build Errors**: Check the console output during `pnpm build`. Style Dictionary provides detailed error messages for circular references or missing values.
 - **Output Inspection**: If a token isn't appearing as expected, inspect the relevant file in `dist/`.

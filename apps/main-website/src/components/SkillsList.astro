@@ -39,14 +39,14 @@ const grouped = categories
   .filter(g => g.skills.length > 0);
 ---
 
-<div class="skills-wrapper">
+<div class="skills-list">
   {
     grouped.map(group => (
-      <div class="skill-group">
-        <span class="skill-group-label">{group.label}</span>
-        <div class="skill-pills">
+      <div class="skills-list__group">
+        <span class="skills-list__label">{group.label}</span>
+        <div class="skills-list__pills">
           {group.skills.map((skill: Skill) => (
-            <span class={`skill-pill skill-pill--${group.key}`}>
+            <span class={`skills-list__pill skills-list__pill--${group.key}`}>
               {skill.name}
             </span>
           ))}
@@ -57,56 +57,65 @@ const grouped = categories
 </div>
 
 <style>
-  .skills-wrapper {
+  .skills-list {
+    /* Layout */
     display: flex;
     flex-direction: column;
     gap: var(--spacing-24);
   }
 
-  .skill-group {
+  .skills-list__group {
+    /* Layout */
     display: flex;
     align-items: flex-start;
     gap: var(--spacing-16);
   }
 
-  .skill-group-label {
-    flex-shrink: 0;
-    width: 80px;
+  .skills-list__label {
+    /* Skin */
     font-size: var(--font-size-100);
     font-family: var(--font-family-mono);
     font-weight: var(--font-weight-medium);
     text-transform: uppercase;
     letter-spacing: var(--font-letter-spacing-wide);
     color: var(--color-text-secondary);
+    
+    /* Layout */
+    flex-shrink: 0;
+    width: 80px;
     padding-top: calc(var(--spacing-4) + 2px);
   }
 
-  .skill-pills {
+  .skills-list__pills {
+    /* Layout */
     display: flex;
     flex-wrap: wrap;
     gap: var(--spacing-8);
   }
 
-  .skill-pill {
-    display: inline-flex;
-    align-items: center;
-    padding: var(--spacing-4) var(--spacing-12);
-    border-radius: var(--border-radius-pill);
+  .skills-list__pill {
+    /* Skin */
     font-size: var(--font-size-200);
     font-weight: var(--font-weight-medium);
     font-family: var(--font-family-mono);
     letter-spacing: 0.02em;
     border: 1px solid transparent;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
+    
+    /* Layout */
+    display: inline-flex;
+    align-items: center;
+    padding: var(--spacing-4) var(--spacing-12);
+    border-radius: var(--border-radius-pill);
   }
 
-  .skill-pill:hover {
+  .skills-list__pill:hover {
     transform: translateY(-1px);
     box-shadow: var(--shadow-card);
   }
 
   /* DS NOTE: --color-skill-frontend candidate */
-  .skill-pill--frontend {
+  .skills-list__pill--frontend {
     background: color-mix(
       in srgb,
       var(--color-primary) 10%,
@@ -117,7 +126,7 @@ const grouped = categories
   }
 
   /* DS NOTE: --color-skill-backend candidate */
-  .skill-pill--backend {
+  .skills-list__pill--backend {
     background: color-mix(
       in srgb,
       var(--color-success) 10%,
@@ -128,7 +137,7 @@ const grouped = categories
   }
 
   /* DS NOTE: --color-skill-tooling candidate */
-  .skill-pill--tooling {
+  .skills-list__pill--tooling {
     background: color-mix(
       in srgb,
       var(--color-text-secondary) 10%,
@@ -142,7 +151,7 @@ const grouped = categories
     color: var(--color-text-secondary);
   }
 
-  .skill-pill--other {
+  .skills-list__pill--other {
     background: var(--color-background-secondary);
     border-color: color-mix(
       in srgb,
@@ -153,12 +162,12 @@ const grouped = categories
   }
 
   @media (max-width: 600px) {
-    .skill-group {
+    .skills-list__group {
       flex-direction: column;
       gap: var(--spacing-8);
     }
 
-    .skill-group-label {
+    .skills-list__label {
       width: auto;
     }
   }

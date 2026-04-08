@@ -12,12 +12,18 @@ The following skills **must** be invoked when working on this package:
 
 | Skill | When to use |
 |---|---|
-| `design-tokens` | Before choosing any color, spacing, or typography value — provides the authoritative token list |
+| `design-tokens` / `design-system:design-tokens` | Before choosing any color, spacing, or typography value — provides the authoritative token list |
 | `frontend-design` | When building or modifying any UI component — produces distinctive, production-grade interfaces |
-| `react-best-practices` | When writing or reviewing React components — ensures optimal React/Next.js patterns |
-| `accessibility` | When implementing or auditing any component — ensures WCAG 2.2 compliance |
-| `react-components` | When checking available primitives before writing new UI — avoids duplicating existing components |
-| `styles-methodology` | When writing CSS — enforces the project's BEM + OOCSS approach |
+| `react-best-practices` / `frontend-tools:react-best-practices` | When writing or reviewing React components — ensures optimal React/Next.js patterns |
+| `accessibility` / `web-quality:accessibility` | When implementing or auditing any component — ensures WCAG 2.2 compliance |
+| `react-components` / `frontend-tools:react-components` | When writing React components based on HTML components |
+| `styles-methodology` / `frontend-tools:styles-methodology` | When writing CSS — enforces the project's BEM + OOCSS approach |
+
+
+## MCP Servers
+
+| MCP | When to use |
+|---|---|
 | `context7` | When you need documentation for any external library (React, Rollup, Vitest, Angular, Astro, Vue) — do not rely on training data alone |
 
 ## Tech Stack & Versions

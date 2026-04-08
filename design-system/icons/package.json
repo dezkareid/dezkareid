@@ -1,16 +1,15 @@
 {
   "name": "@dezkareid/icons",
   "version": "0.0.0",
+  "type": "module",
   "description": "collections of icons for applications",
   "exports": {
     "./react": {
+      "types": "./dist/react.d.ts",
       "import": "./dist/react.mjs",
-      "types": "./dist/react.d.mts"
+      "require": "./dist/react.js"
     },
-    "./astro": {
-      "types": "./src/astro/index.ts",
-      "default": "./src/astro/index.ts"
-    }
+    "./astro": "./src/astro/index.ts"
   },
   "files": [
     "dist",
