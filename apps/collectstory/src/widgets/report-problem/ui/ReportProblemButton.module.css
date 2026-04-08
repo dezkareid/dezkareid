@@ -1,0 +1,25 @@
+.container {
+  position: fixed;
+  bottom: var(--spacing-24);
+  right: var(--spacing-24);
+  z-index: var(--z-index-fixed, 100);
+}
+
+.button {
+  box-shadow: var(--shadow-elevated);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+  border-radius: var(--border-radius-pill);
+}
+
+.icon {
+  --icon-size: 1.125rem;
+}
+
+@media (max-width: 560px) {
+  .container {
+    bottom: var(--spacing-16);
+    right: var(--spacing-16);
+  }
+}

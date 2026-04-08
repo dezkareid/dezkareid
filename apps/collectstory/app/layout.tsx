@@ -1,7 +1,9 @@
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { IBM_Plex_Sans } from 'next/font/google';
 import Script from 'next/script';
 import { SiteHeader } from '@/src/widgets/site-header';
+import { ReportProblem } from '@/src/widgets/report-problem';
 import './globals.css';
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -36,8 +38,13 @@ export default function RootLayout({
             __html: `(function(){try{var t=localStorage.getItem('color-scheme');if(t==='dark'){document.documentElement.style.colorScheme='dark';document.documentElement.style.setProperty('--lightningcss-light',' ');document.documentElement.style.setProperty('--lightningcss-dark','initial');}else if(t==='light'){document.documentElement.style.colorScheme='light';document.documentElement.style.setProperty('--lightningcss-light','initial');document.documentElement.style.setProperty('--lightningcss-dark',' ');}}catch(_){}})();`,
           }}
         />
-        <SiteHeader />
+        <Suspense fallback={undefined}>
+          <SiteHeader />
+        </Suspense>
         <main>{children}</main>
+        <Suspense fallback={undefined}>
+          <ReportProblem />
+        </Suspense>
       </body>
     </html>
   );

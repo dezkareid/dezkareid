@@ -9,6 +9,7 @@ import { ItemImageSection } from './ItemImageSection';
 import { ItemActions } from '@/components/username/ItemActions';
 import { ItemLinksManager } from '@/components/ItemLinksManager/ItemLinksManager';
 import { VerifiedBadge } from '@/components/VerifiedBadge';
+import { SocialShare } from '@/src/features/social-share';
 import type { Store, ItemLink } from '@/app/collection/actions';
 import styles from './page.module.css';
 
@@ -144,7 +145,15 @@ function ItemMeta({
     <div className={styles.details}>
       <ItemTags item={item} />
 
-      <h1 className={styles.name}>{item.name}</h1>
+      <div className={styles.nameContainer}>
+        <h1 className={styles.name}>{item.name}</h1>
+        <SocialShare
+          title={`${item.name} from ${collectionSlug} by ${username} on Collectstory`}
+          text={`Check out this collectible: ${item.name}`}
+          baseUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/${username}/${collectionSlug}/${item.slug}`}
+          entityType="item"
+        />
+      </div>
 
       {item.description && (
         <p className={styles.description}>{item.description}</p>

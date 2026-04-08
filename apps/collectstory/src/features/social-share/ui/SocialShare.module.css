@@ -1,0 +1,9 @@
+.social-share-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+}
+
+.social-share-icon {
+  --icon-size: 1.25rem;
+}
