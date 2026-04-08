@@ -99,7 +99,7 @@ async function ProfileHeader({ params }: { params: Promise<{ username: string }>
             )}
       </div>
       <div className={styles.headerText}>
-        <div className={styles.usernameContainer}>
+        <div className={styles['header__username-wrapper']}>
           <h1 className={styles.username}>
             @
             {username}

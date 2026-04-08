@@ -53,7 +53,7 @@ async function CollectionContent({
     <>
       <header className={styles.header}>
         <div className={styles.headerLeft}>
-          <div className={styles.nameContainer}>
+          <div className={styles['header__name-wrapper']}>
             <h1 className={styles.collectionName}>{collection.name}</h1>
             <SocialShare
               title={`${collection.name} by ${username} on Collectstory`}

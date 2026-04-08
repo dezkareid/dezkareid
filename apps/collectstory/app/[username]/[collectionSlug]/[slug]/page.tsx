@@ -145,7 +145,7 @@ function ItemMeta({
     <div className={styles.details}>
       <ItemTags item={item} />
 
-      <div className={styles.nameContainer}>
+      <div className={styles['details__name-wrapper']}>
         <h1 className={styles.name}>{item.name}</h1>
         <SocialShare
           title={`${item.name} from ${collectionSlug} by ${username} on Collectstory`}
