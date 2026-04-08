@@ -11,7 +11,7 @@ import { ItemImageSection } from './ItemImageSection';
 import { ItemActions } from '@/components/username/ItemActions';
 import { ItemLinksManager } from '@/components/ItemLinksManager/ItemLinksManager';
 import { VerifiedBadge } from '@/components/VerifiedBadge';
-import type { Store, ItemLink } from '@/app/collection/actions';
+import type { Store, ItemLink } from '@/app/[username]/[collectionSlug]/actions';
 import styles from './page.module.css';
 
 type Properties = {

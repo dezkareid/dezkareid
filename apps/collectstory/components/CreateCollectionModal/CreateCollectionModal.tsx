@@ -2,7 +2,7 @@
 
 import { useActionState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { createCollection } from '@/app/collection/actions';
+import { createCollection } from '@/app/[username]/[collectionSlug]/actions';
 import styles from './CreateCollectionModal.module.css';
 
 type CollectionState

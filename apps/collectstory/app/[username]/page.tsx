@@ -5,6 +5,8 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { connection } from 'next/server';
 import { getPublicCollectionsByUsername } from '@/lib/collections';
+import { createClient } from '@/lib/supabase/server';
+import { OnboardingEmptyState } from '@/src/features/quick-start-collection';
 import { UserProfileActions } from '@/components/username/UserProfileActions';
 import styles from './page.module.css';
 
@@ -29,27 +31,36 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
   };
 }
 
+function ProfileEmptyState({ username, isOwner }: { username: string; isOwner: boolean }) {
+  if (isOwner) return <OnboardingEmptyState username={username} />;
+  return (
+    <div className={styles.empty}>
+      <p className={styles.emptyTitle}>No public collections yet</p>
+      <p className={styles.emptyDesc}>
+        {username}
+        {' '}
+        hasn&apos;t made any collections public yet.
+      </p>
+    </div>
+  );
+}
+
 async function ProfileContent({ username }: { username: string }) {
   await connection();
   const result = await getPublicCollectionsByUsername(username);
   if (!result) notFound();
 
-  const { collections } = result;
+  const { collections, userId } = result;
+
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const isOwner = user?.id === userId;
 
   return (
     <>
       <div className={styles.grid}>
         {collections.length === 0
-          ? (
-              <div className={styles.empty}>
-                <p className={styles.emptyTitle}>No public collections yet</p>
-                <p className={styles.emptyDesc}>
-                  {username}
-                  {' '}
-                  hasn&apos;t made any collections public yet.
-                </p>
-              </div>
-            )
+          ? <ProfileEmptyState username={username} isOwner={isOwner} />
           : collections.map(col => (
               <Link
                 key={col.id}

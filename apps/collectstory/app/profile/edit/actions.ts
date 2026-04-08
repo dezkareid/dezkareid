@@ -43,7 +43,7 @@ export async function updateProfile(
   }
   if (error) return { error: 'Failed to save profile. Please try again.' };
 
-  revalidatePath('/collection');
+  revalidatePath(`/${username}`);
   return { success: true };
 }
 
