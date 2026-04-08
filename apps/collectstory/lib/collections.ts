@@ -39,6 +39,24 @@ export type PublicItemDetail = PublicItem & {
   franchises: { name: string; slug: string } | undefined;
 };
 
+export async function getCollectionFirstImage(
+  collectionId: string,
+): Promise<string | undefined> {
+  const supabase = createPublicClient();
+
+  const { data: item } = await supabase
+    .from('collection_items')
+    .select('image_url')
+    .eq('collection_id', collectionId)
+    .eq('visibility', 'public')
+    .not('image_url', 'is', undefined)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  return item?.image_url ?? undefined;
+}
+
 export async function getPublicCollectionsByUsername(
   username: string,
 ): Promise<{ collections: PublicCollection[]; userId: string; avatarUrl: string | undefined } | undefined> {

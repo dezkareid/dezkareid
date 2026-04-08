@@ -5,6 +5,8 @@ import { Suspense } from 'react';
 import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getPublicCollectionBySlug, getPublicItemBySlug, type PublicItemDetail } from '@/lib/collections';
+import { DataSchema } from '@/src/shared/ui/DataSchema';
+import { getItemSchema } from '@/src/entities/item';
 import { ItemImageSection } from './ItemImageSection';
 import { ItemActions } from '@/components/username/ItemActions';
 import { ItemLinksManager } from '@/components/ItemLinksManager/ItemLinksManager';
@@ -229,8 +231,17 @@ async function ItemDetail({
     }));
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
+  const schema = getItemSchema({
+    item,
+    username,
+    collectionSlug,
+    baseUrl,
+  });
+
   return (
     <div className={styles.layout}>
+      <DataSchema schema={schema} />
       <ItemImageSection
         itemId={item.id}
         imageUrl={item.image_url}
