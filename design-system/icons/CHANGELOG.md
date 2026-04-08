@@ -1,3 +1,10 @@
+# [@dezkareid/icons-v1.3.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/icons-v1.2.1...@dezkareid/icons-v1.3.0) (2026-04-08)
+
+
+### Features
+
+* **collectstory:** add social sharing and problem reporting features ([8c71f45](https://github.com/dezkareid/dezkareid/commit/8c71f452388c6b14bca4f4a0cb655e8cdc8655f6))
+
 # [@dezkareid/icons-v1.2.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/icons-v1.2.0...@dezkareid/icons-v1.2.1) (2026-04-08)
 
 
