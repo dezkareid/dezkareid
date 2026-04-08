@@ -48,9 +48,7 @@ export function UserMenu({ username, avatarUrl, email }: Properties) {
         </DropdownMenuItem>
       )}
       <DropdownDivider />
-      <form action={signOut}>
-        <DropdownMenuItem variant="action">Sign Out</DropdownMenuItem>
-      </form>
+      <DropdownMenuItem variant="action" onClick={() => signOut()}>Sign Out</DropdownMenuItem>
     </DropdownMenu>
   );
 }
