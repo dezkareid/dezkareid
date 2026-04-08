@@ -5,8 +5,9 @@
   "description": "collections of icons for applications",
   "exports": {
     "./react": {
+      "types": "./dist/react.d.ts",
       "import": "./dist/react.mjs",
-      "types": "./dist/react.d.mts"
+      "require": "./dist/react.js"
     },
     "./astro": "./src/astro/index.ts"
   },
