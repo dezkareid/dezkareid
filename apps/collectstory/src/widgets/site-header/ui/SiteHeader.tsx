@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { connection } from 'next/server';
+import { headers } from 'next/headers';
 import { Shelves } from '@dezkareid/icons/react';
 import { ThemeToggleWrapper } from '@/src/features/theme';
 import { AdminMenu } from '@/src/features/admin-menu';
@@ -15,12 +16,19 @@ async function HeaderAuthSlot() {
   const session = await getSessionAndRole();
 
   if (!session) {
+    const headersList = await headers();
+    const pathname = headersList.get('x-pathname') ?? '/';
+    const signInHref
+      = pathname && pathname !== '/'
+        ? `/login?next=${encodeURIComponent(pathname)}`
+        : '/login';
+
     return (
       <div className={styles['site-header__nav-actions']}>
         <nav className={styles['site-header__nav']} aria-label="Main navigation" />
         <div className={styles['site-header__actions']}>
           <ThemeToggleWrapper />
-          <Link href="/login" className={styles['site-header__sign-in']}>
+          <Link href={signInHref} className={styles['site-header__sign-in']}>
             Sign In
           </Link>
         </div>

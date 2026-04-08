@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { signOut } from '@/app/collection/actions';
+import { signOut } from '@/app/actions';
 import styles from './UserMenu.module.css';
 
 type UserMenuProperties = {

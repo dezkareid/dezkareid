@@ -26,7 +26,7 @@ export function HomeCTA({ primaryClassName }: Properties) {
             setHref(`/${data.username}`);
           }
           else {
-            setHref('/collection');
+            setHref('/profile/edit');
           }
           setLabel('Explore Vault');
         });

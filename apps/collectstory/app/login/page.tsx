@@ -9,13 +9,18 @@ export const metadata: Metadata = {
   description: 'Sign in to Collectstory to manage your collection.',
 };
 
-async function handleGoogle() {
-  'use server';
-  const url = await signInWithGoogle();
-  redirect(url);
-}
+export default function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string }>;
+}) {
+  async function handleGoogle() {
+    'use server';
+    const { next } = await searchParams;
+    const url = await signInWithGoogle(next);
+    redirect(url);
+  }
 
-export default function LoginPage() {
   return (
     <main className={styles['login']}>
       <div className={styles['login__card']}>
