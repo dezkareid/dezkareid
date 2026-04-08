@@ -4,7 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { getAllFranchises } from '@/app/collection/actions';
+import { getAllFranchises } from '@/app/[username]/[collectionSlug]/actions';
 import { AddItemPageForm } from './AddItemPageForm';
 import styles from './page.module.css';
 

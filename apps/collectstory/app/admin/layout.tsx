@@ -13,7 +13,7 @@ async function AdminGuard({ children }: { children: React.ReactNode }) {
   }
 
   if (session.role !== 'admin') {
-    redirect('/collection');
+    redirect('/');
   }
 
   return <>{children}</>;

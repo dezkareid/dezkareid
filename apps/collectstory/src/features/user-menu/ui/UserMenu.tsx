@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { signOut } from '@/app/collection/actions';
+import { signOut } from '@/app/actions';
 import { DropdownMenu, DropdownMenuItem, DropdownDivider } from '@/src/shared/ui/dropdown-menu';
 import styles from './UserMenu.module.css';
 

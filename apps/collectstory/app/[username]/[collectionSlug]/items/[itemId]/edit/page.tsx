@@ -5,7 +5,7 @@ import { Suspense } from 'react';
 import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getPublicCollectionBySlug } from '@/lib/collections';
-import { getAllFranchises } from '@/app/collection/actions';
+import { getAllFranchises } from '@/app/[username]/[collectionSlug]/actions';
 import { EditItemForm } from './EditItemForm';
 import styles from './page.module.css';
 
