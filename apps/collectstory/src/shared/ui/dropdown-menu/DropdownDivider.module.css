@@ -1,0 +1,10 @@
+/* Structure */
+.dropdown-menu__divider {
+  height: 1px;
+  margin: var(--spacing-4) 0;
+}
+
+/* Skin */
+.dropdown-menu__divider {
+  background-color: var(--color-background-secondary);
+}

@@ -1,0 +1,39 @@
+/* Structure */
+.admin-menu__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  line-height: inherit;
+}
+
+.admin-menu__chevron {
+  width: 12px;
+  height: 12px;
+  transition: transform 0.15s ease;
+}
+
+.admin-menu__chevron--open {
+  transform: rotate(180deg);
+}
+
+/* Skin */
+.admin-menu__trigger {
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  transition: color 0.15s ease;
+}
+
+.admin-menu__trigger:hover {
+  color: var(--color-text-primary);
+}
+
+.admin-menu__trigger:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--border-radius-small);
+}

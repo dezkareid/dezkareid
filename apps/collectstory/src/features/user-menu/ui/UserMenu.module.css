@@ -1,0 +1,40 @@
+/* Structure */
+.user-menu__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: var(--border-radius-pill);
+  cursor: pointer;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.user-menu__avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--border-radius-pill);
+}
+
+/* Skin */
+.user-menu__trigger {
+  background-color: var(--color-background-secondary);
+  border: 2px solid var(--color-primary);
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.user-menu__trigger:hover {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.user-menu__trigger:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}

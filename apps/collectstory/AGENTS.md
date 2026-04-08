@@ -2,99 +2,287 @@
 
 This file provides context for AI agents working on the `apps/collectstory` package.
 
-## Package Overview
+## Overview
 
 Next.js 16 (App Router) web application for tracking collectibles collections. Registered in the monorepo as `@dezkareid/collectstory`.
 
-For implementation we should use react best practices and next best practices skills.
+## Tech Stack & Versions
 
-## Directory Structure
+| Technology | Version / Detail |
+|---|---|
+| **Framework** | Next.js 16 (App Router) |
+| **Language** | TypeScript 5.9.3 |
+| **Package Manager** | pnpm (run all tasks from monorepo root via Turbo) |
+| **Auth** | `@supabase/ssr` — cookie-based session with Next.js middleware |
+| **Database** | Supabase (Postgres) with Row Level Security |
+| **Styling** | CSS Modules + `@dezkareid/design-tokens` CSS custom properties |
+| **UI Components** | `@dezkareid/components` (Button, Tag, Card, ThemeToggle) |
+| **Linting** | `@dezkareid/eslint-plugin-web/next` (ESLint 9 flat config) |
+| **Image CDN** | Cloudinary (configured via `next.config.ts` remotePatterns) |
+| **Node** | >= 22 |
+
+## Project Structure
+
+This project uses **Feature-Sliced Design (FSD)** inside `src/` alongside the Next.js `app/` router. All new code belongs in `src/`. The `components/` directory is legacy and being migrated progressively.
 
 ```
 apps/collectstory/
-├── app/                        # Next.js App Router
-│   ├── layout.tsx              # Root layout (IBM Plex Sans font, globals.css)
-│   ├── globals.css             # Global styles (imports @dezkareid/components/css)
-│   ├── page.tsx                # Homepage (SSG, force-static)
+├── app/                                          # Next.js App Router — routing only
+│   ├── layout.tsx                                # Root layout (font, theme script, SiteHeader)
+│   ├── globals.css                               # Global styles (imports @dezkareid/components/css)
+│   ├── page.tsx                                  # Homepage (SSG, force-static)
 │   ├── page.module.css
+│   ├── sitemap.ts                                # Dynamic sitemap generation
 │   ├── login/
-│   │   ├── page.tsx            # Login page (SSG, force-static)
+│   │   ├── page.tsx                              # Login page (SSG, force-static)
 │   │   ├── login.module.css
-│   │   └── actions.ts          # Server Actions: signInWithProvider (google/facebook/twitter)
-│   ├── auth/
-│   │   └── callback/
-│   │       └── route.ts        # OAuth callback Route Handler
+│   │   └── actions.ts                            # Server Action: signInWithGoogle
+│   ├── auth/callback/route.ts                    # OAuth callback Route Handler
+│   ├── api/upload/route.ts                       # Image upload endpoint
 │   ├── collection/
-│   │   ├── layout.tsx          # Authenticated layout (shows user email + SignOutButton)
-│   │   ├── layout.module.css
-│   │   ├── page.tsx            # Collection page (SSR, force-dynamic)
-│   │   ├── page.module.css
-│   │   └── actions.ts          # Server Action: signOut
-│   └── stores/
-│       ├── page.tsx            # Stores directory (SSG, revalidate 1h)
-│       └── page.module.css
-├── components/                 # Shared UI components
-│   ├── SiteHeader.tsx          # 'use client' — sticky nav with ThemeToggle
-│   ├── SiteHeader.module.css
-│   ├── SignOutButton.tsx        # 'use client' — form action calling signOut
-│   ├── SignOutButton.module.css
-│   ├── CollectionItemCard.tsx  # Server component — displays one collection item
-│   └── CollectionItemCard.module.css
+│   │   ├── layout.tsx / layout.module.css        # Authenticated layout
+│   │   ├── page.tsx / page.module.css            # My Collection (SSR, force-dynamic)
+│   │   ├── error.tsx / error.module.css          # Error boundary
+│   │   └── actions.ts                            # signOut, item/collection mutations
+│   ├── admin/                                    # Admin pages (PPR, admin role only)
+│   │   ├── layout.tsx / layout.module.css        # AdminGuard in Suspense
+│   │   ├── page.tsx / page.module.css            # Admin dashboard
+│   │   ├── form.module.css / list.module.css     # Shared admin styles
+│   │   └── {brands,lines,categories,stores,franchises}/
+│   │       ├── page.tsx                          # List view
+│   │       ├── new/page.tsx                      # Create form
+│   │       ├── [id]/edit/page.tsx                # Edit form
+│   │       └── actions.ts                        # CRUD server actions
+│   ├── [username]/                               # Public user profiles (ISR)
+│   │   ├── page.tsx / page.module.css            # User collections list
+│   │   └── [collectionSlug]/
+│   │       ├── page.tsx / page.module.css        # Collection view
+│   │       ├── actions.ts
+│   │       ├── edit/                             # Edit collection
+│   │       └── items/
+│   │           ├── new/                          # Add item
+│   │           └── [itemId]/edit/               # Edit item
+│   │               └── [slug]/                   # Item detail
+│   ├── stores/page.tsx / page.module.css         # Stores directory (ISR, revalidate 1h)
+│   ├── franchises/                               # Franchise catalog (ISR)
+│   │   ├── page.tsx / page.module.css
+│   │   └── [slug]/page.tsx / page.module.css
+│   └── profile/edit/                             # Edit profile
+│       ├── page.tsx / page.module.css
+│       └── actions.ts
+│
+├── src/                                          # FSD — all new code goes here
+│   ├── shared/                                   # No business logic; reusable by any layer
+│   │   └── ui/
+│   │       └── dropdown-menu/                    # Generic dropdown primitive
+│   │           ├── DropdownMenu.tsx              # Container: click-outside, Escape, open state
+│   │           ├── DropdownMenu.module.css
+│   │           ├── DropdownMenuItem.tsx          # Polymorphic: variant="anchor" | "action"
+│   │           ├── DropdownMenuItem.module.css
+│   │           ├── DropdownDivider.tsx
+│   │           ├── DropdownDivider.module.css
+│   │           └── index.ts                      # Public API
+│   ├── entities/                                 # Business model UI (no actions)
+│   │   └── item/
+│   │       ├── ui/CollectionItemCard.tsx
+│   │       ├── ui/CollectionItemCard.module.css
+│   │       └── index.ts
+│   ├── features/                                 # User interactions (one slice per action)
+│   │   ├── theme/
+│   │   │   ├── ui/ThemeToggleWrapper.tsx         # Wraps ThemeToggle with lightningcss processor
+│   │   │   └── index.ts
+│   │   ├── admin-menu/
+│   │   │   ├── ui/AdminMenu.tsx                  # Admin nav dropdown
+│   │   │   ├── ui/AdminMenu.module.css
+│   │   │   └── index.ts
+│   │   └── user-menu/
+│   │       ├── ui/UserMenu.tsx                   # User dropdown (profile, vault, sign out)
+│   │       ├── ui/UserMenu.module.css
+│   │       └── index.ts
+│   └── widgets/                                  # Composed sections from features + entities
+│       └── site-header/
+│           ├── ui/SiteHeader.tsx                 # Brand + async auth slot (Suspense)
+│           ├── ui/SiteHeader.module.css
+│           └── index.ts
+│
+├── components/                                   # Legacy — migrate to src/ as you touch files
+│   ├── landing/                                  # Homepage sections (Hero, Stats, Features…)
+│   ├── admin/                                    # Admin form components
+│   ├── username/                                 # User profile action components
+│   ├── AddItemForm/ AddItemModal/                # Collection item creation
+│   ├── CreateCollectionModal/                    # Collection creation
+│   ├── EditProfileForm/                          # Profile editing
+│   ├── ItemLinksManager/                         # Item external links
+│   └── UpdateImageForm/                          # Image upload
+│
 ├── lib/
-│   └── supabase/
-│       ├── client.ts           # createBrowserClient (use in 'use client' components)
-│       └── server.ts           # createServerClient (use in Server Components/Actions)
-├── supabase/
-│   └── migrations/
-│       └── 001_initial_schema.sql  # Initial DB schema + RLS
-├── middleware.ts               # Session refresh + /collection route protection
-├── next.config.ts              # Cloudinary remotePatterns
+│   ├── supabase/
+│   │   ├── client.ts                             # createBrowserClient ('use client' only)
+│   │   ├── server.ts                             # createServerClient (RSC, Actions, Handlers)
+│   │   ├── admin.ts                              # createAdminClient (server-only, RLS bypass)
+│   │   └── types.ts                              # Generated database types
+│   ├── auth/role.ts                              # getSessionAndRole() helper
+│   ├── collections.ts                            # Public collection queries
+│   ├── franchises.ts                             # Franchise catalog queries
+│   ├── slug.ts                                   # toSlug, generateUniqueSlug helpers
+│   ├── mock-data.ts                              # Static site data
+│   ├── reserved-usernames.ts                     # Reserved username list
+│   └── image/strip-metadata.ts                   # Image metadata stripping
+│
+├── next.config.ts
 ├── tsconfig.json
-├── vercel.json
 └── .env.local.example
 ```
 
-## Routing Conventions
+## FSD Architecture
 
-| Route | Type | Access |
+### Layer overview
+
+| Layer | Purpose | Can import from |
 |---|---|---|
-| `/` | SSG | Public |
-| `/login` | SSG | Public |
+| `widgets` | Full page sections composed of features + entities | `features`, `entities`, `shared` |
+| `features` | Single user interactions (a menu, a form, a toggle) | `entities`, `shared` |
+| `entities` | Business model UI (card, badge, avatar — no actions) | `shared` |
+| `shared` | Generic, domain-free primitives (dropdown, button wrappers) | nothing internal |
+
+> **One-way rule**: higher layers import lower — never the reverse. Slices within the same layer are isolated and must not import each other.
+
+### Slice anatomy
+
+Every slice lives in its layer folder and exposes a single public API:
+
+```
+src/<layer>/<slice-name>/
+├── ui/           # React components + CSS Modules
+├── model/        # (optional) hooks, stores, types specific to this slice
+├── lib/          # (optional) slice-internal utilities
+└── index.ts      # Public API — only export what consumers need
+```
+
+### Public API rule
+
+Always import from the slice root. Never reach into internal paths:
+
+```ts
+// ✅ correct — public API
+import { SiteHeader } from '@/src/widgets/site-header';
+import { CollectionItemCard } from '@/src/entities/item';
+import { DropdownMenu } from '@/src/shared/ui/dropdown-menu';
+
+// ❌ wrong — bypasses public API, breaks encapsulation
+import { SiteHeader } from '@/src/widgets/site-header/ui/SiteHeader';
+```
+
+### Placing new code
+
+| What you're building | Where it goes |
+|---|---|
+| Generic UI with no business logic (dropdown, modal shell, spinner) | `src/shared/ui/<name>/` |
+| Display component for a business entity (item card, user avatar) | `src/entities/<entity>/ui/` |
+| User-triggered interaction (form, menu, toggle, delete button) | `src/features/<feature>/ui/` |
+| Full composed section used in a page (header, sidebar, feed) | `src/widgets/<widget>/ui/` |
+| Route, layout, Server Action, Route Handler | `app/` (Next.js constraint) |
+
+### Next.js + FSD integration
+
+- `app/` handles **routing only** — pages are thin and delegate rendering to widgets/features/entities.
+- Server Actions stay in `app/**/actions.ts` co-located with the route; features import them as needed.
+- Server Components can live in any FSD layer — the RSC/client boundary is orthogonal to FSD layers.
+- `lib/` (Supabase clients, auth helpers, query functions) is the `shared/api` equivalent — imported by any layer.
+
+## Development Workflow
+
+Always run tasks from the **monorepo root** — never `cd apps/collectstory && next dev` as this bypasses Turborepo and breaks internal package builds.
+
+```bash
+# Start dev server
+pnpm turbo run dev --filter=@dezkareid/collectstory
+
+# Production build
+pnpm turbo run build --filter=@dezkareid/collectstory
+```
+
+### Local Setup
+
+1. Copy `.env.local.example` to `.env.local` and fill in values.
+2. Link and push Supabase migrations:
+
+```bash
+# From apps/collectstory/
+SUPABASE_ACCESS_TOKEN=<token> npx supabase link --project-ref <project-ref>
+npx supabase db push --project-ref <project-ref>
+```
+
+3. Create migrations via CLI only — never by hand:
+
+```bash
+npx supabase migration new <migration_name>
+```
+
+> Manual timestamps cause `supabase db push` to fail with "Remote migration versions not found". If this happens, rename local files to match the versions in the error or run `supabase db pull`.
+
+### Supabase MCP
+
+Add to `.claude/settings.json` at the monorepo root:
+
+```json
+{
+  "mcpServers": {
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=<project-ref>"
+    }
+  }
+}
+```
+
+Authentication is OAuth-based — no token stored in the config.
+
+## Coding Standards & Style
+
+### Rendering Patterns
+
+| Route | Strategy | Access |
+|---|---|---|
+| `/` | SSG (`force-static`) | Public |
+| `/login` | SSG (`force-static`) | Public |
 | `/auth/callback` | Route Handler | Public (OAuth callback) |
-| `/stores` | SSG (ISR 1h) | Public |
-| `/collection` | SSR | Authenticated only |
-| `/admin` | PPR | `admin` role only |
-| `/admin/brands` | PPR | `admin` role only |
-| `/admin/lines` | PPR | `admin` role only |
-| `/admin/categories` | PPR | `admin` role only |
-| `/admin/stores` | PPR | `admin` role only |
+| `/stores` | ISR (`revalidate: 3600`) | Public |
+| `/collection` | SSR (`force-dynamic`) | Authenticated only |
+| `/admin/*` | PPR | `admin` role only |
 
-The middleware redirects:
-- Unauthenticated requests to `/collection` or `/admin/*` → `/login`
-- Authenticated non-admin requests to `/admin/*` → `/collection`
+**RSC boundary rule**: Default to Server Components. Add `'use client'` only when the component uses browser APIs, event handlers, `useState`, `useEffect`, or context that requires hydration. Never make a component a Client Component just to read data — fetch on the server and pass serializable props down.
 
-The `app/admin/layout.tsx` performs a secondary server-side role check (defense-in-depth via `AdminGuard` async Server Component wrapped in `<Suspense>`).
+### API Routes & Server Actions
 
-## Auth Pattern
+- **Server Actions** live in `actions.ts` co-located with the route segment that uses them.
+- **Route Handlers** (`route.ts`) are used only for OAuth callbacks and webhook endpoints — prefer Server Actions for form mutations.
+- Always authenticate Server Actions like API routes: call `getSessionAndRole()` at the top before any mutation.
+- Use `createAdminClient()` (service role) only for admin writes that must bypass RLS — never in Client Components (`import 'server-only'` enforces this).
 
-This app uses `@supabase/ssr` with the Next.js App Router middleware pattern:
+### Middleware & Authentication
 
-1. `middleware.ts` — runs on every non-static request; calls `supabase.auth.getClaims()` immediately after `createServerClient` (no code in between); returns `supabaseResponse` unmodified to preserve cookie sync.
-2. `lib/supabase/server.ts` — `createServerClient` with `next/headers` cookie wiring; use in Server Components, Route Handlers, and Server Actions.
-3. `lib/supabase/client.ts` — `createBrowserClient`; use only in `'use client'` components.
+- `middleware.ts` calls `supabase.auth.getClaims()` immediately after `createServerClient` — no code in between.
+- Always return `supabaseResponse` unmodified to preserve cookie sync. **Never** create a new `NextResponse` after `createServerClient`.
+- Redirect rules:
+  - Unauthenticated → `/collection` or `/admin/*` → redirect to `/login`
+  - Authenticated non-admin → `/admin/*` → redirect to `/collection`
+- `app/admin/layout.tsx` has a secondary server-side role check via `AdminGuard` (async Server Component in `<Suspense>`) for defense-in-depth.
 
-**Critical**: Never create a new `NextResponse` after calling `createServerClient` in middleware — always mutate and return `supabaseResponse`.
+### Image & Font Optimization
 
-## Design System Integration
+- **Always** use `next/image` instead of `<img>`. Configure remote domains in `next.config.ts` under `remotePatterns` (Cloudinary is already set up).
+- **Always** use `next/font` for fonts. The root layout uses `IBM_Plex_Sans` from `next/font/google` — extend there, never import fonts via CSS `@import` or `<link>` tags.
+- Set the `sizes` attribute on `<Image>` for responsive images to avoid oversized downloads.
+- Use `priority` on above-the-fold LCP images.
 
-- All CSS uses CSS Modules with CSS custom properties from `@dezkareid/design-tokens`.
-- `globals.css` imports `@dezkareid/components/css` which includes all design token variables.
-- `SiteHeader.tsx` and `SignOutButton.tsx` are `'use client'` components.
-- `ThemeToggle` from `@dezkareid/components/react` requires a Client Component wrapper because it uses `useState`/`useEffect`.
+### Design System
 
-### Token Reference
+- All CSS uses **CSS Modules** with CSS custom properties from `@dezkareid/design-tokens`.
+- `globals.css` imports `@dezkareid/components/css` — this provides all token variables; do not import `variables.css` separately.
+- Never hardcode colors, spacing, or typography — always use tokens:
 
-| Category | CSS Variable Pattern | Example |
+| Category | Pattern | Example |
 |---|---|---|
 | Semantic colors | `--color-primary`, `--color-background-primary/secondary`, `--color-text-primary/secondary/inverse` | `var(--color-primary)` |
 | Spacing | `--spacing-{4,8,12,16,24,32,48,64}` | `var(--spacing-16)` |
@@ -104,12 +292,82 @@ This app uses `@supabase/ssr` with the Next.js App Router middleware pattern:
 | Border radius | `--border-radius-{small,medium,large,pill}` | `var(--border-radius-large)` |
 | Shadow | `--shadow-{subtle,card,card-hover}` | `var(--shadow-card)` |
 
-## Linting
+- If the desired design cannot be achieved with existing tokens, add a `TODO` annotation:
+  ```
+  // TODO(design-system): needs token for <description>
+  // TODO(design-system): needs component <name>
+  ```
 
-This project uses `@dezkareid/eslint-plugin-web/next` for Next.js-specific linting.
+- Available components from `@dezkareid/components/react`: `Button`, `Tag`, `Card`, `ThemeToggle`. Check these before writing new UI primitives.
 
-- **Config**: `eslint.config.mjs`
-- **Exceptions**: `unicorn/prefer-string-raw` is disabled globally via the plugin for `middleware.ts` and `proxy.ts` to allow regex matchers.
+### Import Conventions
+
+- Use the `@/` alias for all app-internal imports (configured in `tsconfig.json`).
+- Always import FSD slices from their `index.ts` public API — never from internal `ui/` paths.
+- `createBrowserClient` → only in `'use client'` components.
+- `createServerClient` → Server Components, Route Handlers, Server Actions.
+- `createAdminClient` → Server Actions / Server Components that need RLS bypass (never client-side).
+
+## Testing Conventions
+
+> Tests are not yet established for this app. When adding tests:
+> - Use **Vitest** (monorepo standard) with **React Testing Library**.
+> - Place test files adjacent to the component/module: `ComponentName.test.tsx`.
+> - Test Server Components by rendering them in a Node environment (no browser APIs).
+> - Mock Supabase clients at the module level using `vi.mock`.
+> - Do not test implementation details — assert on rendered output and user interactions.
+
+## Debugging & Troubleshooting
+
+### Common Pitfalls
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| Auth session lost on navigation | New `NextResponse` created after `createServerClient` in middleware | Return `supabaseResponse` unmodified |
+| `supabase db push` fails with "Remote migration versions not found" | Migration file created manually with wrong timestamp | Rename file to match version in error, or run `supabase db pull` |
+| Build fails with missing `@dezkareid/components` | Ran `next dev` directly inside `apps/collectstory/` | Always use `pnpm turbo run dev --filter=@dezkareid/collectstory` from root |
+| Admin page accessible to non-admin | Middleware redirect bypassed | Verify `AdminGuard` Server Component is present in `app/admin/layout.tsx` |
+| Hydration mismatch | Using `Date`, `Math.random`, or browser APIs in RSC output | Move to `'use client'` or `useEffect`; use `suppressHydrationWarning` only for intentional mismatches |
+| `SUPABASE_SERVICE_ROLE_KEY` exposed to client | `createAdminClient` imported in a Client Component | `admin.ts` has `import 'server-only'` — fix the import location |
+
+### Logs & Debugging Tools
+
+- **Next.js debug output**: `NODE_OPTIONS='--inspect' pnpm turbo run dev --filter=@dezkareid/collectstory`
+- **Supabase logs**: Supabase Dashboard → Logs → API / Auth / Postgres tabs, or via MCP `mcp__supabase__get_logs`.
+- **Rebuild specific routes**: `next build --debug-build-paths /collection` to isolate rendering issues.
+
+## Skills
+
+AI agents working on this app **must** invoke the following skills before implementing or reviewing code:
+
+| Skill | When to use |
+|---|---|
+| `react-best-practices` / `frontend-tools:react-best-practices` | Any React component work (RSC boundaries, re-renders, data fetching) |
+| `next-best-practices` / `frontend-tools:next-best-practices` | Any Next.js-specific work (routing, middleware, metadata, image/font) |
+| `react-components` / `frontend-tools:react-components` | When writing React components based on HTML components |
+| `styles-methodology` / `frontend-tools:styles-methodology` | Any CSS authoring — BEM naming, OOCSS structure/skin separation |
+| `fsd-architecture` / `frontend-tools:fsd-architecture` | When creating or moving code — determines which FSD layer/slice it belongs to |
+| `frontend-design` | Any new UI — pages, components, layouts |
+| `design-tokens` / `design-system:design-tokens` | When referencing or adding design tokens |
+| `accessibility` / `web-quality:accessibility` | Any UI work — ensure WCAG 2.2 compliance, keyboard navigation, screen reader support |
+| `performance` / `web-quality:performance` | Any performance-sensitive work — loading, rendering, bundle size |
+| `seo` / `web-quality:seo` | Any public page — meta tags, structured data, sitemap |
+| `web-quality-audit` / `web-quality:web-quality-audit` | Full audit of a page or feature before shipping |
+| `supabase-postgres-best-practices` / `database-tools:supabase-postgres-best-practices` | Any Supabase query, schema, or RLS change |
+
+## MCP Servers
+
+| MCP | When to use |
+|---|---|
+| `context7` | When you need documentation for any external library (Next.js, React, Supabase, Tailwind, etc.) — do not rely on training data alone |
+| `supabase` | When querying, migrating, or inspecting the Supabase project (tables, logs, edge functions, migrations) |
+
+### CSS Methodology
+
+All styles in this app follow two conventions:
+
+- **BEM** for class naming — `block__element--modifier` (e.g. `.card__title--highlighted`)
+- **OOCSS** for splitting responsibilities — separate structure (layout, box model) from skin (colors, typography)
 
 ## Data Model Summary
 
@@ -126,8 +384,6 @@ This project uses `@dezkareid/eslint-plugin-web/next` for Next.js-specific linti
 
 ### Promoting the First Admin
 
-After signing in for the first time, run the following SQL in Supabase (or via the MCP) to promote your user to admin:
-
 ```sql
 insert into public.profiles (id, role)
 select id, 'admin'
@@ -136,11 +392,11 @@ where email = 'your-email@example.com'
 on conflict (id) do update set role = 'admin';
 ```
 
-The migration `003_bootstrap_admin.sql` is idempotent and also handles this on first apply if the user exists at migration time.
+The migration `003_bootstrap_admin.sql` is idempotent and handles this on first apply if the user exists at migration time.
 
 ### `createAdminClient`
 
-Use `lib/supabase/admin.ts` → `createAdminClient()` for any Server Action or Server Component that needs to bypass RLS (admin writes). This client uses `SUPABASE_SERVICE_ROLE_KEY` and is protected by `import 'server-only'` — it cannot be imported in Client Components.
+Use `lib/supabase/admin.ts` → `createAdminClient()` for Server Actions or Server Components that need to bypass RLS. Protected by `import 'server-only'`.
 
 ```ts
 import { createAdminClient } from '@/lib/supabase/admin';
@@ -151,7 +407,7 @@ await supabase.from('brands').insert({ name, slug });
 
 ### `getSessionAndRole`
 
-Use `lib/auth/role.ts` → `getSessionAndRole()` in Server Components and Server Actions to check the current user's role:
+Use `lib/auth/role.ts` → `getSessionAndRole()` to check the current user's role in Server Components and Server Actions:
 
 ```ts
 import { getSessionAndRole } from '@/lib/auth/role';
@@ -166,66 +422,7 @@ if (!session || session.role !== 'admin') throw new Error('Forbidden');
 |---|---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | Client + Server | Supabase → Project Settings → API → Project URL |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Client + Server | Supabase → Project Settings → API → anon key |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server only (reserved for admin ops) | Supabase → Project Settings → API → service_role key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server only (admin ops) | Supabase → Project Settings → API → service_role key |
 | `CLOUDINARY_CLOUD_NAME` | Server (future upload feature) | Not yet provisioned — use `placeholder` |
 
-For local development, copy `.env.local.example` to `.env.local` and fill in the values.
-
-## Local Setup
-
-### 1. Link the Supabase CLI
-
-From `apps/collectstory/`:
-
-```bash
-# Authenticate (stores token in native credentials storage)
-SUPABASE_ACCESS_TOKEN=<your-token> npx supabase link --project-ref <project-ref>
-
-# Apply migrations to the remote database
-npx supabase db push --project-ref <project-ref>
-```
-
-### Creating Migrations
-
-**Always** create migration files using the Supabase CLI — never create them manually with a hand-crafted timestamp:
-
-```bash
-# From apps/collectstory/
-npx supabase migration new <migration_name>
-```
-
-This generates a file with the exact timestamp the CLI will record in the remote `supabase_migrations` history table. If you create a file manually with a different timestamp, `supabase db push` will fail with:
-
-```
-Remote migration versions not found in local migrations directory.
-```
-
-Because the remote history and local filenames won't match. If this happens, rename the local files to match the versions reported by the error (or run `supabase db pull` to sync).
-
-### 2. Configure Supabase MCP for Claude Code
-
-Add the following to the monorepo-level Claude Code settings (`.claude/settings.json`):
-
-```json
-{
-  "mcpServers": {
-    "supabase": {
-      "type": "http",
-      "url": "https://mcp.supabase.com/mcp?project_ref=<project-ref>"
-    }
-  }
-}
-```
-
-Authentication is handled via OAuth in Claude Code — no token is stored in the config file. The MCP enables AI-assisted queries, schema inspection, and data management for the collectstory Supabase project.
-
-## Monorepo Usage
-
-Always run tasks from the monorepo root:
-
-```bash
-pnpm turbo run dev --filter=@dezkareid/collectstory
-pnpm turbo run build --filter=@dezkareid/collectstory
-```
-
-Never `cd apps/collectstory && next dev` — this bypasses Turborepo and will fail because `@dezkareid/components` won't be built.
+Copy `.env.local.example` to `.env.local` for local development.

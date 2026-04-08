@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { IBM_Plex_Sans } from 'next/font/google';
 import Script from 'next/script';
-import { SiteHeader } from '@/components/SiteHeader';
+import { SiteHeader } from '@/src/widgets/site-header';
 import './globals.css';
 
 const ibmPlexSans = IBM_Plex_Sans({

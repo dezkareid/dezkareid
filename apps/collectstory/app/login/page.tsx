@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
+import { Button } from '@dezkareid/components/react-server';
 import { signInWithGoogle } from './actions';
 import styles from './login.module.css';
 
@@ -16,19 +17,19 @@ async function handleGoogle() {
 
 export default function LoginPage() {
   return (
-    <div className={styles.main}>
-      <div className={styles.card}>
-        <h1 className={styles.title}>Welcome to Collectstory</h1>
-        <p className={styles.subtitle}>Sign in to manage your collection</p>
+    <main className={styles['login']}>
+      <div className={styles['login__card']}>
+        <h1 className={styles['login__title']}>Welcome to Collectstory</h1>
+        <p className={styles['login__subtitle']}>Sign in to manage your collection</p>
 
-        <div className={styles.actions}>
+        <div className={styles['login__actions']}>
           <form action={handleGoogle}>
-            <button type="submit" className={styles.providerButton}>
+            <Button type="submit" variant="secondary" className={styles['login__provider-button']}>
               Continue with Google
-            </button>
+            </Button>
           </form>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
