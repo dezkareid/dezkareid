@@ -11,13 +11,13 @@ const {
 ---
 
 <Section paddingBlock="large" class="hero">
-  <div class="hero-container">
-    <h1 class="hero-title">
+  <div class="hero__container">
+    <h1 class="hero__title">
       Crafting frontend products and experiences that scale.
     </h1>
 
-    <div class="hero-body">
-      <div class="hero-avatar-wrap">
+    <div class="hero__body">
+      <div class="hero__avatar-wrap">
         <img
           src="https://res.cloudinary.com/ddyovtxd2/image/upload/w_150,h_150,c_fill,g_face,q_auto,f_auto/v1773092115/JOEL_GOMEZ-4_viqymi.jpg"
           srcset="
@@ -26,7 +26,7 @@ const {
           "
           sizes="150px"
           alt="Joel Gomez"
-          class="hero-avatar"
+          class="hero__avatar"
           width="150"
           height="150"
           loading="eager"
@@ -34,9 +34,9 @@ const {
         />
       </div>
 
-      <div class="hero-body-text">
-        <p class="hero-subtitle">{subtitle}</p>
-        <a href="/about" class="hero-link">
+      <div class="hero__content">
+        <p class="hero__subtitle">{subtitle}</p>
+        <a href="/about" class="hero__link">
           About me <span aria-hidden="true">→</span>
         </a>
       </div>
@@ -46,6 +46,7 @@ const {
 
 <style>
   .hero {
+    /* Skin */
     background: linear-gradient(
       135deg,
       var(--color-background-primary) 0%,
@@ -58,7 +59,8 @@ const {
     );
   }
 
-  .hero-container {
+  .hero__container {
+    /* Layout */
     max-width: 1200px;
     margin: 0 auto;
     padding-inline: var(--spacing-24);
@@ -68,18 +70,22 @@ const {
     gap: var(--spacing-48);
   }
 
-  .hero-title {
+  .hero__title {
+    /* Skin */
     font-size: clamp(2.5rem, 6vw, 5rem);
     font-weight: var(--font-weight-bold);
     line-height: 1.05;
     letter-spacing: -0.03em;
     color: var(--color-text-primary);
     text-align: center;
+    
+    /* Layout */
     margin: 0;
   }
 
   /* Mobile: avatar above subtitle, stacked */
-  .hero-body {
+  .hero__body {
+    /* Layout */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -87,65 +93,76 @@ const {
     width: 100%;
   }
 
-  .hero-body-text {
+  .hero__content {
+    /* Layout */
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--spacing-24);
   }
 
-  .hero-avatar-wrap {
+  .hero__avatar-wrap {
+    /* Layout */
     flex-shrink: 0;
   }
 
-  .hero-avatar {
-    width: 150px;
-    height: 150px;
+  .hero__avatar {
+    /* Skin */
     border-radius: 50%;
     object-fit: cover;
     object-position: center top;
-    display: block;
     border: 3px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
+    
+    /* Layout */
+    width: 150px;
+    height: 150px;
+    display: block;
   }
 
-  .hero-subtitle {
+  .hero__subtitle {
+    /* Skin */
     font-size: var(--font-size-400);
     color: var(--color-text-primary);
     line-height: var(--font-line-height-relaxed);
-    margin: 0;
     text-align: center;
+    
+    /* Layout */
+    margin: 0;
     max-width: 48ch;
   }
 
-  .hero-link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-8);
+  .hero__link {
+    /* Skin */
     color: var(--color-primary);
     font-weight: var(--font-weight-medium);
     font-size: var(--font-size-300);
     text-decoration: none;
     transition: gap 0.2s ease;
+    
+    /* Layout */
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-8);
   }
 
-  .hero-link:hover {
+  .hero__link:hover {
     gap: var(--spacing-12);
     text-decoration: none;
   }
 
   /* ≥600px: avatar left, text right */
   @media (min-width: 37.5rem) {
-    .hero-body {
+    .hero__body {
       flex-direction: row;
       align-items: center;
       gap: var(--spacing-48);
     }
 
-    .hero-body-text {
+    .hero__content {
       align-items: flex-start;
     }
 
-    .hero-subtitle {
+    .hero__subtitle {
       text-align: left;
       max-width: 40ch;
     }
@@ -153,12 +170,12 @@ const {
 
   /* XL: title left-aligned, no inline padding */
   @media (min-width: 90rem) {
-    .hero-container {
+    .hero__container {
       align-items: flex-start;
       padding-inline: 0;
     }
 
-    .hero-title {
+    .hero__title {
       text-align: left;
     }
   }

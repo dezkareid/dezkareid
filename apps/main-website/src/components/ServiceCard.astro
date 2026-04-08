@@ -12,13 +12,13 @@ const { title, description, icon } = service.data;
 
 <Card class="service-card">
   <!-- Stretched link covers the full card -->
-  <a class="card-link" href={`/services/${service.id}`} aria-label={`Learn about ${title}`}></a>
+  <a class="service-card__link" href={`/services/${service.id}`} aria-label={`Learn about ${title}`}></a>
 
-  <div class="service-header">
-    <span class="service-icon" aria-hidden="true">{icon || "⚙️"}</span>
-    <h3 class="service-title">{title}</h3>
+  <div class="service-card__header">
+    <span class="service-card__icon" aria-hidden="true">{icon || "⚙️"}</span>
+    <h3 class="service-card__title">{title}</h3>
   </div>
-  <p class="service-description">{description}</p>
+  <p class="service-card__description">{description}</p>
 </Card>
 
 <style>
@@ -29,16 +29,19 @@ const { title, description, icon } = service.data;
      ==================================================== */
 
   .service-card {
+    /* Layout */
     height: 100%;
     display: flex;
     flex-direction: column;
     position: relative;
     overflow: hidden;
+    
+    /* Skin / Behavioral */
     cursor: pointer;
   }
 
   /* Stretched link — covers the full card */
-  .card-link {
+  .service-card__link {
     position: absolute;
     inset: 0;
     z-index: 1;
@@ -66,32 +69,42 @@ const { title, description, icon } = service.data;
     opacity: 1;
   }
 
-  .service-header {
+  .service-card__header {
+    /* Layout */
     display: flex;
     align-items: center;
     gap: var(--spacing-12);
     margin-bottom: var(--spacing-12);
   }
 
-  .service-icon {
+  .service-card__icon {
+    /* Skin */
     font-size: var(--font-size-700);
     line-height: 1;
+    
+    /* Layout */
     flex-shrink: 0;
   }
 
-  .service-title {
+  .service-card__title {
+    /* Skin */
     font-size: var(--font-size-500);
-    margin: 0;
     color: var(--color-text-primary);
     letter-spacing: -0.01em;
+    
+    /* Layout */
+    margin: 0;
   }
 
-  .service-description {
+  .service-card__description {
+    /* Skin */
     font-size: var(--font-size-300);
     /* Use text-primary for sufficient contrast on secondary backgrounds */
     color: var(--color-text-primary);
     opacity: 0.75;
-    flex: 1;
     line-height: var(--font-line-height-relaxed);
+    
+    /* Layout */
+    flex: 1;
   }
 </style>
