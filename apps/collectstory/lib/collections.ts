@@ -50,6 +50,22 @@ export type LatestArrival = {
   collection_slug: string;
 };
 
+export type LastArrivalItem = {
+  id: string;
+  name: string;
+  slug: string;
+  image_url: string | null;
+  created_at: string;
+  collection_id: string;
+  collection_slug: string;
+  username: string;
+  avatar_url: string | null;
+  line_name: string | null;
+  line_slug: string | null;
+  brand_name: string | null;
+  brand_slug: string | null;
+};
+
 export async function getLatestPublicItems(limit: number = 4): Promise<LatestArrival[]> {
   'use cache';
   cacheLife('hours');
@@ -89,6 +105,32 @@ export async function getLatestPublicItems(limit: number = 4): Promise<LatestArr
       collection_slug: collection?.slug ?? 'default',
     };
   });
+}
+
+export async function getLastArrivals(): Promise<LastArrivalItem[]> {
+  'use cache';
+  cacheLife('hours');
+  const supabase = createPublicClient();
+
+  const { data } = await supabase
+    .from('last_arrivals')
+    .select('*');
+
+  return (data ?? []).map(row => ({
+    id: row.id ?? '',
+    name: row.name ?? '',
+    slug: row.slug ?? '',
+    image_url: row.image_url ?? null,
+    created_at: row.created_at ?? '',
+    collection_id: row.collection_id ?? '',
+    collection_slug: row.collection_slug ?? '',
+    username: row.username ?? '',
+    avatar_url: row.avatar_url ?? null,
+    line_name: row.line_name ?? null,
+    line_slug: row.line_slug ?? null,
+    brand_name: row.brand_name ?? null,
+    brand_slug: row.brand_slug ?? null,
+  }));
 }
 
 export async function getCollectionFirstImage(
