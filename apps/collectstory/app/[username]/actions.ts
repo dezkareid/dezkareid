@@ -62,3 +62,22 @@ export async function quickStartCollection(
 
   return { success: true, collectionSlug };
 }
+
+export async function getUserCollections() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  const { data: collections, error } = await supabase
+    .from('collections')
+    .select('id, name, slug')
+    .eq('user_id', user.id)
+    .order('name');
+
+  if (error) {
+    console.error('Error fetching user collections:', error);
+    return [];
+  }
+
+  return collections;
+}

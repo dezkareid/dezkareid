@@ -183,6 +183,12 @@
   gap: var(--spacing-16);
 }
 
+.item-page__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-12);
+}
+
 .item-page__name {
   margin: 0;
   line-height: var(--font-line-height-tight);

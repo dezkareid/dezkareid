@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useEffect, useState, useTransition } from 'react';
+import { useActionState, useEffect, useState, useTransition, useCallback } from 'react';
 import { createCollectionItem, getLinesByBrand } from '@/app/[username]/[collectionSlug]/actions';
 
 type Franchise = { id: string; name: string };
@@ -13,11 +13,28 @@ type Brand = { id: string; name: string };
 type LineVariant = { value: string; display_name: string };
 type Line = { id: string; name: string; categoryName: string | undefined; variants: LineVariant[] };
 
-type Properties = {
+export type InitialItemData = {
+  name?: string;
+  description?: string;
+  image_url?: string;
+  brand_id?: string;
+  line_id?: string;
+  franchise_id?: string;
+  variant?: string;
+  date_acquired?: string;
+  visibility?: string;
+};
+
+type ActionState = { error: string; field?: string } | { success: true } | undefined;
+
+type Properties<T = ActionState> = {
   brands: Brand[];
   franchises: Franchise[];
   collectionId: string;
-  onSuccess: () => void;
+  onSuccess: (state: T) => void;
+  initialData?: InitialItemData;
+  action?: (previousState: T, formData: FormData) => Promise<T>;
+  submitLabel?: string;
 };
 
 async function uploadFile(file: File): Promise<{ url: string } | { error: string }> {
@@ -109,32 +126,203 @@ function VariantSelectField({
         onChange={onVariantChange}
       >
         <option value="">— none —</option>
-        {line.variants.map(v => (
-          <option key={v.value} value={v.value}>{v.display_name}</option>
+        {line.variants.map((v) => (
+          <option key={v.value} value={v.value}>
+            {v.display_name}
+          </option>
         ))}
       </select>
     </div>
   );
 }
 
-export function AddItemForm({ brands, franchises, collectionId, onSuccess }: Properties) {
-  const [state, formAction, pending] = useActionState(createCollectionItem, undefined);
+function NameField({ defaultValue, error }: { defaultValue?: string; error?: string }) {
+  return (
+    <div className={styles.field}>
+      <label className={styles.label} htmlFor="item-name">
+        Name
+        {' '}
+        <span className={styles.required}>*</span>
+      </label>
+      <input
+        id="item-name"
+        name="name"
+        type="text"
+        className={styles.input}
+        required
+        autoComplete="off"
+        defaultValue={defaultValue}
+        placeholder="e.g. S.H. Figuarts Spider-Man"
+        aria-describedby={error ? 'form-error' : undefined}
+      />
+    </div>
+  );
+}
+
+function BrandLineFields({
+  brands,
+  selectedBrandId,
+  selectedLineId,
+  lines,
+  loadingLines,
+  onBrandChange,
+  onLineChange,
+}: {
+  brands: Brand[];
+  selectedBrandId: string;
+  selectedLineId: string;
+  lines: Line[];
+  loadingLines: boolean;
+  onBrandChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  onLineChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+}) {
+  return (
+    <div className={styles.row}>
+      <div className={styles.field}>
+        <label className={styles.label} htmlFor="item-brand">Brand</label>
+        <select id="item-brand" className={styles.select} onChange={onBrandChange} value={selectedBrandId}>
+          <option value="">— none —</option>
+          {brands.map((b) => (
+            <option key={b.id} value={b.id}>
+              {b.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className={styles.field}>
+        <label className={styles.label} htmlFor="item-line">
+          Line
+          {' '}
+          {loadingLines && <span className={styles.loadingDot} aria-hidden="true" />}
+        </label>
+        <select
+          id="item-line"
+          name="line_id"
+          className={styles.select}
+          disabled={lines.length === 0}
+          value={selectedLineId}
+          onChange={onLineChange}
+        >
+          <option value="">— none —</option>
+          {lines.map((l) => (
+            <option key={l.id} value={l.id}>
+              {l.name}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+  );
+}
+
+function MetaFields({ franchises, initialData }: { franchises: Franchise[]; initialData?: InitialItemData }) {
+  return (
+    <>
+      <div className={styles.field}>
+        <label className={styles.label} htmlFor="item-franchise">Franchise</label>
+        <select id="item-franchise" name="franchise_id" className={styles.select} defaultValue={initialData?.franchise_id ?? ''}>
+          <option value="">— none —</option>
+          {franchises.map((f) => (
+            <option key={f.id} value={f.id}>
+              {f.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className={styles.field}>
+        <label className={styles.label} htmlFor="item-description">Description</label>
+        <textarea id="item-description" name="description" className={styles.textarea} rows={3} defaultValue={initialData?.description} placeholder="What makes this piece special?" />
+      </div>
+    </>
+  );
+}
+
+function AcquisitionFields({ initialData }: { initialData?: InitialItemData }) {
+  return (
+    <div className={styles.row}>
+      <div className={styles.field}>
+        <label className={styles.label} htmlFor="item-date">Date Acquired</label>
+        <input id="item-date" name="date_acquired" type="date" className={styles.input} defaultValue={initialData?.date_acquired} />
+      </div>
+
+      <div className={styles.field}>
+        <label className={styles.label} htmlFor="item-visibility">Visibility</label>
+        <select id="item-visibility" name="visibility" className={styles.select} defaultValue={initialData?.visibility ?? 'public'}>
+          <option value="public">Public</option>
+          <option value="private">Private</option>
+          <option value="draft">Draft</option>
+        </select>
+      </div>
+    </div>
+  );
+}
+
+function CategoryDisplay({ line }: { line: Line | undefined }) {
+  if (!line) return <></>;
+  return (
+    <div className={styles.field}>
+      <label className={styles.label}>Category</label>
+      <p className={styles.derivedValue}>{line.categoryName ?? '—'}</p>
+    </div>
+  );
+}
+
+function FormActions({ uploading, pending, submitLabel }: { uploading: boolean; pending: boolean; submitLabel?: string }) {
+  const isBusy = pending || uploading;
+  const label = uploading ? 'Uploading…' : (pending ? 'Saving…' : (submitLabel || 'Add to Collection'));
+
+  return (
+    <div className={styles.actions}>
+      <button type="submit" className={styles.submitButton} disabled={isBusy}>
+        {label}
+      </button>
+    </div>
+  );
+}
+
+function useAddItemFormLogic<T>(
+  initialData: InitialItemData | undefined,
+  action: Properties<T>['action'],
+  onSuccess: Properties<T>['onSuccess'],
+) {
+  const defaultAction = useCallback(async (previousState: ActionState, formData: FormData) => createCollectionItem(previousState, formData), []) as unknown as (previousState: T, formData: FormData) => Promise<T>;
+  const finalAction = action || defaultAction;
+  const [state, formAction, pending] = useActionState(finalAction as any, undefined as any);
   const [fileError, setFileError] = useState<string>();
   const [uploadFailed, setUploadFailed] = useState(false);
-  const [preview, setPreview] = useState<string>();
-  const [uploadedUrl, setUploadedUrl] = useState<string>();
+  const [preview, setPreview] = useState<string | undefined>(initialData?.image_url);
+  const [uploadedUrl, setUploadedUrl] = useState<string | undefined>(initialData?.image_url);
   const [uploading, setUploading] = useState(false);
   const [lines, setLines] = useState<Line[]>([]);
+  const [selectedBrandId, setSelectedBrandId] = useState<string>(initialData?.brand_id ?? '');
   const [selectedLine, setSelectedLine] = useState<Line | undefined>(undefined);
-  const [selectedVariant, setSelectedVariant] = useState('');
+  const [selectedVariant, setSelectedVariant] = useState(initialData?.variant ?? '');
   const [loadingLines, startLoadingLines] = useTransition();
   const [, startTransition] = useTransition();
 
   useEffect(() => {
-    if (state && 'success' in state) onSuccess();
+    if (state && typeof state === 'object' && 'success' in (state as any)) onSuccess(state as T);
   }, [state, onSuccess]);
 
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+  const loadLines = useCallback((brandId: string, lineId?: string) => {
+    startLoadingLines(async () => {
+      const result = await getLinesByBrand(brandId);
+      setLines(result);
+      if (lineId) {
+        setSelectedLine(result.find((l) => l.id === lineId));
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    if (initialData?.brand_id) {
+      loadLines(initialData.brand_id, initialData.line_id);
+    }
+  }, [initialData, loadLines]);
+
+  const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     setFileError(undefined);
     setUploadFailed(false);
@@ -148,27 +336,24 @@ export function AddItemForm({ brands, franchises, collectionId, onSuccess }: Pro
       return;
     }
     setPreview(URL.createObjectURL(file));
-  }
+  }, []);
 
-  async function handleBrandChange(event: React.ChangeEvent<HTMLSelectElement>) {
+  const handleBrandChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     const brandId = event.target.value;
+    setSelectedBrandId(brandId);
     setLines([]);
     setSelectedLine(undefined);
     setSelectedVariant('');
-    if (!brandId) return;
-    startLoadingLines(async () => {
-      const result = await getLinesByBrand(brandId);
-      setLines(result);
-    });
-  }
+    if (brandId) loadLines(brandId);
+  }, [loadLines]);
 
-  function handleLineChange(event: React.ChangeEvent<HTMLSelectElement>) {
+  const handleLineChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     const lineId = event.target.value;
-    setSelectedLine(lines.find(l => l.id === lineId));
+    setSelectedLine(lines.find((l) => l.id === lineId));
     setSelectedVariant('');
-  }
+  }, [lines]);
 
-  async function resolveImageUrl(form: HTMLFormElement, data: FormData): Promise<boolean> {
+  const resolveImageUrl = async (form: HTMLFormElement, data: FormData): Promise<boolean> => {
     const fileInput = form.elements.namedItem('image') as HTMLInputElement;
     const file = fileInput?.files?.[0];
     if (file && !uploadedUrl) {
@@ -187,48 +372,69 @@ export function AddItemForm({ brands, franchises, collectionId, onSuccess }: Pro
       data.set('image_url', uploadedUrl);
     }
     return true;
-  }
+  };
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (fileError) return;
     const form = event.currentTarget;
     const data = new FormData(form);
     const ok = await resolveImageUrl(form, data);
-    if (ok) startTransition(() => formAction(data));
-  }
+    if (ok) startTransition(() => (formAction as any)(data));
+  };
+
+  return {
+    state,
+    pending,
+    fileError,
+    uploadFailed,
+    preview,
+    uploading,
+    lines,
+    selectedBrandId,
+    selectedLine,
+    selectedVariant,
+    setSelectedVariant,
+    loadingLines,
+    handleFileChange,
+    handleBrandChange,
+    handleLineChange,
+    handleSubmit,
+  };
+}
+
+function FormBody<T>({
+  properties,
+  logic,
+}: {
+  properties: Properties<T>;
+  logic: ReturnType<typeof useAddItemFormLogic<T>>;
+}) {
+  const { brands, franchises, initialData, submitLabel } = properties;
+  const {
+    state,
+    preview,
+    fileError,
+    uploadFailed,
+    uploading,
+    selectedBrandId,
+    selectedLine,
+    lines,
+    loadingLines,
+    selectedVariant,
+    setSelectedVariant,
+    handleFileChange,
+    handleBrandChange,
+    handleLineChange,
+    pending,
+  } = logic;
 
   const isBusy = pending || uploading;
+  const stateAsError = state && typeof state === 'object' && 'error' in (state as any) ? ((state as any).error as string) : undefined;
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className={styles.form}
-      noValidate
-    >
-      <input type="hidden" name="collection_id" value={collectionId} />
-
-      {state && 'error' in state && (
-        <p id="form-error" className={styles.formError} role="alert">{state.error}</p>
-      )}
-
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor="item-name">
-          Name
-          {' '}
-          <span className={styles.required}>*</span>
-        </label>
-        <input
-          id="item-name"
-          name="name"
-          type="text"
-          className={styles.input}
-          required
-          autoComplete="off"
-          placeholder="e.g. S.H. Figuarts Spider-Man"
-          aria-describedby={state && 'error' in state ? 'form-error' : undefined}
-        />
-      </div>
+    <>
+      <NameField defaultValue={initialData?.name} error={stateAsError} />
 
       <ImageUploadField
         preview={preview}
@@ -238,115 +444,47 @@ export function AddItemForm({ brands, franchises, collectionId, onSuccess }: Pro
         onFileChange={handleFileChange}
       />
 
-      <div className={styles.row}>
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="item-brand">Brand</label>
-          <select
-            id="item-brand"
-            className={styles.select}
-            onChange={handleBrandChange}
-            defaultValue=""
-          >
-            <option value="">— none —</option>
-            {brands.map(b => (
-              <option key={b.id} value={b.id}>{b.name}</option>
-            ))}
-          </select>
-        </div>
+      <BrandLineFields
+        brands={brands}
+        selectedBrandId={selectedBrandId}
+        selectedLineId={selectedLine?.id ?? ''}
+        lines={lines}
+        loadingLines={loadingLines}
+        onBrandChange={handleBrandChange}
+        onLineChange={handleLineChange}
+      />
 
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="item-line">
-            Line
-            {loadingLines && <span className={styles.loadingDot} aria-hidden="true" />}
-          </label>
-          <select
-            id="item-line"
-            name="line_id"
-            className={styles.select}
-            disabled={lines.length === 0}
-            defaultValue=""
-            onChange={handleLineChange}
-          >
-            <option value="">— none —</option>
-            {lines.map(l => (
-              <option key={l.id} value={l.id}>{l.name}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {selectedLine && (
-        <div className={styles.field}>
-          <label className={styles.label}>Category</label>
-          <p className={styles.derivedValue}>
-            {selectedLine.categoryName ?? '—'}
-          </p>
-        </div>
-      )}
+      <CategoryDisplay line={selectedLine} />
 
       <VariantSelectField
         line={selectedLine}
         selectedVariant={selectedVariant}
-        onVariantChange={event => setSelectedVariant(event.target.value)}
+        onVariantChange={(event) => setSelectedVariant(event.target.value)}
       />
 
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor="item-franchise">Franchise</label>
-        <select
-          id="item-franchise"
-          name="franchise_id"
-          className={styles.select}
-          defaultValue=""
-        >
-          <option value="">— none —</option>
-          {franchises.map(f => (
-            <option key={f.id} value={f.id}>{f.name}</option>
-          ))}
-        </select>
-      </div>
+      <MetaFields franchises={franchises} initialData={initialData} />
 
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor="item-description">Description</label>
-        <textarea
-          id="item-description"
-          name="description"
-          className={styles.textarea}
-          rows={3}
-          placeholder="What makes this piece special?"
-        />
-      </div>
+      <AcquisitionFields initialData={initialData} />
 
-      <div className={styles.row}>
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="item-date">Date Acquired</label>
-          <input
-            id="item-date"
-            name="date_acquired"
-            type="date"
-            className={styles.input}
-          />
-        </div>
+      <FormActions uploading={uploading} pending={pending} submitLabel={submitLabel} />
+    </>
+  );
+}
 
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="item-visibility">Visibility</label>
-          <select
-            id="item-visibility"
-            name="visibility"
-            className={styles.select}
-            defaultValue="public"
-          >
-            <option value="public">Public</option>
-            <option value="private">Private</option>
-            <option value="draft">Draft</option>
-          </select>
-        </div>
-      </div>
+export function AddItemForm<T = ActionState>(properties: Properties<T>) {
+  const logic = useAddItemFormLogic<T>(properties.initialData, properties.action, properties.onSuccess);
+  const { state, handleSubmit } = logic;
+  const stateAsError = state && typeof state === 'object' && 'error' in (state as any) ? ((state as any).error as string) : undefined;
 
-      <div className={styles.actions}>
-        <button type="submit" className={styles.submitButton} disabled={isBusy}>
-          {uploading ? 'Uploading…' : (pending ? 'Saving…' : 'Add to Collection')}
-        </button>
-      </div>
+  return (
+    <form onSubmit={handleSubmit} className={styles.form} noValidate>
+      <input type="hidden" name="collection_id" value={properties.collectionId} />
+
+      {stateAsError && (
+        <p id="form-error" className={styles.formError} role="alert">{stateAsError}</p>
+      )}
+
+      <FormBody<T> properties={properties} logic={logic} />
     </form>
   );
 }

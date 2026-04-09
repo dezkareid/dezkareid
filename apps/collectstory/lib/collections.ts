@@ -25,8 +25,9 @@ export type PublicItem = {
   description: string | undefined;
   date_acquired: string | undefined;
   lines: {
+    id: string;
     name: string;
-    brands: { name: string } | undefined;
+    brands: { id: string; name: string } | undefined;
     categories: { name: string } | undefined;
     variants: LineVariant[];
   } | undefined;
@@ -36,7 +37,9 @@ export type PublicItemDetail = PublicItem & {
   visibility: string;
   user_id: string;
   variant: string | undefined;
-  franchises: { name: string; slug: string } | undefined;
+  line_id?: string;
+  franchise_id?: string;
+  franchises: { id: string; name: string; slug: string } | undefined;
 };
 
 export async function getCollectionFirstImage(
@@ -142,8 +145,9 @@ export async function getPublicItemsInCollection(
       description,
       date_acquired,
       lines (
+        id,
         name,
-        brands ( name ),
+        brands ( id, name ),
         categories ( name )
       )
     `)
@@ -172,13 +176,16 @@ export async function getPublicItemBySlug(
       visibility,
       user_id,
       variant,
+      line_id,
+      franchise_id,
       lines (
+        id,
         name,
         variants,
-        brands ( name ),
+        brands ( id, name ),
         categories ( name )
       ),
-      franchises ( name, slug )
+      franchises ( id, name, slug )
     `)
     .eq('collection_id', collectionId)
     .eq('slug', itemSlug)
