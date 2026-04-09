@@ -300,6 +300,44 @@ Authentication is OAuth-based — no token stored in the config.
 
 - Available components from `@dezkareid/components/react`: `Button`, `Tag`, `Card`, `ThemeToggle`. Check these before writing new UI primitives.
 
+### Routing Strategy
+
+This app uses **Next.js App Router** (file-based routing under `app/`). Key conventions:
+
+- `app/` is routing-only — pages delegate rendering to `src/` widgets/features/entities.
+- Dynamic segments: `[username]`, `[collectionSlug]`, `[itemId]`, `[slug]`, `[id]`.
+- Route groups are not used; authenticated routes live under `app/collection/` and `app/admin/`.
+- Parallel and intercepting routes are not currently used.
+- All public profile routes (`/[username]/...`) use ISR; authenticated routes use SSR (`force-dynamic`).
+
+### State Management
+
+No global state library is used. State is managed at the closest responsible layer:
+
+- **Server state** — fetched in Server Components and passed as serializable props; mutations go through Server Actions.
+- **Local UI state** — `useState` / `useReducer` in Client Components (e.g., dropdown open state, modal visibility).
+- **No** Redux, Zustand, Jotai, or similar libraries. Do not introduce one without discussion.
+
+### Data Fetching & Mutations
+
+- **Reads** — Server Components fetch data directly using `createServerClient` or query helpers in `lib/`. Never fetch in Client Components unless the data is truly client-only (e.g., real-time subscriptions).
+- **Mutations** — Server Actions in `app/**/actions.ts`. Always call `getSessionAndRole()` first; throw on auth failure.
+- **Parallelism** — use `Promise.all()` for independent fetches within the same Server Component to avoid waterfalls.
+- **No client fetching library** (SWR, React Query) — not needed while all data flows through RSC + Server Actions.
+- **Revalidation** — use `revalidatePath` / `revalidateTag` inside Server Actions after mutations; ISR routes set `revalidate` at the segment level.
+
+### Development Strategies
+
+- **Mobile-first** — style from the smallest viewport up; override for larger screens with `min-width` media queries.
+- **Responsive breakpoints** (from `@dezkareid/design-tokens`):
+  - `sm`: 640 px — single-column to two-column transitions
+  - `md`: 768 px — tablet-sized layouts
+  - `lg`: 1024 px — desktop-optimized layouts
+  - `xl`: 1280 px — wide content containers
+- **Layout approach** — use CSS Grid for page-level structure; Flexbox for component-level alignment.
+- **Progressive enhancement** — pages must be readable and functional before JavaScript loads. Avoid client-only rendering for primary content.
+- **Accessibility first** — WCAG 2.2 AA compliance is a baseline, not an afterthought. Every new UI must pass keyboard navigation and screen reader review.
+
 ### Import Conventions
 
 - Use the `@/` alias for all app-internal imports (configured in `tsconfig.json`).
@@ -336,6 +374,76 @@ Authentication is OAuth-based — no token stored in the config.
 - **Supabase logs**: Supabase Dashboard → Logs → API / Auth / Postgres tabs, or via MCP `mcp__supabase__get_logs`.
 - **Rebuild specific routes**: `next build --debug-build-paths /collection` to isolate rendering issues.
 
+### Accessibility Debugging with axe-core
+
+Use the `chrome-user-session` MCP (`mcp__chrome-user-session__*` tools) to run live accessibility audits against any page.
+
+**Step 1 — Navigate to the page**
+
+```
+mcp__chrome-user-session__navigate_page  { url: "http://localhost:3000/<route>" }
+```
+
+**Step 2 — Inject axe-core**
+
+```
+mcp__chrome-user-session__evaluate_script {
+  script: `
+    await new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.3/axe.min.js';
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  `
+}
+```
+
+**Step 3 — Run the audit**
+
+```
+mcp__chrome-user-session__evaluate_script {
+  script: `
+    const results = await axe.run();
+    return JSON.stringify({
+      violations: results.violations.map(v => ({
+        id: v.id,
+        impact: v.impact,
+        description: v.description,
+        helpUrl: v.helpUrl,
+        nodes: v.nodes.map(n => ({ html: n.html, failureSummary: n.failureSummary }))
+      })),
+      passes: results.passes.length,
+      incomplete: results.incomplete.length
+    }, null, 2);
+  `
+}
+```
+
+**Reading the output**
+
+| Field | Meaning |
+|---|---|
+| `violations` | Issues that must be fixed — each has `impact` (`critical`, `serious`, `moderate`, `minor`) |
+| `passes` | Count of rules that passed |
+| `incomplete` | Rules axe could not determine automatically — review manually |
+
+Fix `critical` and `serious` violations first. Every new page must reach zero `critical`/`serious` violations before shipping.
+
+**Scoping the audit to a specific component**
+
+Pass a CSS selector as the `context` option to narrow the scan:
+
+```
+mcp__chrome-user-session__evaluate_script {
+  script: `
+    const results = await axe.run('#main-content');
+    return JSON.stringify(results.violations, null, 2);
+  `
+}
+```
+
 ## Skills
 
 AI agents working on this app **must** invoke the following skills before implementing or reviewing code:
@@ -355,12 +463,13 @@ AI agents working on this app **must** invoke the following skills before implem
 | `web-quality-audit` / `web-quality:web-quality-audit` | Full audit of a page or feature before shipping |
 | `supabase-postgres-best-practices` / `database-tools:supabase-postgres-best-practices` | Any Supabase query, schema, or RLS change |
 
-## MCP Servers
+### MCP Servers
 
 | MCP | When to use |
 |---|---|
 | `context7` | When you need documentation for any external library (Next.js, React, Supabase, Tailwind, etc.) — do not rely on training data alone |
 | `supabase` | When querying, migrating, or inspecting the Supabase project (tables, logs, edge functions, migrations) |
+| `chrome-user-session` | Debugging runtime issues, performance analysis (traces, Lighthouse audits, network inspection, console errors) |
 
 ### CSS Methodology
 
