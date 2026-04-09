@@ -221,7 +221,15 @@ make claude
 
 # Launch Gemini CLI with env vars loaded
 make gemini
+
+# Launch Claude Code in an isolated git worktree
+make claude-worktree feature=<feature-name>
+
+# Launch Gemini CLI in an isolated git worktree
+make gemini-worktree feature=<feature-name>
 ```
+
+The worktree targets pass `--worktree <feature-name>` to the agent, creating an isolated branch and working directory for the feature. Useful when working on a feature in parallel without affecting the main working tree.
 
 > **Why `make` instead of running the CLI directly?** The `Makefile` uses `-include .env.local` + `export` to inject all local environment variables into the shell before starting the agent. Running `claude` or `gemini` directly will miss these vars and MCP servers that depend on them (e.g., `stitch-collectstory` which needs `STITCH_API_KEY`) will fail to authenticate.
 
@@ -347,7 +355,7 @@ pnpm turbo run test --filter=@dezkareid/react-hooks
 ### Common Pitfalls
 - **Missing `dist/` from upstream packages**: If a downstream package fails to import an internal dep, the upstream package likely hasn't been built. Run `pnpm build` from the root first.
 - **Workspace resolution errors**: After adding a new package, always run `pnpm install` from the monorepo root to update the lockfile and symlinks.
-- **MCP server auth failures**: If an MCP server (e.g., `stitch-collectstory`) fails to authenticate, ensure you launched the agent via `make claude` or `make gemini` so `.env.local` is loaded. Running the CLI directly will not have the required environment variables.
+- **MCP server auth failures**: If an MCP server (e.g., `stitch-collectstory`) fails to authenticate, ensure you launched the agent via `make claude`, `make gemini`, `make claude-worktree`, or `make gemini-worktree` so `.env.local` is loaded. Running the CLI directly will not have the required environment variables.
 - **`eslint-config-ts-base` Node version**: This config requires Node >= 22. Ensure your Node version meets this before running lint on TypeScript packages.
 
 ## Committing
