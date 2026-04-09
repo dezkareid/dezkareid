@@ -15,6 +15,7 @@ function FeatureItem({ feature }: { feature: (typeof features)[number] }) {
 }
 
 export function Features() {
+  const filteredFeatures = features.filter(f => f.title === 'Public Vaults');
   return (
     <section className={styles.features}>
       <div className={styles.container}>
@@ -23,7 +24,7 @@ export function Features() {
           <p className={styles.subtitle}>Everything you need to turn your hobby into a legacy.</p>
         </div>
         <div className={styles.grid}>
-          {features.map(feature => (
+          {filteredFeatures.map(feature => (
             <FeatureItem key={feature.title} feature={feature} />
           ))}
         </div>

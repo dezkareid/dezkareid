@@ -1,4 +1,5 @@
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { cacheLife } from 'next/cache';
 
 function createPublicClient() {
   return createSupabaseClient(
@@ -38,6 +39,57 @@ export type PublicItemDetail = PublicItem & {
   variant: string | undefined;
   franchises: { name: string; slug: string } | undefined;
 };
+
+export type LatestArrival = {
+  id: string;
+  name: string;
+  slug: string;
+  image_url: string | undefined;
+  author: string;
+  category: string | undefined;
+  collection_slug: string;
+};
+
+export async function getLatestPublicItems(limit: number = 4): Promise<LatestArrival[]> {
+  'use cache';
+  cacheLife('hours');
+  const supabase = createPublicClient();
+
+  const { data: items } = await supabase
+    .from('collection_items')
+    .select(`
+      id,
+      name,
+      slug,
+      image_url,
+      collections (
+        slug
+      )
+    `)
+    .eq('visibility', 'public')
+    .order('created_at', { ascending: false })
+    .limit(limit);
+
+  return (items ?? []).map((item: {
+    id: string;
+    name: string;
+    slug: string;
+    image_url: string | null;
+    collections: { slug: string } | { slug: string }[] | null;
+  }) => {
+    const collection = Array.isArray(item.collections) ? item.collections[0] : item.collections;
+
+    return {
+      id: item.id,
+      name: item.name,
+      slug: item.slug,
+      image_url: item.image_url ?? undefined,
+      author: 'collector',
+      category: undefined,
+      collection_slug: collection?.slug ?? 'default',
+    };
+  });
+}
 
 export async function getCollectionFirstImage(
   collectionId: string,
