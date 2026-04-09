@@ -10,6 +10,14 @@
     "supabase": {
       "type": "http",
       "url": "https://mcp.supabase.com/mcp?project_ref=nkdtnqnvxskanstajkii"
+    },
+    "stitch-collectstory": {
+      "url": "https://stitch.googleapis.com/mcp",
+      "type": "http",
+      "headers": {
+        "Accept": "application/json",
+        "X-Goog-Api-Key": "${STITCH_API_KEY}"
+      }
     }
   }
 }
