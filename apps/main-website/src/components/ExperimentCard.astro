@@ -59,7 +59,7 @@ const statusLabel: Record<ExperimentMetadata['status'], string> = {
     display: flex;
     flex-direction: column;
     position: relative;
-    
+
     /* Skin / Behavioral */
     cursor: pointer;
     /* subtle left accent line */
@@ -80,7 +80,7 @@ const statusLabel: Record<ExperimentMetadata['status'], string> = {
     position: absolute;
     inset: 0;
     z-index: 1;
-    
+
     /* Skin */
     border-radius: inherit;
   }
@@ -101,7 +101,7 @@ const statusLabel: Record<ExperimentMetadata['status'], string> = {
     letter-spacing: 0.06em;
     text-transform: uppercase;
     border-radius: var(--border-radius-pill, 9999px);
-    
+
     /* Layout */
     display: inline-flex;
     align-items: center;
@@ -112,7 +112,7 @@ const statusLabel: Record<ExperimentMetadata['status'], string> = {
   .experiment-card__status-dot {
     /* Skin */
     border-radius: 50%;
-    
+
     /* Layout */
     width: 6px;
     height: 6px;
@@ -167,7 +167,7 @@ const statusLabel: Record<ExperimentMetadata['status'], string> = {
     color: var(--color-text-primary);
     letter-spacing: -0.02em;
     line-height: var(--font-line-height-tight);
-    
+
     /* Layout */
     margin-bottom: var(--spacing-12);
   }
@@ -177,7 +177,7 @@ const statusLabel: Record<ExperimentMetadata['status'], string> = {
     font-size: var(--font-size-300);
     color: var(--color-text-secondary, color-mix(in srgb, var(--color-text-primary) 65%, transparent));
     line-height: var(--font-line-height-relaxed);
-    
+
     /* Layout */
     flex: 1;
     margin-bottom: var(--spacing-24);
@@ -210,7 +210,7 @@ const statusLabel: Record<ExperimentMetadata['status'], string> = {
     background-color: color-mix(in srgb, var(--color-primary) 8%, var(--color-background-secondary));
     border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
     color: var(--color-primary);
-    
+
     /* Layout */
     padding: var(--spacing-4) var(--spacing-8);
   }
@@ -220,7 +220,7 @@ const statusLabel: Record<ExperimentMetadata['status'], string> = {
     font-size: var(--font-size-400);
     color: color-mix(in srgb, var(--color-primary) 40%, transparent);
     transition: transform 0.2s ease, color 0.2s ease;
-    
+
     /* Layout */
     line-height: 1;
     flex-shrink: 0;

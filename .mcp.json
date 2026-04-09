@@ -1,5 +1,12 @@
 {
   "mcpServers": {
+    "chrome-user-session": {
+      "command": "npx",
+      "args": [
+        "chrome-devtools-mcp@latest",
+        "--autoConnect"
+      ]
+    },
     "supabase": {
       "type": "http",
       "url": "https://mcp.supabase.com/mcp?project_ref=nkdtnqnvxskanstajkii"
