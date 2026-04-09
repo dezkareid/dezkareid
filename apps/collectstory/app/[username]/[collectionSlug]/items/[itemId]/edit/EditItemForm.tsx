@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useState, useTransition } from 'react';
+import { useActionState, useState, useTransition, useEffect } from 'react';
 import { updateItem } from '../../../actions';
 import { getLinesByBrand } from '@/app/[username]/[collectionSlug]/actions';
 import { stripMetadata } from '@/lib/image/strip-metadata';
@@ -84,6 +84,7 @@ async function resolveImageUrl(
 function useEditItemForm(
   currentImageUrl: string | undefined,
   currentBrandId: string | undefined,
+  currentLineId: string | undefined,
   currentLineVariants: LineVariant[],
   currentVariant: string | undefined,
 ) {
@@ -94,11 +95,22 @@ function useEditItemForm(
   const [uploadedUrl, setUploadedUrl] = useState<string | undefined>(currentImageUrl);
   const [uploading, setUploading] = useState(false);
   const [lines, setLines] = useState<Line[]>([]);
+  const [linesLoading, setLinesLoading] = useState(false);
   const [lineVariants, setLineVariants] = useState<LineVariant[]>(currentLineVariants);
   const [selectedVariant, setSelectedVariant] = useState(currentVariant ?? '');
-  const [loadingLines, startLoadingLines] = useTransition();
   const [, startTransition] = useTransition();
   const [selectedBrand, setSelectedBrand] = useState(currentBrandId ?? '');
+  const [selectedLine, setSelectedLine] = useState(currentLineId ?? '');
+
+  // On mount, load lines for the existing brand so the line select is pre-populated
+  useEffect(() => {
+    if (!currentBrandId) return;
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect -- intentional: loading flag managed inside async effect
+    setLinesLoading(true);
+    getLinesByBrand(currentBrandId)
+      .then(setLines)
+      .finally(() => setLinesLoading(false));
+  }, []); // mount-only; currentBrandId is stable initial prop
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -118,18 +130,20 @@ function useEditItemForm(
   async function handleBrandChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const brandId = event.target.value;
     setSelectedBrand(brandId);
+    setSelectedLine('');
     setLines([]);
     setLineVariants([]);
     setSelectedVariant('');
     if (!brandId) return;
-    startLoadingLines(async () => {
-      const result = await getLinesByBrand(brandId);
-      setLines(result);
-    });
+    setLinesLoading(true);
+    getLinesByBrand(brandId)
+      .then(setLines)
+      .finally(() => setLinesLoading(false));
   }
 
   function handleLineChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const lineId = event.target.value;
+    setSelectedLine(lineId);
     const line = lines.find(l => l.id === lineId);
     setLineVariants(line?.variants ?? []);
     setSelectedVariant('');
@@ -148,7 +162,7 @@ function useEditItemForm(
   return {
     state, formAction: handleSubmit, pending,
     fileError, uploadFailed, preview, uploading,
-    lines, loadingLines, selectedBrand, lineVariants, selectedVariant, setSelectedVariant,
+    lines, linesLoading, selectedBrand, selectedLine, lineVariants, selectedVariant, setSelectedVariant,
     handleFileChange, handleBrandChange, handleLineChange,
     isBusy: pending || uploading,
   };
@@ -197,10 +211,10 @@ export function EditItemForm({
   const {
     state, formAction: handleSubmit,
     fileError, uploadFailed, preview, uploading,
-    lines, loadingLines, selectedBrand, lineVariants, selectedVariant, setSelectedVariant,
+    lines, linesLoading, selectedBrand, selectedLine, lineVariants, selectedVariant, setSelectedVariant,
     handleFileChange, handleBrandChange, handleLineChange,
     pending,
-  } = useEditItemForm(currentImageUrl, currentBrandId, currentLineVariants, currentVariant);
+  } = useEditItemForm(currentImageUrl, currentBrandId, currentLineId, currentLineVariants, currentVariant);
 
   const submitDisabled = pending || uploading;
   const submitLabel = uploading ? 'Uploading…' : 'Save Changes';
@@ -268,14 +282,14 @@ export function EditItemForm({
         <div className={styles.field}>
           <label className={styles.label} htmlFor="item-line">
             Line
-            {loadingLines && <span className={styles.loadingDot} aria-hidden="true" />}
+            {linesLoading && <span className={styles.loadingDot} aria-hidden="true" />}
           </label>
           <select
             id="item-line"
             name="line_id"
             className={styles.select}
-            disabled={lines.length === 0 && !currentLineId}
-            defaultValue={currentLineId ?? ''}
+            disabled={lines.length === 0}
+            value={selectedLine}
             onChange={handleLineChange}
           >
             <option value="">— none —</option>

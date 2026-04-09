@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { Button } from '@dezkareid/components/react';
 import { UpdateImageForm } from '@/components/UpdateImageForm/UpdateImageForm';
 import styles from './page.module.css';
 
@@ -15,15 +16,23 @@ type Properties = {
 export function ItemImageSection({ itemId, imageUrl, name, isOwner }: Properties) {
   const [currentImageUrl, setCurrentImageUrl] = useState(imageUrl);
   const [editingImage, setEditingImage] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  useEffect(() => {
+    if (!showSuccess) return;
+    const timer = setTimeout(() => setShowSuccess(false), 1500);
+    return () => clearTimeout(timer);
+  }, [showSuccess]);
 
   function handleImageUpdated(newUrl: string) {
     setCurrentImageUrl(newUrl);
     setEditingImage(false);
+    setShowSuccess(true);
   }
 
   return (
-    <div className={styles.imageSection}>
-      <div className={styles.imageWrapper}>
+    <div className={styles['item-page__image']}>
+      <div className={`${styles['item-page__image-wrapper']} ${editingImage ? styles['item-page__image-wrapper--editing'] : ''}`}>
         {currentImageUrl
           ? (
               <Image
@@ -31,42 +40,45 @@ export function ItemImageSection({ itemId, imageUrl, name, isOwner }: Properties
                 alt={name}
                 fill
                 sizes="(max-width: 768px) 100vw, 480px"
-                className={styles.image}
+                className={styles['item-page__image-media']}
                 priority
               />
             )
           : (
-              <div className={styles.imagePlaceholder} aria-hidden="true">
-                <span className={styles.placeholderIcon}>◻</span>
+              <div className={styles['item-page__image-placeholder']} aria-hidden="true">
+                <span className={styles['item-page__placeholder-icon']}>◻</span>
               </div>
             )}
+
+        {isOwner && !editingImage && (
+          <button
+            type="button"
+            className={styles['item-page__image-overlay-btn']}
+            onClick={() => setEditingImage(true)}
+            aria-label={currentImageUrl ? 'Replace image' : 'Add image'}
+          >
+            {currentImageUrl ? 'Replace image' : 'Add image'}
+          </button>
+        )}
       </div>
 
-      {isOwner && (
-        <div className={styles.ownerActions}>
-          {editingImage
-            ? (
-                <>
-                  <UpdateImageForm itemId={itemId} onSuccess={handleImageUpdated} />
-                  <button
-                    type="button"
-                    className={styles.cancelButton}
-                    onClick={() => setEditingImage(false)}
-                  >
-                    Cancel
-                  </button>
-                </>
-              )
-            : (
-                <button
-                  type="button"
-                  className={styles.editImageButton}
-                  onClick={() => setEditingImage(true)}
-                >
-                  {currentImageUrl ? 'Replace image' : 'Add image'}
-                </button>
-              )}
+      {isOwner && editingImage && (
+        <div className={styles['item-page__owner-actions']}>
+          <UpdateImageForm itemId={itemId} onSuccess={handleImageUpdated} />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setEditingImage(false)}
+          >
+            Cancel
+          </Button>
         </div>
+      )}
+
+      {showSuccess && (
+        <p className={styles['item-page__image-feedback']} role="status" aria-live="polite">
+          Image updated!
+        </p>
       )}
     </div>
   );

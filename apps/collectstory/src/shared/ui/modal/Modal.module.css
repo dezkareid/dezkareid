@@ -1,0 +1,103 @@
+/* ─── Modal ──────────────────────────────────────────────────────────────────── */
+
+.modal {
+  border: none;
+  border-radius: var(--border-radius-large);
+  box-shadow: var(--shadow-card-hover);
+  padding: 0;
+  width: min(540px, calc(100vw - var(--spacing-32)));
+  max-height: calc(100dvh - var(--spacing-64));
+  overflow-y: auto;
+  background-color: var(--color-background-primary);
+  /* Center on screen — browsers don't apply margin:auto to <dialog> by default */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  margin: 0;
+}
+
+.modal::backdrop {
+  /* Works on both light and dark backgrounds:
+     a dark translucent layer + blur creates visible contrast regardless of page color */
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  animation: backdropFadeIn 0.15s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  .modal::backdrop {
+    /* In dark mode darken less but keep the blur prominent */
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+}
+
+@keyframes backdropFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal[open] {
+  animation: modalSlideIn 0.18s ease;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    translate: -50% calc(-50% + var(--spacing-8));
+  }
+  to {
+    opacity: 1;
+    translate: -50% -50%;
+  }
+}
+
+.modal__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-24);
+  padding: var(--spacing-32);
+}
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-16);
+}
+
+.modal__title {
+  font-size: var(--font-size-500);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.modal__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: var(--border-radius-medium);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-300);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.modal__close:hover {
+  background-color: var(--color-background-secondary);
+  color: var(--color-text-primary);
+}
+
+.modal__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+}
