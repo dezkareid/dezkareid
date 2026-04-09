@@ -78,7 +78,6 @@ async function CollectionContent({
             <h1 className={styles.collectionName}>{collection.name}</h1>
             <SocialShare
               title={`${collection.name} by ${username} on Collectstory`}
-              text={`Check out this collection: ${collection.name}`}
               baseUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/${username}/${collectionSlug}`}
               entityType="collection"
             />
