@@ -57,6 +57,7 @@ export function FranchiseForm({
 
   const [uploading, setUploading] = useState(false);
   const [uploadedUrl, setUploadedUrl] = useState<string | undefined>(defaultImageUrl);
+  const [pendingFile, setPendingFile] = useState<File | undefined>();
   const [fileError, setFileError] = useState<string | undefined>();
   const [, startTransition] = useTransition();
 
@@ -68,7 +69,7 @@ export function FranchiseForm({
     const data = new FormData(form);
 
     const fileInput = form.elements.namedItem('image_file') as HTMLInputElement;
-    const file = fileInput?.files?.[0];
+    const file = fileInput?.files?.[0] ?? pendingFile;
 
     if (file) {
       setUploading(true);
@@ -79,10 +80,15 @@ export function FranchiseForm({
         return;
       }
       setUploadedUrl(result.url);
+      setPendingFile(undefined);
       data.set('image_url', result.url);
     }
     else if (uploadedUrl) {
       data.set('image_url', uploadedUrl);
+    }
+    else {
+      setFileError('A cover image is required.');
+      return;
     }
 
     startTransition(() => formAction(data));
@@ -147,6 +153,7 @@ export function FranchiseForm({
         defaultImageUrl={defaultImageUrl}
         uploading={uploading}
         onUploadedUrl={url => setUploadedUrl(url)}
+        onFile={file => { setPendingFile(file); setFileError(undefined); }}
         onFileError={setFileError}
         fileError={fileError}
         label="Cover"

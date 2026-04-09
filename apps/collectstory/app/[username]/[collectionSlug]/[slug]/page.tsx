@@ -2,17 +2,16 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getPublicCollectionBySlug, getPublicItemBySlug, type PublicItemDetail } from '@/lib/collections';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { getItemSchema } from '@/src/entities/item';
-import { ItemImageSection } from './ItemImageSection';
 import { ItemActions } from '@/components/username/ItemActions';
-import { ItemLinksManager } from '@/components/ItemLinksManager/ItemLinksManager';
 import { VerifiedBadge } from '@/components/VerifiedBadge';
 import { SocialShare } from '@/src/features/social-share';
-import type { Store, ItemLink } from '@/app/[username]/[collectionSlug]/actions';
+import { OwnerItemExtras } from './_components/OwnerItemExtras';
+import { OwnerImageSection } from './_components/OwnerImageSection';
+import type { Store } from '@/app/[username]/[collectionSlug]/actions';
 import styles from './page.module.css';
 
 type Properties = {
@@ -26,7 +25,7 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
   const collectionResult = await getPublicCollectionBySlug(username, collectionSlug);
   if (!collectionResult) return {};
 
-  const item = await getPublicItemBySlug(collectionResult.collection.id, slug);
+  const item = await getPublicItemBySlug(collectionResult.collection.id, slug, username, collectionSlug);
   if (!item) return {};
 
   const brand = item.lines?.brands?.name;
@@ -53,25 +52,20 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
 
 function WhereToFindSection({
   itemId,
-  isOwner,
+  userId,
   linkedStores,
-  initialLinks,
 }: {
   itemId: string;
-  isOwner: boolean;
+  userId: string;
   linkedStores: Store[];
-  initialLinks: ItemLink[];
 }) {
-  const hasStores = linkedStores.length > 0;
-  const hasLinks = initialLinks.length > 0;
-
   return (
     <section className={styles.storesSection} aria-labelledby="where-to-find-heading">
       <h2 id="where-to-find-heading" className={styles.storesSectionLabel}>
         Where to find it
       </h2>
 
-      {hasStores && (
+      {linkedStores.length > 0 && (
         <ul className={styles.storeReadList} role="list" aria-label="Stores">
           {linkedStores.map(store => (
             <li key={store.id} className={styles.storeReadItem}>
@@ -84,16 +78,10 @@ function WhereToFindSection({
         </ul>
       )}
 
-      {isOwner && (
-        <>
-          {!hasStores && !hasLinks && (
-            <p className={styles.emptyPrompt}>
-              Add a link to where this item can be found.
-            </p>
-          )}
-          <ItemLinksManager itemId={itemId} initialLinks={initialLinks} />
-        </>
-      )}
+      {/* Owner-only: ItemLinksManager streams in dynamically — never cached */}
+      <Suspense>
+        <OwnerItemExtras itemId={itemId} userId={userId} linkedStores={linkedStores} />
+      </Suspense>
     </section>
   );
 }
@@ -130,19 +118,15 @@ function ItemMeta({
   item,
   username,
   collectionSlug,
-  isOwner,
   linkedStores,
-  initialLinks,
 }: {
   item: PublicItemDetail;
   username: string;
   collectionSlug: string;
-  isOwner: boolean;
   linkedStores: Store[];
-  initialLinks: ItemLink[];
 }) {
-  const showWhereToFind = linkedStores.length > 0 || isOwner;
-
+  // Always show the "Where to find it" section: it renders the public store list
+  // and the dynamic owner slot (OwnerItemExtras inside WhereToFindSection).
   return (
     <div className={styles.details}>
       <ItemTags item={item} />
@@ -173,24 +157,20 @@ function ItemMeta({
         </time>
       )}
 
-      {showWhereToFind && (
-        <WhereToFindSection
-          itemId={item.id}
-          isOwner={isOwner}
-          linkedStores={linkedStores}
-          initialLinks={initialLinks}
-        />
-      )}
+      <WhereToFindSection
+        itemId={item.id}
+        userId={item.user_id}
+        linkedStores={linkedStores}
+      />
 
-      {isOwner && (
-        <Suspense>
-          <ItemActions
-            username={username}
-            collectionSlug={collectionSlug}
-            itemId={item.id}
-          />
-        </Suspense>
-      )}
+      {/* Owner-only: edit button — client component, self-detects ownership */}
+      <Suspense>
+        <ItemActions
+          username={username}
+          collectionSlug={collectionSlug}
+          itemId={item.id}
+        />
+      </Suspense>
     </div>
   );
 }
@@ -200,19 +180,16 @@ async function ItemDetail({
 }: {
   params: Promise<{ username: string; collectionSlug: string; slug: string }>;
 }) {
-  await connection();
   const { username, collectionSlug, slug } = await params;
 
   const collectionResult = await getPublicCollectionBySlug(username, collectionSlug);
   if (!collectionResult) notFound();
 
-  const item = await getPublicItemBySlug(collectionResult.collection.id, slug);
+  const item = await getPublicItemBySlug(collectionResult.collection.id, slug, username, collectionSlug);
   if (!item) notFound();
 
+  // Linked stores are public — fetched in the cached shell for all visitors.
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  const isOwner = user?.id === item.user_id;
-
   const { data: storeRows } = await supabase
     .from('collection_item_stores')
     .select('stores ( id, name, verified, url )')
@@ -223,22 +200,6 @@ async function ItemDetail({
     if (!s) return [];
     return [{ id: s.id, name: s.name, verified: s.verified, url: s.url ?? undefined }];
   });
-
-  let initialLinks: ItemLink[] = [];
-  if (isOwner) {
-    const { data: linkRows } = await supabase
-      .from('item_links')
-      .select('id, item_id, url, label, created_at')
-      .eq('item_id', item.id)
-      .order('created_at');
-    initialLinks = (linkRows ?? []).map(l => ({
-      id: l.id,
-      item_id: l.item_id,
-      url: l.url,
-      label: (l.label as string | null) ?? undefined,
-      created_at: l.created_at,
-    }));
-  }
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
   const schema = getItemSchema({
@@ -251,19 +212,24 @@ async function ItemDetail({
   return (
     <div className={styles.layout}>
       <DataSchema schema={schema} />
-      <ItemImageSection
-        itemId={item.id}
-        imageUrl={item.image_url}
-        name={item.name}
-        isOwner={isOwner}
-      />
+      {/* OwnerImageSection is a dynamic Server Component in <Suspense> — streams
+          in the image section with the correct isOwner value without blocking
+          the cached static shell. */}
+      <Suspense fallback={<div className={styles.imageSection} />}>
+        <OwnerImageSection
+          itemId={item.id}
+          userId={item.user_id}
+          imageUrl={item.image_url}
+          name={item.name}
+          username={username}
+          collectionSlug={collectionSlug}
+        />
+      </Suspense>
       <ItemMeta
         item={item}
         username={username}
         collectionSlug={collectionSlug}
-        isOwner={isOwner}
         linkedStores={linkedStores}
-        initialLinks={initialLinks}
       />
     </div>
   );

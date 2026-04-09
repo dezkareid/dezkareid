@@ -3,10 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-import { connection } from 'next/server';
 import { getPublicCollectionsByUsername } from '@/lib/collections';
-import { createClient } from '@/lib/supabase/server';
-import { OnboardingEmptyState } from '@/src/features/quick-start-collection';
 import { UserProfileActions } from '@/components/username/UserProfileActions';
 import { SocialShare } from '@/src/features/social-share';
 import styles from './page.module.css';
@@ -32,8 +29,7 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
   };
 }
 
-function ProfileEmptyState({ username, isOwner }: { username: string; isOwner: boolean }) {
-  if (isOwner) return <OnboardingEmptyState username={username} />;
+function ProfileEmptyState({ username }: { username: string }) {
   return (
     <div className={styles.empty}>
       <p className={styles.emptyTitle}>No public collections yet</p>
@@ -47,21 +43,16 @@ function ProfileEmptyState({ username, isOwner }: { username: string; isOwner: b
 }
 
 async function ProfileContent({ username }: { username: string }) {
-  await connection();
   const result = await getPublicCollectionsByUsername(username);
   if (!result) notFound();
 
-  const { collections, userId } = result;
-
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  const isOwner = user?.id === userId;
+  const { collections } = result;
 
   return (
     <>
       <div className={styles.grid}>
         {collections.length === 0
-          ? <ProfileEmptyState username={username} isOwner={isOwner} />
+          ? <ProfileEmptyState username={username} />
           : collections.map(col => (
               <Link
                 key={col.id}
@@ -86,7 +77,6 @@ async function ProfileContent({ username }: { username: string }) {
 
 async function ProfileHeader({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params;
-  await connection();
   const result = await getPublicCollectionsByUsername(username);
   const avatarUrl = result?.avatarUrl;
 

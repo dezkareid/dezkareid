@@ -3,7 +3,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-import { connection } from 'next/server';
 import { getCollectionFirstImage, getPublicCollectionBySlug, getPublicItemsInCollection } from '@/lib/collections';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { getCollectionSchema } from '@/src/entities/collection';
@@ -52,14 +51,13 @@ async function CollectionContent({
 }: {
   params: Promise<{ username: string; collectionSlug: string }>;
 }) {
-  await connection();
   const { username, collectionSlug } = await params;
 
   const result = await getPublicCollectionBySlug(username, collectionSlug);
   if (!result) notFound();
 
   const { collection } = result;
-  const items = await getPublicItemsInCollection(collection.id);
+  const items = await getPublicItemsInCollection(collection.id, username, collectionSlug);
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 
   const schema = getCollectionSchema({

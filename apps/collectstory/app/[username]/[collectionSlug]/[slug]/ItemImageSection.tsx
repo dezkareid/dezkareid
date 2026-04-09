@@ -10,9 +10,11 @@ type Properties = {
   imageUrl: string | undefined;
   name: string;
   isOwner: boolean;
+  username: string;
+  collectionSlug: string;
 };
 
-export function ItemImageSection({ itemId, imageUrl, name, isOwner }: Properties) {
+export function ItemImageSection({ itemId, imageUrl, name, isOwner, username, collectionSlug }: Properties) {
   const [currentImageUrl, setCurrentImageUrl] = useState(imageUrl);
   const [editingImage, setEditingImage] = useState(false);
 
@@ -47,7 +49,7 @@ export function ItemImageSection({ itemId, imageUrl, name, isOwner }: Properties
           {editingImage
             ? (
                 <>
-                  <UpdateImageForm itemId={itemId} onSuccess={handleImageUpdated} />
+                  <UpdateImageForm itemId={itemId} username={username} collectionSlug={collectionSlug} onSuccess={handleImageUpdated} />
                   <button
                     type="button"
                     className={styles.cancelButton}

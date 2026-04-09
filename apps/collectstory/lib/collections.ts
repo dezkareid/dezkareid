@@ -1,3 +1,4 @@
+import { cacheLife, cacheTag } from 'next/cache';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
 function createPublicClient() {
@@ -39,9 +40,14 @@ export type PublicItemDetail = PublicItem & {
   franchises: { name: string; slug: string } | undefined;
 };
 
+// i18n note: when a `locale` parameter is added, it must be a named function argument
+// (not derived from headers/cookies) so it becomes part of the 'use cache' cache key.
 export async function getCollectionFirstImage(
   collectionId: string,
 ): Promise<string | undefined> {
+  'use cache';
+  cacheLife('user-content');
+  cacheTag(`collection-first-image:${collectionId}`);
   const supabase = createPublicClient();
 
   const { data: item } = await supabase
@@ -57,9 +63,14 @@ export async function getCollectionFirstImage(
   return item?.image_url ?? undefined;
 }
 
+// i18n note: when a `locale` parameter is added, it must be a named function argument
+// (not derived from headers/cookies) so it becomes part of the 'use cache' cache key.
 export async function getPublicCollectionsByUsername(
   username: string,
 ): Promise<{ collections: PublicCollection[]; userId: string; avatarUrl: string | undefined } | undefined> {
+  'use cache';
+  cacheLife('user-content');
+  cacheTag(`profile:${username}`);
   const supabase = createPublicClient();
 
   const { data: profile } = await supabase
@@ -94,6 +105,8 @@ export async function getPublicCollectionsByUsername(
   return { collections: collectionsWithCount, userId: profile.id, avatarUrl: profile.avatar_url ?? undefined };
 }
 
+// i18n note: when a `locale` parameter is added, it must be a named function argument
+// (not derived from headers/cookies) so it becomes part of the 'use cache' cache key.
 export async function getPublicCollectionBySlug(
   username: string,
   collectionSlug: string,
@@ -101,6 +114,9 @@ export async function getPublicCollectionBySlug(
   collection: { id: string; name: string; slug: string; description: string | undefined };
   userId: string;
 } | undefined> {
+  'use cache';
+  cacheLife('user-content');
+  cacheTag(`collection:${username}:${collectionSlug}`);
   const supabase = createPublicClient();
 
   const { data: profile } = await supabase
@@ -127,9 +143,19 @@ export async function getPublicCollectionBySlug(
   };
 }
 
+// i18n note: when a `locale` parameter is added, it must be a named function argument
+// (not derived from headers/cookies) so it becomes part of the 'use cache' cache key.
 export async function getPublicItemsInCollection(
   collectionId: string,
+  username: string,
+  collectionSlug: string,
 ): Promise<PublicItem[]> {
+  'use cache';
+  cacheLife('user-content');
+  // Tag with both the slug-based key (for revalidation by Server Actions) and
+  // the UUID-based key (for internal cross-references if needed).
+  cacheTag(`collection:${username}:${collectionSlug}`);
+  cacheTag(`collection-items:${collectionId}`);
   const supabase = createPublicClient();
 
   const { data: items } = await supabase
@@ -154,10 +180,17 @@ export async function getPublicItemsInCollection(
   return (items ?? []) as unknown as PublicItem[];
 }
 
+// i18n note: when a `locale` parameter is added, it must be a named function argument
+// (not derived from headers/cookies) so it becomes part of the 'use cache' cache key.
 export async function getPublicItemBySlug(
   collectionId: string,
   itemSlug: string,
+  username: string,
+  collectionSlug: string,
 ): Promise<PublicItemDetail | undefined> {
+  'use cache';
+  cacheLife('user-content');
+  cacheTag(`item:${username}:${collectionSlug}:${itemSlug}`);
   const supabase = createPublicClient();
 
   const { data: item } = await supabase

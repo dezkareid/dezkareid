@@ -33,6 +33,7 @@ export function NameOnlyForm({ action, cancelHref, defaultName, defaultImageUrl,
 
   const [uploading, setUploading] = useState(false);
   const [uploadedUrl, setUploadedUrl] = useState<string | undefined>();
+  const [pendingFile, setPendingFile] = useState<File | undefined>();
   const [fileError, setFileError] = useState<string | undefined>();
   const [, startTransition] = useTransition();
 
@@ -44,7 +45,7 @@ export function NameOnlyForm({ action, cancelHref, defaultName, defaultImageUrl,
     const data = new FormData(form);
 
     const fileInput = form.elements.namedItem('image_file') as HTMLInputElement;
-    const file = fileInput?.files?.[0];
+    const file = fileInput?.files?.[0] ?? pendingFile;
 
     if (file && !uploadedUrl) {
       setUploading(true);
@@ -55,6 +56,7 @@ export function NameOnlyForm({ action, cancelHref, defaultName, defaultImageUrl,
         return;
       }
       setUploadedUrl(result.url);
+      setPendingFile(undefined);
       data.set('image_url', result.url);
     }
     else if (uploadedUrl) {
@@ -85,6 +87,7 @@ export function NameOnlyForm({ action, cancelHref, defaultName, defaultImageUrl,
         defaultImageUrl={defaultImageUrl}
         uploading={uploading}
         onUploadedUrl={setUploadedUrl}
+        onFile={file => { setPendingFile(file); setFileError(undefined); }}
         onFileError={setFileError}
         fileError={fileError}
       />

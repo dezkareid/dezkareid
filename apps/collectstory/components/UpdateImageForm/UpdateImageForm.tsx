@@ -15,6 +15,8 @@ const MAX_BYTES = 5 * 1024 * 1024;
 
 type Properties = {
   itemId: string;
+  username: string;
+  collectionSlug: string;
   onSuccess: (newUrl: string) => void;
 };
 
@@ -39,7 +41,7 @@ async function toUploadBlob(file: File): Promise<{ blob: Blob; error?: never } |
   return { blob: file };
 }
 
-export function UpdateImageForm({ itemId, onSuccess }: Properties) {
+export function UpdateImageForm({ itemId, username, collectionSlug, onSuccess }: Properties) {
   const [fileError, setFileError] = useState<string>();
   const [preview, setPreview] = useState<string>();
   const [pendingBlob, setPendingBlob] = useState<Blob>();
@@ -111,7 +113,7 @@ export function UpdateImageForm({ itemId, onSuccess }: Properties) {
       }
 
       setStatus('saving');
-      const saveResult = await updateItemImage(itemId, result.url);
+      const saveResult = await updateItemImage(itemId, result.url, username, collectionSlug);
 
       if ('error' in saveResult) {
         setStatus('error');
