@@ -8,10 +8,9 @@ export const siteData = {
   logoIcon: 'shelves',
   copyrightYear: 2026,
   navLinks: [
-    { label: 'Privacy Policy', href: '#' },
-    { label: 'Terms of Service', href: '#' },
-    { label: 'Contact', href: '#' },
-    { label: 'Community', href: '#' },
+    { label: 'Privacy Policy', href: '/privacy' },
+    { label: 'Terms of Service', href: '/terms' },
+    { label: 'Contact', href: 'mailto:elmaildeldezkareid@gmail.com' },
   ],
 };
 

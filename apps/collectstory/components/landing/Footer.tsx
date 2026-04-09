@@ -1,9 +1,12 @@
 import Link from 'next/link';
-import { Globe, Share, Shelves } from '@dezkareid/icons/react';
+import { Shelves } from '@dezkareid/icons/react';
 import { siteData } from '@/lib/mock-data';
+import { SocialShare } from '@/src/features/social-share';
 import styles from './Footer.module.css';
 
 export function Footer() {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
+
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
@@ -30,12 +33,11 @@ export function Footer() {
             ))}
           </nav>
           <div className={styles.socials}>
-            <button className={styles.socialBtn} aria-label="Share">
-              <Share aria-hidden />
-            </button>
-            <button className={styles.socialBtn} aria-label="Public">
-              <Globe aria-hidden />
-            </button>
+            <SocialShare
+              title="Collectstory — Track Your Collection"
+              baseUrl={baseUrl}
+              entityType="collection"
+            />
           </div>
         </div>
       </div>
