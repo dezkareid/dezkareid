@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { Hero } from '@/components/landing/Hero';
-import { Stats } from '@/components/landing/Stats';
 import { LatestArrivals } from '@/components/landing/LatestArrivals';
 import { Features } from '@/components/landing/Features';
 import { CallToAction } from '@/components/landing/CallToAction';
@@ -23,7 +22,6 @@ export default function HomePage() {
     <>
       <div>
         <Hero />
-        <Stats />
         <LatestArrivals />
         <Features />
         <CallToAction />
