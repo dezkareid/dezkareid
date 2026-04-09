@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useId, useRef, type ReactNode } from 'react';
 import styles from './Modal.module.css';
 
 interface ModalProperties {
@@ -13,7 +13,7 @@ interface ModalProperties {
 export function Modal({ open, onClose, title, children }: ModalProperties) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
-  const titleIdRef = useRef(`modal-title-${Math.random().toString(36).slice(2)}`);
+  const titleId = `modal-title-${useId().replaceAll(':', '')}`;
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -54,12 +54,12 @@ export function Modal({ open, onClose, title, children }: ModalProperties) {
       ref={dialogRef}
       className={styles.modal}
       aria-modal="true"
-      aria-labelledby={titleIdRef.current}
+      aria-labelledby={titleId}
       onClick={handleBackdropClick}
     >
       <div className={styles.modal__inner}>
         <div className={styles.modal__header}>
-          <h2 id={titleIdRef.current} className={styles.modal__title}>
+          <h2 id={titleId} className={styles.modal__title}>
             {title}
           </h2>
           <button
