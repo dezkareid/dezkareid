@@ -9,6 +9,7 @@ Collectstory is the collector's companion app — a Next.js 16 web application f
 - **Collector page** (SSR, authenticated) — personal collection grid with Cloudinary images
 - **Social login** — Google, Facebook, and X (Twitter) via Supabase Auth
 - **Design system** — fully themed with `@dezkareid/design-tokens` and `@dezkareid/components`
+- **Analytics** — G4 integration with privacy-focused user tracking and cookie consent
 
 ## Tech Stack
 
@@ -18,6 +19,7 @@ Collectstory is the collector's companion app — a Next.js 16 web application f
 | Language | TypeScript |
 | Auth & DB | Supabase (Auth + PostgreSQL) |
 | Images | Cloudinary |
+| Analytics | Google Analytics 4 (@next/third-parties) |
 | Hosting | Vercel |
 | Styling | Pure CSS Modules + design tokens |
 
@@ -54,6 +56,7 @@ Required variables:
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase publishable (anon) key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-side only) |
 | `CLOUDINARY_CLOUD_NAME` | Your Cloudinary cloud name |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Google Analytics 4 Measurement ID |
 
 ### 3. Apply the database schema
 

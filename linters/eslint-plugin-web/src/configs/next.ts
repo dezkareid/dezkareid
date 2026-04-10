@@ -19,6 +19,25 @@ const config: Linter.Config[] = [
       'unicorn/prevent-abbreviations': ['error', {
         allowList: { Ref: true, ref: true, generateStaticParams: true },
       }],
+      // Next.js App Router uses PascalCase for component files and lowercase for route files.
+      'unicorn/filename-case': ['error', {
+        cases: {
+          kebabCase: true,
+          pascalCase: true,
+        },
+      }],
+    },
+  },
+  {
+    files: ['**/use*.ts', '**/use*.tsx'],
+    rules: {
+      'unicorn/filename-case': ['error', {
+        cases: {
+          camelCase: true,
+          pascalCase: true,
+          kebabCase: true,
+        },
+      }],
     },
   },
   {

@@ -7,6 +7,7 @@ import { Share, TwitterX, Facebook, Linkedin, Copy, Check } from '@dezkareid/ico
 import { DropdownMenu, DropdownMenuItem } from '@/src/shared/ui/dropdown-menu';
 import { Toast } from '@/src/shared/ui/toast';
 import { getUtmTaggedUrl, copyToClipboard, type EntityType } from '@/src/shared/lib/share-utilities';
+import { useAnalytics } from '@/src/shared/lib/analytics/useAnalytics';
 import styles from './SocialShare.module.css';
 
 interface SocialShareProperties {
@@ -18,6 +19,7 @@ interface SocialShareProperties {
 export function SocialShare({ title, baseUrl, entityType }: SocialShareProperties) {
   const [isClient, setIsClient] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const { track } = useAnalytics();
 
   useEffect(() => {
     React.startTransition(() => {
@@ -25,11 +27,21 @@ export function SocialShare({ title, baseUrl, entityType }: SocialSharePropertie
     });
   }, []);
 
+  const handleTrackShare = (platform: string) => {
+    track({
+      action: 'share',
+      category: 'social',
+      label: entityType,
+      platform,
+    });
+  };
+
   const handleCopyLink = async () => {
     const url = getUtmTaggedUrl(baseUrl, 'direct', entityType);
     const success = await copyToClipboard(url);
     if (success) {
       setIsCopied(true);
+      handleTrackShare('copy_link');
       setTimeout(() => setIsCopied(false), 2000);
     }
   };
@@ -74,19 +86,37 @@ export function SocialShare({ title, baseUrl, entityType }: SocialSharePropertie
           </Button>
         )}
       >
-        <DropdownMenuItem variant="anchor" href={getShareLink('twitter')} target="_blank" rel="noopener noreferrer">
+        <DropdownMenuItem
+          variant="anchor"
+          href={getShareLink('twitter')}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => handleTrackShare('twitter')}
+        >
           <div className={styles['social-share-item']}>
             <TwitterX className={styles['social-share-icon']} />
             <span>Twitter (X)</span>
           </div>
         </DropdownMenuItem>
-        <DropdownMenuItem variant="anchor" href={getShareLink('facebook')} target="_blank" rel="noopener noreferrer">
+        <DropdownMenuItem
+          variant="anchor"
+          href={getShareLink('facebook')}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => handleTrackShare('facebook')}
+        >
           <div className={styles['social-share-item']}>
             <Facebook className={styles['social-share-icon']} />
             <span>Facebook</span>
           </div>
         </DropdownMenuItem>
-        <DropdownMenuItem variant="anchor" href={getShareLink('linkedin')} target="_blank" rel="noopener noreferrer">
+        <DropdownMenuItem
+          variant="anchor"
+          href={getShareLink('linkedin')}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => handleTrackShare('linkedin')}
+        >
           <div className={styles['social-share-item']}>
             <Linkedin className={styles['social-share-icon']} />
             <span>LinkedIn</span>

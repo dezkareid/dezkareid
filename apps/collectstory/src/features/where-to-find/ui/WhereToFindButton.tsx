@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@dezkareid/components/react';
 import { Modal } from '@/src/shared/ui/modal';
+import { useAnalytics } from '@/src/shared/lib/analytics/useAnalytics';
 import { WhereToFindContent } from './WhereToFindContent';
 import type { Store, ItemLink } from '@/app/[username]/[collectionSlug]/actions';
 import styles from './WhereToFind.module.css';
@@ -21,13 +22,23 @@ export function WhereToFindButton({
   initialLinks,
 }: WhereToFindButtonProperties) {
   const [open, setOpen] = useState(false);
+  const { track } = useAnalytics();
+
+  const handleOpen = () => {
+    track({
+      action: 'cta_click',
+      category: 'interaction',
+      label: 'where_to_find',
+    });
+    setOpen(true);
+  };
 
   return (
     <>
       <Button
         variant="secondary"
         className={styles['where-to-find__trigger']}
-        onClick={() => setOpen(true)}
+        onClick={handleOpen}
       >
         Where to find
       </Button>

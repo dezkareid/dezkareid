@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@dezkareid/components/react';
 import { createClient } from '@/lib/supabase/client';
+import { useAnalytics } from '@/src/shared/lib/analytics/useAnalytics';
 import type { PublicItem, PublicItemDetail } from '@/lib/collections';
 import styles from './IHaveThisButton.module.css';
 import { CopyItemModal } from './CopyItemModal';
@@ -16,10 +17,17 @@ export function IHaveThisButton({ item }: Properties) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const { track } = useAnalytics();
 
   const handleClick = async (event: React.MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
+
+    track({
+      action: 'cta_click',
+      category: 'interaction',
+      label: 'copy_item',
+    });
 
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
