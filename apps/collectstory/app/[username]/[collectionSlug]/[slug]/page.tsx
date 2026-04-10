@@ -12,6 +12,7 @@ import { ItemImageSection } from './ItemImageSection';
 import { ItemActions } from '@/components/username/ItemActions';
 import { SocialShare } from '@/src/features/social-share';
 import { WhereToFindButton } from '@/src/features/where-to-find';
+import { IHaveThisButton } from '@/src/features/copy-item';
 import type { Store, ItemLink } from '@/app/[username]/[collectionSlug]/actions';
 import styles from './page.module.css';
 
@@ -142,11 +143,14 @@ function ItemMeta({
 
       <div className={styles['item-page__name-row']}>
         <h1 className={styles['item-page__name']}>{item.name}</h1>
-        <SocialShare
-          title={`${item.name} from ${collectionSlug} by ${username} on Collectstory`}
-          baseUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/${username}/${collectionSlug}/${item.slug}`}
-          entityType="item"
-        />
+        <div className={styles['item-page__actions']}>
+          <SocialShare
+            title={`${item.name} from ${collectionSlug} by ${username} on Collectstory`}
+            baseUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/${username}/${collectionSlug}/${item.slug}`}
+            entityType="item"
+          />
+          {!isOwner && <IHaveThisButton item={item} />}
+        </div>
       </div>
 
       <ItemMetaDetails item={item} />
