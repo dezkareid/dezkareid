@@ -1,3 +1,10 @@
+# [@dezkareid/design-tokens-v1.6.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.5.0...@dezkareid/design-tokens-v1.6.0) (2026-04-10)
+
+
+### Features
+
+* **design-tokens:** add rose and orange palettes, alpha support, and like/error semantic tokens ([8c83c8e](https://github.com/dezkareid/dezkareid/commit/8c83c8e0acc25223e1d1ce61af41e7d1bb8d5842))
+
 # [@dezkareid/design-tokens-v1.5.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/design-tokens-v1.4.1...@dezkareid/design-tokens-v1.5.0) (2026-03-20)
 
 
