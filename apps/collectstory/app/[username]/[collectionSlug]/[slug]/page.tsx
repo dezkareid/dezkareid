@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/server';
 import { getPublicCollectionBySlug, getPublicItemBySlug, type PublicItemDetail } from '@/lib/collections';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { getItemSchema } from '@/src/entities/item';
+import { getBreadcrumbSchema } from '@/src/shared/lib/schema/breadcrumb';
 import { ItemActions } from '@/components/username/ItemActions';
 import { OwnerImageSection } from './_components/OwnerImageSection';
 import { LikeSection } from './_components/LikeSection';
@@ -242,6 +243,7 @@ async function ItemDetail({
       <Suspense fallback={<div className={styles.imageSection} />}>
         <OwnerImageSection
           itemId={item.id}
+          slug={slug}
           userId={item.user_id}
           imageUrl={item.image_url}
           name={item.name}
@@ -265,19 +267,38 @@ async function BreadcrumbNav({
   params: Promise<{ username: string; collectionSlug: string; slug: string }>;
 }) {
   const { username, collectionSlug, slug } = await params;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
+
+  const collectionResult = await getPublicCollectionBySlug(username, collectionSlug);
+  const collectionName = collectionResult?.collection.name ?? collectionSlug;
+
+  const item = collectionResult
+    ? await getPublicItemBySlug(collectionResult.collection.id, slug, username, collectionSlug)
+    : undefined;
+  const itemName = item?.name ?? slug;
+
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: `@${username}`, url: `${baseUrl}/${username}` },
+    { name: collectionName, url: `${baseUrl}/${username}/${collectionSlug}` },
+    { name: itemName, url: `${baseUrl}/${username}/${collectionSlug}/${slug}` },
+  ]);
+
   return (
-    <nav className={styles['item-page__breadcrumb']} aria-label="Breadcrumb">
-      <Link href={`/${username}`} className={styles['item-page__breadcrumb-link']}>
-        @
-        {username}
-      </Link>
-      <span className={styles['item-page__breadcrumb-sep']} aria-hidden="true">/</span>
-      <Link href={`/${username}/${collectionSlug}`} className={styles['item-page__breadcrumb-link']}>
-        {collectionSlug}
-      </Link>
-      <span className={styles['item-page__breadcrumb-sep']} aria-hidden="true">/</span>
-      <span>{slug}</span>
-    </nav>
+    <>
+      <DataSchema schema={breadcrumbSchema} id="breadcrumb-schema" />
+      <nav className={styles['item-page__breadcrumb']} aria-label="Breadcrumb">
+        <Link href={`/${username}`} className={styles['item-page__breadcrumb-link']}>
+          @
+          {username}
+        </Link>
+        <span className={styles['item-page__breadcrumb-sep']} aria-hidden="true">/</span>
+        <Link href={`/${username}/${collectionSlug}`} className={styles['item-page__breadcrumb-link']}>
+          {collectionName}
+        </Link>
+        <span className={styles['item-page__breadcrumb-sep']} aria-hidden="true">/</span>
+        <span>{itemName}</span>
+      </nav>
+    </>
   );
 }
 

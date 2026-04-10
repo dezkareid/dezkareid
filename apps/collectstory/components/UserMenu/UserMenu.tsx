@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
+import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
 import { signOut } from '@/app/actions';
 import styles from './UserMenu.module.css';
 
@@ -53,7 +53,8 @@ export function UserMenu({ username, avatarUrl, email }: UserMenuProperties) {
       >
         {avatarUrl
           ? (
-              <Image
+              <CloudinaryImage
+                mode="fixed"
                 src={avatarUrl}
                 alt={username ?? 'User avatar'}
                 width={32}

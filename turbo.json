@@ -85,7 +85,8 @@
         "src/**/*.js",
         "server/src/**/*.ts",
         "client/src/**/*.ts"
-      ]
+      ],
+      "outputs": []
     },
     "dev": {
       "dependsOn": [

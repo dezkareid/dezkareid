@@ -74,6 +74,7 @@
   "scripts": {
     "build": "rollup -c rollup.config.mjs && pnpm build:angular",
     "build:angular": "ng-packagr -p ng-package.json",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "vitest --run --config vitest.config.mts"

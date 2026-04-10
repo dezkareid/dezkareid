@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
+import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
 import { createClient } from '@/lib/supabase/server';
 import { connection } from 'next/server';
 import { DeleteButton } from '@/components/admin/DeleteButton';
@@ -44,9 +44,10 @@ export default async function FranchisesPage() {
                   <tr key={franchise.id} className={styles.tr}>
                     <td className={styles.td}>
                       {franchise.image_url && (
-                        <Image
+                        <CloudinaryImage
+                          mode="fixed"
                           src={franchise.image_url}
-                          alt=""
+                          alt={franchise.name}
                           width={40}
                           height={40}
                           style={{ objectFit: 'cover', borderRadius: 4 }}

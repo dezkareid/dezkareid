@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { getPublicCollectionsByUsername } from '@/lib/collections';
+import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
 import { UserProfileActions } from '@/components/username/UserProfileActions';
 import { SocialShare } from '@/src/features/social-share';
 import styles from './page.module.css';
@@ -85,7 +85,8 @@ async function ProfileHeader({ params }: { params: Promise<{ username: string }>
       <div className={styles.avatar}>
         {avatarUrl
           ? (
-              <Image
+              <CloudinaryImage
+                mode="fixed"
                 src={avatarUrl}
                 alt={username}
                 width={72}
