@@ -1,0 +1,58 @@
+@keyframes like-pop {
+  0%   { transform: scale(1); }
+  25%  { transform: scale(1.5) rotate(-8deg); }
+  55%  { transform: scale(0.88) rotate(4deg); }
+  75%  { transform: scale(1.15) rotate(-2deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.like-button {
+  align-self: flex-start;
+  width: fit-content;
+  padding: var(--spacing-4) var(--spacing-12);
+  border-radius: var(--border-radius-pill);
+  gap: var(--spacing-4);
+  font-size: var(--font-size-200);
+  border: none !important;
+  background: transparent !important;
+  transition: background 0.2s ease;
+}
+
+.like-button:hover:not(:disabled) {
+  /* TODO(design-system): needs token --color-like-hover-bg (rose-500 at 8% opacity) */
+  background: color-mix(in srgb, #f43f6e 8%, transparent) !important;
+}
+
+.like-button--pending {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* ── Icon ── */
+
+.like-button__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
+  transition: color 0.2s ease;
+}
+
+.like-button:hover:not(:disabled) .like-button__icon {
+  /* TODO(design-system): needs token --color-like (rose-500 #f43f6e) */
+  color: #f43f6e;
+}
+
+
+.like-button__icon--pop {
+  animation: like-pop 0.65s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* ── Count — always secondary color, never changes ── */
+
+.like-button__count {
+  font-variant-numeric: tabular-nums;
+  min-width: 1ch;
+  color: var(--color-text-secondary);
+}

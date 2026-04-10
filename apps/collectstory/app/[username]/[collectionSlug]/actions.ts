@@ -395,6 +395,47 @@ export async function getLinesByBrand(
   }));
 }
 
+// ─── Like actions ─────────────────────────────────────────────────────────────
+
+export async function likeItem(
+  itemId: string,
+): Promise<{ success: true } | { error: string }> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated.' };
+
+  const { error } = await supabase
+    .from('item_likes')
+    .insert({ user_id: user.id, item_id: itemId });
+
+  // Ignore conflict (already liked) — idempotent
+  if (error && error.code !== '23505') return { error: 'Failed to like item. Please try again.' };
+
+  revalidateTag(`item-like:${user.id}:${itemId}`, 'max');
+
+  return { success: true };
+}
+
+export async function unlikeItem(
+  itemId: string,
+): Promise<{ success: true } | { error: string }> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated.' };
+
+  const { error } = await supabase
+    .from('item_likes')
+    .delete()
+    .eq('user_id', user.id)
+    .eq('item_id', itemId);
+
+  if (error) return { error: 'Failed to unlike item. Please try again.' };
+
+  revalidateTag(`item-like:${user.id}:${itemId}`, 'max');
+
+  return { success: true };
+}
+
 // Aliases used by the original addItem / updateItem / updateCollection functions below.
 type ItemState = CollectionItemState;
 

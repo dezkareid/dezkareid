@@ -191,6 +191,18 @@
   text-overflow: ellipsis;
 }
 
+/* Item card like count */
+
+.item-card__like-count {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  margin-top: var(--spacing-4);
+  font-size: var(--font-size-100);
+  color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
 /* Empty state */
 
 .empty {

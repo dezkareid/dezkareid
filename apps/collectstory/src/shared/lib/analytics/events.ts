@@ -8,7 +8,9 @@ export type AnalyticsEvent
     | { action: 'cta_click'; category: 'interaction'; label: string }
     | { action: 'onboarding_start'; category: 'onboarding'; label: 'quick_start' }
     | { action: 'onboarding_complete'; category: 'onboarding'; label: 'quick_start' }
-    | { action: 'page_view'; category: 'navigation'; label: string };
+    | { action: 'page_view'; category: 'navigation'; label: string }
+    | { action: 'like_item'; category: 'engagement'; label: string }
+    | { action: 'unlike_item'; category: 'engagement'; label: string };
 
 /**
  * Dispatches a custom GA event.

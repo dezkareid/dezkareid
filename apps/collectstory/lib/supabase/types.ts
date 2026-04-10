@@ -108,6 +108,7 @@ export type Database = {
           franchise_id: string | null;
           id: string;
           image_url: string | null;
+          likes_count: number;
           line_id: string | null;
           name: string;
           slug: string;
@@ -124,6 +125,7 @@ export type Database = {
           franchise_id?: string | null;
           id?: string;
           image_url?: string | null;
+          likes_count?: number;
           line_id?: string | null;
           name: string;
           slug?: string;
@@ -140,6 +142,7 @@ export type Database = {
           franchise_id?: string | null;
           id?: string;
           image_url?: string | null;
+          likes_count?: number;
           line_id?: string | null;
           name?: string;
           slug?: string;
@@ -281,6 +284,46 @@ export type Database = {
           slug?: string;
         };
         Relationships: [];
+      };
+      item_likes: {
+        Row: {
+          created_at: string;
+          item_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          item_id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          item_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'item_likes_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: false;
+            referencedRelation: 'collection_items';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'item_likes_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: false;
+            referencedRelation: 'last_arrivals';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'item_likes_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       lines: {
         Row: {

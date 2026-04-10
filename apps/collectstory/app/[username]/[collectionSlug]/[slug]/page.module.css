@@ -330,3 +330,17 @@
 .item-page__meta-link:hover {
   text-decoration: underline;
 }
+
+/* ─── Like button skeleton ──────────────────────────────────────────────────── */
+
+.item-page__like-skeleton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4) var(--spacing-12);
+  border-radius: var(--border-radius-pill);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  opacity: 0.5;
+}
