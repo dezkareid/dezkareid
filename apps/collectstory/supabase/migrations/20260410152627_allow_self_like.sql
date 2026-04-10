@@ -1,0 +1,3 @@
+-- Migration: allow_self_like
+-- Already applied to remote via MCP. This file exists to keep local migration
+-- history in sync with the remote schema_migrations table.
