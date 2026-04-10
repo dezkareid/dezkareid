@@ -6,7 +6,7 @@ import { Suspense } from 'react';
 import { createClient } from '@/lib/supabase/server';
 import { getPublicCollectionBySlug, getPublicItemBySlug, type PublicItemDetail } from '@/lib/collections';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
-import { getItemSchema } from '@/src/entities/item';
+import { generateCollectionItemSchema } from '@/lib/seo';
 import { ItemActions } from '@/components/username/ItemActions';
 import { OwnerImageSection } from './_components/OwnerImageSection';
 import { LikeSection } from './_components/LikeSection';
@@ -226,7 +226,7 @@ async function ItemDetail({
   });
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
-  const schema = getItemSchema({
+  const schema = generateCollectionItemSchema({
     item,
     username,
     collectionSlug,
