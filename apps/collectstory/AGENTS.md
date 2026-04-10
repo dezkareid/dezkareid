@@ -231,7 +231,7 @@ npx supabase db push --project-ref <project-ref>
 npx supabase migration new <migration_name>
 ```
 
-> Manual timestamps cause `supabase db push` to fail with "Remote migration versions not found". If this happens, rename local files to match the versions in the error or run `supabase db pull`.
+> **Timestamp mismatch after MCP apply**: The `mcp__supabase__apply_migration` tool applies migrations to remote with its own generated timestamp, which differs from the local filename. This causes `supabase db push --include-all` to fail with "Remote migration versions not found in local migrations directory". **Fix: rename local files to match the remote timestamps listed in the error — do not use `migration repair`.** Match by the descriptive suffix (e.g. `20260410071400_add_item_likes.sql` → `20260410071438_add_item_likes.sql`). Never use `supabase db pull` as it may overwrite local changes.
 
 ### Release Workflow (Changesets)
 
