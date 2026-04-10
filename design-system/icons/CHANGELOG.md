@@ -1,3 +1,10 @@
+# [@dezkareid/icons-v1.4.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/icons-v1.3.0...@dezkareid/icons-v1.4.0) (2026-04-10)
+
+
+### Features
+
+* **collectstory:** add changeset versioning and web app manifest ([49acc61](https://github.com/dezkareid/dezkareid/commit/49acc6150dcac5a946c389e8239e06a5ba362ae8))
+
 # [@dezkareid/icons-v1.3.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/icons-v1.2.1...@dezkareid/icons-v1.3.0) (2026-04-08)
 
 
