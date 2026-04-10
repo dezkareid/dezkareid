@@ -32,6 +32,22 @@
           "inverse": {
             "value": "{color.base.white}"
           }
+        },
+        "like": {
+          "value": "{color.base.rose.700}"
+        },
+        "like-hover-bg": {
+          "value": "{color.base.rose.700}",
+          "alpha": 0.08
+        },
+        "like-gradient-from": {
+          "value": "{color.base.rose.700}"
+        },
+        "like-gradient-to": {
+          "value": "{color.base.orange.400}"
+        },
+        "error": {
+          "value": "{color.base.red.700}"
         }
       },
       "dark": {
@@ -65,6 +81,22 @@
           "inverse": {
             "value": "{color.base.gray.900}"
           }
+        },
+        "like": {
+          "value": "{color.base.rose.100}"
+        },
+        "like-hover-bg": {
+          "value": "{color.base.rose.100}",
+          "alpha": 0.08
+        },
+        "like-gradient-from": {
+          "value": "{color.base.rose.100}"
+        },
+        "like-gradient-to": {
+          "value": "{color.base.orange.100}"
+        },
+        "error": {
+          "value": "{color.base.red.100}"
         }
       }
     }

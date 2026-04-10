@@ -12,7 +12,7 @@ program
   .version('1.0.0')
   .option('-f, --format <format>', 'Output format: css, scss, js', 'css')
   .action(async (options) => {
-    const catalogPath = path.join(process.cwd(), 'dist', 'catalogs', `all-tokens-${options.format}.md`);
+    const catalogPath = path.join(process.cwd(), 'catalogs', `all-tokens-${options.format}.md`);
 
     if (!fs.existsSync(catalogPath)) {
       console.error(`Error: Catalog file for format "${options.format}" not found at: ${catalogPath}`);

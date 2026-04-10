@@ -15,7 +15,8 @@
   "files": [
     "dist",
     "AGENTS.md",
-    "scripts/export-catalog.js"
+    "scripts/export-catalog.js",
+    "catalog"
   ],
   "publishConfig": {
     "access": "public",
