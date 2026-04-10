@@ -10,7 +10,9 @@
     "typecheck": "turbo run typecheck --affected",
     "dev": "turbo run dev",
     "test": "turbo run test --affected",
-    "storybook": "turbo run storybook --filter=storybook-react"
+    "storybook": "turbo run storybook --filter=storybook-react",
+    "changeset": "changeset",
+    "version-packages": "changeset version"
   },
   "repository": {
     "type": "git",
@@ -23,6 +25,7 @@
   },
   "homepage": "https://github.com/dezkareid/dezkareid#readme",
   "devDependencies": {
+    "@changesets/cli": "2.30.0",
     "@commitlint/cli": "19.8.1",
     "@commitlint/config-conventional": "19.8.1",
     "husky": "9.1.7",

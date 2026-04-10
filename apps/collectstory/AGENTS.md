@@ -233,6 +233,47 @@ npx supabase migration new <migration_name>
 
 > Manual timestamps cause `supabase db push` to fail with "Remote migration versions not found". If this happens, rename local files to match the versions in the error or run `supabase db pull`.
 
+### Release Workflow (Changesets)
+
+`@dezkareid/collectstory` uses [Changesets](https://github.com/changesets/changesets) for versioning. The config lives at `.changeset/config.json` in the monorepo root and is scoped exclusively to this package.
+
+#### When to create a changeset
+
+Create a changeset for **every pull request** that contains a user-observable change:
+
+| Change type | Bump | Examples |
+|---|---|---|
+| Breaking change or major new feature | `major` | Removing a route, changing auth flow |
+| Backwards-compatible new feature | `minor` | New page, new manifest field, new icon |
+| Bug fix, dependency update, refactor | `patch` | Fix a layout bug, update a library |
+
+Skip changesets for: documentation-only changes, test-only changes, changes to `working-on/` planning files.
+
+#### How to create a changeset
+
+Run from the **monorepo root** and select `@dezkareid/collectstory` when prompted:
+
+```bash
+pnpm changeset
+```
+
+The CLI will ask:
+1. Which packages to include — select `@dezkareid/collectstory`
+2. Bump type — `patch`, `minor`, or `major`
+3. A summary of the change — write a clear, user-facing description
+
+This creates a file under `.changeset/` that must be committed with the PR.
+
+#### How to release (bump version + generate changelog)
+
+When ready to cut a release, consume all pending changesets:
+
+```bash
+pnpm version-packages
+```
+
+This updates `apps/collectstory/package.json#version` and appends an entry to `apps/collectstory/CHANGELOG.md`. Commit the result as the release commit.
+
 ### Supabase MCP
 
 Add to `.claude/settings.json` at the monorepo root:

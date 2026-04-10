@@ -1,0 +1,31 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.3/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "fixed": [],
+  "linked": [],
+  "access": "restricted",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": [
+    "@dezkareid/main-website",
+    "@dezkareid/eslint-config-js-base",
+    "@dezkareid/eslint-config-ts-base",
+    "@dezkareid/components",
+    "@dezkareid/css",
+    "@dezkareid/design-tokens",
+    "@dezkareid/icons",
+    "@dezkareid/eslint-plugin-web",
+    "@dezkareid/ai-context-sync",
+    "@dezkareid/cra-template-js-app",
+    "@dezkareid/module-federated-libs",
+    "@dezkareid/multi-format",
+    "@dezkareid/react-components",
+    "@dezkareid/react-hooks",
+    "@dezkareid/scaffolding",
+    "@dezkareid/types",
+    "@dezkareid/website",
+    "@dezkareid/auditor",
+    "storybook-react"
+  ]
+}
