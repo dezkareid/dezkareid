@@ -4,6 +4,7 @@ import { IBM_Plex_Sans } from 'next/font/google';
 import Script from 'next/script';
 import { SiteHeader } from '@/src/widgets/site-header';
 import { ReportProblem } from '@/src/widgets/report-problem';
+import { AnalyticsClient } from '@/src/shared/lib/analytics/AnalyticsClient';
 import './globals.css';
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -26,9 +27,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+
   return (
     <html lang="en" className={ibmPlexSans.variable} suppressHydrationWarning>
       <body>
+        <AnalyticsClient gaId={gaId} />
         <Script
           id="theme-strategy"
           strategy="beforeInteractive"

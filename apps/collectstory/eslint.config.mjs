@@ -7,19 +7,4 @@ export default [
   },
   ...tsBase,
   ...nextConfig,
-  {
-    rules: {
-      // Next.js App Router uses PascalCase for component files and lowercase for route files.
-      // Allow both conventions.
-      'unicorn/filename-case': [
-        'error',
-        {
-          cases: {
-            kebabCase: true,
-            pascalCase: true,
-          },
-        },
-      ],
-    },
-  },
 ];

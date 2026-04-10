@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useAnalytics } from '@/src/shared/lib/analytics/useAnalytics';
 import { QuickStartForm } from './QuickStartForm';
 import styles from './OnboardingEmptyState.module.css';
 
@@ -10,6 +11,16 @@ type OnboardingEmptyStateProperties = {
 
 export function OnboardingEmptyState({ username }: OnboardingEmptyStateProperties) {
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const { track } = useAnalytics();
+
+  const handleStartOnboarding = () => {
+    track({
+      action: 'onboarding_start',
+      category: 'onboarding',
+      label: 'quick_start',
+    });
+    setIsFormOpen(true);
+  };
 
   return (
     <div className={styles['onboarding-empty']}>
@@ -71,7 +82,7 @@ export function OnboardingEmptyState({ username }: OnboardingEmptyStatePropertie
         <button
           type="button"
           className={styles['onboarding-empty__cta']}
-          onClick={() => setIsFormOpen(true)}
+          onClick={handleStartOnboarding}
         >
           Add your first item
         </button>
