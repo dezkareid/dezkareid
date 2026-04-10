@@ -17,6 +17,7 @@ Next.js 16 (App Router) web application for tracking collectibles collections. R
 | **Database** | Supabase (Postgres) with Row Level Security |
 | **Styling** | CSS Modules + `@dezkareid/design-tokens` CSS custom properties |
 | **UI Components** | `@dezkareid/components` (Button, Tag, Card, ThemeToggle) |
+| **Analytics** | `@next/third-parties/google` (G4 integration) |
 | **Linting** | `@dezkareid/eslint-plugin-web/next` (ESLint 9 flat config) |
 | **Image CDN** | Cloudinary (configured via `next.config.ts` remotePatterns) |
 | **Node** | >= 22 |
@@ -73,7 +74,18 @@ apps/collectstory/
 │
 ├── src/                                          # FSD — all new code goes here
 │   ├── shared/                                   # No business logic; reusable by any layer
+│   │   ├── lib/
+│   │   │   ├── analytics/                        # Analytics utilities
+│   │   │   │   ├── events.ts                     # Typed G4 event tracking wrapper
+│   │   │   │   ├── hash.ts                       # SHA-256 User ID hashing
+│   │   │   │   ├── useAnalytics.ts               # Client hook for tracking with auth/consent context
+│   │   │   │   └── AnalyticsClient.tsx           # Client-side GA initializer + dynamic banner
+│   │   │   └── share-utilities.ts
 │   │   └── ui/
+│   │       ├── ConsentBanner/                    # Lazy-loaded cookie consent banner
+│   │       │   ├── ConsentBanner.tsx
+│   │       │   ├── ConsentBanner.module.css
+│   │       │   └── index.ts
 │   │       └── dropdown-menu/                    # Generic dropdown primitive
 │   │           ├── DropdownMenu.tsx              # Container: click-outside, Escape, open state
 │   │           ├── DropdownMenu.module.css
@@ -340,6 +352,31 @@ Authentication is OAuth-based — no token stored in the config.
   ```
 
 - Available components from `@dezkareid/components/react`: `Button`, `Tag`, `Card`, `ThemeToggle`. Check these before writing new UI primitives.
+
+### Analytics & Tracking
+
+This application uses Google Analytics 4 (G4) via `@next/third-parties/google`.
+
+- **Privacy**: User IDs are always hashed using SHA-256 before being sent to G4.
+- **Consent**: Tracking is strictly prohibited until the user grants consent via the `ConsentBanner`. Consent state is stored in `localStorage` (`ga_consent: 'true'`).
+- **Performance**: The `GoogleAnalytics` component and `ConsentBanner` are loaded via `AnalyticsClient` (Client Component) to avoid blocking initial TTI. The banner appears after a 3-second idle delay.
+- **How to track events**:
+  - Always use the `useAnalytics` hook from `@/src/shared/lib/analytics/useAnalytics`.
+  - The `track` function automatically handles User ID hashing and checks for consent.
+  - Custom events must be defined in the `AnalyticsEvent` type in `events.ts`.
+
+Example:
+```tsx
+const { track } = useAnalytics();
+
+const handleClick = () => {
+  track({
+    action: 'cta_click',
+    category: 'interaction',
+    label: 'my_button',
+  });
+};
+```
 
 ### Routing Strategy
 

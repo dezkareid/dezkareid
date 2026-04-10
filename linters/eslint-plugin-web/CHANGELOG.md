@@ -1,3 +1,10 @@
+# [@dezkareid/eslint-plugin-web-v1.2.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/eslint-plugin-web-v1.1.2...@dezkareid/eslint-plugin-web-v1.2.0) (2026-04-10)
+
+
+### Features
+
+* **collectstory:** integrate Google Analytics 4 with privacy-focused consent management ([0d9a06c](https://github.com/dezkareid/dezkareid/commit/0d9a06c37d1a4684f424d9b356963ea14f96612d))
+
 # [@dezkareid/eslint-plugin-web-v1.1.2](https://github.com/dezkareid/dezkareid/compare/@dezkareid/eslint-plugin-web-v1.1.1...@dezkareid/eslint-plugin-web-v1.1.2) (2026-04-05)
 
 

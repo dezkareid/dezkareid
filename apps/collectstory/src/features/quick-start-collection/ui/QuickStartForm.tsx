@@ -3,6 +3,7 @@
 import { useActionState, useCallback, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { quickStartCollection } from '@/app/[username]/actions';
+import { useAnalytics } from '@/src/shared/lib/analytics/useAnalytics';
 import styles from './QuickStartForm.module.css';
 
 type QuickStartFormProperties = {
@@ -61,14 +62,20 @@ function FormField({
 export function QuickStartForm({ username, onClose }: QuickStartFormProperties) {
   const router = useRouter();
   const [state, formAction, isPending] = useActionState(quickStartCollection, undefined);
+  const { track } = useAnalytics();
   const dialogRef = useRef<HTMLDivElement>(null);
   const firstInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (state && 'success' in state && state.success) {
+      track({
+        action: 'onboarding_complete',
+        category: 'onboarding',
+        label: 'quick_start',
+      });
       router.push(`/${username}/${state.collectionSlug}`);
     }
-  }, [state, username, router]);
+  }, [state, username, router, track]);
 
   useEffect(() => {
     firstInputRef.current?.focus();

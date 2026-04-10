@@ -3,12 +3,20 @@
 import { usePathname } from 'next/navigation';
 import { Button } from '@dezkareid/components/react';
 import { Info } from '@dezkareid/icons/react';
+import { useAnalytics } from '@/src/shared/lib/analytics/useAnalytics';
 import styles from './ReportProblemButton.module.css';
 
 export function ReportProblemButton() {
   const pathname = usePathname();
+  const { track } = useAnalytics();
 
   const handleReport = () => {
+    track({
+      action: 'cta_click',
+      category: 'interaction',
+      label: 'report_problem',
+    });
+
     const email = 'elmaildeldezkareid@gmail.com';
     const subject = encodeURIComponent('Problem Report - Collectstory');
     const url = `${globalThis.location.origin}${pathname}`;

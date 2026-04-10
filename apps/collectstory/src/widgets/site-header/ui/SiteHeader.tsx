@@ -9,6 +9,7 @@ import { UserMenu } from '@/src/features/user-menu';
 import { getSessionAndRole } from '@/lib/auth/role';
 import { createClient } from '@/lib/supabase/server';
 import { siteData } from '@/lib/mock-data';
+import { HeaderTracker } from './HeaderTracker';
 import styles from './SiteHeader.module.css';
 
 async function HeaderAuthSlot() {
@@ -28,9 +29,11 @@ async function HeaderAuthSlot() {
         <nav className={styles['site-header__nav']} aria-label="Main navigation" />
         <div className={styles['site-header__actions']}>
           <ThemeToggleWrapper />
-          <Link href={signInHref} className={styles['site-header__sign-in']}>
-            Sign In
-          </Link>
+          <HeaderTracker label="login">
+            <Link href={signInHref} className={styles['site-header__sign-in']}>
+              Sign In
+            </Link>
+          </HeaderTracker>
         </div>
       </div>
     );
@@ -47,9 +50,11 @@ async function HeaderAuthSlot() {
     <div className={styles['site-header__nav-actions']}>
       <nav className={styles['site-header__nav']} aria-label="Main navigation">
         {profile?.username && (
-          <Link href={`/${profile.username}`} className={styles['site-header__nav-link']}>
-            Vault
-          </Link>
+          <HeaderTracker label="vault">
+            <Link href={`/${profile.username}`} className={styles['site-header__nav-link']}>
+              Vault
+            </Link>
+          </HeaderTracker>
         )}
         {session.role === 'admin' && <AdminMenu />}
       </nav>
@@ -81,10 +86,12 @@ export function SiteHeader() {
   return (
     <header className={styles['site-header']}>
       <div className={`container ${styles['site-header__inner']}`}>
-        <Link href="/" className={styles['site-header__brand']} aria-label="Collectstory home">
-          <Shelves aria-hidden style={{ '--icon-size': '24px' } as React.CSSProperties} />
-          <span className={styles['site-header__brand-name']}>{siteData.name}</span>
-        </Link>
+        <HeaderTracker label="home">
+          <Link href="/" className={styles['site-header__brand']} aria-label="Collectstory home">
+            <Shelves aria-hidden style={{ '--icon-size': '24px' } as React.CSSProperties} />
+            <span className={styles['site-header__brand-name']}>{siteData.name}</span>
+          </Link>
+        </HeaderTracker>
 
         <Suspense fallback={<HeaderAuthFallback />}>
           <HeaderAuthSlot />
