@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import { Tag } from '@dezkareid/components/react-server';
+import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
 import styles from './CollectionItemCard.module.css';
 
 type Properties = {
@@ -28,10 +28,9 @@ export function CollectionItemCard({
       <div className={styles['collection-item-card__image-wrapper']}>
         {imageUrl
           ? (
-              <Image
+              <CloudinaryImage
                 src={imageUrl}
                 alt={name}
-                fill
                 sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 300px"
                 className={styles['collection-item-card__image']}
               />

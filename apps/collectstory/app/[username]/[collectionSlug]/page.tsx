@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { getCollectionFirstImage, getPublicCollectionBySlug, getPublicItemsInCollection } from '@/lib/collections';
 import { createClient } from '@/lib/supabase/server';
+import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { getCollectionSchema } from '@/src/entities/collection';
+import { getBreadcrumbSchema } from '@/src/shared/lib/schema/breadcrumb';
 import { CollectionActions } from '@/components/username/CollectionActions';
 import { SocialShare } from '@/src/features/social-share';
 import { IHaveThisButton } from '@/src/features/copy-item';
@@ -123,12 +124,10 @@ async function CollectionContent({
                   <div className={styles.itemImage}>
                     {item.image_url
                       ? (
-                          <Image
+                          <CloudinaryImage
                             src={item.image_url}
                             alt={item.name}
-                            fill
                             sizes="(max-width: 420px) 100vw, (max-width: 720px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                            style={{ objectFit: 'cover' }}
                           />
                         )
                       : (
@@ -175,15 +174,28 @@ async function BreadcrumbNav({
   params: Promise<{ username: string; collectionSlug: string }>;
 }) {
   const { username, collectionSlug } = await params;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
+
+  const result = await getPublicCollectionBySlug(username, collectionSlug);
+  const collectionName = result?.collection.name ?? collectionSlug;
+
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: `@${username}`, url: `${baseUrl}/${username}` },
+    { name: collectionName, url: `${baseUrl}/${username}/${collectionSlug}` },
+  ]);
+
   return (
-    <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-      <Link href={`/${username}`} className={styles.breadcrumbLink}>
-        @
-        {username}
-      </Link>
-      <span className={styles.breadcrumbSep} aria-hidden="true">/</span>
-      <span>{collectionSlug}</span>
-    </nav>
+    <>
+      <DataSchema schema={breadcrumbSchema} id="breadcrumb-schema" />
+      <nav className={styles.breadcrumb} aria-label="Breadcrumb">
+        <Link href={`/${username}`} className={styles.breadcrumbLink}>
+          @
+          {username}
+        </Link>
+        <span className={styles.breadcrumbSep} aria-hidden="true">/</span>
+        <span>{collectionName}</span>
+      </nav>
+    </>
   );
 }
 

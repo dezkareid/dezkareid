@@ -1,10 +1,11 @@
 'use client';
 
 import * as React from 'react';
-import Image from 'next/image';
+import { ViewTransition } from 'react';
 import Link from 'next/link';
 import { Card } from '@dezkareid/components/react';
 import type { LastArrivalItem } from '@/lib/collections';
+import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
 import styles from './LatestArrivals.module.css';
 
 export function LatestArrivals() {
@@ -60,21 +61,22 @@ export function LatestArrivals() {
                 return (
                   <div key={item.id} className={styles.item} role="listitem">
                     <Link
-                      href={`/${item.username}/${item.collection_slug}`}
+                      href={`/${item.username}/${item.collection_slug}/${item.slug}`}
                       className={styles.itemLink}
                     >
                       <Card elevation="raised" className={styles.card}>
                         <div className={styles.imageWrapper}>
                           {item.image_url
                             ? (
-                                <Image
-                                  src={item.image_url}
-                                  alt={item.name}
-                                  fill
-                                  sizes="(min-width: 60rem) 25vw, (min-width: 37.5rem) 50vw, 100vw"
-                                  loading={index === 0 ? 'eager' : undefined}
-                                  className={styles.image}
-                                />
+                                <ViewTransition name={`item-image-${item.slug}`}>
+                                  <CloudinaryImage
+                                    src={item.image_url}
+                                    alt={item.name}
+                                    sizes="(min-width: 60rem) 25vw, (min-width: 37.5rem) 50vw, 100vw"
+                                    priority={index === 0}
+                                    className={styles.image}
+                                  />
+                                </ViewTransition>
                               )
                             : (
                                 <div className={styles.placeholderImage} aria-hidden="true">📦</div>
@@ -85,9 +87,10 @@ export function LatestArrivals() {
                           {label && <p className={styles.itemLabel}>{label}</p>}
                           <p className={styles.itemAuthor}>
                             {item.avatar_url && (
-                              <Image
+                              <CloudinaryImage
+                                mode="fixed"
                                 src={item.avatar_url}
-                                alt=""
+                                alt={item.username}
                                 width={16}
                                 height={16}
                                 className={styles.avatar}
