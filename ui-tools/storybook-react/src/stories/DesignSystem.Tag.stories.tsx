@@ -54,7 +54,6 @@ export const WithAriaLabel: Story = {
 // --- Compositions ---
 
 export const AllVariants: Story = {
-  name: 'All Variants',
   render: (args) => (
     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
       <Tag {...args} variant="default">Default</Tag>
