@@ -18,6 +18,7 @@ interface ImageFieldProperties {
   defaultImageUrl?: string;
   uploading: boolean;
   onUploadedUrl: (url: string | undefined) => void;
+  onFile: (file: File | undefined) => void;
   onFileError: (error: string | undefined) => void;
   fileError: string | undefined;
   label?: string;
@@ -28,10 +29,12 @@ async function processFile(
   file: File,
   onFileError: (error: string | undefined) => void,
   onUploadedUrl: (url: string | undefined) => void,
+  onFile: (file: File | undefined) => void,
   setPreview: (url: string | undefined) => void,
 ): Promise<void> {
   onFileError(undefined);
   onUploadedUrl(undefined);
+  onFile(undefined);
   setPreview(undefined);
 
   const isHeic = file.type === 'image/heic' || file.type === 'image/heif'
@@ -53,6 +56,7 @@ async function processFile(
       const heic2any = heic2anyModule.default ?? heic2anyModule;
       const result = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.9 });
       const blob = Array.isArray(result) ? result[0] : result;
+      onFile(new File([blob], file.name, { type: 'image/jpeg' }));
       setPreview(URL.createObjectURL(blob));
     }
     catch {
@@ -61,6 +65,7 @@ async function processFile(
     return;
   }
 
+  onFile(file);
   setPreview(URL.createObjectURL(file));
 }
 
@@ -68,6 +73,7 @@ export function ImageField({
   defaultImageUrl,
   uploading,
   onUploadedUrl,
+  onFile,
   onFileError,
   fileError,
   label = 'Image',
@@ -89,7 +95,7 @@ export function ImageField({
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
-    processFile(file, onFileError, onUploadedUrl, setPreview);
+    processFile(file, onFileError, onUploadedUrl, onFile, setPreview);
     event.target.value = '';
   }
 
@@ -98,7 +104,7 @@ export function ImageField({
       .find(item => item.kind === 'file' && item.type.startsWith('image/'))
       ?.getAsFile();
     if (!file) return;
-    processFile(file, onFileError, onUploadedUrl, setPreview);
+    processFile(file, onFileError, onUploadedUrl, onFile, setPreview);
   }
 
   return (

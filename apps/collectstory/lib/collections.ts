@@ -1,5 +1,5 @@
+import { cacheLife, cacheTag } from 'next/cache';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
-import { cacheLife } from 'next/cache';
 
 function createPublicClient() {
   return createSupabaseClient(
@@ -43,6 +43,8 @@ export type PublicItemDetail = PublicItem & {
   franchises: { id: string; name: string; slug: string } | undefined;
 };
 
+// i18n note: when a `locale` parameter is added, it must be a named function argument
+// (not derived from headers/cookies) so it becomes part of the 'use cache' cache key.
 export type LatestArrival = {
   id: string;
   name: string;
@@ -57,16 +59,16 @@ export type LastArrivalItem = {
   id: string;
   name: string;
   slug: string;
-  image_url: string | null;
+  image_url: string | undefined;
   created_at: string;
   collection_id: string;
   collection_slug: string;
   username: string;
-  avatar_url: string | null;
-  line_name: string | null;
-  line_slug: string | null;
-  brand_name: string | null;
-  brand_slug: string | null;
+  avatar_url: string | undefined;
+  line_name: string | undefined;
+  line_slug: string | undefined;
+  brand_name: string | undefined;
+  brand_slug: string | undefined;
 };
 
 export async function getLatestPublicItems(limit: number = 4): Promise<LatestArrival[]> {
@@ -110,6 +112,31 @@ export async function getLatestPublicItems(limit: number = 4): Promise<LatestArr
   });
 }
 
+type LastArrivalRow = Record<keyof LastArrivalItem, string | null | undefined>;
+
+function mapLastArrivalRowCore(row: LastArrivalRow) {
+  return {
+    id: row.id ?? '',
+    name: row.name ?? '',
+    slug: row.slug ?? '',
+    created_at: row.created_at ?? '',
+    collection_id: row.collection_id ?? '',
+    collection_slug: row.collection_slug ?? '',
+    username: row.username ?? '',
+  };
+}
+
+function mapLastArrivalRowOptionals(row: LastArrivalRow) {
+  return {
+    image_url: row.image_url ?? undefined,
+    avatar_url: row.avatar_url ?? undefined,
+    line_name: row.line_name ?? undefined,
+    line_slug: row.line_slug ?? undefined,
+    brand_name: row.brand_name ?? undefined,
+    brand_slug: row.brand_slug ?? undefined,
+  };
+}
+
 export async function getLastArrivals(): Promise<LastArrivalItem[]> {
   'use cache';
   cacheLife('hours');
@@ -119,26 +146,15 @@ export async function getLastArrivals(): Promise<LastArrivalItem[]> {
     .from('last_arrivals')
     .select('*');
 
-  return (data ?? []).map(row => ({
-    id: row.id ?? '',
-    name: row.name ?? '',
-    slug: row.slug ?? '',
-    image_url: row.image_url ?? null,
-    created_at: row.created_at ?? '',
-    collection_id: row.collection_id ?? '',
-    collection_slug: row.collection_slug ?? '',
-    username: row.username ?? '',
-    avatar_url: row.avatar_url ?? null,
-    line_name: row.line_name ?? null,
-    line_slug: row.line_slug ?? null,
-    brand_name: row.brand_name ?? null,
-    brand_slug: row.brand_slug ?? null,
-  }));
+  return (data ?? []).map(row => ({ ...mapLastArrivalRowCore(row), ...mapLastArrivalRowOptionals(row) }));
 }
 
 export async function getCollectionFirstImage(
   collectionId: string,
 ): Promise<string | undefined> {
+  'use cache';
+  cacheLife('user-content');
+  cacheTag(`collection-first-image:${collectionId}`);
   const supabase = createPublicClient();
 
   const { data: item } = await supabase
@@ -154,9 +170,14 @@ export async function getCollectionFirstImage(
   return item?.image_url ?? undefined;
 }
 
+// i18n note: when a `locale` parameter is added, it must be a named function argument
+// (not derived from headers/cookies) so it becomes part of the 'use cache' cache key.
 export async function getPublicCollectionsByUsername(
   username: string,
 ): Promise<{ collections: PublicCollection[]; userId: string; avatarUrl: string | undefined } | undefined> {
+  'use cache';
+  cacheLife('user-content');
+  cacheTag(`profile:${username}`);
   const supabase = createPublicClient();
 
   const { data: profile } = await supabase
@@ -191,6 +212,8 @@ export async function getPublicCollectionsByUsername(
   return { collections: collectionsWithCount, userId: profile.id, avatarUrl: profile.avatar_url ?? undefined };
 }
 
+// i18n note: when a `locale` parameter is added, it must be a named function argument
+// (not derived from headers/cookies) so it becomes part of the 'use cache' cache key.
 export async function getPublicCollectionBySlug(
   username: string,
   collectionSlug: string,
@@ -198,6 +221,9 @@ export async function getPublicCollectionBySlug(
   collection: { id: string; name: string; slug: string; description: string | undefined };
   userId: string;
 } | undefined> {
+  'use cache';
+  cacheLife('user-content');
+  cacheTag(`collection:${username}:${collectionSlug}`);
   const supabase = createPublicClient();
 
   const { data: profile } = await supabase
@@ -224,9 +250,19 @@ export async function getPublicCollectionBySlug(
   };
 }
 
+// i18n note: when a `locale` parameter is added, it must be a named function argument
+// (not derived from headers/cookies) so it becomes part of the 'use cache' cache key.
 export async function getPublicItemsInCollection(
   collectionId: string,
+  username: string,
+  collectionSlug: string,
 ): Promise<PublicItem[]> {
+  'use cache';
+  cacheLife('user-content');
+  // Tag with both the slug-based key (for revalidation by Server Actions) and
+  // the UUID-based key (for internal cross-references if needed).
+  cacheTag(`collection:${username}:${collectionSlug}`);
+  cacheTag(`collection-items:${collectionId}`);
   const supabase = createPublicClient();
 
   const { data: items } = await supabase
@@ -252,10 +288,17 @@ export async function getPublicItemsInCollection(
   return (items ?? []) as unknown as PublicItem[];
 }
 
+// i18n note: when a `locale` parameter is added, it must be a named function argument
+// (not derived from headers/cookies) so it becomes part of the 'use cache' cache key.
 export async function getPublicItemBySlug(
   collectionId: string,
   itemSlug: string,
+  username: string,
+  collectionSlug: string,
 ): Promise<PublicItemDetail | undefined> {
+  'use cache';
+  cacheLife('user-content');
+  cacheTag(`item:${username}:${collectionSlug}:${itemSlug}`);
   const supabase = createPublicClient();
 
   const { data: item } = await supabase

@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/server';
@@ -66,6 +66,7 @@ export async function createCollection(
 
   if (profile?.username) {
     revalidatePath(`/${profile.username}`);
+    revalidateTag(`profile:${profile.username}`, 'max');
   }
 
   return { success: true, slug };
@@ -92,6 +93,8 @@ export async function deleteCollection(collectionId: string): Promise<{ error: s
 
   if (profile?.username) {
     revalidatePath(`/${profile.username}`);
+    // Invalidate both the collection and the profile page (collection list changes).
+    revalidateTag(`profile:${profile.username}`, 'max');
   }
 
   return { success: true };
@@ -143,6 +146,9 @@ export async function createCollectionItem(
   const username = getOptional(formData, 'username');
   const collectionSlug = getOptional(formData, 'collection_slug');
   revalidatePath(`/${username}/${collectionSlug}`);
+  if (username && collectionSlug) {
+    revalidateTag(`collection:${username}:${collectionSlug}`, 'max');
+  }
   return { success: true };
 }
 
@@ -268,6 +274,8 @@ export async function copyItemToCollection(
 export async function updateItemImage(
   itemId: string,
   imageUrl: string,
+  username: string,
+  collectionSlug: string,
 ): Promise<{ error: string } | { success: true }> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -290,15 +298,8 @@ export async function updateItemImage(
 
   if (error) return { error: 'Failed to update image. Please try again.' };
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('username')
-    .eq('id', user.id)
-    .single();
-
-  if (profile?.username) {
-    revalidatePath(`/${profile.username}/items/${item.slug}`);
-  }
+  revalidatePath(`/${username}/${collectionSlug}/${item.slug}`);
+  revalidateTag(`item:${username}:${collectionSlug}:${item.slug}`, 'max');
 
   return { success: true };
 }
@@ -440,6 +441,9 @@ export async function addItem(
   const collectionSlug = getOptional(formData, 'collection_slug');
 
   revalidatePath(`/${username}/${collectionSlug}`);
+  if (username && collectionSlug) {
+    revalidateTag(`collection:${username}:${collectionSlug}`, 'max');
+  }
   redirect(`/${username}/${collectionSlug}`);
 }
 
@@ -473,6 +477,9 @@ export async function updateCollection(
   const username = getOptional(formData, 'username');
   revalidatePath(`/${username}/${updated.slug}`);
   revalidatePath(`/${username}`);
+  if (username) {
+    revalidateTag(`collection:${username}:${updated.slug}`, 'max');
+  }
 
   return { success: true, slug: updated.slug };
 }
@@ -533,6 +540,9 @@ export async function updateItem(
 
   revalidatePath(`/${username}/${collectionSlug}/${item.slug}`);
   revalidatePath(`/${username}/${collectionSlug}`);
+  if (username && collectionSlug) {
+    revalidateTag(`item:${username}:${collectionSlug}:${item.slug}`, 'max');
+  }
 
   redirect(`/${username}/${collectionSlug}/${item.slug}`);
 }

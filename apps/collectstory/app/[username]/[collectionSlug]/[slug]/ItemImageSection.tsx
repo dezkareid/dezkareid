@@ -11,9 +11,11 @@ type Properties = {
   imageUrl: string | undefined;
   name: string;
   isOwner: boolean;
+  username: string;
+  collectionSlug: string;
 };
 
-export function ItemImageSection({ itemId, imageUrl, name, isOwner }: Properties) {
+export function ItemImageSection({ itemId, imageUrl, name, isOwner, username, collectionSlug }: Properties) {
   const [currentImageUrl, setCurrentImageUrl] = useState(imageUrl);
   const [editingImage, setEditingImage] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -64,7 +66,7 @@ export function ItemImageSection({ itemId, imageUrl, name, isOwner }: Properties
 
       {isOwner && editingImage && (
         <div className={styles['item-page__owner-actions']}>
-          <UpdateImageForm itemId={itemId} onSuccess={handleImageUpdated} />
+          <UpdateImageForm itemId={itemId} username={username} collectionSlug={collectionSlug} onSuccess={handleImageUpdated} />
           <Button
             variant="ghost"
             size="sm"

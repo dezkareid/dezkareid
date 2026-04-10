@@ -9,6 +9,16 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  cacheLife: {
+    // User-generated content pages: profile, collection, item detail.
+    // Primary freshness mechanism is on-demand revalidation via revalidateTag()
+    // after owner mutations — TTL expiry is the safety net only.
+    'user-content': {
+      stale: 60 * 60 * 24, // 24h — serve stale while revalidating
+      revalidate: 60 * 60 * 24, // 24h — background revalidation interval
+      expire: 60 * 60 * 24 * 7, // 7d — hard expiry
+    },
+  },
   images: {
     remotePatterns: [
       {

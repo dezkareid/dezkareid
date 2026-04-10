@@ -30,7 +30,7 @@ export function LatestArrivals() {
   }, []);
 
   if (!loading && items.length === 0) {
-    return null;
+    return;
   }
 
   return (

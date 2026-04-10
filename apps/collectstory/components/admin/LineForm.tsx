@@ -58,6 +58,7 @@ export function LineForm({ action, brands, categories, defaultName, defaultBrand
 
   const [uploading, setUploading] = useState(false);
   const [uploadedUrl, setUploadedUrl] = useState<string | undefined>();
+  const [pendingFile, setPendingFile] = useState<File | undefined>();
   const [fileError, setFileError] = useState<string | undefined>();
   const [variants, setVariants] = useState<LineVariant[]>(
     (defaultVariants ?? []).map(v => ({ ...v, key: crypto.randomUUID() })),
@@ -84,7 +85,7 @@ export function LineForm({ action, brands, categories, defaultName, defaultBrand
     const data = new FormData(form);
 
     const fileInput = form.elements.namedItem('image_file') as HTMLInputElement;
-    const file = fileInput?.files?.[0];
+    const file = fileInput?.files?.[0] ?? pendingFile;
 
     if (file && !uploadedUrl) {
       setUploading(true);
@@ -95,6 +96,7 @@ export function LineForm({ action, brands, categories, defaultName, defaultBrand
         return;
       }
       setUploadedUrl(result.url);
+      setPendingFile(undefined);
       data.set('image_url', result.url);
     }
     else if (uploadedUrl) {
@@ -147,6 +149,10 @@ export function LineForm({ action, brands, categories, defaultName, defaultBrand
         defaultImageUrl={defaultImageUrl}
         uploading={uploading}
         onUploadedUrl={setUploadedUrl}
+        onFile={(file) => {
+          setPendingFile(file);
+          setFileError(undefined);
+        }}
         onFileError={setFileError}
         fileError={fileError}
       />

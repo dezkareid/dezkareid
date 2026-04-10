@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { RESERVED_USERNAMES } from '@/lib/reserved-usernames';
 
@@ -44,6 +44,7 @@ export async function updateProfile(
   if (error) return { error: 'Failed to save profile. Please try again.' };
 
   revalidatePath(`/${username}`);
+  revalidateTag(`profile:${username}`, 'max');
   return { success: true };
 }
 

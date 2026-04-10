@@ -27,7 +27,7 @@ export type InitialItemData = {
 
 type ActionState = { error: string; field?: string } | { success: true } | undefined;
 
-type Properties<T = ActionState> = {
+type Properties<T extends ActionState = ActionState> = {
   brands: Brand[];
   franchises: Franchise[];
   collectionId: string;
@@ -126,7 +126,7 @@ function VariantSelectField({
         onChange={onVariantChange}
       >
         <option value="">— none —</option>
-        {line.variants.map((v) => (
+        {line.variants.map(v => (
           <option key={v.value} value={v.value}>
             {v.display_name}
           </option>
@@ -182,7 +182,7 @@ function BrandLineFields({
         <label className={styles.label} htmlFor="item-brand">Brand</label>
         <select id="item-brand" className={styles.select} onChange={onBrandChange} value={selectedBrandId}>
           <option value="">— none —</option>
-          {brands.map((b) => (
+          {brands.map(b => (
             <option key={b.id} value={b.id}>
               {b.name}
             </option>
@@ -205,7 +205,7 @@ function BrandLineFields({
           onChange={onLineChange}
         >
           <option value="">— none —</option>
-          {lines.map((l) => (
+          {lines.map(l => (
             <option key={l.id} value={l.id}>
               {l.name}
             </option>
@@ -223,7 +223,7 @@ function MetaFields({ franchises, initialData }: { franchises: Franchise[]; init
         <label className={styles.label} htmlFor="item-franchise">Franchise</label>
         <select id="item-franchise" name="franchise_id" className={styles.select} defaultValue={initialData?.franchise_id ?? ''}>
           <option value="">— none —</option>
-          {franchises.map((f) => (
+          {franchises.map(f => (
             <option key={f.id} value={f.id}>
               {f.name}
             </option>
@@ -282,14 +282,14 @@ function FormActions({ uploading, pending, submitLabel }: { uploading: boolean; 
   );
 }
 
-function useAddItemFormLogic<T>(
+function useAddItemFormLogic<T extends ActionState>(
   initialData: InitialItemData | undefined,
   action: Properties<T>['action'],
   onSuccess: Properties<T>['onSuccess'],
 ) {
-  const defaultAction = useCallback(async (previousState: ActionState, formData: FormData) => createCollectionItem(previousState, formData), []) as unknown as (previousState: T, formData: FormData) => Promise<T>;
-  const finalAction = action || defaultAction;
-  const [state, formAction, pending] = useActionState(finalAction as any, undefined as any);
+  const defaultAction = useCallback(async (previousState: ActionState, formData: FormData) => createCollectionItem(previousState, formData), []) as unknown as (state: Awaited<T>, payload: FormData) => Promise<T>;
+  const finalAction = (action as unknown as (state: Awaited<T>, payload: FormData) => Promise<T>) || defaultAction;
+  const [state, formAction, pending] = useActionState(finalAction, undefined as unknown as Awaited<T>);
   const [fileError, setFileError] = useState<string>();
   const [uploadFailed, setUploadFailed] = useState(false);
   const [preview, setPreview] = useState<string | undefined>(initialData?.image_url);
@@ -303,7 +303,7 @@ function useAddItemFormLogic<T>(
   const [, startTransition] = useTransition();
 
   useEffect(() => {
-    if (state && typeof state === 'object' && 'success' in (state as any)) onSuccess(state as T);
+    if (state && typeof state === 'object' && 'success' in state) onSuccess(state as T);
   }, [state, onSuccess]);
 
   const loadLines = useCallback((brandId: string, lineId?: string) => {
@@ -311,7 +311,7 @@ function useAddItemFormLogic<T>(
       const result = await getLinesByBrand(brandId);
       setLines(result);
       if (lineId) {
-        setSelectedLine(result.find((l) => l.id === lineId));
+        setSelectedLine(result.find(l => l.id === lineId));
       }
     });
   }, []);
@@ -349,7 +349,7 @@ function useAddItemFormLogic<T>(
 
   const handleLineChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     const lineId = event.target.value;
-    setSelectedLine(lines.find((l) => l.id === lineId));
+    setSelectedLine(lines.find(l => l.id === lineId));
     setSelectedVariant('');
   }, [lines]);
 
@@ -380,7 +380,7 @@ function useAddItemFormLogic<T>(
     const form = event.currentTarget;
     const data = new FormData(form);
     const ok = await resolveImageUrl(form, data);
-    if (ok) startTransition(() => (formAction as any)(data));
+    if (ok) startTransition(() => formAction(data));
   };
 
   return {
@@ -403,7 +403,7 @@ function useAddItemFormLogic<T>(
   };
 }
 
-function FormBody<T>({
+function FormBody<T extends ActionState>({
   properties,
   logic,
 }: {
@@ -429,8 +429,7 @@ function FormBody<T>({
     pending,
   } = logic;
 
-  const isBusy = pending || uploading;
-  const stateAsError = state && typeof state === 'object' && 'error' in (state as any) ? ((state as any).error as string) : undefined;
+  const stateAsError = state && typeof state === 'object' && 'error' in state ? (state as { error: string }).error : undefined;
 
   return (
     <>
@@ -459,7 +458,7 @@ function FormBody<T>({
       <VariantSelectField
         line={selectedLine}
         selectedVariant={selectedVariant}
-        onVariantChange={(event) => setSelectedVariant(event.target.value)}
+        onVariantChange={event => setSelectedVariant(event.target.value)}
       />
 
       <MetaFields franchises={franchises} initialData={initialData} />
@@ -471,10 +470,10 @@ function FormBody<T>({
   );
 }
 
-export function AddItemForm<T = ActionState>(properties: Properties<T>) {
+export function AddItemForm<T extends ActionState = ActionState>(properties: Properties<T>) {
   const logic = useAddItemFormLogic<T>(properties.initialData, properties.action, properties.onSuccess);
   const { state, handleSubmit } = logic;
-  const stateAsError = state && typeof state === 'object' && 'error' in (state as any) ? ((state as any).error as string) : undefined;
+  const stateAsError = state && typeof state === 'object' && 'error' in state ? (state as { error: string }).error : undefined;
 
   return (
     <form onSubmit={handleSubmit} className={styles.form} noValidate>
