@@ -120,6 +120,26 @@ const PAIRS = [
     fg: ['primary'],
     bg: ['background', 'secondary'],
   },
+  {
+    label: 'error on background-primary',
+    fg: ['error'],
+    bg: ['background', 'primary'],
+  },
+  {
+    label: 'error on background-secondary',
+    fg: ['error'],
+    bg: ['background', 'secondary'],
+  },
+  {
+    label: 'like on background-primary',
+    fg: ['like'],
+    bg: ['background', 'primary'],
+  },
+  {
+    label: 'like on background-secondary',
+    fg: ['like'],
+    bg: ['background', 'secondary'],
+  },
 ];
 
 // ---------------------------------------------------------------------------

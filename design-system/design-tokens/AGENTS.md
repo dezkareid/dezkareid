@@ -13,6 +13,10 @@ This project serves as the single source of truth for the `dezkareid` design sys
 ## Project Structure
 ```text
 design-system/design-tokens/
+├── catalogs/               # Token catalogs for discovery (auto-generated)
+│   ├── all-tokens-css.md   # CSS variables reference
+│   ├── all-tokens-scss.md  # SCSS variables reference
+│   └── all-tokens-js.md    # JS/TS constants reference
 ├── dist/                   # Build outputs (auto-generated)
 │   ├── css/variables.css   # CSS Custom Properties with light-dark() support
 │   ├── scss/_variables.scss# Simple SCSS variables
@@ -125,9 +129,10 @@ Tokens follow a multi-tier architecture to ensure maintainability:
 - All new color pairs MUST be validated with the `contrast-check` script.
 
 ### Documentation & Storybook
-- **Internal**: Use `pnpm tokens:catalog` for a quick CLI/Markdown reference.
-- **External**: Tokens are consumed by `ui-tools/storybook-react` for component documentation.
-- **Interactive**: Use the local `visualizer` for a graphical overview.
+- **Internal**: Use the markdown catalogs in the \`catalogs/\` directory for a quick CLI/Markdown reference. These files (\`all-tokens-css.md\`, \`all-tokens-scss.md\`, \`all-tokens-js.md\`) are the primary source for token discovery for AI agents and developers.
+- **External**: Tokens are consumed by \`ui-tools/storybook-react\` for component documentation.
+- **Interactive**: Use the local \`visualizer\` for a graphical overview.
+
 
 ### Skills
 The following skills/agents are essential for this project:
