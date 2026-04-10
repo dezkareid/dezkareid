@@ -4,12 +4,38 @@ const { generateCatalog } = require('./src/utils/catalog-generator');
 module.exports = {
   source: ['src/tokens/**/*.json'],
   hooks: {
+    transforms: {
+      'color/alpha': {
+        type: 'value',
+        transitive: true,
+        filter: (token) => token.path.includes('color') && token.alpha !== undefined,
+        transform: (token) => {
+          const { value, alpha } = token;
+          if (typeof value !== 'string' || !value.startsWith('#')) return value;
+
+          let r, g, b;
+          if (value.length === 4) {
+            r = parseInt(value[1] + value[1], 16);
+            g = parseInt(value[2] + value[2], 16);
+            b = parseInt(value[3] + value[3], 16);
+          } else {
+            r = parseInt(value.slice(1, 3), 16);
+            g = parseInt(value.slice(3, 5), 16);
+            b = parseInt(value.slice(5, 7), 16);
+          }
+          return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+      }
+    },
     formats: {
       'css/variables-light-dark': ({ dictionary }) => {
         const tokenPathMap = new Map();
         dictionary.allTokens.forEach(t => tokenPathMap.set(t.path.join('.'), t));
 
         const formatValue = (token) => {
+          if (token.alpha !== undefined) {
+            return token.value;
+          }
           if (typeof token.original.value === 'string') {
             const match = token.original.value.match(/^\{([^}]+)\}$/);
             if (match) {
@@ -129,8 +155,8 @@ module.exports = {
   },
   platforms: {
     catalog: {
-      transforms: ['color/css'],
-      buildPath: 'dist/catalogs/',
+      transforms: ['color/css', 'color/alpha'],
+      buildPath: 'catalogs/',
       files: [
         {
           destination: 'all-tokens-css.md',
@@ -150,7 +176,7 @@ module.exports = {
       ]
     },
     css: {
-      transforms: ['color/css'],
+      transforms: ['color/css', 'color/alpha'],
       buildPath: 'dist/css/',
       files: [
         {
@@ -160,7 +186,7 @@ module.exports = {
       ]
     },
     scss: {
-      transforms: ['color/css'],
+      transforms: ['color/css', 'color/alpha'],
       buildPath: 'dist/scss/',
       files: [
         {
