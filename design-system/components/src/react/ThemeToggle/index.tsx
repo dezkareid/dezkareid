@@ -4,9 +4,10 @@ import { useState, useEffect, type HTMLAttributes, type Ref } from 'react';
 import cx from 'classnames';
 import type { Theme, ThemeToggleProperties } from '../../shared/types/theme-toggle';
 import { getInitialTheme, applyTheme, persistTheme } from '../../shared/js/theme';
+import { Button } from '../Button';
 import styles from '../../css/theme-toggle.module.css';
 
-export interface Properties extends ThemeToggleProperties, HTMLAttributes<HTMLSpanElement> {
+export interface Properties extends ThemeToggleProperties, Omit<HTMLAttributes<HTMLSpanElement>, 'onChange'> {
   /**
    * Optional ref forwarded to the wrapper span element.
    * In React 19+, 'ref' is a standard prop and forwardRef is deprecated.
@@ -83,8 +84,8 @@ export function ThemeToggle({
 
   return (
     <span ref={ref} className={cx(styles['theme-toggle__wrapper'], className)} {...rest}>
-      <button
-        type="button"
+      <Button
+        variant="ghost"
         className={cx(styles['theme-toggle'], isDark && styles['theme-toggle--dark'])}
         onClick={toggle}
         aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
@@ -92,7 +93,7 @@ export function ThemeToggle({
       >
         {isDark ? MoonIcon : SunIcon}
         {label}
-      </button>
+      </Button>
       <span aria-live="polite" className={styles['sr-only']}>
         {`${label} mode active`}
       </span>

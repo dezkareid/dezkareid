@@ -1,8 +1,10 @@
-import Image from 'next/image';
+import { ViewTransition } from 'react';
 import { Tag } from '@dezkareid/components/react-server';
+import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
 import styles from './CollectionItemCard.module.css';
 
 type Properties = {
+  slug: string;
   name: string;
   imageUrl: string | undefined;
   brand: string | undefined;
@@ -13,6 +15,7 @@ type Properties = {
 };
 
 export function CollectionItemCard({
+  slug,
   name,
   imageUrl,
   brand,
@@ -28,13 +31,14 @@ export function CollectionItemCard({
       <div className={styles['collection-item-card__image-wrapper']}>
         {imageUrl
           ? (
-              <Image
-                src={imageUrl}
-                alt={name}
-                fill
-                sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 300px"
-                className={styles['collection-item-card__image']}
-              />
+              <ViewTransition name={`item-image-${slug}`}>
+                <CloudinaryImage
+                  src={imageUrl}
+                  alt={name}
+                  sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 300px"
+                  className={styles['collection-item-card__image']}
+                />
+              </ViewTransition>
             )
           : (
               <div className={styles['collection-item-card__image-placeholder']} aria-hidden="true">

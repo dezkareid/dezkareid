@@ -4,6 +4,7 @@ import { ItemImageSection } from '../ItemImageSection';
 
 type Properties = {
   itemId: string;
+  slug: string;
   userId: string;
   imageUrl: string | undefined;
   name: string;
@@ -17,7 +18,7 @@ type Properties = {
  * correct isOwner value. Wrapped in <Suspense> on the parent page so it
  * streams in without blocking the cached static shell.
  */
-export async function OwnerImageSection({ itemId, userId, imageUrl, name, username, collectionSlug }: Properties) {
+export async function OwnerImageSection({ itemId, slug, userId, imageUrl, name, username, collectionSlug }: Properties) {
   await connection();
 
   const supabase = await createClient();
@@ -27,6 +28,7 @@ export async function OwnerImageSection({ itemId, userId, imageUrl, name, userna
   return (
     <ItemImageSection
       itemId={itemId}
+      slug={slug}
       imageUrl={imageUrl}
       name={name}
       isOwner={isOwner}

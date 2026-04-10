@@ -8,6 +8,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  experimental: {
+    viewTransition: true,
+  },
   cacheComponents: true,
   cacheLife: {
     // User-generated content pages: profile, collection, item detail.
@@ -21,10 +24,6 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'res.cloudinary.com',
-      },
       {
         protocol: 'https',
         hostname: 'lh3.googleusercontent.com',
