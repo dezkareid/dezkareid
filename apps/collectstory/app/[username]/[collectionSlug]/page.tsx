@@ -6,7 +6,7 @@ import { getCollectionFirstImage, getPublicCollectionBySlug, getPublicItemsInCol
 import { createClient } from '@/lib/supabase/server';
 import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
-import { getCollectionSchema } from '@/src/entities/collection';
+import { generateCollectionListingSchema } from '@/lib/seo';
 import { getBreadcrumbSchema } from '@/src/shared/lib/schema/breadcrumb';
 import { CollectionActions } from '@/components/username/CollectionActions';
 import { SocialShare } from '@/src/features/social-share';
@@ -67,7 +67,7 @@ async function CollectionContent({
   const { data: { user } } = await supabase.auth.getUser();
   const isOwner = user?.id === result.userId;
 
-  const schema = getCollectionSchema({
+  const schema = generateCollectionListingSchema({
     collection,
     username,
     items,
