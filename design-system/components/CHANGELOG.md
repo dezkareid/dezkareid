@@ -1,3 +1,10 @@
+# [@dezkareid/components-v1.3.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.2.3...@dezkareid/components-v1.3.0) (2026-04-10)
+
+
+### Features
+
+* **collectstory:** fix theme toggle border, Cloudinary image LCP, breadcrumbs, and last arrivals link ([643052c](https://github.com/dezkareid/dezkareid/commit/643052c6147c7ff39a436c93bb6acdf3192ff68e))
+
 # [@dezkareid/components-v1.2.3](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.2.2...@dezkareid/components-v1.2.3) (2026-04-07)
 
 
