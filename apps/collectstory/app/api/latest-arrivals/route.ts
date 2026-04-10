@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { getLatestPublicItems } from '@/lib/collections';
+import { getLastArrivals } from '@/lib/collections';
 
 export async function GET() {
   try {
-    const items = await getLatestPublicItems(4);
+    const items = await getLastArrivals();
     return NextResponse.json(items);
   }
   catch (error) {

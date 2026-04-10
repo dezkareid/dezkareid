@@ -35,29 +35,6 @@
   color: var(--color-text-secondary);
 }
 
-.controls {
-  display: flex;
-  gap: var(--spacing-8);
-}
-
-.controlBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--border-radius-pill);
-  border: 1px solid var(--color-background-secondary);
-  background: none;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.controlBtn:hover {
-  background-color: var(--color-background-secondary);
-  color: var(--color-text-primary);
-}
 
 .grid {
   display: grid;
@@ -163,7 +140,22 @@
   color: var(--color-text-primary);
 }
 
-.itemAuthor {
+.itemLabel {
   font-size: var(--font-size-200);
   color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-4);
+}
+
+.itemAuthor {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+}
+
+.avatar {
+  border-radius: var(--border-radius-pill);
+  object-fit: cover;
+  flex-shrink: 0;
 }
