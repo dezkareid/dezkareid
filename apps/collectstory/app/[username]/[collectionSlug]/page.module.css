@@ -113,6 +113,16 @@
   }
 }
 
+.itemCardWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.itemActions {
+  margin-top: var(--spacing-8);
+}
+
 /* Item card */
 
 .itemCard {

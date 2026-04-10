@@ -4,10 +4,12 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { getCollectionFirstImage, getPublicCollectionBySlug, getPublicItemsInCollection } from '@/lib/collections';
+import { createClient } from '@/lib/supabase/server';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { getCollectionSchema } from '@/src/entities/collection';
 import { CollectionActions } from '@/components/username/CollectionActions';
 import { SocialShare } from '@/src/features/social-share';
+import { IHaveThisButton } from '@/src/features/copy-item';
 import styles from './page.module.css';
 
 type Properties = {
@@ -60,6 +62,10 @@ async function CollectionContent({
   const items = await getPublicItemsInCollection(collection.id, username, collectionSlug);
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const isOwner = user?.id === result.userId;
+
   const schema = getCollectionSchema({
     collection,
     username,
@@ -76,7 +82,6 @@ async function CollectionContent({
             <h1 className={styles.collectionName}>{collection.name}</h1>
             <SocialShare
               title={`${collection.name} by ${username} on Collectstory`}
-              text={`Check out this collection: ${collection.name}`}
               baseUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/${username}/${collectionSlug}`}
               entityType="collection"
             />
@@ -110,33 +115,39 @@ async function CollectionContent({
               </div>
             )
           : items.map(item => (
-              <Link
-                key={item.id}
-                href={`/${username}/${collectionSlug}/${item.slug}`}
-                className={styles.itemCard}
-              >
-                <div className={styles.itemImage}>
-                  {item.image_url
-                    ? (
-                        <Image
-                          src={item.image_url}
-                          alt={item.name}
-                          fill
-                          sizes="(max-width: 420px) 100vw, (max-width: 720px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                          style={{ objectFit: 'cover' }}
-                        />
-                      )
-                    : (
-                        <div className={styles.itemImagePlaceholder}>
-                          📦
-                        </div>
-                      )}
-                </div>
-                <p className={styles.itemName}>{item.name}</p>
-                {item.lines?.name && (
-                  <p className={styles.itemLine}>{item.lines.name}</p>
+              <div key={item.id} className={styles.itemCardWrapper}>
+                <Link
+                  href={`/${username}/${collectionSlug}/${item.slug}`}
+                  className={styles.itemCard}
+                >
+                  <div className={styles.itemImage}>
+                    {item.image_url
+                      ? (
+                          <Image
+                            src={item.image_url}
+                            alt={item.name}
+                            fill
+                            sizes="(max-width: 420px) 100vw, (max-width: 720px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                            style={{ objectFit: 'cover' }}
+                          />
+                        )
+                      : (
+                          <div className={styles.itemImagePlaceholder}>
+                            📦
+                          </div>
+                        )}
+                  </div>
+                  <p className={styles.itemName}>{item.name}</p>
+                  {item.lines?.name && (
+                    <p className={styles.itemLine}>{item.lines.name}</p>
+                  )}
+                </Link>
+                {!isOwner && (
+                  <div className={styles.itemActions}>
+                    <IHaveThisButton item={item} />
+                  </div>
                 )}
-              </Link>
+              </div>
             ))}
       </div>
     </>

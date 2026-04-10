@@ -87,7 +87,10 @@ export function NameOnlyForm({ action, cancelHref, defaultName, defaultImageUrl,
         defaultImageUrl={defaultImageUrl}
         uploading={uploading}
         onUploadedUrl={setUploadedUrl}
-        onFile={file => { setPendingFile(file); setFileError(undefined); }}
+        onFile={(file) => {
+          setPendingFile(file);
+          setFileError(undefined);
+        }}
         onFileError={setFileError}
         fileError={fileError}
       />

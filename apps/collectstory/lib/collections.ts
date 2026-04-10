@@ -26,8 +26,9 @@ export type PublicItem = {
   description: string | undefined;
   date_acquired: string | undefined;
   lines: {
+    id: string;
     name: string;
-    brands: { name: string } | undefined;
+    brands: { id: string; name: string } | undefined;
     categories: { name: string } | undefined;
     variants: LineVariant[];
   } | undefined;
@@ -37,11 +38,117 @@ export type PublicItemDetail = PublicItem & {
   visibility: string;
   user_id: string;
   variant: string | undefined;
-  franchises: { name: string; slug: string } | undefined;
+  line_id?: string;
+  franchise_id?: string;
+  franchises: { id: string; name: string; slug: string } | undefined;
 };
 
 // i18n note: when a `locale` parameter is added, it must be a named function argument
 // (not derived from headers/cookies) so it becomes part of the 'use cache' cache key.
+export type LatestArrival = {
+  id: string;
+  name: string;
+  slug: string;
+  image_url: string | undefined;
+  author: string;
+  category: string | undefined;
+  collection_slug: string;
+};
+
+export type LastArrivalItem = {
+  id: string;
+  name: string;
+  slug: string;
+  image_url: string | undefined;
+  created_at: string;
+  collection_id: string;
+  collection_slug: string;
+  username: string;
+  avatar_url: string | undefined;
+  line_name: string | undefined;
+  line_slug: string | undefined;
+  brand_name: string | undefined;
+  brand_slug: string | undefined;
+};
+
+export async function getLatestPublicItems(limit: number = 4): Promise<LatestArrival[]> {
+  'use cache';
+  cacheLife('hours');
+  const supabase = createPublicClient();
+
+  const { data: items } = await supabase
+    .from('collection_items')
+    .select(`
+      id,
+      name,
+      slug,
+      image_url,
+      collections (
+        slug
+      )
+    `)
+    .eq('visibility', 'public')
+    .order('created_at', { ascending: false })
+    .limit(limit);
+
+  return (items ?? []).map((item: {
+    id: string;
+    name: string;
+    slug: string;
+    image_url: string | null;
+    collections: { slug: string } | { slug: string }[] | null;
+  }) => {
+    const collection = Array.isArray(item.collections) ? item.collections[0] : item.collections;
+
+    return {
+      id: item.id,
+      name: item.name,
+      slug: item.slug,
+      image_url: item.image_url ?? undefined,
+      author: 'collector',
+      category: undefined,
+      collection_slug: collection?.slug ?? 'default',
+    };
+  });
+}
+
+type LastArrivalRow = Record<keyof LastArrivalItem, string | null | undefined>;
+
+function mapLastArrivalRowCore(row: LastArrivalRow) {
+  return {
+    id: row.id ?? '',
+    name: row.name ?? '',
+    slug: row.slug ?? '',
+    created_at: row.created_at ?? '',
+    collection_id: row.collection_id ?? '',
+    collection_slug: row.collection_slug ?? '',
+    username: row.username ?? '',
+  };
+}
+
+function mapLastArrivalRowOptionals(row: LastArrivalRow) {
+  return {
+    image_url: row.image_url ?? undefined,
+    avatar_url: row.avatar_url ?? undefined,
+    line_name: row.line_name ?? undefined,
+    line_slug: row.line_slug ?? undefined,
+    brand_name: row.brand_name ?? undefined,
+    brand_slug: row.brand_slug ?? undefined,
+  };
+}
+
+export async function getLastArrivals(): Promise<LastArrivalItem[]> {
+  'use cache';
+  cacheLife('hours');
+  const supabase = createPublicClient();
+
+  const { data } = await supabase
+    .from('last_arrivals')
+    .select('*');
+
+  return (data ?? []).map(row => ({ ...mapLastArrivalRowCore(row), ...mapLastArrivalRowOptionals(row) }));
+}
+
 export async function getCollectionFirstImage(
   collectionId: string,
 ): Promise<string | undefined> {
@@ -168,8 +275,9 @@ export async function getPublicItemsInCollection(
       description,
       date_acquired,
       lines (
+        id,
         name,
-        brands ( name ),
+        brands ( id, name ),
         categories ( name )
       )
     `)
@@ -205,13 +313,16 @@ export async function getPublicItemBySlug(
       visibility,
       user_id,
       variant,
+      line_id,
+      franchise_id,
       lines (
+        id,
         name,
         variants,
-        brands ( name ),
+        brands ( id, name ),
         categories ( name )
       ),
-      franchises ( name, slug )
+      franchises ( id, name, slug )
     `)
     .eq('collection_id', collectionId)
     .eq('slug', itemSlug)

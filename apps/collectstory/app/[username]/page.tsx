@@ -107,7 +107,6 @@ async function ProfileHeader({ params }: { params: Promise<{ username: string }>
           </h1>
           <SocialShare
             title={`@${username}'s Profile on Collectstory`}
-            text={`Check out @${username}'s collectible collections!`}
             baseUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/${username}`}
             entityType="profile"
           />

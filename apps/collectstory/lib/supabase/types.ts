@@ -84,6 +84,13 @@ export type Database = {
             referencedColumns: ['id'];
           },
           {
+            foreignKeyName: 'collection_item_stores_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: false;
+            referencedRelation: 'last_arrivals';
+            referencedColumns: ['id'];
+          },
+          {
             foreignKeyName: 'collection_item_stores_store_id_fkey';
             columns: ['store_id'];
             isOneToOne: false;
@@ -163,6 +170,54 @@ export type Database = {
             referencedRelation: 'lines';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'collection_items_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      collections: {
+        Row: {
+          created_at: string;
+          description: string | null;
+          id: string;
+          name: string;
+          slug: string;
+          updated_at: string;
+          user_id: string;
+          visibility: string;
+        };
+        Insert: {
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          name: string;
+          slug: string;
+          updated_at?: string;
+          user_id: string;
+          visibility?: string;
+        };
+        Update: {
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          name?: string;
+          slug?: string;
+          updated_at?: string;
+          user_id?: string;
+          visibility?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'collections_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
         ];
       };
       franchise_localized_names: {
@@ -224,39 +279,6 @@ export type Database = {
           image_url?: string;
           name?: string;
           slug?: string;
-        };
-        Relationships: [];
-      };
-      collections: {
-        Row: {
-          created_at: string;
-          description: string | null;
-          id: string;
-          name: string;
-          slug: string;
-          updated_at: string;
-          user_id: string;
-          visibility: string;
-        };
-        Insert: {
-          created_at?: string;
-          description?: string | null;
-          id?: string;
-          name: string;
-          slug: string;
-          updated_at?: string;
-          user_id: string;
-          visibility?: string;
-        };
-        Update: {
-          created_at?: string;
-          description?: string | null;
-          id?: string;
-          name?: string;
-          slug?: string;
-          updated_at?: string;
-          user_id?: string;
-          visibility?: string;
         };
         Relationships: [];
       };
@@ -376,7 +398,32 @@ export type Database = {
       };
     };
     Views: {
-      [_ in never]: never
+      last_arrivals: {
+        Row: {
+          avatar_url: string | null;
+          brand_name: string | null;
+          brand_slug: string | null;
+          collection_id: string | null;
+          collection_slug: string | null;
+          created_at: string | null;
+          id: string | null;
+          image_url: string | null;
+          line_name: string | null;
+          line_slug: string | null;
+          name: string | null;
+          slug: string | null;
+          username: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'collection_items_collection_id_fkey';
+            columns: ['collection_id'];
+            isOneToOne: false;
+            referencedRelation: 'collections';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
     };
     Functions: {
       is_admin: { Args: never; Returns: boolean };

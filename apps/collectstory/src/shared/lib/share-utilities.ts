@@ -25,32 +25,6 @@ export function getUtmTaggedUrl(
 }
 
 /**
- * Checks if the Web Share API is available in the current browser.
- */
-export function canUseWebShare(): boolean {
-  return typeof navigator !== 'undefined' && !!navigator.share;
-}
-
-/**
- * Triggers the native Web Share API.
- */
-export async function shareUrl(title: string, text: string, url: string): Promise<boolean> {
-  if (canUseWebShare()) {
-    try {
-      await navigator.share({ title, text, url });
-      return true;
-    }
-    catch (error) {
-      if ((error as Error).name !== 'AbortError') {
-        console.error('Error sharing:', error);
-      }
-      return false;
-    }
-  }
-  return false;
-}
-
-/**
  * Copies text to the clipboard using the Clipboard API.
  */
 export async function copyToClipboard(text: string): Promise<boolean> {

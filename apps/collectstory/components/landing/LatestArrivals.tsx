@@ -1,52 +1,107 @@
+'use client';
+
+import * as React from 'react';
 import Image from 'next/image';
-import { Card, Tag } from '@dezkareid/components/react-server';
-import { ChevronLeft, ChevronRight } from '@dezkareid/icons/react';
-import { latestArrivals } from '@/lib/mock-data';
+import Link from 'next/link';
+import { Card } from '@dezkareid/components/react';
+import type { LastArrivalItem } from '@/lib/collections';
 import styles from './LatestArrivals.module.css';
 
 export function LatestArrivals() {
+  const [items, setItems] = React.useState<LastArrivalItem[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    async function fetchArrivals() {
+      try {
+        const response = await fetch('/api/latest-arrivals');
+        if (!response.ok) throw new Error('Failed to fetch');
+        const data = await response.json();
+        setItems(data);
+      }
+      catch (error) {
+        console.error('Error fetching latest arrivals:', error);
+      }
+      finally {
+        setLoading(false);
+      }
+    }
+    fetchArrivals();
+  }, []);
+
+  if (!loading && items.length === 0) {
+    return;
+  }
+
   return (
-    <section className={styles.latestArrivals}>
+    <section className={styles.latestArrivals} aria-label="Latest Arrivals">
       <div className={styles.container}>
         <div className={styles.header}>
           <div>
             <h2 className={styles.title}>Latest Arrivals</h2>
             <p className={styles.subtitle}>Discover what the community is adding to their vaults today.</p>
           </div>
-          <div className={styles.controls}>
-            <button className={styles.controlBtn} aria-label="Previous">
-              <ChevronLeft aria-hidden />
-            </button>
-            <button className={styles.controlBtn} aria-label="Next">
-              <ChevronRight aria-hidden />
-            </button>
-          </div>
         </div>
-        <div className={styles.grid}>
-          {latestArrivals.map((item, index) => (
-            <div key={item.title} className={styles.item}>
-              <Card elevation="raised" className={styles.card}>
-                <div className={styles.imageWrapper}>
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    sizes="(min-width: 60rem) 25vw, (min-width: 37.5rem) 50vw, 100vw"
-                    loading={index === 0 ? 'eager' : undefined}
-                    className={styles.image}
-                  />
-                  <Tag className={styles.tag}>{item.category}</Tag>
+        <div className={styles.grid} role="list">
+          {loading
+            ? ['s1', 's2', 's3', 's4'].map(id => (
+                <div key={id} className={styles.item} role="listitem" aria-hidden="true">
+                  <Card elevation="raised" className={`${styles.card} ${styles.skeletonCard}`}>
+                    <div className={styles.imageWrapper} />
+                    <div className={styles.info}>
+                      <div className={styles.skeletonText} />
+                      <div className={styles.skeletonTextSmall} />
+                    </div>
+                  </Card>
                 </div>
-                <div className={styles.info}>
-                  <h3 className={styles.itemTitle}>{item.title}</h3>
-                  <p className={styles.itemAuthor}>
-                    Added by
-                    {item.author}
-                  </p>
-                </div>
-              </Card>
-            </div>
-          ))}
+              ))
+            : items.map((item, index) => {
+                const label = [item.brand_name, item.line_name].filter(Boolean).join(' · ');
+                return (
+                  <div key={item.id} className={styles.item} role="listitem">
+                    <Link
+                      href={`/${item.username}/${item.collection_slug}`}
+                      className={styles.itemLink}
+                    >
+                      <Card elevation="raised" className={styles.card}>
+                        <div className={styles.imageWrapper}>
+                          {item.image_url
+                            ? (
+                                <Image
+                                  src={item.image_url}
+                                  alt={item.name}
+                                  fill
+                                  sizes="(min-width: 60rem) 25vw, (min-width: 37.5rem) 50vw, 100vw"
+                                  loading={index === 0 ? 'eager' : undefined}
+                                  className={styles.image}
+                                />
+                              )
+                            : (
+                                <div className={styles.placeholderImage} aria-hidden="true">📦</div>
+                              )}
+                        </div>
+                        <div className={styles.info}>
+                          <h3 className={styles.itemTitle}>{item.name}</h3>
+                          {label && <p className={styles.itemLabel}>{label}</p>}
+                          <p className={styles.itemAuthor}>
+                            {item.avatar_url && (
+                              <Image
+                                src={item.avatar_url}
+                                alt=""
+                                width={16}
+                                height={16}
+                                className={styles.avatar}
+                              />
+                            )}
+                            @
+                            {item.username}
+                          </p>
+                        </div>
+                      </Card>
+                    </Link>
+                  </div>
+                );
+              })}
         </div>
       </div>
     </section>

@@ -153,7 +153,10 @@ export function FranchiseForm({
         defaultImageUrl={defaultImageUrl}
         uploading={uploading}
         onUploadedUrl={url => setUploadedUrl(url)}
-        onFile={file => { setPendingFile(file); setFileError(undefined); }}
+        onFile={(file) => {
+          setPendingFile(file);
+          setFileError(undefined);
+        }}
         onFileError={setFileError}
         fileError={fileError}
         label="Cover"

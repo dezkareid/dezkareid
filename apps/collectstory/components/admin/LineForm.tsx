@@ -149,7 +149,10 @@ export function LineForm({ action, brands, categories, defaultName, defaultBrand
         defaultImageUrl={defaultImageUrl}
         uploading={uploading}
         onUploadedUrl={setUploadedUrl}
-        onFile={file => { setPendingFile(file); setFileError(undefined); }}
+        onFile={(file) => {
+          setPendingFile(file);
+          setFileError(undefined);
+        }}
         onFileError={setFileError}
         fileError={fileError}
       />

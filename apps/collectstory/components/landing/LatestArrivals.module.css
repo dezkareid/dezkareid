@@ -35,29 +35,6 @@
   color: var(--color-text-secondary);
 }
 
-.controls {
-  display: flex;
-  gap: var(--spacing-8);
-}
-
-.controlBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--border-radius-pill);
-  border: 1px solid var(--color-background-secondary);
-  background: none;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.controlBtn:hover {
-  background-color: var(--color-background-secondary);
-  color: var(--color-text-primary);
-}
 
 .grid {
   display: grid;
@@ -86,7 +63,14 @@
   transition: transform 0.3s ease;
 }
 
-.card:hover {
+.itemLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
+}
+
+.itemLink:hover .card {
   transform: translateY(-8px);
 }
 
@@ -94,6 +78,40 @@
   position: relative;
   aspect-ratio: 3/4;
   overflow: hidden;
+  background-color: var(--color-background-secondary);
+}
+
+.placeholderImage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 3rem;
+  background-color: var(--color-background-secondary);
+}
+
+.skeletonCard {
+  pointer-events: none;
+}
+
+.skeletonText,
+.skeletonTextSmall {
+  height: 1.2rem;
+  background-color: var(--color-background-secondary);
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeletonTextSmall {
+  width: 60%;
+  height: 0.8rem;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
 }
 
 .image {
@@ -122,7 +140,22 @@
   color: var(--color-text-primary);
 }
 
-.itemAuthor {
+.itemLabel {
   font-size: var(--font-size-200);
   color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-4);
+}
+
+.itemAuthor {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+}
+
+.avatar {
+  border-radius: var(--border-radius-pill);
+  object-fit: cover;
+  flex-shrink: 0;
 }

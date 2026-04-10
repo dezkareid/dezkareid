@@ -2,6 +2,7 @@
 
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/server';
 import { generateUniqueSlug, generateUniqueCollectionSlug } from '@/lib/slug';
 
@@ -151,6 +152,125 @@ export async function createCollectionItem(
   return { success: true };
 }
 
+export type CopyItemState
+  = | { error: string }
+    | { success: true; itemSlug: string; collectionSlug: string; username: string }
+    | undefined;
+
+async function resolveTargetCollection(
+  supabase: SupabaseClient,
+  userId: string,
+  collectionId?: string,
+  collectionSlug?: string,
+): Promise<{ id: string; slug: string } | { error: string }> {
+  if (!collectionId) {
+    const { data: existingCollections } = await supabase
+      .from('collections')
+      .select('id, slug')
+      .eq('user_id', userId)
+      .limit(1);
+
+    if (existingCollections && existingCollections.length > 0) {
+      return { id: existingCollections[0].id, slug: existingCollections[0].slug };
+    }
+
+    const defaultName = 'My Collection';
+    const slug = await generateUniqueCollectionSlug(supabase, userId, defaultName);
+    const { data: newCollection, error: createError } = await supabase
+      .from('collections')
+      .insert({
+        user_id: userId,
+        name: defaultName,
+        slug,
+        visibility: 'public',
+      })
+      .select('id, slug')
+      .single();
+
+    if (createError || !newCollection) {
+      return { error: 'Failed to create a default collection.' };
+    }
+    return { id: newCollection.id, slug: newCollection.slug };
+  }
+
+  if (!collectionSlug) {
+    const { data: col } = await supabase
+      .from('collections')
+      .select('slug')
+      .eq('id', collectionId)
+      .single();
+    return { id: collectionId, slug: col?.slug ?? '' };
+  }
+
+  return { id: collectionId, slug: collectionSlug };
+}
+
+export async function copyItemToCollection(
+  _previousState: CopyItemState,
+  formData: FormData,
+): Promise<CopyItemState> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated.' };
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('username')
+    .eq('id', user.id)
+    .single();
+
+  if (!profile) return { error: 'Profile not found.' };
+
+  const target = await resolveTargetCollection(
+    supabase,
+    user.id,
+    getOptional(formData, 'collection_id'),
+    getOptional(formData, 'collection_slug'),
+  );
+
+  if ('error' in target) return { error: target.error };
+
+  const { id: collectionId, slug: collectionSlug } = target;
+
+  // 2. Map data and insert new item
+  const name = getOptional(formData, 'name') ?? '';
+  if (!name) return { error: 'Name is required.' };
+
+  const itemSlug = await generateUniqueSlug(supabase, user.id, name);
+
+  const { error: insertError } = await supabase
+    .from('collection_items')
+    .insert({
+      user_id: user.id,
+      collection_id: collectionId,
+      name,
+      slug: itemSlug,
+      description: getOptional(formData, 'description'),
+      image_url: getOptional(formData, 'image_url'),
+      date_acquired: getOptional(formData, 'date_acquired') || null, // eslint-disable-line unicorn/no-null
+      visibility: getOptional(formData, 'visibility') ?? 'public',
+      variant: getOptional(formData, 'variant'),
+      line_id: getOptional(formData, 'line_id'),
+      franchise_id: getOptional(formData, 'franchise_id'),
+    });
+
+  if (insertError) {
+    console.error('Error copying item:', insertError);
+    if (insertError.code === '23505') return { error: 'An item with this name already exists in your collection.' };
+    return { error: 'Failed to copy item to your collection.' };
+  }
+
+  revalidatePath(`/${profile.username}`);
+  revalidatePath(`/${profile.username}/${collectionSlug}`);
+
+  return {
+    success: true,
+    itemSlug,
+    collectionSlug,
+    username: profile.username,
+  };
+}
+
 export async function updateItemImage(
   itemId: string,
   imageUrl: string,
@@ -240,6 +360,21 @@ export async function getAllFranchises(): Promise<{ id: string; name: string }[]
     .select('id, name')
     .order('name');
   return data ?? [];
+}
+
+export async function getAllBrands(): Promise<{ id: string; name: string }[]> {
+  const supabase = await createClient();
+  const { data: brands, error } = await supabase
+    .from('brands')
+    .select('id, name')
+    .order('name');
+
+  if (error) {
+    console.error('Error fetching brands:', error);
+    return [];
+  }
+
+  return brands ?? [];
 }
 
 export async function getLinesByBrand(
