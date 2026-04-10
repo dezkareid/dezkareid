@@ -9,6 +9,8 @@ import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { getItemSchema } from '@/src/entities/item';
 import { ItemActions } from '@/components/username/ItemActions';
 import { OwnerImageSection } from './_components/OwnerImageSection';
+import { LikeSection } from './_components/LikeSection';
+import { LikeButtonSkeleton } from './_components/LikeButtonSkeleton';
 import { SocialShare } from '@/src/features/social-share';
 import { WhereToFindButton } from '@/src/features/where-to-find';
 import { IHaveThisButton } from '@/src/features/copy-item';
@@ -131,6 +133,7 @@ function ItemMeta({
   linkedStores: Store[];
 }) {
   const showWhereToFind = linkedStores.length > 0;
+  const isPublic = item.visibility === 'public';
 
   return (
     <div className={styles['item-page__details']}>
@@ -144,15 +147,24 @@ function ItemMeta({
             baseUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/${username}/${collectionSlug}/${item.slug}`}
             entityType="item"
           />
-          <IHaveThisButton item={item} />
         </div>
       </div>
+
+      <Suspense fallback={<LikeButtonSkeleton count={item.likes_count} />}>
+        <LikeSection
+          itemId={item.id}
+          likesCount={item.likes_count}
+          isPublic={isPublic}
+        />
+      </Suspense>
 
       <ItemMetaDetails item={item} />
 
       {item.description && (
         <p className={styles['item-page__description']}>{item.description}</p>
       )}
+
+      <IHaveThisButton item={item} />
 
       {item.date_acquired && (
         <time className={styles['item-page__date']} dateTime={item.date_acquired}>

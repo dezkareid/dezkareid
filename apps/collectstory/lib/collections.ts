@@ -1,5 +1,6 @@
 import { cacheLife, cacheTag } from 'next/cache';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { createClient } from '@/lib/supabase/server';
 
 function createPublicClient() {
   return createSupabaseClient(
@@ -25,6 +26,7 @@ export type PublicItem = {
   image_url: string | undefined;
   description: string | undefined;
   date_acquired: string | undefined;
+  likes_count: number;
   lines: {
     id: string;
     name: string;
@@ -41,6 +43,7 @@ export type PublicItemDetail = PublicItem & {
   line_id?: string;
   franchise_id?: string;
   franchises: { id: string; name: string; slug: string } | undefined;
+  // likes_count inherited from PublicItem
 };
 
 // i18n note: when a `locale` parameter is added, it must be a named function argument
@@ -274,6 +277,7 @@ export async function getPublicItemsInCollection(
       image_url,
       description,
       date_acquired,
+      likes_count,
       lines (
         id,
         name,
@@ -310,6 +314,7 @@ export async function getPublicItemBySlug(
       image_url,
       description,
       date_acquired,
+      likes_count,
       visibility,
       user_id,
       variant,
@@ -332,4 +337,20 @@ export async function getPublicItemBySlug(
   if (!item) return undefined;
 
   return item as unknown as PublicItemDetail;
+}
+
+export async function getItemLikedByUser(
+  itemId: string,
+  userId: string,
+): Promise<boolean> {
+  const supabase = await createClient();
+
+  const { data } = await supabase
+    .from('item_likes')
+    .select('item_id')
+    .eq('item_id', itemId)
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  return data !== null;
 }
