@@ -10,6 +10,7 @@ import { getBreadcrumbSchema } from '@/src/shared/lib/schema/breadcrumb';
 import { OwnerCollectionActions } from '@/src/features/owner-collection-actions';
 import { NonOwnerItemActions } from '@/src/features/non-owner-item-actions';
 import { SocialShare } from '@/src/features/social-share';
+import { OwnerEmptyStateFallback } from './_components/OwnerEmptyStateFallback';
 import styles from './page.module.css';
 
 type Properties = {
@@ -59,6 +60,7 @@ async function CollectionContent({
   if (!result) notFound();
 
   const { collection } = result;
+
   const items = await getPublicItemsInCollection(collection.id, username, collectionSlug);
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 
@@ -104,10 +106,18 @@ async function CollectionContent({
       <div className={styles.grid}>
         {items.length === 0
           ? (
-              <div className={styles.empty}>
-                <p className={styles.emptyTitle}>No items in this collection</p>
-                <p className={styles.emptyDesc}>Items added to this collection will appear here.</p>
-              </div>
+              <>
+                <div className={styles.empty}>
+                  <p className={styles.emptyTitle}>No items in this collection</p>
+                  <p className={styles.emptyDesc}>Items added to this collection will appear here.</p>
+                </div>
+                <Suspense fallback={undefined}>
+                  <OwnerEmptyStateFallback
+                    username={username}
+                    collectionSlug={collectionSlug}
+                  />
+                </Suspense>
+              </>
             )
           : items.map(item => (
               <div key={item.id} className={styles.itemCardWrapper}>

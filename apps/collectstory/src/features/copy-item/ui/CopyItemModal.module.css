@@ -48,6 +48,15 @@
   color: var(--color-text-secondary);
 }
 
+.imageWarning {
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+  background-color: var(--color-background-secondary);
+  border-radius: var(--border-radius-small);
+  padding: var(--spacing-8) var(--spacing-12);
+  margin: 0;
+}
+
 .formWrapper {
   display: flex;
   flex-direction: column;
