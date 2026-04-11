@@ -2,9 +2,9 @@ import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { IBM_Plex_Sans } from 'next/font/google';
 import Script from 'next/script';
+import { AnalyticsClient } from '@/src/shared/lib/analytics/AnalyticsClient';
 import { SiteHeader } from '@/src/widgets/site-header';
 import { ReportProblem } from '@/src/widgets/report-problem';
-import { AnalyticsClient } from '@/src/shared/lib/analytics/AnalyticsClient';
 import './globals.css';
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -32,7 +32,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={ibmPlexSans.variable} suppressHydrationWarning>
       <body>
-        <AnalyticsClient gaId={gaId} />
+        <Suspense fallback={undefined}>
+          <AnalyticsClient gaId={gaId} />
+        </Suspense>
         <Script
           id="theme-strategy"
           strategy="beforeInteractive"

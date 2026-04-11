@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { getPublicCollectionsByUsername } from '@/lib/collections';
 import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
-import { UserProfileActions } from '@/components/username/UserProfileActions';
+import { OwnerProfileActions } from '@/src/features/owner-profile-actions';
 import { SocialShare } from '@/src/features/social-share';
 import styles from './page.module.css';
 
@@ -115,7 +115,7 @@ async function ProfileHeader({ params }: { params: Promise<{ username: string }>
       </div>
       <div className={styles.ownerActions}>
         <Suspense fallback={undefined}>
-          <UserProfileActions username={username} />
+          <OwnerProfileActions username={username} />
         </Suspense>
       </div>
     </header>
@@ -130,15 +130,11 @@ async function ProfileCollections({ params }: { params: Promise<{ username: stri
 export default function UserProfilePage({ params }: Properties) {
   return (
     <div className={`container ${styles.page}`}>
-      <Suspense>
-        <ProfileHeader params={params} />
-      </Suspense>
+      <ProfileHeader params={params} />
 
       <p className={styles.sectionLabel}>Collections</p>
 
-      <Suspense>
-        <ProfileCollections params={params} />
-      </Suspense>
+      <ProfileCollections params={params} />
     </div>
   );
 }

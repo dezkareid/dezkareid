@@ -1,12 +1,11 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { connection } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
 
 type Properties = {
   username: string;
   collectionSlug: string;
   itemId: string;
+  userId: string;
 };
 
 const buttonStyle: React.CSSProperties = {
@@ -25,26 +24,20 @@ const buttonStyle: React.CSSProperties = {
   textDecoration: 'none',
 };
 
-export function ItemActions({ username, collectionSlug, itemId }: Properties) {
-  const [isOwner, setIsOwner] = useState(false);
+/**
+ * Dynamic Server Component — always rendered fresh, never cached.
+ * Accepts the item's userId as a prop (already fetched by the parent cached
+ * shell) to avoid an extra DB round-trip. Resolves ownership via
+ * auth.getUser() server-side and renders the Edit item link only for owners.
+ * Wrapped in <Suspense> on the parent page so it streams in without blocking
+ * the cached public content shell.
+ */
+export async function OwnerItemActions({ username, collectionSlug, itemId, userId }: Properties) {
+  await connection();
 
-  useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (!user) return;
-      supabase
-        .from('collection_items')
-        .select('id')
-        .eq('id', itemId)
-        .eq('user_id', user.id)
-        .single()
-        .then(({ data }) => {
-          if (data) setIsOwner(true);
-        });
-    });
-  }, [itemId]);
-
-  if (!isOwner) return;
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user || user.id !== userId) return;
 
   return (
     <div style={{ display: 'flex', gap: 'var(--spacing-8)', paddingTop: 'var(--spacing-8)' }}>

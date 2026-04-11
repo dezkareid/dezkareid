@@ -3,14 +3,13 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { getCollectionFirstImage, getPublicCollectionBySlug, getPublicItemsInCollection } from '@/lib/collections';
-import { createClient } from '@/lib/supabase/server';
 import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { generateCollectionListingSchema } from '@/lib/seo';
 import { getBreadcrumbSchema } from '@/src/shared/lib/schema/breadcrumb';
-import { CollectionActions } from '@/components/username/CollectionActions';
+import { OwnerCollectionActions } from '@/src/features/owner-collection-actions';
+import { NonOwnerItemActions } from '@/src/features/non-owner-item-actions';
 import { SocialShare } from '@/src/features/social-share';
-import { IHaveThisButton } from '@/src/features/copy-item';
 import styles from './page.module.css';
 
 type Properties = {
@@ -63,10 +62,6 @@ async function CollectionContent({
   const items = await getPublicItemsInCollection(collection.id, username, collectionSlug);
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  const isOwner = user?.id === result.userId;
-
   const schema = generateCollectionListingSchema({
     collection,
     username,
@@ -98,9 +93,8 @@ async function CollectionContent({
         </div>
         <div className={styles.ownerActions}>
           <Suspense fallback={undefined}>
-            <CollectionActions
+            <OwnerCollectionActions
               username={username}
-              collectionId={collection.id}
               collectionSlug={collectionSlug}
             />
           </Suspense>
@@ -156,11 +150,15 @@ async function CollectionContent({
                     </span>
                   )}
                 </Link>
-                {!isOwner && (
+                <Suspense fallback={undefined}>
                   <div className={styles.itemActions}>
-                    <IHaveThisButton item={item} />
+                    <NonOwnerItemActions
+                      username={username}
+                      collectionSlug={collectionSlug}
+                      item={item}
+                    />
                   </div>
-                )}
+                </Suspense>
               </div>
             ))}
       </div>
@@ -202,13 +200,8 @@ async function BreadcrumbNav({
 export default function CollectionPage({ params }: Properties) {
   return (
     <div className={`container ${styles.page}`}>
-      <Suspense>
-        <BreadcrumbNav params={params} />
-      </Suspense>
-
-      <Suspense>
-        <CollectionContent params={params} />
-      </Suspense>
+      <BreadcrumbNav params={params} />
+      <CollectionContent params={params} />
     </div>
   );
 }

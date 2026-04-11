@@ -1,11 +1,9 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { connection } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
+import { getPublicCollectionBySlug } from '@/lib/collections';
 
 type Properties = {
   username: string;
-  collectionId: string;
   collectionSlug: string;
 };
 
@@ -23,25 +21,21 @@ const buttonStyle: React.CSSProperties = {
   textDecoration: 'none',
 };
 
-export function CollectionActions({ username, collectionSlug }: Properties) {
-  const [isOwner, setIsOwner] = useState(false);
+/**
+ * Dynamic Server Component — always rendered fresh, never cached.
+ * Resolves ownership server-side and renders Add Item + Edit links
+ * only for the collection owner. Wrapped in <Suspense> on the parent page
+ * so it streams in without blocking the cached public content shell.
+ */
+export async function OwnerCollectionActions({ username, collectionSlug }: Properties) {
+  await connection();
 
-  useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (!user) return;
-      supabase
-        .from('profiles')
-        .select('username')
-        .eq('id', user.id)
-        .single()
-        .then(({ data }) => {
-          if (data?.username === username) setIsOwner(true);
-        });
-    });
-  }, [username]);
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
 
-  if (!isOwner) return;
+  const result = await getPublicCollectionBySlug(username, collectionSlug);
+  if (!result || user.id !== result.userId) return;
 
   return (
     <div style={{ display: 'flex', gap: 'var(--spacing-8)', alignItems: 'center' }}>

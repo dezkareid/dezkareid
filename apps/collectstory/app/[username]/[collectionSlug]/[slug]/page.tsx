@@ -3,19 +3,17 @@ import type React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-import { createClient } from '@/lib/supabase/server';
-import { getPublicCollectionBySlug, getPublicItemBySlug, type PublicItemDetail } from '@/lib/collections';
+import { getPublicCollectionBySlug, getPublicItemBySlug, getLinkedStores, type PublicItemDetail, type LinkedStore } from '@/lib/collections';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { generateCollectionItemSchema } from '@/lib/seo';
 import { getBreadcrumbSchema } from '@/src/shared/lib/schema/breadcrumb';
-import { ItemActions } from '@/components/username/ItemActions';
+import { OwnerItemActions } from '@/src/features/owner-item-actions';
 import { OwnerImageSection } from './_components/OwnerImageSection';
 import { LikeSection } from './_components/LikeSection';
 import { LikeButtonSkeleton } from './_components/LikeButtonSkeleton';
 import { SocialShare } from '@/src/features/social-share';
 import { WhereToFindButton } from '@/src/features/where-to-find';
 import { IHaveThisButton } from '@/src/features/copy-item';
-import type { Store } from '@/app/[username]/[collectionSlug]/actions';
 import styles from './page.module.css';
 
 type Properties = {
@@ -131,7 +129,7 @@ function ItemMeta({
   item: PublicItemDetail;
   username: string;
   collectionSlug: string;
-  linkedStores: Store[];
+  linkedStores: LinkedStore[];
 }) {
   const showWhereToFind = linkedStores.length > 0;
   const isPublic = item.visibility === 'public';
@@ -188,12 +186,13 @@ function ItemMeta({
         />
       )}
 
-      {/* Owner-only: edit button — client component, self-detects ownership */}
-      <Suspense>
-        <ItemActions
+      {/* Owner-only: edit button — dynamic server component, streams in via Suspense */}
+      <Suspense fallback={undefined}>
+        <OwnerItemActions
           username={username}
           collectionSlug={collectionSlug}
           itemId={item.id}
+          userId={item.user_id}
         />
       </Suspense>
     </div>
@@ -213,18 +212,8 @@ async function ItemDetail({
   const item = await getPublicItemBySlug(collectionResult.collection.id, slug, username, collectionSlug);
   if (!item) notFound();
 
-  // Linked stores are public — fetched in the cached shell for all visitors.
-  const supabase = await createClient();
-  const { data: storeRows } = await supabase
-    .from('collection_item_stores')
-    .select('stores ( id, name, verified, url )')
-    .eq('item_id', item.id);
-
-  const linkedStores: Store[] = (storeRows ?? []).flatMap((row) => {
-    const s = (row as unknown as { stores: { id: string; name: string; verified: boolean; url: string | null } | null }).stores;
-    if (!s) return [];
-    return [{ id: s.id, name: s.name, verified: s.verified, url: s.url ?? undefined }];
-  });
+  // Linked stores are public — fetched via cached query for all visitors.
+  const linkedStores = await getLinkedStores(item.id);
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
   const schema = generateCollectionItemSchema({
@@ -305,13 +294,8 @@ async function BreadcrumbNav({
 export default function ItemDetailPage({ params }: Properties) {
   return (
     <div className={styles['item-page']}>
-      <Suspense>
-        <BreadcrumbNav params={params} />
-      </Suspense>
-
-      <Suspense>
-        <ItemDetail params={params} />
-      </Suspense>
+      <BreadcrumbNav params={params} />
+      <ItemDetail params={params} />
     </div>
   );
 }
