@@ -34,7 +34,7 @@ async function fetchEditPageData(supabase: Awaited<ReturnType<typeof createClien
   const [{ data: item }, { data: brands }, franchises] = await Promise.all([
     supabase
       .from('collection_items')
-      .select('id, name, image_url, description, date_acquired, visibility, line_id, franchise_id, variant, lines ( id, name, brand_id, variants, brands ( id, name ) )')
+      .select('id, name, image_url, description, date_acquired, visibility, line_id, franchise_id, variant, catalog_item_id, lines ( id, name, brand_id, variants, brands ( id, name ) )')
       .eq('id', itemId)
       .eq('user_id', userId)
       .single(),
@@ -51,6 +51,7 @@ type LineWithVariants = { brand_id: string; variants: { value: string; display_n
 
 function buildFormProperties(
   item: Awaited<ReturnType<typeof fetchEditPageData>>['item'],
+  catalogItem: { id: string; name: string } | undefined,
 ) {
   const lineData = item!.lines as unknown as LineWithVariants;
   return {
@@ -65,6 +66,7 @@ function buildFormProperties(
     currentFranchiseId: (item!.franchise_id as string | null) ?? undefined,
     currentVariant: (item!.variant as string | null) ?? undefined,
     currentLineVariants: Array.isArray(lineData?.variants) ? lineData!.variants : [],
+    currentCatalogItem: catalogItem,
   };
 }
 
@@ -81,7 +83,18 @@ async function EditItemContent({ params }: Properties) {
   const { item, brands, franchises } = await fetchEditPageData(supabase, itemId, user.id);
   if (!item) notFound();
 
-  const formProperties = buildFormProperties(item);
+  const catalogItemId = (item as Record<string, unknown>).catalog_item_id as string | undefined;
+  let catalogItem: { id: string; name: string } | undefined;
+  if (catalogItemId) {
+    const { data } = await supabase
+      .from('catalog_items')
+      .select('id, name')
+      .eq('id', catalogItemId)
+      .single();
+    catalogItem = data ?? undefined;
+  }
+
+  const formProperties = buildFormProperties(item, catalogItem);
 
   return (
     <div className={styles.card}>

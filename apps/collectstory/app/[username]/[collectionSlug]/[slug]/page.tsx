@@ -12,9 +12,11 @@ import { OwnerImageSection } from './_components/OwnerImageSection';
 import { LikeSection } from './_components/LikeSection';
 import { LikeButtonSkeleton } from './_components/LikeButtonSkeleton';
 import { SocialShare } from '@/src/features/social-share';
-import { WhereToFindButton } from '@/src/features/where-to-find';
 import { IHaveThisButton } from '@/src/features/copy-item';
+import { WhereToFindButton } from '@/src/features/where-to-find';
+import { WhereToBuy } from '@/src/features/where-to-buy';
 import styles from './page.module.css';
+import { createClient } from '@/lib/supabase/server';
 
 type Properties = {
   params: Promise<{ username: string; collectionSlug: string; slug: string }>;
@@ -120,16 +122,26 @@ function ItemTags({ item }: { item: PublicItemDetail }) {
   );
 }
 
+interface CatalogStore {
+  id: string;
+  name: string;
+  city: string | null;
+  country: string | null;
+  url: string | null;
+}
+
 function ItemMeta({
   item,
   username,
   collectionSlug,
   linkedStores,
+  catalogStores,
 }: {
   item: PublicItemDetail;
   username: string;
   collectionSlug: string;
   linkedStores: LinkedStore[];
+  catalogStores: CatalogStore[];
 }) {
   const showWhereToFind = linkedStores.length > 0;
   const isPublic = item.visibility === 'public';
@@ -186,6 +198,8 @@ function ItemMeta({
         />
       )}
 
+      <WhereToBuy stores={catalogStores} />
+
       {/* Owner-only: edit button — dynamic server component, streams in via Suspense */}
       <Suspense fallback={undefined}>
         <OwnerItemActions
@@ -214,6 +228,22 @@ async function ItemDetail({
 
   // Linked stores are public — fetched via cached query for all visitors.
   const linkedStores = await getLinkedStores(item.id);
+  // Catalog-driven stores — fetched via catalog_item_id if the item is linked to a catalog item.
+  const supabase = await createClient();
+  const catalogItemId = item.catalog_item_id;
+
+  const catalogStoreRows = await (catalogItemId
+    ? supabase
+        .from('catalog_item_stores')
+        .select('stores ( id, name, city, country, url )')
+        .eq('catalog_item_id', catalogItemId)
+    : Promise.resolve({ data: [] }));
+
+  const catalogStores: CatalogStore[] = (catalogStoreRows.data ?? []).flatMap((row: unknown) => {
+    const s = (row as { stores: { id: string; name: string; city: string | null; country: string | null; url: string | null } | null }).stores;
+    if (!s) return [];
+    return [{ id: s.id, name: s.name, city: s.city, country: s.country, url: s.url }];
+  });
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
   const schema = generateCollectionItemSchema({
@@ -245,6 +275,7 @@ async function ItemDetail({
         username={username}
         collectionSlug={collectionSlug}
         linkedStores={linkedStores}
+        catalogStores={catalogStores}
       />
     </div>
   );

@@ -67,5 +67,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
   });
 
-  return [...staticRoutes, ...profileRoutes, ...collectionRoutes, ...itemRoutes];
+  const catalogRoute: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/catalog`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+  ];
+
+  const { data: catalogItems } = await supabase
+    .from('catalog_items')
+    .select('slug, updated_at');
+
+  const catalogItemRoutes: MetadataRoute.Sitemap = (catalogItems ?? []).map(item => ({
+    url: `${baseUrl}/catalog/${item.slug}`,
+    lastModified: new Date(item.updated_at),
+    changeFrequency: 'weekly' as const,
+    priority: 0.7,
+  }));
+
+  return [...staticRoutes, ...catalogRoute, ...catalogItemRoutes, ...profileRoutes, ...collectionRoutes, ...itemRoutes];
 }

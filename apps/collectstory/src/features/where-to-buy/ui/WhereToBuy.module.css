@@ -1,0 +1,66 @@
+.where-to-buy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+}
+
+.where-to-buy__heading {
+  font-size: var(--font-size-400);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.where-to-buy__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.where-to-buy__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-12);
+  padding: var(--spacing-12) var(--spacing-16);
+  background-color: var(--color-background-secondary);
+  border-radius: var(--border-radius-medium);
+}
+
+.where-to-buy__store-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  min-width: 0;
+}
+
+.where-to-buy__store-name {
+  font-size: var(--font-size-300);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.where-to-buy__store-location {
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+}
+
+.where-to-buy__link {
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary);
+  text-decoration: none;
+  padding: var(--spacing-4) var(--spacing-8);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--border-radius-small);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity 0.15s ease;
+}
+
+.where-to-buy__link:hover {
+  opacity: 0.75;
+}

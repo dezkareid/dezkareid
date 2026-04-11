@@ -470,6 +470,7 @@ export async function addItem(
     description: getOptional(formData, 'description'),
     date_acquired: getOptional(formData, 'date_acquired'),
     visibility: getOptional(formData, 'visibility') ?? 'public',
+    catalog_item_id: getOptional(formData, 'catalog_item_id') ?? null, // eslint-disable-line unicorn/no-null -- null required to clear value in database
   });
 
   if (error) {
@@ -570,6 +571,7 @@ export async function updateItem(
       description: orNull(getOptional(formData, 'description')),
       date_acquired: orNull(getOptional(formData, 'date_acquired')),
       visibility: getOptional(formData, 'visibility') ?? 'public',
+      catalog_item_id: orNull(getOptional(formData, 'catalog_item_id')),
     })
     .eq('id', itemId)
     .eq('user_id', user.id);

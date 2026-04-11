@@ -4,6 +4,8 @@ import { useActionState, useState, useTransition, useEffect } from 'react';
 import { updateItem } from '../../../actions';
 import { getLinesByBrand } from '@/app/[username]/[collectionSlug]/actions';
 import { stripMetadata } from '@/lib/image/strip-metadata';
+import { CatalogItemPicker } from '@/src/features/catalog-item-picker';
+import type { CatalogItemSearchResult } from '@/src/features/catalog-item-picker';
 import styles from '@/components/AddItemForm/AddItemForm.module.css';
 
 type Brand = { id: string; name: string };
@@ -22,6 +24,7 @@ type Properties = {
   currentFranchiseId: string | undefined;
   currentVariant: string | undefined;
   currentLineVariants: LineVariant[];
+  currentCatalogItem: Pick<CatalogItemSearchResult, 'id' | 'name'> | undefined;
   franchises: { id: string; name: string }[];
   brands: Brand[];
   username: string;
@@ -203,6 +206,7 @@ export function EditItemForm({
   currentFranchiseId,
   currentVariant,
   currentLineVariants,
+  currentCatalogItem,
   franchises,
   brands,
   username,
@@ -370,6 +374,11 @@ export function EditItemForm({
           </select>
         </div>
       </div>
+
+      <CatalogItemPicker
+        name="catalog_item_id"
+        defaultValue={currentCatalogItem}
+      />
 
       <div className={styles.actions}>
         <button type="submit" className={styles.submitButton} disabled={submitDisabled}>
