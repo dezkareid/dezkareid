@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import type { WithContext, Thing } from 'schema-dts';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { WhereToBuy } from '@/src/features/where-to-buy';
 import styles from './page.module.css';
@@ -47,7 +48,7 @@ function buildProductSchema(
 }
 
 export async function generateStaticParams() {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const { data } = await supabase.from('catalog_items').select('slug');
   return (data ?? []).map(item => ({ slug: item.slug }));
 }
