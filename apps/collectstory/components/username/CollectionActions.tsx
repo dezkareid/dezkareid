@@ -1,30 +1,25 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
+import { AddItemModal, type AddItemModalHandle } from '@/components/AddItemModal/AddItemModal';
+import styles from './CollectionActions.module.css';
+
+type Brand = { id: string; name: string };
+type Franchise = { id: string; name: string };
 
 type Properties = {
   username: string;
   collectionId: string;
   collectionSlug: string;
+  brands: Brand[];
+  franchises: Franchise[];
 };
 
-const buttonStyle: React.CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  padding: 'var(--spacing-8) var(--spacing-16)',
-  borderRadius: 'var(--border-radius-medium)',
-  fontSize: 'var(--font-size-200)',
-  fontWeight: 'var(--font-weight-medium)',
-  fontFamily: 'inherit',
-  cursor: 'pointer',
-  border: '1px solid var(--color-background-secondary)',
-  whiteSpace: 'nowrap' as const,
-  textDecoration: 'none',
-};
-
-export function CollectionActions({ username, collectionSlug }: Properties) {
+export function CollectionActions({ username, collectionId, collectionSlug, brands, franchises }: Properties) {
   const [isOwner, setIsOwner] = useState(false);
+  const modalRef = useRef<AddItemModalHandle>(null);
 
   useEffect(() => {
     const supabase = createClient();
@@ -44,28 +39,26 @@ export function CollectionActions({ username, collectionSlug }: Properties) {
   if (!isOwner) return;
 
   return (
-    <div style={{ display: 'flex', gap: 'var(--spacing-8)', alignItems: 'center' }}>
-      <a
-        href={`/${username}/${collectionSlug}/items/new`}
-        style={{
-          ...buttonStyle,
-          background: 'var(--color-primary)',
-          color: 'var(--color-text-inverse)',
-          border: 'none',
-        }}
+    <div className={styles.actions}>
+      <AddItemModal
+        ref={modalRef}
+        brands={brands}
+        franchises={franchises}
+        collectionId={collectionId}
+      />
+      <button
+        type="button"
+        className={styles.addButton}
+        onClick={() => modalRef.current?.open()}
       >
         + Add Item
-      </a>
-      <a
+      </button>
+      <Link
         href={`/${username}/${collectionSlug}/edit`}
-        style={{
-          ...buttonStyle,
-          background: 'transparent',
-          color: 'var(--color-text-secondary)',
-        }}
+        className={styles.editLink}
       >
         Edit
-      </a>
+      </Link>
     </div>
   );
 }

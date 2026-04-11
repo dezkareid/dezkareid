@@ -1,0 +1,47 @@
+.actions {
+  display: flex;
+  gap: var(--spacing-8);
+  align-items: center;
+}
+
+.addButton {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-8) var(--spacing-16);
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+  border: none;
+  border-radius: var(--border-radius-medium);
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.addButton:hover {
+  opacity: 0.88;
+}
+
+.editLink {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-8) var(--spacing-16);
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-background-secondary);
+  border-radius: var(--border-radius-medium);
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.editLink:hover {
+  opacity: 0.88;
+}

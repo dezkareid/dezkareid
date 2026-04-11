@@ -11,6 +11,8 @@ import { getBreadcrumbSchema } from '@/src/shared/lib/schema/breadcrumb';
 import { CollectionActions } from '@/components/username/CollectionActions';
 import { SocialShare } from '@/src/features/social-share';
 import { IHaveThisButton } from '@/src/features/copy-item';
+import { getAllBrands, getAllFranchises } from '@/app/[username]/[collectionSlug]/actions';
+import { OwnerEmptyState } from './_components/OwnerEmptyState';
 import styles from './page.module.css';
 
 type Properties = {
@@ -60,11 +62,16 @@ async function CollectionContent({
   if (!result) notFound();
 
   const { collection } = result;
-  const items = await getPublicItemsInCollection(collection.id, username, collectionSlug);
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const [items, brands, franchises, { data: { user } }] = await Promise.all([
+    getPublicItemsInCollection(collection.id, username, collectionSlug),
+    getAllBrands(),
+    getAllFranchises(),
+    supabase.auth.getUser(),
+  ]);
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
   const isOwner = user?.id === result.userId;
 
   const schema = generateCollectionListingSchema({
@@ -102,6 +109,8 @@ async function CollectionContent({
               username={username}
               collectionId={collection.id}
               collectionSlug={collectionSlug}
+              brands={brands}
+              franchises={franchises}
             />
           </Suspense>
         </div>
@@ -109,12 +118,20 @@ async function CollectionContent({
 
       <div className={styles.grid}>
         {items.length === 0
-          ? (
-              <div className={styles.empty}>
-                <p className={styles.emptyTitle}>No items in this collection</p>
-                <p className={styles.emptyDesc}>Items added to this collection will appear here.</p>
-              </div>
-            )
+          ? (isOwner
+              ? (
+                  <OwnerEmptyState
+                    collectionId={collection.id}
+                    brands={brands}
+                    franchises={franchises}
+                  />
+                )
+              : (
+                  <div className={styles.empty}>
+                    <p className={styles.emptyTitle}>No items in this collection</p>
+                    <p className={styles.emptyDesc}>Items added to this collection will appear here.</p>
+                  </div>
+                ))
           : items.map(item => (
               <div key={item.id} className={styles.itemCardWrapper}>
                 <Link
