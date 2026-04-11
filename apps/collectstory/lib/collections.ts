@@ -42,6 +42,7 @@ export type PublicItemDetail = PublicItem & {
   variant: string | undefined;
   line_id?: string;
   franchise_id?: string;
+  catalog_item_id?: string | null;
   franchises: { id: string; name: string; slug: string } | undefined;
   // likes_count inherited from PublicItem
 };
@@ -320,6 +321,7 @@ export async function getPublicItemBySlug(
       variant,
       line_id,
       franchise_id,
+      catalog_item_id,
       lines (
         id,
         name,

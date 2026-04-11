@@ -7,6 +7,7 @@ const ADMIN_LINKS = [
   { href: '/admin/brands', label: 'Brands' },
   { href: '/admin/lines', label: 'Lines' },
   { href: '/admin/categories', label: 'Categories' },
+  { href: '/catalog', label: 'Catalog' },
   { href: '/admin/stores', label: 'Stores' },
   { href: '/admin/franchises', label: 'Franchises' },
 ] as const;

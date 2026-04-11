@@ -1,0 +1,113 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-32);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+}
+
+.sectionHeading {
+  font-size: var(--font-size-300);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.searchInput {
+  font-size: var(--font-size-300);
+  color: var(--color-text-primary);
+  background-color: var(--color-background-primary);
+  border: 1px solid var(--color-text-secondary);
+  border-radius: var(--border-radius-medium);
+  padding: var(--spacing-8) var(--spacing-12);
+  width: 100%;
+  outline: none;
+}
+
+.searchInput:focus {
+  border-color: var(--color-primary);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--color-background-secondary);
+  border-radius: var(--border-radius-medium);
+  overflow: hidden;
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-12);
+  padding: var(--spacing-8) var(--spacing-16);
+  border-bottom: 1px solid var(--color-background-secondary);
+}
+
+.listItem:last-child {
+  border-bottom: none;
+}
+
+.storeName {
+  font-size: var(--font-size-300);
+  color: var(--color-text-primary);
+}
+
+.removeButton,
+.addButton {
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--border-radius-small);
+  padding: var(--spacing-4) var(--spacing-8);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity 0.15s ease;
+}
+
+.removeButton {
+  color: var(--color-text-secondary);
+  background: none;
+  border: 1px solid var(--color-text-secondary);
+}
+
+.removeButton:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-text-primary);
+}
+
+.addButton {
+  color: var(--color-text-inverse);
+  background-color: var(--color-primary);
+  border: none;
+}
+
+.addButton:hover {
+  opacity: 0.85;
+}
+
+.removeButton:disabled,
+.addButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.empty {
+  font-size: var(--font-size-300);
+  color: var(--color-text-secondary);
+}
+
+.error {
+  font-size: var(--font-size-200);
+  color: var(--color-text-primary);
+  background-color: var(--color-background-secondary);
+  border: 1px solid var(--color-text-secondary);
+  border-radius: var(--border-radius-small);
+  padding: var(--spacing-8) var(--spacing-12);
+}

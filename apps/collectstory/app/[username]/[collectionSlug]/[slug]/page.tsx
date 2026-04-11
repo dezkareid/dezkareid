@@ -14,6 +14,7 @@ import { LikeSection } from './_components/LikeSection';
 import { LikeButtonSkeleton } from './_components/LikeButtonSkeleton';
 import { SocialShare } from '@/src/features/social-share';
 import { WhereToFindButton } from '@/src/features/where-to-find';
+import { WhereToBuy } from '@/src/features/where-to-buy';
 import { IHaveThisButton } from '@/src/features/copy-item';
 import type { Store } from '@/app/[username]/[collectionSlug]/actions';
 import styles from './page.module.css';
@@ -122,16 +123,26 @@ function ItemTags({ item }: { item: PublicItemDetail }) {
   );
 }
 
+interface CatalogStore {
+  id: string;
+  name: string;
+  city: string | null;
+  country: string | null;
+  url: string | null;
+}
+
 function ItemMeta({
   item,
   username,
   collectionSlug,
   linkedStores,
+  catalogStores,
 }: {
   item: PublicItemDetail;
   username: string;
   collectionSlug: string;
   linkedStores: Store[];
+  catalogStores: CatalogStore[];
 }) {
   const showWhereToFind = linkedStores.length > 0;
   const isPublic = item.visibility === 'public';
@@ -188,6 +199,8 @@ function ItemMeta({
         />
       )}
 
+      <WhereToBuy stores={catalogStores} />
+
       {/* Owner-only: edit button — client component, self-detects ownership */}
       <Suspense>
         <ItemActions
@@ -213,18 +226,25 @@ async function ItemDetail({
   const item = await getPublicItemBySlug(collectionResult.collection.id, slug, username, collectionSlug);
   if (!item) notFound();
 
-  // Linked stores are public — fetched in the cached shell for all visitors.
+  // Catalog-driven stores — fetched via catalog_item_id if the item is linked to a catalog item.
   const supabase = await createClient();
-  const { data: storeRows } = await supabase
-    .from('collection_item_stores')
-    .select('stores ( id, name, verified, url )')
-    .eq('item_id', item.id);
+  const catalogItemId = item.catalog_item_id;
 
-  const linkedStores: Store[] = (storeRows ?? []).flatMap((row) => {
-    const s = (row as unknown as { stores: { id: string; name: string; verified: boolean; url: string | null } | null }).stores;
+  const catalogStoreRows = await (catalogItemId
+    ? supabase
+        .from('catalog_item_stores')
+        .select('stores ( id, name, city, country, url )')
+        .eq('catalog_item_id', catalogItemId)
+    : Promise.resolve({ data: [] }));
+
+  const catalogStores: CatalogStore[] = (catalogStoreRows.data ?? []).flatMap((row: unknown) => {
+    const s = (row as { stores: { id: string; name: string; city: string | null; country: string | null; url: string | null } | null }).stores;
     if (!s) return [];
-    return [{ id: s.id, name: s.name, verified: s.verified, url: s.url ?? undefined }];
+    return [{ id: s.id, name: s.name, city: s.city, country: s.country, url: s.url }];
   });
+
+  // Legacy linkedStores kept for WhereToFindButton compatibility (empty since junction dropped)
+  const linkedStores: Store[] = [];
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
   const schema = generateCollectionItemSchema({
@@ -256,6 +276,7 @@ async function ItemDetail({
         username={username}
         collectionSlug={collectionSlug}
         linkedStores={linkedStores}
+        catalogStores={catalogStores}
       />
     </div>
   );
