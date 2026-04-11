@@ -16,6 +16,33 @@ type Properties = {
   onClose: () => void;
 };
 
+async function uploadImageFromUrl(sourceUrl: string): Promise<string | undefined> {
+  try {
+    const response = await fetch(sourceUrl);
+    if (!response.ok) return undefined;
+
+    const blob = await response.blob();
+    const extension = blob.type === 'image/png' ? 'png' : (blob.type === 'image/webp' ? 'webp' : 'jpg');
+    const file = new File([blob], `image.${extension}`, { type: blob.type });
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const uploadResponse = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!uploadResponse.ok) return undefined;
+
+    const data = await uploadResponse.json() as { url?: string };
+    return data.url;
+  }
+  catch {
+    return undefined;
+  }
+}
+
 function LoadingState() {
   return <div className={styles.loading}>Loading collections...</div>;
 }
@@ -71,30 +98,46 @@ function CollectionSelector({
   );
 }
 
-function useCopyItemModalData() {
+function useCopyItemModalData(sourceImageUrl: string | undefined) {
   const [collections, setCollections] = useState<Collection[]>([]);
   const [selectedCollectionId, setSelectedCollectionId] = useState<string>('');
   const [brands, setBrands] = useState<{ id: string; name: string }[]>([]);
   const [franchises, setFranchises] = useState<{ id: string; name: string }[]>([]);
   const [loading, setLoading] = useState(true);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | undefined>(undefined);
+  const [imageUploadFailed, setImageUploadFailed] = useState(false);
 
   useEffect(() => {
     async function loadData() {
-      const [cols, b, f] = await Promise.all([
-        getUserCollections(),
-        getAllBrands(),
-        getAllFranchises(),
-      ]);
-      setCollections(cols);
-      if (cols.length > 0) {
-        setSelectedCollectionId(cols[0].id);
+      const tasks: Promise<unknown>[] = [
+        getUserCollections().then((cols) => {
+          setCollections(cols);
+          if (cols.length > 0) {
+            setSelectedCollectionId(cols[0].id);
+          }
+        }),
+        getAllBrands().then(setBrands),
+        getAllFranchises().then(setFranchises),
+      ];
+
+      if (sourceImageUrl) {
+        tasks.push(
+          uploadImageFromUrl(sourceImageUrl).then((url) => {
+            if (url) {
+              setUploadedImageUrl(url);
+            }
+            else {
+              setImageUploadFailed(true);
+            }
+          }),
+        );
       }
-      setBrands(b);
-      setFranchises(f);
+
+      await Promise.all(tasks);
       setLoading(false);
     }
     loadData();
-  }, []);
+  }, [sourceImageUrl]);
 
   return {
     collections,
@@ -103,6 +146,8 @@ function useCopyItemModalData() {
     brands,
     franchises,
     loading,
+    uploadedImageUrl,
+    imageUploadFailed,
   };
 }
 
@@ -135,13 +180,17 @@ function resolveMetadata(item: PublicItem | PublicItemDetail) {
   return { lineId, franchiseId, variant };
 }
 
-function resolveInitialData(item: PublicItem | PublicItemDetail): InitialItemData {
+function resolveInitialData(
+  item: PublicItem | PublicItemDetail,
+  uploadedImageUrl: string | undefined,
+): InitialItemData {
   const { lineId, franchiseId, variant } = resolveMetadata(item);
 
   return {
     name: item.name,
     description: item.description ?? undefined,
-    image_url: item.image_url ?? undefined,
+    // Use the uploaded (user-owned) image URL; fall back to undefined if upload failed or no image
+    image_url: uploadedImageUrl,
     brand_id: item.lines?.brands?.id,
     line_id: lineId,
     franchise_id: franchiseId,
@@ -160,10 +209,13 @@ function CopyItemModalContent({
   data: ReturnType<typeof useCopyItemModalData>;
   actions: ReturnType<typeof useCopyItemModalActions>;
 }) {
-  const { collections, selectedCollectionId, brands, franchises, loading } = data;
+  const { collections, selectedCollectionId, brands, franchises, loading, uploadedImageUrl, imageUploadFailed } = data;
   const { handleSuccess, onCollectionChange } = actions;
 
-  const initialData = useMemo(() => resolveInitialData(item), [item]);
+  const initialData = useMemo(
+    () => resolveInitialData(item, uploadedImageUrl),
+    [item, uploadedImageUrl],
+  );
 
   if (loading) return <LoadingState />;
 
@@ -174,6 +226,12 @@ function CopyItemModalContent({
         value={selectedCollectionId}
         onChange={onCollectionChange}
       />
+
+      {imageUploadFailed && (
+        <p className={styles.imageWarning} role="alert">
+          ⚠ The image could not be copied. You can add one manually.
+        </p>
+      )}
 
       <div className={styles.formWrapper}>
         <p className={styles.formTitle}>Confirm details</p>
@@ -192,7 +250,8 @@ function CopyItemModalContent({
 }
 
 export function CopyItemModal({ item, onClose }: Properties) {
-  const data = useCopyItemModalData();
+  const sourceImageUrl = item.image_url ?? undefined;
+  const data = useCopyItemModalData(sourceImageUrl);
   const actions = useCopyItemModalActions(onClose, data.setSelectedCollectionId);
 
   return (
