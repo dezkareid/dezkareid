@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import type { WithContext, Thing } from 'schema-dts';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { WhereToBuy } from '@/src/features/where-to-buy';
 import styles from './page.module.css';
@@ -46,10 +47,13 @@ function buildProductSchema(
   } as WithContext<Thing>;
 }
 
-export const dynamicParams = true;
-
 export async function generateStaticParams() {
-  return [];
+  const supabase = createAdminClient();
+  const { data } = await supabase.from('catalog_items').select('slug');
+  const slugs = (data ?? []).map(item => ({ slug: item.slug }));
+  // cacheComponents requires at least one result; return a placeholder if the
+  // catalog is empty at build time so the build doesn't fail.
+  return slugs.length > 0 ? slugs : [{ slug: '_placeholder' }];
 }
 
 export async function generateMetadata({ params }: Properties): Promise<Metadata> {
