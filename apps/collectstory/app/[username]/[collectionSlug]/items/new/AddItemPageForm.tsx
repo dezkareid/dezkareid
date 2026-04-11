@@ -4,6 +4,7 @@ import { useActionState, useState, useTransition } from 'react';
 import { addItem } from '../../actions';
 import { getLinesByBrand } from '@/app/[username]/[collectionSlug]/actions';
 import { stripMetadata } from '@/lib/image/strip-metadata';
+import { CatalogItemPicker } from '@/src/features/catalog-item-picker';
 import styles from '@/components/AddItemForm/AddItemForm.module.css';
 
 function ImageUploadArea({
@@ -299,6 +300,8 @@ export function AddItemPageForm({ brands, franchises, collectionId, username, co
           placeholder="What makes this piece special?"
         />
       </div>
+
+      <CatalogItemPicker name="catalog_item_id" />
 
       <div className={styles.row}>
         <div className={styles.field}>

@@ -10,6 +10,7 @@ const resources = [
   { href: '/admin/categories', label: 'Categories', description: 'Manage collection categories' },
   { href: '/admin/stores', label: 'Stores', description: 'Manage store directory' },
   { href: '/admin/franchises', label: 'Franchises', description: 'Manage IP franchise catalog' },
+  { href: '/admin/catalog-items', label: 'Catalog Items', description: 'Manage the global product catalog' },
 ];
 
 export default function AdminPage() {

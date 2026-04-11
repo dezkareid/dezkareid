@@ -38,6 +38,87 @@ export type Database = {
         };
         Relationships: [];
       };
+      catalog_item_stores: {
+        Row: {
+          catalog_item_id: string;
+          store_id: string;
+        };
+        Insert: {
+          catalog_item_id: string;
+          store_id: string;
+        };
+        Update: {
+          catalog_item_id?: string;
+          store_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'catalog_item_stores_catalog_item_id_fkey';
+            columns: ['catalog_item_id'];
+            isOneToOne: false;
+            referencedRelation: 'catalog_items';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'catalog_item_stores_store_id_fkey';
+            columns: ['store_id'];
+            isOneToOne: false;
+            referencedRelation: 'stores';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      catalog_items: {
+        Row: {
+          created_at: string;
+          description: string | null;
+          franchise_id: string | null;
+          id: string;
+          image_url: string | null;
+          line_id: string | null;
+          name: string;
+          slug: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          description?: string | null;
+          franchise_id?: string | null;
+          id?: string;
+          image_url?: string | null;
+          line_id?: string | null;
+          name: string;
+          slug: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          description?: string | null;
+          franchise_id?: string | null;
+          id?: string;
+          image_url?: string | null;
+          line_id?: string | null;
+          name?: string;
+          slug?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'catalog_items_franchise_id_fkey';
+            columns: ['franchise_id'];
+            isOneToOne: false;
+            referencedRelation: 'franchises';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'catalog_items_line_id_fkey';
+            columns: ['line_id'];
+            isOneToOne: false;
+            referencedRelation: 'lines';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       categories: {
         Row: {
           created_at: string;
@@ -62,45 +143,9 @@ export type Database = {
         };
         Relationships: [];
       };
-      collection_item_stores: {
-        Row: {
-          item_id: string;
-          store_id: string;
-        };
-        Insert: {
-          item_id: string;
-          store_id: string;
-        };
-        Update: {
-          item_id?: string;
-          store_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'collection_item_stores_item_id_fkey';
-            columns: ['item_id'];
-            isOneToOne: false;
-            referencedRelation: 'collection_items';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'collection_item_stores_item_id_fkey';
-            columns: ['item_id'];
-            isOneToOne: false;
-            referencedRelation: 'last_arrivals';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'collection_item_stores_store_id_fkey';
-            columns: ['store_id'];
-            isOneToOne: false;
-            referencedRelation: 'stores';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
       collection_items: {
         Row: {
+          catalog_item_id: string | null;
           collection_id: string;
           created_at: string;
           date_acquired: string | null;
@@ -118,6 +163,7 @@ export type Database = {
           visibility: string;
         };
         Insert: {
+          catalog_item_id?: string | null;
           collection_id: string;
           created_at?: string;
           date_acquired?: string | null;
@@ -135,6 +181,7 @@ export type Database = {
           visibility?: string;
         };
         Update: {
+          catalog_item_id?: string | null;
           collection_id?: string;
           created_at?: string;
           date_acquired?: string | null;
@@ -152,6 +199,13 @@ export type Database = {
           visibility?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: 'collection_items_catalog_item_id_fkey';
+            columns: ['catalog_item_id'];
+            isOneToOne: false;
+            referencedRelation: 'catalog_items';
+            referencedColumns: ['id'];
+          },
           {
             foreignKeyName: 'collection_items_collection_id_fkey';
             columns: ['collection_id'];
@@ -470,6 +524,22 @@ export type Database = {
     };
     Functions: {
       is_admin: { Args: never; Returns: boolean };
+      search_catalog_items: {
+        Args: { max_results?: number; query: string };
+        Returns: {
+          franchise_id: string;
+          franchise_name: string;
+          id: string;
+          image_url: string;
+          line_id: string;
+          line_name: string;
+          name: string;
+          score: number;
+          slug: string;
+        }[];
+      };
+      show_limit: { Args: never; Returns: number };
+      show_trgm: { Args: { '': string }; Returns: string[] };
     };
     Enums: {
       [_ in never]: never
