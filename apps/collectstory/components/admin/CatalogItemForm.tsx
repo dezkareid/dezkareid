@@ -13,7 +13,7 @@ interface FranchiseOption {
 interface LineOption {
   id: string;
   name: string;
-  franchise_id: string | null;
+  franchise_id: string | null | undefined;
 }
 
 interface CatalogItemDefaults {

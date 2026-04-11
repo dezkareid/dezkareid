@@ -65,7 +65,7 @@ export default async function EditCatalogItemPage({
         action={updateWithId}
         defaultValues={item}
         franchises={franchises ?? []}
-        lines={(lines ?? []).map(l => ({ ...l, franchise_id: null }))}
+        lines={(lines ?? []).map(l => ({ ...l, franchise_id: undefined }))}
         submitLabel="Save Changes"
         cancelHref="/admin/catalog-items"
       />

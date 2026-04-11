@@ -26,7 +26,7 @@ export default async function NewCatalogItemPage() {
       <CatalogItemForm
         action={createCatalogItem}
         franchises={franchises ?? []}
-        lines={(lines ?? []).map(l => ({ ...l, franchise_id: null }))}
+        lines={(lines ?? []).map(l => ({ ...l, franchise_id: undefined }))}
         submitLabel="Create Catalog Item"
         cancelHref="/admin/catalog-items"
       />

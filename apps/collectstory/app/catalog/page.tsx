@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import type { WithContext, Thing } from 'schema-dts';
 import { createClient } from '@/lib/supabase/server';
 import { getSessionAndRole } from '@/lib/auth/role';
+import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { CatalogItemCard } from '@/src/entities/catalog-item';
 import styles from './page.module.css';
 
@@ -10,9 +12,9 @@ export const metadata: Metadata = {
   description: 'Browse the complete catalog of collectible items and find where to buy them.',
 };
 
-const itemListSchema = (baseUrl: string, items: { name: string; slug: string; image_url: string | null }[]) => ({
-  '@context': 'https://schema.org',
-  '@type': 'ItemList',
+const itemListSchema = (baseUrl: string, items: { name: string; slug: string; image_url: string | null }[]): WithContext<Thing> => ({
+  '@context': 'https://schema.org' as const,
+  '@type': 'ItemList' as const,
   'name': 'Collectstory Catalog',
   'url': `${baseUrl}/catalog`,
   'numberOfItems': items.length,
@@ -49,10 +51,7 @@ export default async function CatalogPage() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      />
+      <DataSchema schema={schema} id="catalog-schema" />
       <div className={styles.page}>
         <header className={styles.header}>
           <div className={styles.headerTop}>

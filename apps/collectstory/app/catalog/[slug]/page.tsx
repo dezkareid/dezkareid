@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
+import type { WithContext, Thing } from 'schema-dts';
 import { createClient } from '@/lib/supabase/server';
+import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { WhereToBuy } from '@/src/features/where-to-buy';
 import styles from './page.module.css';
 
@@ -26,10 +28,10 @@ function buildProductSchema(
   item: { name: string; description: string | null; image_url: string | null; slug: string },
   stores: StoreRow[],
   baseUrl: string,
-) {
+): WithContext<Thing> {
   return {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
+    '@context': 'https://schema.org' as const,
+    '@type': 'Product' as const,
     'name': item.name,
     'description': item.description ?? undefined,
     'image': item.image_url ?? undefined,
@@ -37,11 +39,11 @@ function buildProductSchema(
     'offers': stores
       .filter(s => s.url)
       .map(s => ({
-        '@type': 'Offer',
+        '@type': 'Offer' as const,
         'url': s.url,
-        'seller': { '@type': 'Organization', 'name': s.name },
+        'seller': { '@type': 'Organization' as const, 'name': s.name },
       })),
-  };
+  } as WithContext<Thing>;
 }
 
 export async function generateStaticParams() {
@@ -113,10 +115,7 @@ export default async function CatalogItemDetailPage({ params }: Properties) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
-      />
+      <DataSchema schema={productSchema} id="product-schema" />
       <div className={styles.page}>
         <div className={styles.layout}>
           <div className={styles.imageWrapper}>
