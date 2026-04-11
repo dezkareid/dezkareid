@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
+import { Suspense } from 'react';
 import type { WithContext, Thing } from 'schema-dts';
-import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { WhereToBuy } from '@/src/features/where-to-buy';
@@ -58,7 +58,9 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Properties): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = await createClient();
+  // Use admin client — generateMetadata runs at build time for static params,
+  // where cookie-based createClient() is not available.
+  const supabase = createAdminClient();
   const { data: item } = await supabase
     .from('catalog_items')
     .select('name, description, image_url')
@@ -80,9 +82,8 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
   };
 }
 
-export default async function CatalogItemDetailPage({ params }: Properties) {
-  const { slug } = await params;
-  const supabase = await createClient();
+async function CatalogItemContent({ slug }: { slug: string }) {
+  const supabase = createAdminClient();
 
   const { data: item } = await supabase
     .from('catalog_items')
@@ -100,7 +101,6 @@ export default async function CatalogItemDetailPage({ params }: Properties) {
 
   if (!item) notFound();
 
-  // Fetch catalog stores for this item
   const { data: catalogStoreRows } = await supabase
     .from('catalog_item_stores')
     .select('stores ( id, name, city, country, url )')
@@ -120,50 +120,59 @@ export default async function CatalogItemDetailPage({ params }: Properties) {
   return (
     <>
       <DataSchema schema={productSchema} id="product-schema" />
-      <div className={styles.page}>
-        <div className={styles.layout}>
-          <div className={styles.imageWrapper}>
-            {item.image_url
-              ? (
-                  <Image
-                    src={item.image_url}
-                    alt={item.name}
-                    width={600}
-                    height={600}
-                    className={styles.image}
-                    priority
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                )
-              : (
-                  <div className={styles.imagePlaceholder} aria-hidden="true">📦</div>
-                )}
+      <div className={styles.layout}>
+        <div className={styles.imageWrapper}>
+          {item.image_url
+            ? (
+                <Image
+                  src={item.image_url}
+                  alt={item.name}
+                  width={600}
+                  height={600}
+                  className={styles.image}
+                  priority
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              )
+            : (
+                <div className={styles.imagePlaceholder} aria-hidden="true">📦</div>
+              )}
+        </div>
+
+        <div className={styles.details}>
+          <div className={styles.tags}>
+            {franchise && (
+              <span className={styles.tag}>{franchise.name}</span>
+            )}
+            {line && (
+              <span className={styles.tag}>{line.name}</span>
+            )}
           </div>
 
-          <div className={styles.details}>
-            <div className={styles.tags}>
-              {franchise && (
-                <span className={styles.tag}>{franchise.name}</span>
-              )}
-              {line && (
-                <span className={styles.tag}>{line.name}</span>
-              )}
+          <h1 className={styles.name}>{item.name}</h1>
+
+          {item.description && (
+            <p className={styles.description}>{item.description}</p>
+          )}
+
+          {stores.length > 0 && (
+            <div className={styles.stores}>
+              <WhereToBuy stores={stores} />
             </div>
-
-            <h1 className={styles.name}>{item.name}</h1>
-
-            {item.description && (
-              <p className={styles.description}>{item.description}</p>
-            )}
-
-            {stores.length > 0 && (
-              <div className={styles.stores}>
-                <WhereToBuy stores={stores} />
-              </div>
-            )}
-          </div>
+          )}
         </div>
       </div>
     </>
+  );
+}
+
+export default async function CatalogItemDetailPage({ params }: Properties) {
+  const { slug } = await params;
+  return (
+    <div className={styles.page}>
+      <Suspense fallback={undefined}>
+        <CatalogItemContent slug={slug} />
+      </Suspense>
+    </div>
   );
 }
