@@ -1,12 +1,8 @@
 'use client';
 
-import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
 import { GoogleAnalytics as NextGoogleAnalytics } from '@next/third-parties/google';
-
-const ConsentBanner = dynamic(
-  () => import('@/src/shared/ui/ConsentBanner').then(module_ => module_.ConsentBanner),
-  { ssr: false },
-);
+import { ConsentBanner } from '../../ui/ConsentBanner';
 
 interface AnalyticsClientProperties {
   gaId?: string;
@@ -20,7 +16,9 @@ export function AnalyticsClient({ gaId }: AnalyticsClientProperties) {
   return (
     <>
       {gaId && <NextGoogleAnalytics gaId={gaId} />}
-      <ConsentBanner />
+      <Suspense fallback={undefined}>
+        <ConsentBanner />
+      </Suspense>
     </>
   );
 }

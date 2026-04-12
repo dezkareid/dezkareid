@@ -1,23 +1,24 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
+import { use, Suspense } from 'react';
 import { getCollectionFirstImage, getPublicCollectionBySlug, getPublicItemsInCollection } from '@/lib/collections';
-import { createClient } from '@/lib/supabase/server';
 import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { generateCollectionListingSchema } from '@/lib/seo';
 import { getBreadcrumbSchema } from '@/src/shared/lib/schema/breadcrumb';
-import { CollectionActions } from '@/components/username/CollectionActions';
+import { OwnerCollectionActions } from '@/src/features/owner-collection-actions';
+import { NonOwnerItemActions } from '@/src/features/non-owner-item-actions';
 import { SocialShare } from '@/src/features/social-share';
-import { IHaveThisButton } from '@/src/features/copy-item';
-import { getAllBrands, getAllFranchises } from '@/app/[username]/[collectionSlug]/actions';
-import { OwnerEmptyState } from './_components/OwnerEmptyState';
+import { OwnerEmptyStateFallback } from './_components/OwnerEmptyStateFallback';
 import styles from './page.module.css';
 
 type Properties = {
   params: Promise<{ username: string; collectionSlug: string }>;
 };
+
+// Collection pages are rendered on-demand — slugs are not known at build time.
+export function generateStaticParams() { return [{ username: '_placeholder', collectionSlug: '_placeholder' }]; }
 
 export async function generateMetadata({ params }: Properties): Promise<Metadata> {
   const { username, collectionSlug } = await params;
@@ -52,27 +53,20 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
 }
 
 async function CollectionContent({
-  params,
+  username,
+  collectionSlug,
 }: {
-  params: Promise<{ username: string; collectionSlug: string }>;
+  username: string;
+  collectionSlug: string;
 }) {
-  const { username, collectionSlug } = await params;
 
   const result = await getPublicCollectionBySlug(username, collectionSlug);
   if (!result) notFound();
 
   const { collection } = result;
 
-  const supabase = await createClient();
-  const [items, brands, franchises, { data: { user } }] = await Promise.all([
-    getPublicItemsInCollection(collection.id, username, collectionSlug),
-    getAllBrands(),
-    getAllFranchises(),
-    supabase.auth.getUser(),
-  ]);
-
+  const items = await getPublicItemsInCollection(collection.id, username, collectionSlug);
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
-  const isOwner = user?.id === result.userId;
 
   const schema = generateCollectionListingSchema({
     collection,
@@ -105,12 +99,9 @@ async function CollectionContent({
         </div>
         <div className={styles.ownerActions}>
           <Suspense fallback={undefined}>
-            <CollectionActions
+            <OwnerCollectionActions
               username={username}
-              collectionId={collection.id}
               collectionSlug={collectionSlug}
-              brands={brands}
-              franchises={franchises}
             />
           </Suspense>
         </div>
@@ -118,20 +109,20 @@ async function CollectionContent({
 
       <div className={styles.grid}>
         {items.length === 0
-          ? (isOwner
-              ? (
-                  <OwnerEmptyState
-                    collectionId={collection.id}
-                    brands={brands}
-                    franchises={franchises}
+          ? (
+              <>
+                <div className={styles.empty}>
+                  <p className={styles.emptyTitle}>No items in this collection</p>
+                  <p className={styles.emptyDesc}>Items added to this collection will appear here.</p>
+                </div>
+                <Suspense fallback={undefined}>
+                  <OwnerEmptyStateFallback
+                    username={username}
+                    collectionSlug={collectionSlug}
                   />
-                )
-              : (
-                  <div className={styles.empty}>
-                    <p className={styles.emptyTitle}>No items in this collection</p>
-                    <p className={styles.emptyDesc}>Items added to this collection will appear here.</p>
-                  </div>
-                ))
+                </Suspense>
+              </>
+            )
           : items.map(item => (
               <div key={item.id} className={styles.itemCardWrapper}>
                 <Link
@@ -173,11 +164,15 @@ async function CollectionContent({
                     </span>
                   )}
                 </Link>
-                {!isOwner && (
+                <Suspense fallback={undefined}>
                   <div className={styles.itemActions}>
-                    <IHaveThisButton item={item} />
+                    <NonOwnerItemActions
+                      username={username}
+                      collectionSlug={collectionSlug}
+                      item={item}
+                    />
                   </div>
-                )}
+                </Suspense>
               </div>
             ))}
       </div>
@@ -186,11 +181,12 @@ async function CollectionContent({
 }
 
 async function BreadcrumbNav({
-  params,
+  username,
+  collectionSlug,
 }: {
-  params: Promise<{ username: string; collectionSlug: string }>;
+  username: string;
+  collectionSlug: string;
 }) {
-  const { username, collectionSlug } = await params;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 
   const result = await getPublicCollectionBySlug(username, collectionSlug);
@@ -217,15 +213,11 @@ async function BreadcrumbNav({
 }
 
 export default function CollectionPage({ params }: Properties) {
+  const { username, collectionSlug } = use(params);
   return (
     <div className={`container ${styles.page}`}>
-      <Suspense>
-        <BreadcrumbNav params={params} />
-      </Suspense>
-
-      <Suspense>
-        <CollectionContent params={params} />
-      </Suspense>
+      <BreadcrumbNav username={username} collectionSlug={collectionSlug} />
+      <CollectionContent username={username} collectionSlug={collectionSlug} />
     </div>
   );
 }

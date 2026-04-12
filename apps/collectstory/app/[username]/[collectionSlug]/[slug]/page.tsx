@@ -2,26 +2,28 @@ import type { Metadata } from 'next';
 import type React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
-import { createClient } from '@/lib/supabase/server';
-import { getPublicCollectionBySlug, getPublicItemBySlug, type PublicItemDetail } from '@/lib/collections';
+import { use, Suspense } from 'react';
+import { getPublicCollectionBySlug, getPublicItemBySlug, getLinkedStores, type PublicItemDetail, type LinkedStore } from '@/lib/collections';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { generateCollectionItemSchema } from '@/lib/seo';
 import { getBreadcrumbSchema } from '@/src/shared/lib/schema/breadcrumb';
-import { ItemActions } from '@/components/username/ItemActions';
+import { OwnerItemActions } from '@/src/features/owner-item-actions';
 import { OwnerImageSection } from './_components/OwnerImageSection';
 import { LikeSection } from './_components/LikeSection';
 import { LikeButtonSkeleton } from './_components/LikeButtonSkeleton';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { SocialShare } from '@/src/features/social-share';
+import { IHaveThisButton } from '@/src/features/copy-item';
 import { WhereToFindButton } from '@/src/features/where-to-find';
 import { WhereToBuy } from '@/src/features/where-to-buy';
-import { IHaveThisButton } from '@/src/features/copy-item';
-import type { Store } from '@/app/[username]/[collectionSlug]/actions';
 import styles from './page.module.css';
 
 type Properties = {
   params: Promise<{ username: string; collectionSlug: string; slug: string }>;
 };
+
+// Item pages are rendered on-demand — slugs are not known at build time.
+export function generateStaticParams() { return [{ username: '_placeholder', collectionSlug: '_placeholder', slug: '_placeholder' }]; }
 
 export async function generateMetadata({ params }: Properties): Promise<Metadata> {
   const { username, collectionSlug, slug } = await params;
@@ -76,13 +78,13 @@ function ItemMetaDetails({ item }: { item: PublicItemDetail }) {
     category ? { label: 'Category', value: category } : undefined,
     franchise
       ? {
-          label: 'Franchise',
-          value: (
-            <Link href={`/franchises/${franchise.slug}`} className={styles['item-page__meta-link']}>
-              {franchise.name}
-            </Link>
-          ),
-        }
+        label: 'Franchise',
+        value: (
+          <Link href={`/franchises/${franchise.slug}`} className={styles['item-page__meta-link']}>
+            {franchise.name}
+          </Link>
+        ),
+      }
       : undefined,
   ];
   const rows = rowCandidates.filter((row): row is MetaRow => row !== undefined);
@@ -131,6 +133,19 @@ interface CatalogStore {
   url: string | null;
 }
 
+async function getCatalogStoresForItem(catalogItemId: string): Promise<CatalogStore[]> {
+  'use cache';
+  const supabase = createAdminClient();
+  const { data } = await supabase
+    .from('catalog_item_stores')
+    .select('stores ( id, name, city, country, url )')
+    .eq('catalog_item_id', catalogItemId);
+  return (data ?? []).flatMap((row: unknown) => {
+    const s = (row as { stores: CatalogStore | null }).stores;
+    return s ? [s] : [];
+  });
+}
+
 function ItemMeta({
   item,
   username,
@@ -141,7 +156,7 @@ function ItemMeta({
   item: PublicItemDetail;
   username: string;
   collectionSlug: string;
-  linkedStores: Store[];
+  linkedStores: LinkedStore[];
   catalogStores: CatalogStore[];
 }) {
   const showWhereToFind = linkedStores.length > 0;
@@ -201,12 +216,13 @@ function ItemMeta({
 
       <WhereToBuy stores={catalogStores} />
 
-      {/* Owner-only: edit button — client component, self-detects ownership */}
-      <Suspense>
-        <ItemActions
+      {/* Owner-only: edit button — dynamic server component, streams in via Suspense */}
+      <Suspense fallback={undefined}>
+        <OwnerItemActions
           username={username}
           collectionSlug={collectionSlug}
           itemId={item.id}
+          userId={item.user_id}
         />
       </Suspense>
     </div>
@@ -214,11 +230,14 @@ function ItemMeta({
 }
 
 async function ItemDetail({
-  params,
+  username,
+  collectionSlug,
+  slug,
 }: {
-  params: Promise<{ username: string; collectionSlug: string; slug: string }>;
+  username: string;
+  collectionSlug: string;
+  slug: string;
 }) {
-  const { username, collectionSlug, slug } = await params;
 
   const collectionResult = await getPublicCollectionBySlug(username, collectionSlug);
   if (!collectionResult) notFound();
@@ -226,25 +245,15 @@ async function ItemDetail({
   const item = await getPublicItemBySlug(collectionResult.collection.id, slug, username, collectionSlug);
   if (!item) notFound();
 
-  // Catalog-driven stores — fetched via catalog_item_id if the item is linked to a catalog item.
-  const supabase = await createClient();
+  // Linked stores are public — fetched via cached query for all visitors.
+  const linkedStores = await getLinkedStores(item.id);
+  // Catalog-driven stores — public data, use admin client (no cookies) so this
+  // fetch is treated as cached by cacheComponents.
   const catalogItemId = item.catalog_item_id;
 
-  const catalogStoreRows = await (catalogItemId
-    ? supabase
-        .from('catalog_item_stores')
-        .select('stores ( id, name, city, country, url )')
-        .eq('catalog_item_id', catalogItemId)
-    : Promise.resolve({ data: [] }));
-
-  const catalogStores: CatalogStore[] = (catalogStoreRows.data ?? []).flatMap((row: unknown) => {
-    const s = (row as { stores: { id: string; name: string; city: string | null; country: string | null; url: string | null } | null }).stores;
-    if (!s) return [];
-    return [{ id: s.id, name: s.name, city: s.city, country: s.country, url: s.url }];
-  });
-
-  // Legacy linkedStores kept for WhereToFindButton compatibility (empty since junction dropped)
-  const linkedStores: Store[] = [];
+  const catalogStores = await (catalogItemId
+    ? getCatalogStoresForItem(catalogItemId)
+    : Promise.resolve([]));
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
   const schema = generateCollectionItemSchema({
@@ -283,11 +292,14 @@ async function ItemDetail({
 }
 
 async function BreadcrumbNav({
-  params,
+  username,
+  collectionSlug,
+  slug,
 }: {
-  params: Promise<{ username: string; collectionSlug: string; slug: string }>;
+  username: string;
+  collectionSlug: string;
+  slug: string;
 }) {
-  const { username, collectionSlug, slug } = await params;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 
   const collectionResult = await getPublicCollectionBySlug(username, collectionSlug);
@@ -324,15 +336,11 @@ async function BreadcrumbNav({
 }
 
 export default function ItemDetailPage({ params }: Properties) {
+  const { username, collectionSlug, slug } = use(params);
   return (
     <div className={styles['item-page']}>
-      <Suspense>
-        <BreadcrumbNav params={params} />
-      </Suspense>
-
-      <Suspense>
-        <ItemDetail params={params} />
-      </Suspense>
+      <BreadcrumbNav username={username} collectionSlug={collectionSlug} slug={slug} />
+      <ItemDetail username={username} collectionSlug={collectionSlug} slug={slug} />
     </div>
   );
 }

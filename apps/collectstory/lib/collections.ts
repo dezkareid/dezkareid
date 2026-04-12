@@ -341,6 +341,32 @@ export async function getPublicItemBySlug(
   return item as unknown as PublicItemDetail;
 }
 
+export type LinkedStore = {
+  id: string;
+  name: string;
+  verified: boolean;
+  url: string | undefined;
+};
+
+// itemId is not derived from headers/cookies so it becomes part of the 'use cache' cache key.
+export async function getLinkedStores(itemId: string): Promise<LinkedStore[]> {
+  'use cache';
+  cacheLife('user-content');
+  cacheTag(`item-stores:${itemId}`);
+  const supabase = createPublicClient();
+
+  const { data } = await supabase
+    .from('collection_item_stores')
+    .select('stores ( id, name, verified, url )')
+    .eq('item_id', itemId);
+
+  return (data ?? []).flatMap((row) => {
+    const s = (row as unknown as { stores: { id: string; name: string; verified: boolean; url: string | null } | null }).stores;
+    if (!s) return [];
+    return [{ id: s.id, name: s.name, verified: s.verified, url: s.url ?? undefined }];
+  });
+}
+
 export async function getItemLikedByUser(
   itemId: string,
   userId: string,
