@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Modal } from '@/src/shared/ui/modal';
+import { Modal } from '@dezkareid/components/react';
 import { AddItemForm, type InitialItemData } from '@/components/AddItemForm/AddItemForm';
 import { getUserCollections } from '@/app/[username]/actions';
 import { getAllBrands, getAllFranchises, copyItemToCollection, type CopyItemState } from '@/app/[username]/[collectionSlug]/actions';

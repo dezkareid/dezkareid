@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import Link from 'next/link';
-import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
+import { Image } from '@dezkareid/components/react-server';
 import { getAllPublicFranchises } from '@/lib/franchises';
 import styles from './page.module.css';
 
@@ -34,9 +34,10 @@ async function FranchiseGrid() {
         <li key={franchise.id}>
           <Link href={`/franchises/${franchise.slug}`} className={styles.card}>
             <div className={styles.cardCover}>
-              <CloudinaryImage
+              <Image
                 src={franchise.image_url}
                 alt={franchise.name}
+                strategy="cloudinary"
                 sizes="(max-width: 640px) 50vw, (max-width: 1080px) 33vw, 360px"
                 className={styles.cardImage}
               />

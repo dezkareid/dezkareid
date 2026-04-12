@@ -1,0 +1,89 @@
+/* =============================================================================
+   MODAL — BEM + OOCSS
+   Structure: dialog, backdrop, layout
+   Skin: background, shadow, animations
+   ============================================================================= */
+
+.modal {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: auto;
+  max-width: min(90vw, 600px);
+  width: 100%;
+  border-radius: var(--border-radius-large);
+  box-shadow: var(--shadow-modal);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.modal::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  transition: opacity 0.2s ease;
+}
+
+/* --- Content Wrapper --- */
+.modal__inner {
+  background-color: var(--color-background-primary);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: inherit;
+  border: 1px solid var(--color-background-secondary);
+}
+
+/* --- Header --- */
+.modal__header {
+  padding: var(--spacing-16) var(--spacing-24);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-background-secondary);
+}
+
+.modal__title {
+  margin: 0;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-500);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.modal__close {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: var(--spacing-8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-tertiary);
+  border-radius: var(--border-radius-small);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.modal__close:hover {
+  background-color: var(--color-background-secondary);
+  color: var(--color-text-primary);
+}
+
+/* --- Body --- */
+.modal__body {
+  padding: var(--spacing-24);
+  max-height: 70vh;
+  overflow-y: auto;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-300);
+  line-height: var(--font-line-height-relaxed);
+  color: var(--color-text-primary);
+}
+
+/* --- Animations: Native Dialog --- */
+.modal[open] {
+  animation: modal-fade-in 0.2s ease forwards;
+}
+
+@keyframes modal-fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

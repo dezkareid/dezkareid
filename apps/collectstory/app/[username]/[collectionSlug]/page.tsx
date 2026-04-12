@@ -10,7 +10,7 @@ import {
   getPublicCollectionBySlug,
   getPublicItemsInCollection,
 } from '@/lib/collections';
-import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
+import { Image, Breadcrumb } from '@dezkareid/components/react-server';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { generateCollectionListingSchema } from '@/lib/seo';
 import { getBreadcrumbSchema } from '@/src/shared/lib/schema/breadcrumb';
@@ -72,6 +72,7 @@ async function CollectionContent({
   collectionSlug: string;
 }) {
   const result = await getPublicCollectionBySlug(username, collectionSlug);
+
   if (!result) notFound();
 
   const { collection } = result;
@@ -143,9 +144,10 @@ async function CollectionContent({
                   <div className={styles.itemImage}>
                     {item.image_url
                       ? (
-                          <CloudinaryImage
+                          <Image
                             src={item.image_url}
                             alt={item.name}
+                            strategy="cloudinary"
                             sizes="(max-width: 420px) 100vw, (max-width: 720px) 50vw, (max-width: 1024px) 33vw, 25vw"
                           />
                         )
@@ -164,7 +166,7 @@ async function CollectionContent({
                       {/* TODO(design-system): needs tokens --color-like-gradient-from (rose-500 #f43f6e) and --color-like-gradient-to (orange-400 #fb923c) */}
                       <svg width="12" height="12" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <defs>
-                          <linearGradient id="like-count-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <linearGradient id="like-count-gradient" x1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stopColor="#f43f6e" />
                             <stop offset="100%" stopColor="#fb923c" />
                           </linearGradient>
@@ -211,14 +213,13 @@ async function BreadcrumbNav({
   return (
     <>
       <DataSchema schema={breadcrumbSchema} id="breadcrumb-schema" />
-      <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-        <Link href={`/${username}`} className={styles.breadcrumbLink}>
-          @
-          {username}
-        </Link>
-        <span className={styles.breadcrumbSep} aria-hidden="true">/</span>
-        <span>{collectionName}</span>
-      </nav>
+      <Breadcrumb
+        className={styles.breadcrumb}
+        items={[
+          { label: `@${username}`, href: `/${username}` },
+          { label: collectionName },
+        ]}
+      />
     </>
   );
 }

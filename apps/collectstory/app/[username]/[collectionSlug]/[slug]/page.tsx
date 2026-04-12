@@ -13,6 +13,7 @@ import {
   type PublicItemDetail,
   type LinkedStore,
 } from '@/lib/collections';
+import { Breadcrumb } from '@dezkareid/components/react-server';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { generateCollectionItemSchema } from '@/lib/seo';
 import { getBreadcrumbSchema } from '@/src/shared/lib/schema/breadcrumb';
@@ -255,6 +256,7 @@ async function ItemDetail({
   slug: string;
 }) {
   const collectionResult = await getPublicCollectionBySlug(username, collectionSlug);
+
   if (!collectionResult) notFound();
 
   const item = await getPublicItemBySlug(collectionResult.collection.id, slug, username, collectionSlug);
@@ -339,18 +341,14 @@ async function BreadcrumbNav({
   return (
     <>
       <DataSchema schema={breadcrumbSchema} id="breadcrumb-schema" />
-      <nav className={styles['item-page__breadcrumb']} aria-label="Breadcrumb">
-        <Link href={`/${username}`} className={styles['item-page__breadcrumb-link']}>
-          @
-          {username}
-        </Link>
-        <span className={styles['item-page__breadcrumb-sep']} aria-hidden="true">/</span>
-        <Link href={`/${username}/${collectionSlug}`} className={styles['item-page__breadcrumb-link']}>
-          {collectionName}
-        </Link>
-        <span className={styles['item-page__breadcrumb-sep']} aria-hidden="true">/</span>
-        <span>{itemName}</span>
-      </nav>
+      <Breadcrumb
+        className={styles['item-page__breadcrumb']}
+        items={[
+          { label: `@${username}`, href: `/${username}` },
+          { label: collectionName, href: `/${username}/${collectionSlug}` },
+          { label: itemName },
+        ]}
+      />
     </>
   );
 }

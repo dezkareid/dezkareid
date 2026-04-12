@@ -2,7 +2,7 @@
 
 import { useState, ReactNode } from 'react';
 import { ViewTransition } from 'react';
-import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
+import { Image } from '@dezkareid/components/react';
 import styles from './page.module.css';
 
 type Properties = {
@@ -30,9 +30,10 @@ export function ItemImageSection({
         {currentImageUrl
           ? (
               <ViewTransition name={`item-image-${slug}`}>
-                <CloudinaryImage
+                <Image
                   src={currentImageUrl}
                   alt={name}
+                  strategy="cloudinary"
                   sizes="(max-width: 768px) 100vw, 480px"
                   className={styles['item-page__image-media']}
                   priority

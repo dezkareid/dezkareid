@@ -3,9 +3,8 @@
 import * as React from 'react';
 import { ViewTransition } from 'react';
 import Link from 'next/link';
-import { Card } from '@dezkareid/components/react';
+import { Card, Image } from '@dezkareid/components/react';
 import type { LastArrivalItem } from '@/lib/collections';
-import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
 import styles from './LatestArrivals.module.css';
 
 export function LatestArrivals() {
@@ -69,9 +68,10 @@ export function LatestArrivals() {
                           {item.image_url
                             ? (
                                 <ViewTransition name={`item-image-${item.slug}`}>
-                                  <CloudinaryImage
+                                  <Image
                                     src={item.image_url}
                                     alt={item.name}
+                                    strategy="cloudinary"
                                     sizes="(min-width: 60rem) 25vw, (min-width: 37.5rem) 50vw, 100vw"
                                     priority={index === 0}
                                     className={styles.image}
@@ -87,7 +87,8 @@ export function LatestArrivals() {
                           {label && <p className={styles.itemLabel}>{label}</p>}
                           <p className={styles.itemAuthor}>
                             {item.avatar_url && (
-                              <CloudinaryImage
+                              <Image
+                                strategy="cloudinary"
                                 mode="fixed"
                                 src={item.avatar_url}
                                 alt={item.username}

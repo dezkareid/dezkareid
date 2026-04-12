@@ -8,7 +8,7 @@ import {
 import {
   getPublicCollectionsByUsername,
 } from '@/lib/collections';
-import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
+import { Image } from '@dezkareid/components/react-server';
 import { OwnerProfileActions } from '@/src/features/owner-profile-actions';
 import { SocialShare } from '@/src/features/social-share';
 import styles from './page.module.css';
@@ -96,7 +96,8 @@ async function ProfileHeader({ username }: { username: string }) {
       <div className={styles.avatar}>
         {avatarUrl
           ? (
-              <CloudinaryImage
+              <Image
+                strategy="cloudinary"
                 mode="fixed"
                 src={avatarUrl}
                 alt={username}

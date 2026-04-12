@@ -1,3 +1,16 @@
+# [@dezkareid/components-v1.4.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.3.0...@dezkareid/components-v1.4.0) (2026-04-12)
+
+
+### Features
+
+* **components:** add ActionToggle base component ([906db9d](https://github.com/dezkareid/dezkareid/commit/906db9d05173decd344ea0721f08e973906cc5dc))
+* **components:** add Breadcrumb component ([b6dc8a5](https://github.com/dezkareid/dezkareid/commit/b6dc8a5d37474486bb30911be7b13efd18024144))
+* **components:** add ConsentBanner component ([29249ea](https://github.com/dezkareid/dezkareid/commit/29249ea89e00ab8534aa56c0a7ce38c802360ac0))
+* **components:** add Image component with Cloudinary strategy ([7294635](https://github.com/dezkareid/dezkareid/commit/7294635ec838fea3064b74f73c09f72b000a052e))
+* **components:** add LikeButton component ([f957e44](https://github.com/dezkareid/dezkareid/commit/f957e443185bd60c17177d4dbb43db5f9f63332b))
+* **components:** add Modal component ([1785820](https://github.com/dezkareid/dezkareid/commit/1785820a8f3f5ab069fb585a3ae102a8a6b6ef49))
+* **components:** add VerifiedBadge component ([720f444](https://github.com/dezkareid/dezkareid/commit/720f444f14e78930249ad1b42022d7633c4af65c))
+
 # [@dezkareid/components-v1.3.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.2.3...@dezkareid/components-v1.3.0) (2026-04-10)
 
 

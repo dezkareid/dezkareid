@@ -46,6 +46,24 @@ The following skills **must** be invoked when working on this package:
 
 Always use **exact versions** (no `^` or `~`) when adding new dependencies.
 
+## Peer Dependencies
+
+The following packages are required as peer dependencies and must be provided by the consuming application. They are explicitly excluded from the Rollup bundle to avoid duplication.
+
+| Package | Version | Optional? |
+|---|---|---|
+| `react` | `^18.0.0 \|\| ^19.0.0` | Yes |
+| `react-dom` | `^18.0.0 \|\| ^19.0.0` | Yes |
+| `astro` | `>=6.0.0` | Yes |
+| `vue` | `^3.0.0` | Yes |
+| `@angular/core` | `>=21.0.0` | Yes |
+| `@angular/common` | `>=21.0.0` | Yes |
+| `@dezkareid/design-tokens` | `1.5.0` | No |
+| `@dezkareid/icons` | `1.4.0` | No |
+| `classnames` | `2.5.1` | No |
+
+Note: `classnames`, `@dezkareid/design-tokens`, and `@dezkareid/icons` are listed as both `dependencies` and `peerDependencies` to ensure compatibility across different monorepo link strategies while remaining external in the final bundle.
+
 ## Project Structure
 
 ```
@@ -53,11 +71,12 @@ design-system/components/
 ├── src/
 │   ├── react/                  # React components (entry: src/react/index.ts)
 │   │   └── <Component>/
-│   │       └── index.tsx
+│   │       ├── index.tsx       # Implementation
+│   │       └── index.test.tsx  # Vitest tests
 │   ├── react-server/           # Server-safe entry (entry: src/react-server/index.ts)
-│   │   └── index.ts            # Re-exports Button, Card, Tag only
+│   │   └── index.ts            # Re-exports server-safe components only
 │   ├── react-client/           # Client-only entry (entry: src/react-client/index.ts)
-│   │   └── index.ts            # Re-exports ThemeToggle only
+│   │   └── index.ts            # Re-exports components requiring 'use client'
 │   ├── astro/                  # Astro components (entry: src/astro/index.ts)
 │   │   └── <Component>/
 │   │       └── index.astro
@@ -66,12 +85,13 @@ design-system/components/
 │   │       └── index.vue
 │   ├── angular/                # Angular components (entry: src/angular/index.ts)
 │   │   └── <Component>/
-│   │       └── <component>.component.ts
+│   │       ├── <component>.component.ts
+│   │       └── <component>.component.spec.ts
 │   ├── css/                    # CSS Modules — one file per component
 │   │   ├── <component>.module.css
 │   │   └── index.ts            # Imports all modules for the CSS bundle
 │   └── shared/
-│       ├── js/                 # Framework-agnostic JS utilities (e.g. theme.ts)
+│       ├── js/                 # Framework-agnostic JS utilities (e.g. image.ts)
 │       └── types/              # Shared TypeScript interfaces for all components
 │           └── <component>.ts
 ├── dist/                       # Build output (git-ignored)
@@ -87,8 +107,8 @@ design-system/components/
 | Export | Points to | Compiled? | Notes |
 |---|---|---|---|
 | `@dezkareid/components/react` | `dist/react/index.js` | Yes — Rollup ESM, `preserveModules` | All components. For non-Next.js React consumers. |
-| `@dezkareid/components/react-server` | `dist/react-server/index.js` | Yes — Rollup ESM, `preserveModules` | `Button`, `Card`, `Tag` only. Safe for Next.js Server Components. No `'use client'`. |
-| `@dezkareid/components/react-client` | `dist/react-client/index.js` | Yes — Rollup ESM, `preserveModules` | `ThemeToggle` only. Every emitted file starts with `'use client'` (injected via Rollup `output.banner`). |
+| `@dezkareid/components/react-server` | `dist/react-server/index.js` | Yes — Rollup ESM, `preserveModules` | `Button`, `Card`, `Tag`, `Breadcrumb`, `Image`, `VerifiedBadge` only. Safe for Next.js Server Components. No `'use client'`. |
+| `@dezkareid/components/react-client` | `dist/react-client/index.js` | Yes — Rollup ESM, `preserveModules` | `ThemeToggle`, `ActionToggle`, `LikeButton`, `Modal`, `ConsentBanner` only. Every emitted file starts with `'use client'` (injected via Rollup `output.banner`). |
 | `@dezkareid/components/astro` | `src/astro/index.ts` | No — compiled by Astro | |
 | `@dezkareid/components/vue` | `src/vue/index.ts` | No — compiled by Vite/Vue | |
 | `@dezkareid/components/angular` | `dist/angular/index.d.ts` | Yes — Angular Package Format (APF) | Pre-compiled for Angular 21+ |
@@ -375,6 +395,84 @@ Behaviour:
 - Astro version includes an inline `<script is:inline>` for FOUC prevention
 
 BEM classes: `.theme-toggle`, `.theme-toggle--dark`, `.theme-toggle__icon`, `.theme-toggle__wrapper`
+
+### Breadcrumb
+
+File: `src/react/Breadcrumb/index.tsx` | `src/astro/Breadcrumb/index.astro`
+Types: `src/shared/types/breadcrumb.ts` | CSS: `src/css/breadcrumb.module.css`
+
+Props:
+- `items: BreadcrumbItem[]` — array of `{ label: string; href?: string }`
+
+BEM classes: `.breadcrumb`, `.breadcrumb__link`, `.breadcrumb__separator`, `.breadcrumb__current`
+
+### Image
+
+File: `src/react/Image/index.tsx` | `src/astro/Image/index.astro`
+Types: `src/shared/types/image.ts` | CSS: `src/css/image.module.css`
+Shared logic: `src/shared/js/image.ts`
+
+Props:
+- `src: string` — source URL
+- `alt: string` — required alt text
+- `mode?: 'responsive' | 'fixed'` — default `'responsive'`
+- `strategy?: 'default' | 'cloudinary'` — default `'default'`
+- `aspectRatio?: string` — e.g. "16 / 9"
+- `priority?: boolean` — for LCP images
+
+### ActionToggle & LikeButton
+
+File: `src/react/ActionToggle/index.tsx` | `src/react/LikeButton/index.tsx`
+Types: `src/shared/types/action-toggle.ts` | CSS: `src/css/action-toggle.module.css`
+
+`ActionToggle` is a base component for boolean interactions. `LikeButton` is a specialized implementation.
+
+Props (`ActionToggle`):
+- `active?: boolean` — controlled state
+- `defaultActive?: boolean` — uncontrolled initial state
+- `onChange?: (active: boolean) => void`
+- `variant?: 'default' | 'like'`
+
+BEM classes: `.action-toggle`, `.action-toggle--active`, `.action-toggle--like`, `.action-toggle__icon`, `.action-toggle__icon--pop`
+
+### Modal
+
+File: `src/react/Modal/index.tsx` | `src/astro/Modal/index.astro`
+Types: `src/shared/types/modal.ts` | CSS: `src/css/modal.module.css`
+
+Props:
+- `open: boolean` — visibility
+- `onClose: () => void` — dismissal callback
+- `title: string` — accessible title
+
+Accessibility:
+- Uses native `<dialog>` with `showModal()`
+- Handles focus trapping and "Escape" key
+- Backdrop click dismissal
+
+BEM classes: `.modal`, `.modal__inner`, `.modal__header`, `.modal__title`, `.modal__close`, `.modal__body`
+
+### VerifiedBadge
+
+File: `src/react/VerifiedBadge/index.tsx` | `src/astro/VerifiedBadge/index.astro`
+Types: `src/shared/types/verified-badge.ts` | CSS: `src/css/verified-badge.module.css`
+
+Props:
+- `size?: number` — pixel size (default 14)
+
+BEM classes: `.verified-badge`, `.verified-badge__icon`
+
+### ConsentBanner
+
+File: `src/react/ConsentBanner/index.tsx` | `src/astro/ConsentBanner/index.astro`
+Types: `src/shared/types/consent-banner.ts` | CSS: `src/css/consent-banner.module.css`
+
+Behaviour:
+- Lazy loads (3s delay) to prioritize page performance
+- Persists state to `localStorage` (`ga_consent`)
+- Reloads page on accept to apply tracking
+
+BEM classes: `.consent-banner`, `.consent-banner__content`, `.consent-banner__text`, `.consent-banner__actions`
 
 ## Documentation
 
