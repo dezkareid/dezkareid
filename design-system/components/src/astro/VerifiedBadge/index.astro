@@ -1,0 +1,19 @@
+---
+import { Check } from '@dezkareid/icons/astro';
+import type { VerifiedBadgeProperties } from '../../shared/types/verified-badge';
+import styles from '../../css/verified-badge.module.css';
+
+interface Properties extends VerifiedBadgeProperties {
+  [key: string]: unknown;
+}
+
+const { class: className, size = 14, ...rest } = Astro.props;
+---
+
+<span class:list={[styles['verified-badge'], className]} {...rest}>
+  <Check
+    class={styles['verified-badge__icon']}
+    label="Verified store"
+    style={{ '--verified-badge-size': `${size}px` }}
+  />
+</span>
