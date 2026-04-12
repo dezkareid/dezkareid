@@ -2,12 +2,22 @@ import type { Metadata } from 'next';
 import type React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { use, Suspense } from 'react';
-import { getPublicCollectionBySlug, getPublicItemBySlug, getLinkedStores, type PublicItemDetail, type LinkedStore } from '@/lib/collections';
+import {
+  use,
+  Suspense,
+} from 'react';
+import {
+  getPublicCollectionBySlug,
+  getPublicItemBySlug,
+  getLinkedStores,
+  type PublicItemDetail,
+  type LinkedStore,
+} from '@/lib/collections';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { generateCollectionItemSchema } from '@/lib/seo';
 import { getBreadcrumbSchema } from '@/src/shared/lib/schema/breadcrumb';
 import { OwnerItemActions } from '@/src/features/owner-item-actions';
+import { ItemImageSection } from './ItemImageSection';
 import { OwnerImageSection } from './_components/OwnerImageSection';
 import { LikeSection } from './_components/LikeSection';
 import { LikeButtonSkeleton } from './_components/LikeButtonSkeleton';
@@ -23,7 +33,13 @@ type Properties = {
 };
 
 // Item pages are rendered on-demand — slugs are not known at build time.
-export function generateStaticParams() { return [{ username: '_placeholder', collectionSlug: '_placeholder', slug: '_placeholder' }]; }
+export function generateStaticParams() {
+  return [{
+    username: '_placeholder',
+    collectionSlug: '_placeholder',
+    slug: '_placeholder',
+  }];
+}
 
 export async function generateMetadata({ params }: Properties): Promise<Metadata> {
   const { username, collectionSlug, slug } = await params;
@@ -78,13 +94,13 @@ function ItemMetaDetails({ item }: { item: PublicItemDetail }) {
     category ? { label: 'Category', value: category } : undefined,
     franchise
       ? {
-        label: 'Franchise',
-        value: (
-          <Link href={`/franchises/${franchise.slug}`} className={styles['item-page__meta-link']}>
-            {franchise.name}
-          </Link>
-        ),
-      }
+          label: 'Franchise',
+          value: (
+            <Link href={`/franchises/${franchise.slug}`} className={styles['item-page__meta-link']}>
+              {franchise.name}
+            </Link>
+          ),
+        }
       : undefined,
   ];
   const rows = rowCandidates.filter((row): row is MetaRow => row !== undefined);
@@ -238,7 +254,6 @@ async function ItemDetail({
   collectionSlug: string;
   slug: string;
 }) {
-
   const collectionResult = await getPublicCollectionBySlug(username, collectionSlug);
   if (!collectionResult) notFound();
 
@@ -266,20 +281,25 @@ async function ItemDetail({
   return (
     <div className={styles['item-page__layout']}>
       <DataSchema schema={schema} />
-      {/* OwnerImageSection is a dynamic Server Component in <Suspense> — streams
-          in the image section with the correct isOwner value without blocking
-          the cached static shell. */}
-      <Suspense fallback={<div className={styles.imageSection} />}>
-        <OwnerImageSection
-          itemId={item.id}
-          slug={slug}
-          userId={item.user_id}
-          imageUrl={item.image_url}
-          name={item.name}
-          username={username}
-          collectionSlug={collectionSlug}
-        />
-      </Suspense>
+      {/* ItemImageSection renders the image immediately. It receives
+          OwnerImageSection (a Suspense-wrapped Server Component) as a child
+          to preserve the server-to-client boundary. */}
+      <ItemImageSection
+        key={item.image_url}
+        slug={slug}
+        imageUrl={item.image_url}
+        name={item.name}
+      >
+        <Suspense fallback={undefined}>
+          <OwnerImageSection
+            itemId={item.id}
+            userId={item.user_id}
+            username={username}
+            collectionSlug={collectionSlug}
+            imageUrl={item.image_url}
+          />
+        </Suspense>
+      </ItemImageSection>
       <ItemMeta
         item={item}
         username={username}
