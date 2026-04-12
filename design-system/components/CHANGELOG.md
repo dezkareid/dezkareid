@@ -1,3 +1,10 @@
+# [@dezkareid/components-v1.4.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.4.0...@dezkareid/components-v1.4.1) (2026-04-12)
+
+
+### Bug Fixes
+
+* update design tokens ([69969fb](https://github.com/dezkareid/dezkareid/commit/69969fbc9f40b424191f505cf868023ef2c412fc))
+
 # [@dezkareid/components-v1.4.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.3.0...@dezkareid/components-v1.4.0) (2026-04-12)
 
 
