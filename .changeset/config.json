@@ -25,7 +25,6 @@
     "@dezkareid/scaffolding",
     "@dezkareid/types",
     "@dezkareid/website",
-    "@dezkareid/auditor",
-    "storybook-react"
+    "@dezkareid/auditor"
   ]
 }

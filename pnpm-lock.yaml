@@ -215,8 +215,8 @@ importers:
         specifier: '>=21.0.0'
         version: 21.2.0(@angular/compiler@21.2.0)(rxjs@7.8.2)(zone.js@0.15.0)
       '@dezkareid/design-tokens':
-        specifier: 1.5.0
-        version: 1.5.0
+        specifier: 1.6.0
+        version: 1.6.0
       '@dezkareid/icons':
         specifier: 1.4.0
         version: 1.4.0
@@ -2348,6 +2348,10 @@ packages:
 
   '@dezkareid/design-tokens@1.5.0':
     resolution: {integrity: sha512-31ygxZPyWrrcRHiZ6C8KS46DCVqxioERUCEb5eMchXjTzQf6wxGaH9Gh+MRWqdebSUVcxhtO1PQexAOVogUMNA==}
+    hasBin: true
+
+  '@dezkareid/design-tokens@1.6.0':
+    resolution: {integrity: sha512-udpzl3dvg8JgpW55eQjaWw43xiRDTLSrKWNfI2mg6r37kRfXQjbJ/EM25NktPGx019y5BPX7IBgWchS7Nu+mQg==}
     hasBin: true
 
   '@dezkareid/eslint-config-ts-base@1.0.0':
@@ -15435,6 +15439,8 @@ snapshots:
 
   '@dezkareid/design-tokens@1.5.0': {}
 
+  '@dezkareid/design-tokens@1.6.0': {}
+
   '@dezkareid/eslint-config-ts-base@1.0.0(@eslint/js@9.39.2)(eslint@10.2.0(jiti@2.6.0))(typescript-eslint@8.58.0(eslint@10.2.0(jiti@2.6.0))(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
       '@eslint/js': 9.39.2
@@ -19338,7 +19344,7 @@ snapshots:
       pngjs: 7.0.0
       sirv: 3.0.2
       tinyrainbow: 3.1.0
-      vitest: 4.0.18(@opentelemetry/api@1.9.1)(@types/node@25.0.10)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.0)(jsdom@27.4.0)(less@4.6.4)(lightningcss@1.29.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)
+      vitest: 4.0.18(@opentelemetry/api@1.9.1)(@types/node@25.0.10)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.0)(jsdom@29.0.1)(less@4.6.4)(lightningcss@1.29.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)
       ws: 8.19.0
     transitivePeerDependencies:
       - bufferutil
