@@ -11,12 +11,12 @@ import { OwnerItemActions } from '@/src/features/owner-item-actions';
 import { OwnerImageSection } from './_components/OwnerImageSection';
 import { LikeSection } from './_components/LikeSection';
 import { LikeButtonSkeleton } from './_components/LikeButtonSkeleton';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { SocialShare } from '@/src/features/social-share';
 import { IHaveThisButton } from '@/src/features/copy-item';
 import { WhereToFindButton } from '@/src/features/where-to-find';
 import { WhereToBuy } from '@/src/features/where-to-buy';
 import styles from './page.module.css';
-import { createClient } from '@/lib/supabase/server';
 
 type Properties = {
   params: Promise<{ username: string; collectionSlug: string; slug: string }>;
@@ -75,13 +75,13 @@ function ItemMetaDetails({ item }: { item: PublicItemDetail }) {
     category ? { label: 'Category', value: category } : undefined,
     franchise
       ? {
-          label: 'Franchise',
-          value: (
-            <Link href={`/franchises/${franchise.slug}`} className={styles['item-page__meta-link']}>
-              {franchise.name}
-            </Link>
-          ),
-        }
+        label: 'Franchise',
+        value: (
+          <Link href={`/franchises/${franchise.slug}`} className={styles['item-page__meta-link']}>
+            {franchise.name}
+          </Link>
+        ),
+      }
       : undefined,
   ];
   const rows = rowCandidates.filter((row): row is MetaRow => row !== undefined);
@@ -128,6 +128,19 @@ interface CatalogStore {
   city: string | null;
   country: string | null;
   url: string | null;
+}
+
+async function getCatalogStoresForItem(catalogItemId: string): Promise<CatalogStore[]> {
+  'use cache';
+  const supabase = createAdminClient();
+  const { data } = await supabase
+    .from('catalog_item_stores')
+    .select('stores ( id, name, city, country, url )')
+    .eq('catalog_item_id', catalogItemId);
+  return (data ?? []).flatMap((row: unknown) => {
+    const s = (row as { stores: CatalogStore | null }).stores;
+    return s ? [s] : [];
+  });
 }
 
 function ItemMeta({
@@ -228,22 +241,13 @@ async function ItemDetail({
 
   // Linked stores are public — fetched via cached query for all visitors.
   const linkedStores = await getLinkedStores(item.id);
-  // Catalog-driven stores — fetched via catalog_item_id if the item is linked to a catalog item.
-  const supabase = await createClient();
+  // Catalog-driven stores — public data, use admin client (no cookies) so this
+  // fetch is treated as cached by cacheComponents.
   const catalogItemId = item.catalog_item_id;
 
-  const catalogStoreRows = await (catalogItemId
-    ? supabase
-        .from('catalog_item_stores')
-        .select('stores ( id, name, city, country, url )')
-        .eq('catalog_item_id', catalogItemId)
-    : Promise.resolve({ data: [] }));
-
-  const catalogStores: CatalogStore[] = (catalogStoreRows.data ?? []).flatMap((row: unknown) => {
-    const s = (row as { stores: { id: string; name: string; city: string | null; country: string | null; url: string | null } | null }).stores;
-    if (!s) return [];
-    return [{ id: s.id, name: s.name, city: s.city, country: s.country, url: s.url }];
-  });
+  const catalogStores = await (catalogItemId
+    ? getCatalogStoresForItem(catalogItemId)
+    : Promise.resolve([]));
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
   const schema = generateCollectionItemSchema({
@@ -322,7 +326,7 @@ async function BreadcrumbNav({
   );
 }
 
-export default function ItemDetailPage({ params }: Properties) {
+export default async function ItemDetailPage({ params }: Properties) {
   return (
     <div className={styles['item-page']}>
       <BreadcrumbNav params={params} />
