@@ -1,0 +1,69 @@
+/* =============================================================================
+   ACTION TOGGLE — BEM + OOCSS
+   Structure: button, icon, animation
+   Skin: colour, hover states, specialized variants (Like)
+   ============================================================================= */
+
+.action-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: var(--spacing-4);
+  border-radius: var(--border-radius-full);
+  transition:
+    background-color 0.15s ease,
+    transform 0.1s ease;
+  color: var(--color-text-tertiary);
+}
+
+.action-toggle:hover:not(:disabled) {
+  background-color: var(--color-background-secondary);
+  color: var(--color-text-primary);
+}
+
+.action-toggle:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
+.action-toggle:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.action-toggle__icon {
+  display: inline-flex;
+  transition: transform 0.15s var(--transition-bounce);
+}
+
+/* --- State: active/pressed --- */
+.action-toggle--active {
+  color: var(--color-primary);
+}
+
+/* --- Variant: Like --- */
+.action-toggle--like {
+  --color-like-gradient-from: #f43f6e; /* rose-500 */
+  --color-like-gradient-to: #fb923c;   /* orange-400 */
+}
+
+.action-toggle--like:hover:not(:disabled) {
+  background-color: rgba(244, 63, 110, 0.08); /* light rose tint */
+}
+
+.action-toggle--like.action-toggle--active {
+  color: var(--color-like-gradient-from);
+}
+
+/* --- Animation: Pop --- */
+.action-toggle__icon--pop {
+  animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
