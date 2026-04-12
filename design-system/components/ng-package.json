@@ -6,6 +6,7 @@
   },
   "allowedNonPeerDependencies": [
     "@dezkareid/design-tokens",
+    "@dezkareid/icons",
     "classnames"
   ]
 }

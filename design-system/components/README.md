@@ -321,6 +321,136 @@ import { ThemeToggle } from '@dezkareid/components/vue';
 
 ---
 
+### Breadcrumb
+
+A navigation aid that helps users understand their location within the application.
+
+#### React
+
+```tsx
+import { Breadcrumb } from '@dezkareid/components/react';
+
+<Breadcrumb
+  items={[
+    { label: 'Home', href: '/' },
+    { label: 'Collections', href: '/collections' },
+    { label: 'Figures' },
+  ]}
+/>
+```
+
+#### Astro
+
+```astro
+---
+import { Breadcrumb } from '@dezkareid/components/astro';
+---
+<Breadcrumb
+  items={[
+    { label: 'Home', href: '/' },
+    { label: 'Collections' },
+  ]}
+/>
+```
+
+---
+
+### Image
+
+A responsive image component with support for Cloudinary optimizations and different loading strategies.
+
+**Props**
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `src` | `string` | — | Image source URL |
+| `alt` | `string` | — | Accessible description |
+| `mode` | `'responsive' \| 'fixed'` | `'responsive'` | Rendering mode |
+| `strategy` | `'default' \| 'cloudinary'` | `'default'` | Optimization strategy |
+| `aspectRatio` | `string` | — | CSS aspect-ratio (e.g. "16 / 9") |
+| `priority` | `boolean` | `false` | If true, loads eagerly with high priority |
+
+#### React
+
+```tsx
+import { Image } from '@dezkareid/components/react';
+
+<Image
+  src="https://res.cloudinary.com/demo/image/upload/sample.jpg"
+  alt="Sample"
+  mode="responsive"
+  aspectRatio="16 / 9"
+/>
+```
+
+---
+
+### LikeButton
+
+A specialized toggle for liking items. Built on top of `ActionToggle`.
+
+#### React
+
+```tsx
+import { LikeButton } from '@dezkareid/components/react';
+
+<LikeButton
+  active={isLiked}
+  onChange={(liked) => handleLike(liked)}
+  aria-label="Like this item"
+/>
+```
+
+---
+
+### Modal
+
+A standardized overlay for dialogs and focused interactions.
+
+#### React
+
+```tsx
+import { Modal } from '@dezkareid/components/react';
+
+<Modal
+  open={isOpen}
+  onClose={() => setIsOpen(false)}
+  title="Confirm Action"
+>
+  <p>Are you sure you want to proceed?</p>
+</Modal>
+```
+
+---
+
+### VerifiedBadge
+
+A small UI primitive to indicate verified status.
+
+#### React
+
+```tsx
+import { VerifiedBadge } from '@dezkareid/components/react';
+
+<VerifiedBadge size={16} />
+```
+
+---
+
+### ConsentBanner
+
+A reusable banner for cookie consent and privacy notifications.
+
+#### React
+
+```tsx
+import { ConsentBanner } from '@dezkareid/components/react';
+
+<ConsentBanner />
+```
+
+---
+
 ## License
 
 ISC

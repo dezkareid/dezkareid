@@ -2,3 +2,8 @@ export { default as Button } from './Button/index.astro';
 export { default as Tag } from './Tag/index.astro';
 export { default as Card } from './Card/index.astro';
 export { default as ThemeToggle } from './ThemeToggle/index.astro';
+export { default as Breadcrumb } from './Breadcrumb/index.astro';
+export { default as Image } from './Image/index.astro';
+export { default as Modal } from './Modal/index.astro';
+export { default as VerifiedBadge } from './VerifiedBadge/index.astro';
+export { default as ConsentBanner } from './ConsentBanner/index.astro';

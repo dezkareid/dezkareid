@@ -1,9 +1,15 @@
+import { readFileSync } from 'node:fs';
 import typescript from '@rollup/plugin-typescript';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import postcss from 'rollup-plugin-postcss';
 
-const external = ['react', 'react/jsx-runtime', 'classnames'];
+const package_ = JSON.parse(readFileSync('./package.json', 'utf8'));
+
+const external = [
+  ...Object.keys(package_.peerDependencies || {}),
+  'react/jsx-runtime',
+];
 
 const plugins = (cssExtract, cssInject = true) => [
   resolve({ extensions: ['.ts', '.tsx'] }),
