@@ -1,9 +1,9 @@
 'use client';
 
-import { useImperativeHandle, useRef } from 'react';
+import { useImperativeHandle, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Modal } from '@dezkareid/components/react';
 import { AddItemForm } from '@/components/AddItemForm/AddItemForm';
-import styles from './AddItemModal.module.css';
 
 type Brand = { id: string; name: string };
 type Franchise = { id: string; name: string };
@@ -19,17 +19,17 @@ export type AddItemModalHandle = {
 };
 
 export const AddItemModal = function AddItemModal({ ref, brands, franchises, collectionId }: Properties & { ref?: React.RefObject<AddItemModalHandle | null> }) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
   useImperativeHandle(ref, () => ({
     open() {
-      dialogRef.current?.showModal();
+      setIsOpen(true);
     },
   }));
 
   function close() {
-    dialogRef.current?.close();
+    setIsOpen(false);
   }
 
   function handleSuccess() {
@@ -38,36 +38,17 @@ export const AddItemModal = function AddItemModal({ ref, brands, franchises, col
   }
 
   return (
-    <dialog
-      ref={dialogRef}
-      className={styles.dialog}
-      aria-modal="true"
-      aria-labelledby="add-item-dialog-title"
-      onClick={(event) => {
-        if (event.target === dialogRef.current) close();
-      }}
+    <Modal
+      open={isOpen}
+      onClose={close}
+      title="Add to Collection"
     >
-      <div className={styles.panel}>
-        <div className={styles.header}>
-          <h2 id="add-item-dialog-title" className={styles.title}>Add to Collection</h2>
-          <button
-            type="button"
-            className={styles.closeButton}
-            onClick={close}
-            aria-label="Close dialog"
-          >
-            ✕
-          </button>
-        </div>
-        <div className={styles.body}>
-          <AddItemForm
-            brands={brands}
-            franchises={franchises}
-            collectionId={collectionId}
-            onSuccess={handleSuccess}
-          />
-        </div>
-      </div>
-    </dialog>
+      <AddItemForm
+        brands={brands}
+        franchises={franchises}
+        collectionId={collectionId}
+        onSuccess={handleSuccess}
+      />
+    </Modal>
   );
 };

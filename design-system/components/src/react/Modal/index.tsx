@@ -1,33 +1,29 @@
 'use client';
 
-import { useEffect, useId, useRef, type ReactNode } from 'react';
-import styles from './Modal.module.css';
+import { useEffect, useId, useRef, type HTMLAttributes } from 'react';
+import cx from 'classnames';
+import type { ModalProperties } from '../../shared/types/modal';
+import styles from '../../css/modal.module.css';
 
-interface ModalProperties {
-  open: boolean;
-  onClose: () => void;
-  title: string;
-  children: ReactNode;
-}
+export interface Properties extends ModalProperties, Omit<HTMLAttributes<HTMLDialogElement>, 'title' | 'children'> {}
 
-export function Modal({ open, onClose, title, children }: ModalProperties) {
+export function Modal({ open, onClose, title, children, className, ...rest }: Properties) {
   const dialogRef = useRef<HTMLDialogElement>(null);
-
   const titleId = `modal-title-${useId().replaceAll(':', '')}`;
 
   useEffect(() => {
     const dialog = dialogRef.current;
-    if (!dialog) return;
+    if (!dialog) {
+      return;
+    }
 
     if (open) {
       if (!dialog.open) {
         dialog.showModal();
       }
     }
-    else {
-      if (dialog.open) {
-        dialog.close();
-      }
+    else if (dialog.open) {
+      dialog.close();
     }
   }, [open]);
 
@@ -52,10 +48,11 @@ export function Modal({ open, onClose, title, children }: ModalProperties) {
   return (
     <dialog
       ref={dialogRef}
-      className={styles.modal}
+      className={cx(styles.modal, className)}
       aria-modal="true"
       aria-labelledby={titleId}
       onClick={handleBackdropClick}
+      {...rest}
     >
       <div className={styles.modal__inner}>
         <div className={styles.modal__header}>

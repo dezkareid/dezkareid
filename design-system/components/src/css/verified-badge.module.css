@@ -1,0 +1,18 @@
+/* =============================================================================
+   VERIFIED BADGE — BEM + OOCSS
+   Structure: icon, wrapper
+   Skin: colour, sizing
+   ============================================================================= */
+
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.verified-badge__icon {
+  width: var(--verified-badge-size, 14px);
+  height: var(--verified-badge-size, 14px);
+}

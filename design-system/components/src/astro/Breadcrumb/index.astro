@@ -1,0 +1,35 @@
+---
+import type { BreadcrumbProperties } from '../../shared/types/breadcrumb';
+import styles from '../../css/breadcrumb.module.css';
+
+interface Properties extends BreadcrumbProperties {
+  [key: string]: unknown;
+}
+
+const { items, class: className, ...rest } = Astro.props;
+---
+
+<nav class:list={[styles.breadcrumb, className]} aria-label="Breadcrumb" {...rest}>
+  {items.map((item, index) => {
+    const isLast = index === items.length - 1;
+
+    return (
+      <Fragment>
+        {item.href && !isLast ? (
+          <a href={item.href} class={styles.breadcrumb__link}>
+            {item.label}
+          </a>
+        ) : (
+          <span class:list={[isLast && styles.breadcrumb__current]}>
+            {item.label}
+          </span>
+        )}
+        {!isLast && (
+          <span class={styles.breadcrumb__separator} aria-hidden="true">
+            /
+          </span>
+        )}
+      </Fragment>
+    );
+  })}
+</nav>

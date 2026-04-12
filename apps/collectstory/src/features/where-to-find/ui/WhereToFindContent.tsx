@@ -1,5 +1,5 @@
+import { VerifiedBadge } from '@dezkareid/components/react';
 import { ItemLinksManager } from '@/components/ItemLinksManager/ItemLinksManager';
-import { VerifiedBadge } from '@/components/VerifiedBadge';
 import type { Store, ItemLink } from '@/app/[username]/[collectionSlug]/actions';
 import styles from './WhereToFind.module.css';
 

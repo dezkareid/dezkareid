@@ -1,0 +1,70 @@
+---
+import type { ImageProperties } from '../../shared/types/image';
+import { getCloudinarySrcset, getCloudinaryUrl, CLOUDINARY_SRCSET_WIDTHS } from '../../shared/js/image';
+import styles from '../../css/image.module.css';
+
+interface Properties extends ImageProperties {
+  [key: string]: unknown;
+}
+
+const {
+  src,
+  alt,
+  mode = 'responsive',
+  strategy = 'default',
+  width,
+  height,
+  aspectRatio,
+  priority = false,
+  sizes,
+  class: className,
+  style,
+  ...rest
+} = Astro.props;
+
+if (!src) return null;
+
+const isCloudinary = strategy === 'cloudinary' || src.includes('res.cloudinary.com');
+
+const computedStyle = {
+  ...(aspectRatio ? { aspectRatio } : {}),
+  ...(style || {}),
+};
+
+const loadingAttribute: 'eager' | 'lazy' = priority ? 'eager' : 'lazy';
+const fetchPriorityAttribute: 'high' | undefined = priority ? 'high' : undefined;
+
+const classes = [
+  styles.image,
+  styles[`image--${mode}`],
+  className ?? '',
+].filter(Boolean).join(' ');
+
+let srcSet;
+let finalSrc = src;
+
+if (isCloudinary) {
+  if (mode === 'fixed') {
+    const requestWidth = (width as number) ? (width as number) * 2 : CLOUDINARY_SRCSET_WIDTHS[0];
+    finalSrc = getCloudinaryUrl(src, requestWidth);
+  } else {
+    srcSet = getCloudinarySrcset(src);
+    finalSrc = getCloudinaryUrl(src, CLOUDINARY_SRCSET_WIDTHS[0]);
+  }
+}
+---
+
+<img
+  src={finalSrc}
+  srcset={srcSet}
+  sizes={sizes}
+  alt={alt}
+  class={classes}
+  style={computedStyle}
+  loading={loadingAttribute}
+  decoding="async"
+  fetchpriority={fetchPriorityAttribute}
+  width={width}
+  height={height}
+  {...rest}
+/>

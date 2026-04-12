@@ -2,7 +2,7 @@
 
 import { Suspense } from 'react';
 import { GoogleAnalytics as NextGoogleAnalytics } from '@next/third-parties/google';
-import { ConsentBanner } from '../../ui/ConsentBanner';
+import { ConsentBanner } from '@dezkareid/components/react';
 
 interface AnalyticsClientProperties {
   gaId?: string;

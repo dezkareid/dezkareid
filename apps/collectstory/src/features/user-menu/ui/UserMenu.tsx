@@ -1,7 +1,7 @@
 'use client';
 
 import { signOut } from '@/app/actions';
-import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
+import { Image } from '@dezkareid/components/react';
 import { DropdownMenu, DropdownMenuItem, DropdownDivider } from '@/src/shared/ui/dropdown-menu';
 import styles from './UserMenu.module.css';
 
@@ -26,7 +26,8 @@ export function UserMenu({ username, avatarUrl, email }: Properties) {
         >
           {avatarUrl
             ? (
-                <CloudinaryImage
+                <Image
+                  strategy="cloudinary"
                   mode="fixed"
                   src={avatarUrl}
                   alt={username ?? 'User avatar'}
