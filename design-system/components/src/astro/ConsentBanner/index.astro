@@ -1,0 +1,53 @@
+---
+import { Button } from '../index';
+import styles from '../../css/consent-banner.module.css';
+
+interface Properties {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div id="consent-banner" class:list={[styles['consent-banner'], className]} role="alert" aria-live="polite" style="display: none;">
+  <div class={styles['consent-banner__content']}>
+    <p class={styles['consent-banner__text']}>
+      We use cookies to understand how you use our services and to improve your experience.
+    </p>
+    <div class={styles['consent-banner__actions']}>
+      <Button variant="ghost" size="sm" id="consent-decline">
+        Decline
+      </Button>
+      <Button variant="primary" size="sm" id="consent-accept">
+        Accept
+      </Button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const banner = document.getElementById('consent-banner');
+  const acceptBtn = document.getElementById('consent-accept');
+  const declineBtn = document.getElementById('consent-decline');
+
+  if (banner && acceptBtn && declineBtn) {
+    const consent = localStorage.getItem('ga_consent');
+
+    if (consent === null) {
+      setTimeout(() => {
+        banner.style.display = 'block';
+      }, 3000);
+    }
+
+    acceptBtn.addEventListener('click', () => {
+      localStorage.setItem('ga_consent', 'true');
+      banner.style.display = 'none';
+      window.location.reload();
+    });
+
+    declineBtn.addEventListener('click', () => {
+      localStorage.setItem('ga_consent', 'false');
+      banner.style.display = 'none';
+    });
+  }
+</script>

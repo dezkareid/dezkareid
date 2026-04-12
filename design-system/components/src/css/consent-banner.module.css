@@ -1,0 +1,54 @@
+/* =============================================================================
+   CONSENT BANNER — BEM + OOCSS
+   Structure: fixed position, layout, actions
+   Skin: background, shadow, typography
+   ============================================================================= */
+
+.consent-banner {
+  position: fixed;
+  bottom: var(--spacing-24);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: min(95vw, 600px);
+  background-color: var(--color-background-primary);
+  border: 1px solid var(--color-background-secondary);
+  border-radius: var(--border-radius-large);
+  box-shadow: var(--shadow-modal);
+  padding: var(--spacing-24);
+  animation: banner-slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes banner-slide-up {
+  from { opacity: 0; transform: translate(-50%, 20px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.consent-banner__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+}
+
+@media (min-width: 600px) {
+  .consent-banner__content {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.consent-banner__text {
+  margin: 0;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-200);
+  line-height: var(--font-line-height-relaxed);
+  color: var(--color-text-primary);
+}
+
+.consent-banner__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-12);
+  flex-shrink: 0;
+}
