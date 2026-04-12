@@ -1,0 +1,35 @@
+/* =============================================================================
+   BREADCRUMB — BEM + OOCSS
+   Structure: navigation, list, item, separator
+   Skin: colour, typography
+   ============================================================================= */
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+}
+
+.breadcrumb__link {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.breadcrumb__link:hover {
+  color: var(--color-text-primary);
+}
+
+.breadcrumb__separator {
+  color: var(--color-text-tertiary);
+  user-select: none;
+}
+
+.breadcrumb__current {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+}
