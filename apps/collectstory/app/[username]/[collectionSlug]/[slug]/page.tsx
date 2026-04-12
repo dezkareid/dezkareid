@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import type React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
+import { use, Suspense } from 'react';
 import { getPublicCollectionBySlug, getPublicItemBySlug, getLinkedStores, type PublicItemDetail, type LinkedStore } from '@/lib/collections';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { generateCollectionItemSchema } from '@/lib/seo';
@@ -21,6 +21,9 @@ import styles from './page.module.css';
 type Properties = {
   params: Promise<{ username: string; collectionSlug: string; slug: string }>;
 };
+
+// Item pages are rendered on-demand — slugs are not known at build time.
+export function generateStaticParams() { return [{ username: '_placeholder', collectionSlug: '_placeholder', slug: '_placeholder' }]; }
 
 export async function generateMetadata({ params }: Properties): Promise<Metadata> {
   const { username, collectionSlug, slug } = await params;
@@ -227,11 +230,14 @@ function ItemMeta({
 }
 
 async function ItemDetail({
-  params,
+  username,
+  collectionSlug,
+  slug,
 }: {
-  params: Promise<{ username: string; collectionSlug: string; slug: string }>;
+  username: string;
+  collectionSlug: string;
+  slug: string;
 }) {
-  const { username, collectionSlug, slug } = await params;
 
   const collectionResult = await getPublicCollectionBySlug(username, collectionSlug);
   if (!collectionResult) notFound();
@@ -286,11 +292,14 @@ async function ItemDetail({
 }
 
 async function BreadcrumbNav({
-  params,
+  username,
+  collectionSlug,
+  slug,
 }: {
-  params: Promise<{ username: string; collectionSlug: string; slug: string }>;
+  username: string;
+  collectionSlug: string;
+  slug: string;
 }) {
-  const { username, collectionSlug, slug } = await params;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 
   const collectionResult = await getPublicCollectionBySlug(username, collectionSlug);
@@ -326,11 +335,12 @@ async function BreadcrumbNav({
   );
 }
 
-export default async function ItemDetailPage({ params }: Properties) {
+export default function ItemDetailPage({ params }: Properties) {
+  const { username, collectionSlug, slug } = use(params);
   return (
     <div className={styles['item-page']}>
-      <BreadcrumbNav params={params} />
-      <ItemDetail params={params} />
+      <BreadcrumbNav username={username} collectionSlug={collectionSlug} slug={slug} />
+      <ItemDetail username={username} collectionSlug={collectionSlug} slug={slug} />
     </div>
   );
 }

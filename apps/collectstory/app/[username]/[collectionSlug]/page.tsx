@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
+import { use, Suspense } from 'react';
 import { getCollectionFirstImage, getPublicCollectionBySlug, getPublicItemsInCollection } from '@/lib/collections';
 import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
@@ -16,6 +16,9 @@ import styles from './page.module.css';
 type Properties = {
   params: Promise<{ username: string; collectionSlug: string }>;
 };
+
+// Collection pages are rendered on-demand — slugs are not known at build time.
+export function generateStaticParams() { return [{ username: '_placeholder', collectionSlug: '_placeholder' }]; }
 
 export async function generateMetadata({ params }: Properties): Promise<Metadata> {
   const { username, collectionSlug } = await params;
@@ -50,11 +53,12 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
 }
 
 async function CollectionContent({
-  params,
+  username,
+  collectionSlug,
 }: {
-  params: Promise<{ username: string; collectionSlug: string }>;
+  username: string;
+  collectionSlug: string;
 }) {
-  const { username, collectionSlug } = await params;
 
   const result = await getPublicCollectionBySlug(username, collectionSlug);
   if (!result) notFound();
@@ -177,11 +181,12 @@ async function CollectionContent({
 }
 
 async function BreadcrumbNav({
-  params,
+  username,
+  collectionSlug,
 }: {
-  params: Promise<{ username: string; collectionSlug: string }>;
+  username: string;
+  collectionSlug: string;
 }) {
-  const { username, collectionSlug } = await params;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 
   const result = await getPublicCollectionBySlug(username, collectionSlug);
@@ -208,10 +213,11 @@ async function BreadcrumbNav({
 }
 
 export default function CollectionPage({ params }: Properties) {
+  const { username, collectionSlug } = use(params);
   return (
     <div className={`container ${styles.page}`}>
-      <BreadcrumbNav params={params} />
-      <CollectionContent params={params} />
+      <BreadcrumbNav username={username} collectionSlug={collectionSlug} />
+      <CollectionContent username={username} collectionSlug={collectionSlug} />
     </div>
   );
 }

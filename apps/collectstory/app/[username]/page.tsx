@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
+import { use, Suspense } from 'react';
 import { getPublicCollectionsByUsername } from '@/lib/collections';
 import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
 import { OwnerProfileActions } from '@/src/features/owner-profile-actions';
@@ -11,6 +11,9 @@ import styles from './page.module.css';
 type Properties = {
   params: Promise<{ username: string }>;
 };
+
+// User profile pages are rendered on-demand — usernames are not known at build time.
+export function generateStaticParams() { return [{ username: '_placeholder' }]; }
 
 export async function generateMetadata({ params }: Properties): Promise<Metadata> {
   const { username } = await params;
@@ -75,8 +78,7 @@ async function ProfileContent({ username }: { username: string }) {
   );
 }
 
-async function ProfileHeader({ params }: { params: Promise<{ username: string }> }) {
-  const { username } = await params;
+async function ProfileHeader({ username }: { username: string }) {
   const result = await getPublicCollectionsByUsername(username);
   const avatarUrl = result?.avatarUrl;
 
@@ -122,19 +124,15 @@ async function ProfileHeader({ params }: { params: Promise<{ username: string }>
   );
 }
 
-async function ProfileCollections({ params }: { params: Promise<{ username: string }> }) {
-  const { username } = await params;
-  return <ProfileContent username={username} />;
-}
-
 export default function UserProfilePage({ params }: Properties) {
+  const { username } = use(params);
   return (
     <div className={`container ${styles.page}`}>
-      <ProfileHeader params={params} />
+      <ProfileHeader username={username} />
 
       <p className={styles.sectionLabel}>Collections</p>
 
-      <ProfileCollections params={params} />
+      <ProfileContent username={username} />
     </div>
   );
 }
