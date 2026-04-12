@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
+import { Image } from '@dezkareid/components/react-server';
 import { notFound, redirect, RedirectType } from 'next/navigation';
 import {
   getAllFranchiseSlugs,
@@ -62,9 +62,10 @@ export default async function FranchiseDetailPage({ params }: Properties) {
       {/* Hero */}
       <div className={styles.hero}>
         <div className={styles.coverWrap}>
-          <CloudinaryImage
+          <Image
             src={franchise.image_url}
             alt={franchise.name}
+            strategy="cloudinary"
             sizes="(max-width: 768px) 100vw, 240px"
             className={styles.coverImage}
             priority
@@ -116,9 +117,10 @@ export default async function FranchiseDetailPage({ params }: Properties) {
                       <div className={styles.itemImageWrap}>
                         {item.image_url
                           ? (
-                              <CloudinaryImage
+                              <Image
                                 src={item.image_url}
                                 alt={item.name}
+                                strategy="cloudinary"
                                 sizes="(max-width: 640px) 50vw, 200px"
                                 className={styles.itemImage}
                               />

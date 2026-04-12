@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@dezkareid/components/react';
-import { Modal } from '@/src/shared/ui/modal';
+import { Button, Modal } from '@dezkareid/components/react';
 import { useAnalytics } from '@/src/shared/lib/analytics/useAnalytics';
 import { WhereToFindContent } from './WhereToFindContent';
 import type { Store, ItemLink } from '@/app/[username]/[collectionSlug]/actions';

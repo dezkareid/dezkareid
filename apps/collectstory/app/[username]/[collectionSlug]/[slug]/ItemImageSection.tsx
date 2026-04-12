@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ViewTransition } from 'react';
-import { Button } from '@dezkareid/components/react';
-import { CloudinaryImage } from '@/src/shared/ui/CloudinaryImage';
+import { Button, Image } from '@dezkareid/components/react';
 import { UpdateImageForm } from '@/components/UpdateImageForm/UpdateImageForm';
 import styles from './page.module.css';
 
@@ -40,9 +39,10 @@ export function ItemImageSection({ itemId, slug, imageUrl, name, isOwner, userna
         {currentImageUrl
           ? (
               <ViewTransition name={`item-image-${slug}`}>
-                <CloudinaryImage
+                <Image
                   src={currentImageUrl}
                   alt={name}
+                  strategy="cloudinary"
                   sizes="(max-width: 768px) 100vw, 480px"
                   className={styles['item-page__image-media']}
                   priority
