@@ -1,8 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { use, Suspense } from 'react';
-import { getPublicCollectionsByUsername } from '@/lib/collections';
+import {
+  use,
+  Suspense,
+} from 'react';
+import {
+  getPublicCollectionsByUsername,
+} from '@/lib/collections';
 import { Image } from '@dezkareid/components/react-server';
 import { OwnerProfileActions } from '@/src/features/owner-profile-actions';
 import { SocialShare } from '@/src/features/social-share';
@@ -14,7 +19,9 @@ type Properties = {
 
 // User profile pages are rendered on-demand — usernames are not known at build time.
 export function generateStaticParams() {
-  return [{ username: '_placeholder' }];
+  return [{
+    username: '_placeholder',
+  }];
 }
 
 export async function generateMetadata({ params }: Properties): Promise<Metadata> {

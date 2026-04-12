@@ -1,41 +1,32 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, ReactNode } from 'react';
 import { ViewTransition } from 'react';
-import { Button, Image } from '@dezkareid/components/react';
-import { UpdateImageForm } from '@/components/UpdateImageForm/UpdateImageForm';
+import { Image } from '@dezkareid/components/react';
 import styles from './page.module.css';
 
 type Properties = {
-  itemId: string;
   slug: string;
   imageUrl: string | undefined;
   name: string;
-  isOwner: boolean;
-  username: string;
-  collectionSlug: string;
+  children?: ReactNode;
 };
 
-export function ItemImageSection({ itemId, slug, imageUrl, name, isOwner, username, collectionSlug }: Properties) {
-  const [currentImageUrl, setCurrentImageUrl] = useState(imageUrl);
-  const [editingImage, setEditingImage] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-
-  useEffect(() => {
-    if (!showSuccess) return;
-    const timer = setTimeout(() => setShowSuccess(false), 1500);
-    return () => clearTimeout(timer);
-  }, [showSuccess]);
-
-  function handleImageUpdated(newUrl: string) {
-    setCurrentImageUrl(newUrl);
-    setEditingImage(false);
-    setShowSuccess(true);
-  }
+export function ItemImageSection({
+  slug,
+  imageUrl,
+  name,
+  children,
+}: Properties) {
+  // We use the 'imageUrl' from props as the source of truth.
+  // The 'key' prop on this component at the call site (in page.tsx)
+  // will ensure the internal state resets when the image actually changes
+  // after a server revalidation.
+  const [currentImageUrl] = useState(imageUrl);
 
   return (
     <div className={styles['item-page__image']}>
-      <div className={`${styles['item-page__image-wrapper']} ${editingImage ? styles['item-page__image-wrapper--editing'] : ''}`}>
+      <div className={styles['item-page__image-wrapper']}>
         {currentImageUrl
           ? (
               <ViewTransition name={`item-image-${slug}`}>
@@ -55,36 +46,8 @@ export function ItemImageSection({ itemId, slug, imageUrl, name, isOwner, userna
               </div>
             )}
 
-        {isOwner && !editingImage && (
-          <button
-            type="button"
-            className={styles['item-page__image-overlay-btn']}
-            onClick={() => setEditingImage(true)}
-            aria-label={currentImageUrl ? 'Replace image' : 'Add image'}
-          >
-            {currentImageUrl ? 'Replace image' : 'Add image'}
-          </button>
-        )}
+        {children}
       </div>
-
-      {isOwner && editingImage && (
-        <div className={styles['item-page__owner-actions']}>
-          <UpdateImageForm itemId={itemId} username={username} collectionSlug={collectionSlug} onSuccess={handleImageUpdated} />
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setEditingImage(false)}
-          >
-            Cancel
-          </Button>
-        </div>
-      )}
-
-      {showSuccess && (
-        <p className={styles['item-page__image-feedback']} role="status" aria-live="polite">
-          Image updated!
-        </p>
-      )}
     </div>
   );
 }

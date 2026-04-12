@@ -1,8 +1,15 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { use, Suspense } from 'react';
-import { getCollectionFirstImage, getPublicCollectionBySlug, getPublicItemsInCollection } from '@/lib/collections';
+import {
+  use,
+  Suspense,
+} from 'react';
+import {
+  getCollectionFirstImage,
+  getPublicCollectionBySlug,
+  getPublicItemsInCollection,
+} from '@/lib/collections';
 import { Image, Breadcrumb } from '@dezkareid/components/react-server';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { generateCollectionListingSchema } from '@/lib/seo';
@@ -19,7 +26,10 @@ type Properties = {
 
 // Collection pages are rendered on-demand — slugs are not known at build time.
 export function generateStaticParams() {
-  return [{ username: '_placeholder', collectionSlug: '_placeholder' }];
+  return [{
+    username: '_placeholder',
+    collectionSlug: '_placeholder',
+  }];
 }
 
 export async function generateMetadata({ params }: Properties): Promise<Metadata> {
