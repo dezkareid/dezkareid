@@ -1,0 +1,51 @@
+---
+import type { ModalProperties } from '../../shared/types/modal';
+import styles from '../../css/modal.module.css';
+
+interface Properties extends Omit<ModalProperties, 'onClose'> {
+  id: string;
+  [key: string]: unknown;
+}
+
+const { open, title, id, class: className, ...rest } = Astro.props;
+---
+
+<dialog
+  id={id}
+  class:list={[styles.modal, className]}
+  aria-modal="true"
+  aria-labelledby={`${id}-title`}
+  open={open}
+  {...rest}
+>
+  <div class={styles.modal__inner}>
+    <div class={styles.modal__header}>
+      <h2 id={`${id}-title`} class={styles.modal__title}>
+        {title}
+      </h2>
+      <form method="dialog">
+        <button
+          type="submit"
+          class={styles.modal__close}
+          aria-label="Close"
+        >
+          ✕
+        </button>
+      </form>
+    </div>
+    <div class={styles.modal__body}>
+      <slot />
+    </div>
+  </div>
+</dialog>
+
+<script is:inline define:vars={{ id }}>
+  const dialog = document.getElementById(id);
+  if (dialog) {
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) {
+        dialog.close();
+      }
+    });
+  }
+</script>
