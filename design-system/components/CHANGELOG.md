@@ -1,3 +1,10 @@
+# [@dezkareid/components-v1.5.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.4.1...@dezkareid/components-v1.5.0) (2026-04-13)
+
+
+### Features
+
+* **components:** add support for change strings hardcoded to i18n ([95bb4a6](https://github.com/dezkareid/dezkareid/commit/95bb4a67d3bdeee89bfdb8763630f9ade49874e5))
+
 # [@dezkareid/components-v1.4.1](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.4.0...@dezkareid/components-v1.4.1) (2026-04-12)
 
 
