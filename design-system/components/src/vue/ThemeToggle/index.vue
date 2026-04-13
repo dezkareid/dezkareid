@@ -1,9 +1,18 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import cx from 'classnames';
-import type { Theme } from '../../shared/types/theme-toggle';
+import type { Theme, ThemeToggleProperties } from '../../shared/types/theme-toggle';
 import { getInitialTheme, applyTheme, persistTheme } from '../../shared/js/theme';
 import styles from '../../css/theme-toggle.module.css';
+
+const props = withDefaults(defineProps<ThemeToggleProperties>(), {
+  ariaLabelDark: 'Switch to dark mode',
+  ariaLabelLight: 'Switch to light mode',
+  labelDark: 'Dark',
+  labelLight: 'Light',
+  statusDarkLabel: 'Dark mode active',
+  statusLightLabel: 'Light mode active',
+});
 
 const theme = ref<Theme>('light');
 
@@ -31,7 +40,7 @@ const classes = () =>
     <button
       type="button"
       :class="classes()"
-      :aria-label="isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
+      :aria-label="isDark() ? props.ariaLabelLight : props.ariaLabelDark"
       :aria-pressed="isDark()"
       @click="toggle"
     >
@@ -73,10 +82,10 @@ const classes = () =>
         <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
       </svg>
-      {{ isDark() ? 'Dark' : 'Light' }}
+      {{ isDark() ? props.labelDark : props.labelLight }}
     </button>
     <span aria-live="polite" :class="styles['sr-only']">
-      {{ isDark() ? 'Dark' : 'Light' }} mode active
+      {{ isDark() ? props.statusDarkLabel : props.statusLightLabel }}
     </span>
   </span>
 </template>

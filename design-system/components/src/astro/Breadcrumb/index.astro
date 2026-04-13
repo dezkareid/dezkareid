@@ -6,10 +6,10 @@ interface Properties extends BreadcrumbProperties {
   [key: string]: unknown;
 }
 
-const { items, class: className, ...rest } = Astro.props;
+const { items, ariaLabel = 'Breadcrumb', class: className, ...rest } = Astro.props;
 ---
 
-<nav class:list={[styles.breadcrumb, className]} aria-label="Breadcrumb" {...rest}>
+<nav class:list={[styles.breadcrumb, className]} aria-label={ariaLabel} {...rest}>
   {items.map((item, index) => {
     const isLast = index === items.length - 1;
 

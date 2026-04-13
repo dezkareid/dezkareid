@@ -6,4 +6,9 @@ export interface BreadcrumbItem {
 export interface BreadcrumbProperties {
   items: BreadcrumbItem[];
   className?: string;
+  /**
+   * Accessible label for the breadcrumb navigation.
+   * @default "Breadcrumb"
+   */
+  ariaLabel?: string;
 }

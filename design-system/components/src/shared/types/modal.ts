@@ -4,4 +4,9 @@ export interface ModalProperties {
   title: string;
   children: React.ReactNode;
   className?: string;
+  /**
+   * Accessible label for the close button.
+   * @default "Close"
+   */
+  closeLabel?: string;
 }

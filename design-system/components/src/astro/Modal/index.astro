@@ -7,7 +7,7 @@ interface Properties extends Omit<ModalProperties, 'onClose'> {
   [key: string]: unknown;
 }
 
-const { open, title, id, class: className, ...rest } = Astro.props;
+const { open, title, id, closeLabel = 'Close', class: className, ...rest } = Astro.props;
 ---
 
 <dialog
@@ -27,7 +27,7 @@ const { open, title, id, class: className, ...rest } = Astro.props;
         <button
           type="submit"
           class={styles.modal__close}
-          aria-label="Close"
+          aria-label={closeLabel}
         >
           ✕
         </button>

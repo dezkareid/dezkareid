@@ -7,12 +7,12 @@ export interface Properties extends BreadcrumbProperties, HTMLAttributes<HTMLEle
   ref?: Ref<HTMLElement>;
 }
 
-export function Breadcrumb({ items, className, ref, ...rest }: Properties) {
+export function Breadcrumb({ items, className, ariaLabel = 'Breadcrumb', ref, ...rest }: Properties) {
   return (
     <nav
       ref={ref}
       className={cx(styles.breadcrumb, className)}
-      aria-label="Breadcrumb"
+      aria-label={ariaLabel}
       {...rest}
     >
       {items.map((item, index) => {

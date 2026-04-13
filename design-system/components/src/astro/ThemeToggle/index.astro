@@ -1,11 +1,20 @@
 ---
+import type { ThemeToggleProperties } from '../../shared/types/theme-toggle';
 import styles from '../../css/theme-toggle.module.css';
 
-type Properties = {
+interface Properties extends ThemeToggleProperties {
   class?: string;
-};
+}
 
-const { class: className } = Astro.props;
+const {
+  ariaLabelDark = 'Switch to dark mode',
+  ariaLabelLight = 'Switch to light mode',
+  labelDark = 'Dark',
+  labelLight = 'Light',
+  statusDarkLabel = 'Dark mode active',
+  statusLightLabel = 'Light mode active',
+  class: className,
+} = Astro.props;
 
 const classes = [styles['theme-toggle'], className ?? ''].filter(Boolean).join(' ');
 const wrapperClass = styles['theme-toggle__wrapper'];
@@ -35,7 +44,7 @@ const srOnlyClass = styles['sr-only'];
     type="button"
     class={classes}
     data-theme-toggle
-    aria-label="Toggle colour scheme"
+    aria-label={ariaLabelDark}
     aria-pressed="false"
   >
     <!-- Sun icon (light mode default) -->
@@ -61,12 +70,12 @@ const srOnlyClass = styles['sr-only'];
       <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
       <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
     </svg>
-    <span data-theme-label>Light</span>
+    <span data-theme-label>{labelLight}</span>
   </button>
-  <span aria-live="polite" class={srOnlyClass} data-theme-live>Light mode active</span>
+  <span aria-live="polite" class={srOnlyClass} data-theme-live>{statusLightLabel}</span>
 </span>
 
-<script>
+<script define:vars={{ labelDark, labelLight, statusDarkLabel, statusLightLabel, ariaLabelDark, ariaLabelLight }}>
   import { getInitialTheme, applyTheme, persistTheme } from '../../shared/js/theme';
 
   const btn = document.querySelector('[data-theme-toggle]') as HTMLButtonElement | null;
@@ -80,13 +89,14 @@ const srOnlyClass = styles['sr-only'];
   if (btn && label) {
     let current = getInitialTheme();
 
-    function update(theme: 'light' | 'dark') {
+    function update(theme) {
       const isDark = theme === 'dark';
-      label!.textContent = isDark ? 'Dark' : 'Light';
-      btn!.setAttribute('aria-pressed', String(isDark));
-      btn!.classList.toggle('theme-toggle--dark', isDark);
+      label.textContent = isDark ? labelDark : labelLight;
+      btn.setAttribute('aria-pressed', String(isDark));
+      btn.setAttribute('aria-label', isDark ? ariaLabelLight : ariaLabelDark);
+      btn.classList.toggle('theme-toggle--dark', isDark);
       if (iconEl) iconEl.innerHTML = isDark ? moonPath : sunPath;
-      if (liveRegion) liveRegion.textContent = `${isDark ? 'Dark' : 'Light'} mode active`;
+      if (liveRegion) liveRegion.textContent = isDark ? statusDarkLabel : statusLightLabel;
     }
 
     update(current);
