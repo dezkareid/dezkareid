@@ -1,0 +1,110 @@
+{
+  "Common": {
+    "consent": {
+      "message": "Utilizamos cookies para entender cómo usas nuestros servicios y mejorar tu experiencia.",
+      "accept": "Aceptar",
+      "decline": "Rechazar"
+    },
+    "search": "Buscar",
+    "close": "Cerrar",
+    "home": "Inicio",
+    "back": "Atrás",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "item": "artículo",
+    "items": "artículos",
+    "brand": "Marca",
+    "line": "Línea",
+    "variant": "Variante",
+    "category": "Categoría",
+    "franchise": "Franquicia",
+    "acquired_on": "Adquirido el",
+    "collections": "Colecciones",
+    "no_public_collections": "Aún no hay colecciones públicas",
+    "has_not_made_public": "no ha hecho pública ninguna colección aún.",
+    "no_items_in_collection": "No hay artículos en esta colección",
+    "items_will_appear_here": "Los artículos añadidos a esta colección aparecerán aquí."
+  },
+  "Navigation": {
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Servicio",
+    "contact": "Contacto",
+    "login": "Iniciar Sesión",
+    "join": "Unirse Ahora",
+    "main_nav": "Navegación principal",
+    "sign_in": "Iniciar Sesión",
+    "vault": "Bóveda",
+    "home_aria": "Inicio de Collectstory",
+    "all_rights_reserved": "Todos los derechos reservados.",
+    "theme": {
+      "dark": "Oscuro",
+      "light": "Claro",
+      "switch_dark": "Cambiar a modo oscuro",
+      "switch_light": "Cambiar a modo claro",
+      "dark_active": "Modo oscuro activo",
+      "light_active": "Modo claro activo"
+    }
+  },
+  "HomePage": {
+    "metadata": {
+      "title": "Collectstory — Rastrea Tu Colección",
+      "description": "Collectstory es la plataforma principal para coleccionistas serios. Cataloga tus S.H. Figuarts, Marvel Legends y cada figura de tu colección — organizada por marca, línea y categoría."
+    }
+  },
+  "Login": {
+    "metadata": {
+      "title": "Iniciar Sesión",
+      "description": "Inicia sesión en Collectstory para gestionar tu colección."
+    },
+    "welcome": "Bienvenido a Collectstory",
+    "subtitle": "Inicia sesión para gestionar tu colección",
+    "continue_google": "Continuar con Google"
+  },
+  "Landing": {
+    "Hero": {
+      "badge": "Nuevo: Cataloga tus sets de 2024",
+      "title": "Cada pieza tiene una historia.",
+      "description": "El hogar moderno para coleccionistas. Organiza, rastrea y muestra tus cartas coleccionables, figuras de acción y hallazgos raros en una bóveda digital encantadora.",
+      "cta": "Comienza tu colección"
+    },
+    "Stats": {
+      "items_cataloged": "Artículos Catalogados",
+      "active_vaults": "Bóvedas Activas",
+      "match_rate": "Tasa de Coincidencia",
+      "price_tracking": "Rastreo de Precios"
+    },
+    "Features": {
+      "header": {
+        "title": "A los coleccionistas les encantamos",
+        "subtitle": "Todo lo que necesitas para convertir tu hobby en un legado."
+      },
+      "ai_inventory": {
+        "title": "Inventario IA",
+        "description": "Toma una foto y deja que nuestra IA reconozca y catalogue tu artículo instantáneamente con datos de mercado."
+      },
+      "value_tracking": {
+        "title": "Rastreo de Valor",
+        "description": "Mantente actualizado con las tendencias de precios en tiempo real de los principales mercados y casas de subastas."
+      },
+      "public_vaults": {
+        "title": "Bóvedas Públicas",
+        "description": "Comparte tu colección curada con el mundo a través de una página de aterrizaje hermosa y personalizable."
+      }
+    },
+    "LatestArrivals": {
+      "aria_label": "Últimas llegadas",
+      "title": "Últimas Llegadas",
+      "subtitle": "Descubre lo que la comunidad está añadiendo a sus bóvedas hoy."
+    },
+    "CTA": {
+      "title": "¿Listo para mostrar tu viaje?",
+      "description": "Únete a más de 100,000 coleccionistas que confían en collectstory con sus posesiones más preciadas.",
+      "button": "Únete Ahora"
+    }
+  },
+  "Manifest": {
+    "name": "Collectstory",
+    "short_name": "Collectstory",
+    "description": "Rastrea y muestra tu colección de coleccionables."
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "Common": {
+    "consent": {
+      "message": "We use cookies to understand how you use our services and to improve your experience.",
+      "accept": "Accept",
+      "decline": "Decline"
+    },
+    "search": "Search",
+    "close": "Close",
+    "home": "Home",
+    "back": "Back",
+    "save": "Save",
+    "cancel": "Cancel",
+    "item": "item",
+    "items": "items",
+    "brand": "Brand",
+    "line": "Line",
+    "variant": "Variant",
+    "category": "Category",
+    "franchise": "Franchise",
+    "acquired_on": "Acquired on",
+    "collections": "Collections",
+    "no_public_collections": "No public collections yet",
+    "has_not_made_public": "hasn't made any collections public yet.",
+    "no_items_in_collection": "No items in this collection",
+    "items_will_appear_here": "Items added to this collection will appear here."
+  },
+  "Navigation": {
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "contact": "Contact",
+    "login": "Login",
+    "join": "Join Now",
+    "main_nav": "Main navigation",
+    "sign_in": "Sign In",
+    "vault": "Vault",
+    "home_aria": "Collectstory home",
+    "all_rights_reserved": "All rights reserved.",
+    "theme": {
+      "dark": "Dark",
+      "light": "Light",
+      "switch_dark": "Switch to dark mode",
+      "switch_light": "Switch to light mode",
+      "dark_active": "Dark mode active",
+      "light_active": "Light mode active"
+    }
+  },
+  "HomePage": {
+    "metadata": {
+      "title": "Collectstory — Track Your Collection",
+      "description": "Collectstory is the premier platform for serious collectors. Catalog your S.H. Figuarts, Marvel Legends, and every figure in your collection — organized by brand, line, and category."
+    }
+  },
+  "Login": {
+    "metadata": {
+      "title": "Sign In",
+      "description": "Sign in to Collectstory to manage your collection."
+    },
+    "welcome": "Welcome to Collectstory",
+    "subtitle": "Sign in to manage your collection",
+    "continue_google": "Continue with Google"
+  },
+  "Landing": {
+    "Hero": {
+      "badge": "New: Catalog your 2024 sets",
+      "title": "Every piece has a story.",
+      "description": "The modern home for collectors. Organise, track, and showcase your trading cards, action figures, and rare finds in a delightful digital vault.",
+      "cta": "Start your collection"
+    },
+    "Stats": {
+      "items_cataloged": "Items Cataloged",
+      "active_vaults": "Active Vaults",
+      "match_rate": "Match Rate",
+      "price_tracking": "Price Tracking"
+    },
+    "Features": {
+      "header": {
+        "title": "Collectors Love Us",
+        "subtitle": "Everything you need to turn your hobby into a legacy."
+      },
+      "ai_inventory": {
+        "title": "AI Inventory",
+        "description": "Snap a photo and let our AI recognize and catalog your item instantly with market data."
+      },
+      "value_tracking": {
+        "title": "Value Tracking",
+        "description": "Stay updated with real-time price trends from major marketplaces and auction houses."
+      },
+      "public_vaults": {
+        "title": "Public Vaults",
+        "description": "Share your curated collection with the world through a beautiful, customizable landing page."
+      }
+    },
+    "LatestArrivals": {
+      "aria_label": "Latest Arrivals",
+      "title": "Latest Arrivals",
+      "subtitle": "Discover what the community is adding to their vaults today."
+    },
+    "CTA": {
+      "title": "Ready to showcase your journey?",
+      "description": "Join over 100,000 collectors who trust collectstory with their most prized possessions.",
+      "button": "Join Now"
+    }
+  },
+  "Manifest": {
+    "name": "Collectstory",
+    "short_name": "Collectstory",
+    "description": "Track and showcase your collectibles collection."
+  }
+}
