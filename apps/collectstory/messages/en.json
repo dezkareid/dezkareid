@@ -23,7 +23,42 @@
     "no_public_collections": "No public collections yet",
     "has_not_made_public": "hasn't made any collections public yet.",
     "no_items_in_collection": "No items in this collection",
-    "items_will_appear_here": "Items added to this collection will appear here."
+    "items_will_appear_here": "Items added to this collection will appear here.",
+    "profile": {
+      "metadata": {
+        "title": "{username}'s Collections",
+        "description": "Browse {username}'s collectible collections on Collectstory."
+      },
+      "collections": "Collections",
+      "items_count": "{count} {count, plural, =1 {item} other {items}}",
+      "share": "{username}'s Profile on Collectstory",
+      "collection": {
+        "metadata": {
+          "title": "{collectionName} by {username}",
+          "description": "{collectionName}{description} · collected by {username} on Collectstory."
+        },
+        "share": "{collectionName} by {username} on Collectstory",
+        "items_count": "{count} {count, plural, =0 {items} =1 {item} other {items}}"
+      },
+      "item": {
+        "metadata": {
+          "title": "{itemName} — {collectionName} by {username}",
+          "description": "{itemName} from {line} by {brand}. Part of {username}'s {collectionName} collection on Collectstory.",
+          "description_fallback": "{itemName} — part of {username}'s {collectionName} collection on Collectstory."
+        },
+        "meta": {
+          "brand": "Brand",
+          "line": "Line",
+          "variant": "Variant",
+          "category": "Category",
+          "franchise": "Franchise"
+        },
+        "status": {
+          "acquired": "Acquired"
+        },
+        "share": "{itemName} from {collectionSlug} by {username} on Collectstory"
+      }
+    }
   },
   "Navigation": {
     "privacy": "Privacy Policy",

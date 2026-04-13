@@ -1,21 +1,23 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { Hero } from '@/components/landing/Hero';
 import { LatestArrivals } from '@/components/landing/LatestArrivals';
 import { Features } from '@/components/landing/Features';
 import { CallToAction } from '@/components/landing/CallToAction';
 import { Footer } from '@/components/landing/Footer';
 
-export const metadata: Metadata = {
-  title: 'Collectstory — Track Your Collection',
-  description:
-    'Collectstory is the premier platform for serious collectors. Catalog your S.H. Figuarts, Marvel Legends, and every figure in your collection — organized by brand, line, and category.',
-  openGraph: {
-    title: 'Collectstory — Track Your Collection',
-    description:
-      'The premier platform for serious collectors. Organize every figure by brand, line, and category.',
-    type: 'website',
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('HomePage.metadata');
+  return {
+    title: t('title'),
+    description: t('description'),
+    openGraph: {
+      title: t('title'),
+      description: t('description'),
+      type: 'website',
+    },
+  };
+}
 
 export default function HomePage() {
   return (

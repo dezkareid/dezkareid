@@ -23,7 +23,42 @@
     "no_public_collections": "Aún no hay colecciones públicas",
     "has_not_made_public": "no ha hecho pública ninguna colección aún.",
     "no_items_in_collection": "No hay artículos en esta colección",
-    "items_will_appear_here": "Los artículos añadidos a esta colección aparecerán aquí."
+    "items_will_appear_here": "Los artículos añadidos a esta colección aparecerán aquí.",
+    "profile": {
+      "metadata": {
+        "title": "Colecciones de {username}",
+        "description": "Explora las colecciones de {username} en Collectstory."
+      },
+      "collections": "Colecciones",
+      "items_count": "{count} {count, plural, =1 {artículo} other {artículos}}",
+      "share": "Perfil de {username} en Collectstory",
+      "collection": {
+        "metadata": {
+          "title": "{collectionName} por {username}",
+          "description": "{collectionName}{description} · coleccionado por {username} en Collectstory."
+        },
+        "share": "{collectionName} por {username} en Collectstory",
+        "items_count": "{count} {count, plural, =0 {artículos} =1 {artículo} other {artículos}}"
+      },
+      "item": {
+        "metadata": {
+          "title": "{itemName} — {collectionName} por {username}",
+          "description": "{itemName} de {line} por {brand}. Parte de la colección {collectionName} de {username} en Collectstory.",
+          "description_fallback": "{itemName} — parte de la colección {collectionName} de {username} en Collectstory."
+        },
+        "meta": {
+          "brand": "Marca",
+          "line": "Línea",
+          "variant": "Variante",
+          "category": "Categoría",
+          "franchise": "Franquicia"
+        },
+        "status": {
+          "acquired": "Adquirido el"
+        },
+        "share": "{itemName} de {collectionSlug} por {username} en Collectstory"
+      }
+    }
   },
   "Navigation": {
     "privacy": "Política de Privacidad",

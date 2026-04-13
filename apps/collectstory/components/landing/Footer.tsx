@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { Shelves } from '@dezkareid/icons/react';
 import { siteData } from '@/lib/mock-data';
 import { SocialShare } from '@/src/features/social-share';
@@ -6,6 +7,8 @@ import styles from './Footer.module.css';
 
 export function Footer() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
+  const t = useTranslations('Navigation');
+  const tHome = useTranslations('HomePage.metadata');
 
   return (
     <footer className={styles.footer}>
@@ -22,19 +25,26 @@ export function Footer() {
               {siteData.copyrightYear}
               {' '}
               {siteData.name}
-              . All rights reserved.
+              .
+              {' '}
+              {t('all_rights_reserved')}
             </p>
           </div>
-          <nav className={styles.nav}>
-            {siteData.navLinks.map(link => (
-              <a key={link.label} href={link.href} className={styles.link}>
-                {link.label}
-              </a>
-            ))}
+          <nav className={styles.nav} aria-label={t('main_nav')}>
+            {siteData.navLinks.map(link => {
+              const translationKey = link.label === 'Privacy Policy' ? 'privacy' : 
+                                   link.label === 'Terms of Service' ? 'terms' : 
+                                   link.label === 'Contact' ? 'contact' : 'contact';
+              return (
+                <a key={link.label} href={link.href} className={styles.link}>
+                  {t(translationKey)}
+                </a>
+              );
+            })}
           </nav>
           <div className={styles.socials}>
             <SocialShare
-              title="Collectstory — Track Your Collection"
+              title={tHome('title')}
               baseUrl={baseUrl}
               entityType="collection"
             />
