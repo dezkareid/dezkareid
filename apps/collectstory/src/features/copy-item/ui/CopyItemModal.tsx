@@ -4,8 +4,8 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Modal } from '@dezkareid/components/react';
 import { AddItemForm, type InitialItemData } from '@/components/AddItemForm/AddItemForm';
-import { getUserCollections } from '@/app/[username]/actions';
-import { getAllBrands, getAllFranchises, copyItemToCollection, type CopyItemState } from '@/app/[username]/[collectionSlug]/actions';
+import { getUserCollections } from '@/app/[locale]/[username]/actions';
+import { getAllBrands, getAllFranchises, copyItemToCollection, type CopyItemState } from '@/app/[locale]/[username]/[collectionSlug]/actions';
 import type { PublicItem, PublicItemDetail } from '@/lib/collections';
 import styles from './CopyItemModal.module.css';
 

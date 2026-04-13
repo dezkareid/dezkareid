@@ -2,7 +2,7 @@
 
 import { useActionState, useState, useTransition } from 'react';
 import { addItem } from '../../actions';
-import { getLinesByBrand } from '@/app/[username]/[collectionSlug]/actions';
+import { getLinesByBrand } from '@/app/[locale]/[username]/[collectionSlug]/actions';
 import { stripMetadata } from '@/lib/image/strip-metadata';
 import { CatalogItemPicker } from '@/src/features/catalog-item-picker';
 import styles from '@/components/AddItemForm/AddItemForm.module.css';

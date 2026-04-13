@@ -1,6 +1,6 @@
 import { VerifiedBadge } from '@dezkareid/components/react';
 import { ItemLinksManager } from '@/components/ItemLinksManager/ItemLinksManager';
-import type { Store, ItemLink } from '@/app/[username]/[collectionSlug]/actions';
+import type { Store, ItemLink } from '@/app/[locale]/[username]/[collectionSlug]/actions';
 import styles from './WhereToFind.module.css';
 
 interface WhereToFindContentProperties {
