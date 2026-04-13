@@ -6,6 +6,7 @@ import { Shelves } from '@dezkareid/icons/react';
 import { ThemeToggleWrapper } from '@/src/features/theme';
 import { AdminMenu } from '@/src/features/admin-menu';
 import { UserMenu } from '@/src/features/user-menu';
+import { LanguageSwitcher } from '@/src/features/language-switcher';
 import { getSessionAndRole } from '@/lib/auth/role';
 import { createClient } from '@/lib/supabase/server';
 import { siteData } from '@/lib/mock-data';
@@ -28,6 +29,7 @@ async function HeaderAuthSlot() {
       <div className={styles['site-header__nav-actions']}>
         <nav className={styles['site-header__nav']} aria-label="Main navigation" />
         <div className={styles['site-header__actions']}>
+          <LanguageSwitcher />
           <ThemeToggleWrapper />
           <HeaderTracker label="login">
             <Link href={signInHref} className={styles['site-header__sign-in']}>
@@ -59,6 +61,7 @@ async function HeaderAuthSlot() {
         {session.role === 'admin' && <AdminMenu />}
       </nav>
       <div className={styles['site-header__actions']}>
+        <LanguageSwitcher />
         <ThemeToggleWrapper />
         <UserMenu
           username={profile?.username ?? undefined}
@@ -75,6 +78,7 @@ function HeaderAuthFallback() {
     <div className={styles['site-header__nav-actions']}>
       <nav className={styles['site-header__nav']} aria-label="Main navigation" />
       <div className={styles['site-header__actions']}>
+        <LanguageSwitcher />
         <ThemeToggleWrapper />
         <div className={styles['site-header__avatar-placeholder']} aria-hidden="true" />
       </div>

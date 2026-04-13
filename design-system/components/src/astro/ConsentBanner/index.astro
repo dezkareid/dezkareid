@@ -1,25 +1,31 @@
 ---
 import { Button } from '../index';
+import type { ConsentBannerProperties } from '../../shared/types/consent-banner';
 import styles from '../../css/consent-banner.module.css';
 
-interface Properties {
-  class?: string;
+interface Properties extends ConsentBannerProperties {
+  [key: string]: unknown;
 }
 
-const { class: className } = Astro.props;
+const {
+  message = 'We use cookies to understand how you use our services and to improve your experience.',
+  acceptLabel = 'Accept',
+  declineLabel = 'Decline',
+  class: className,
+} = Astro.props;
 ---
 
 <div id="consent-banner" class:list={[styles['consent-banner'], className]} role="alert" aria-live="polite" style="display: none;">
   <div class={styles['consent-banner__content']}>
     <p class={styles['consent-banner__text']}>
-      We use cookies to understand how you use our services and to improve your experience.
+      {message}
     </p>
     <div class={styles['consent-banner__actions']}>
       <Button variant="ghost" size="sm" id="consent-decline">
-        Decline
+        {declineLabel}
       </Button>
       <Button variant="primary" size="sm" id="consent-accept">
-        Accept
+        {acceptLabel}
       </Button>
     </div>
   </div>

@@ -1,7 +1,7 @@
 import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getPublicCollectionBySlug } from '@/lib/collections';
-import { getAllBrands, getAllFranchises } from '@/app/[username]/[collectionSlug]/actions';
+import { getAllBrands, getAllFranchises } from '@/app/[locale]/[username]/[collectionSlug]/actions';
 import { OwnerEmptyState } from './OwnerEmptyState';
 
 type Properties = {

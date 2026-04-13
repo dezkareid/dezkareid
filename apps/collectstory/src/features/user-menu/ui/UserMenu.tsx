@@ -1,6 +1,6 @@
 'use client';
 
-import { signOut } from '@/app/actions';
+import { signOut } from '@/app/[locale]/actions';
 import { Image } from '@dezkareid/components/react';
 import { DropdownMenu, DropdownMenuItem, DropdownDivider } from '@/src/shared/ui/dropdown-menu';
 import styles from './UserMenu.module.css';

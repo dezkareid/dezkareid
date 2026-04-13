@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button, Modal } from '@dezkareid/components/react';
 import { useAnalytics } from '@/src/shared/lib/analytics/useAnalytics';
 import { WhereToFindContent } from './WhereToFindContent';
-import type { Store, ItemLink } from '@/app/[username]/[collectionSlug]/actions';
+import type { Store, ItemLink } from '@/app/[locale]/[username]/[collectionSlug]/actions';
 import styles from './WhereToFind.module.css';
 
 interface WhereToFindButtonProperties {

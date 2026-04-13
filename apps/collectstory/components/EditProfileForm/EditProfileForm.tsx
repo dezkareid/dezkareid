@@ -2,7 +2,7 @@
 
 import { useActionState, useRef, useState, useTransition } from 'react';
 import Image from 'next/image';
-import { updateProfile, checkUsernameAvailable } from '@/app/profile/edit/actions';
+import { updateProfile, checkUsernameAvailable } from '@/app/[locale]/profile/edit/actions';
 import styles from './EditProfileForm.module.css';
 
 const ALLOWED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);

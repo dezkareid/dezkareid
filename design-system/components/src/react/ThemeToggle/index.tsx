@@ -55,13 +55,7 @@ const MoonIcon = (
   </svg>
 );
 
-export function ThemeToggle({
-  cssProcessor = 'css',
-  onChange,
-  className,
-  ref,
-  ...rest
-}: Properties) {
+function useTheme(cssProcessor: 'css' | 'lightningcss', onChange?: (theme: Theme) => void) {
   const [theme, setTheme] = useState<Theme>('light');
 
   useEffect(() => {
@@ -79,23 +73,61 @@ export function ThemeToggle({
     onChange?.(next);
   }
 
+  return { theme, toggle };
+}
+
+function ThemeToggleButton({ isDark, toggle, ariaLabel, label }: { isDark: boolean; toggle: () => void; ariaLabel: string; label: string }) {
+  return (
+    <Button
+      variant="ghost"
+      className={cx(styles['theme-toggle'], isDark && styles['theme-toggle--dark'])}
+      onClick={toggle}
+      aria-label={ariaLabel}
+      aria-pressed={isDark}
+    >
+      {isDark ? MoonIcon : SunIcon}
+      {label}
+    </Button>
+  );
+}
+
+export function ThemeToggle(properties: Properties) {
+  const {
+    cssProcessor = 'css',
+    onChange,
+    className,
+    ref,
+    // Explicitly destructure all ThemeToggleProperties to prevent them from
+    // leaking into the 'rest' object spread on the DOM element.
+    ariaLabelDark,
+    ariaLabelLight,
+    labelDark,
+    labelLight,
+    statusDarkLabel,
+    statusLightLabel,
+    ...rest
+  } = properties;
+
+  const { theme, toggle } = useTheme(cssProcessor, onChange);
   const isDark = theme === 'dark';
-  const label = isDark ? 'Dark' : 'Light';
+
+  const ariaLabel = isDark
+    ? (ariaLabelLight ?? 'Switch to light mode')
+    : (ariaLabelDark ?? 'Switch to dark mode');
+
+  const label = isDark
+    ? (labelDark ?? 'Dark')
+    : (labelLight ?? 'Light');
+
+  const status = isDark
+    ? (statusDarkLabel ?? 'Dark mode active')
+    : (statusLightLabel ?? 'Light mode active');
 
   return (
     <span ref={ref} className={cx(styles['theme-toggle__wrapper'], className)} {...rest}>
-      <Button
-        variant="ghost"
-        className={cx(styles['theme-toggle'], isDark && styles['theme-toggle--dark'])}
-        onClick={toggle}
-        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-        aria-pressed={isDark}
-      >
-        {isDark ? MoonIcon : SunIcon}
-        {label}
-      </Button>
+      <ThemeToggleButton isDark={isDark} toggle={toggle} ariaLabel={ariaLabel} label={label} />
       <span aria-live="polite" className={styles['sr-only']}>
-        {`${label} mode active`}
+        {status}
       </span>
     </span>
   );

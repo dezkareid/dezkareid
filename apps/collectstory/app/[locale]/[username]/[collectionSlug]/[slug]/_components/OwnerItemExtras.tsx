@@ -1,7 +1,7 @@
 import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { ItemLinksManager } from '@/components/ItemLinksManager/ItemLinksManager';
-import type { ItemLink, Store } from '@/app/[username]/[collectionSlug]/actions';
+import type { ItemLink, Store } from '@/app/[locale]/[username]/[collectionSlug]/actions';
 import styles from '../page.module.css';
 
 type Properties = {

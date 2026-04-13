@@ -2,7 +2,7 @@
 
 import { useActionState, useState, useTransition, useEffect } from 'react';
 import { updateItem } from '../../../actions';
-import { getLinesByBrand } from '@/app/[username]/[collectionSlug]/actions';
+import { getLinesByBrand } from '@/app/[locale]/[username]/[collectionSlug]/actions';
 import { stripMetadata } from '@/lib/image/strip-metadata';
 import { CatalogItemPicker } from '@/src/features/catalog-item-picker';
 import type { CatalogItemSearchResult } from '@/src/features/catalog-item-picker';

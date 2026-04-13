@@ -1,0 +1,42 @@
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem !important;
+  color: var(--color-text-secondary, #4a5568);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.trigger:hover {
+  color: var(--color-text-primary, #1a202c);
+}
+
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.label {
+  display: none;
+}
+
+@media (min-width: 48rem) {
+  .label {
+    display: inline;
+  }
+}
+
+.active {
+  font-weight: 600;
+  color: var(--color-primary) !important;
+  background-color: var(--color-background-secondary) !important;
+}
+
+:global(.dark) .trigger {
+  color: var(--color-text-secondary);
+}
+
+:global(.dark) .trigger:hover {
+  color: var(--color-text-primary);
+}

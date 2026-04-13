@@ -10,6 +10,9 @@ export function ConsentBanner({
   onAccept,
   onDecline,
   className,
+  message = 'We use cookies to understand how you use our services and to improve your experience.',
+  acceptLabel = 'Accept',
+  declineLabel = 'Decline',
 }: ConsentBannerProperties) {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -53,14 +56,14 @@ export function ConsentBanner({
     <div className={cx(styles['consent-banner'], className)} role="alert" aria-live="polite">
       <div className={styles['consent-banner__content']}>
         <p className={styles['consent-banner__text']}>
-          We use cookies to understand how you use our services and to improve your experience.
+          {message}
         </p>
         <div className={styles['consent-banner__actions']}>
           <Button variant="ghost" size="sm" onClick={handleDecline}>
-            Decline
+            {declineLabel}
           </Button>
           <Button variant="primary" size="sm" onClick={handleAccept}>
-            Accept
+            {acceptLabel}
           </Button>
         </div>
       </div>

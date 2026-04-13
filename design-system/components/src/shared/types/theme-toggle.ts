@@ -24,4 +24,34 @@ export type ThemeToggleProperties = {
    * Useful for syncing external state or analytics.
    */
   onChange?: (theme: Theme) => void;
+  /**
+   * Accessible label for switching to dark mode.
+   * @default "Switch to dark mode"
+   */
+  ariaLabelDark?: string;
+  /**
+   * Accessible label for switching to light mode.
+   * @default "Switch to light mode"
+   */
+  ariaLabelLight?: string;
+  /**
+   * Visible label for dark mode.
+   * @default "Dark"
+   */
+  labelDark?: string;
+  /**
+   * Visible label for light mode.
+   * @default "Light"
+   */
+  labelLight?: string;
+  /**
+   * Screen reader status message when dark mode is active.
+   * @default "Dark mode active"
+   */
+  statusDarkLabel?: string;
+  /**
+   * Screen reader status message when light mode is active.
+   * @default "Light mode active"
+   */
+  statusLightLabel?: string;
 };

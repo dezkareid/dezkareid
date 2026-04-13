@@ -7,7 +7,15 @@ import styles from '../../css/modal.module.css';
 
 export interface Properties extends ModalProperties, Omit<HTMLAttributes<HTMLDialogElement>, 'title' | 'children'> {}
 
-export function Modal({ open, onClose, title, children, className, ...rest }: Properties) {
+export function Modal({
+  open,
+  onClose,
+  title,
+  children,
+  className,
+  closeLabel = 'Close',
+  ...rest
+}: Properties) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = `modal-title-${useId().replaceAll(':', '')}`;
 
@@ -63,7 +71,7 @@ export function Modal({ open, onClose, title, children, className, ...rest }: Pr
             type="button"
             className={styles.modal__close}
             onClick={onClose}
-            aria-label="Close"
+            aria-label={closeLabel}
           >
             ✕
           </button>

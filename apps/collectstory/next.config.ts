@@ -1,4 +1,7 @@
 import type { NextConfig } from 'next';
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin('./app/i18n/request.ts');
 
 const securityHeaders = [
   { key: 'X-Frame-Options', value: 'DENY' },
@@ -10,6 +13,7 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   experimental: {
     viewTransition: true,
+    rootParams: true,
   },
   cacheComponents: true,
   cacheLife: {
@@ -39,5 +43,5 @@ const nextConfig: NextConfig = {
     ];
   },
 };
-
-export default nextConfig;
+console.log('withNextIntl(nextConfig)', withNextIntl(nextConfig)?.i18n);
+export default withNextIntl(nextConfig);

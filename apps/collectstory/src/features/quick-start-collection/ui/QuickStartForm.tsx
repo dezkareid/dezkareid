@@ -2,7 +2,7 @@
 
 import { useActionState, useCallback, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { quickStartCollection } from '@/app/[username]/actions';
+import { quickStartCollection } from '@/app/[locale]/[username]/actions';
 import { useAnalytics } from '@/src/shared/lib/analytics/useAnalytics';
 import styles from './QuickStartForm.module.css';
 

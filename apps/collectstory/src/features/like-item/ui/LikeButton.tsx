@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { LikeButton as LikeButtonPrimitive } from '@dezkareid/components/react-client';
-import { likeItem, unlikeItem } from '@/app/[username]/[collectionSlug]/actions';
+import { likeItem, unlikeItem } from '@/app/[locale]/[username]/[collectionSlug]/actions';
 import { useAnalytics } from '@/src/shared/lib/analytics/useAnalytics';
 import styles from './LikeButton.module.css';
 

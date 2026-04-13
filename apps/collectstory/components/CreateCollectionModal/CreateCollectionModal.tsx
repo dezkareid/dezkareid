@@ -3,7 +3,7 @@
 import { useActionState, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Modal } from '@dezkareid/components/react';
-import { createCollection } from '@/app/[username]/[collectionSlug]/actions';
+import { createCollection } from '@/app/[locale]/[username]/[collectionSlug]/actions';
 import styles from './CreateCollectionModal.module.css';
 
 type CollectionState
