@@ -1,16 +1,19 @@
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { HomeCTA } from '@/components/HomeCta';
 import { heroData } from '@/lib/mock-data';
 import styles from './Hero.module.css';
 
 export function Hero() {
+  const t = useTranslations('Landing.Hero');
+
   return (
     <section className={styles.hero}>
       <div className={styles.container}>
         <div className={styles.content}>
-          <span className={styles.badge}>{heroData.badge}</span>
-          <h1 className={styles.title}>{heroData.title}</h1>
-          <p className={styles.description}>{heroData.description}</p>
+          <span className={styles.badge}>{t('badge')}</span>
+          <h1 className={styles.title}>{t('title')}</h1>
+          <p className={styles.description}>{t('description')}</p>
           <div className={styles.actions}>
             <HomeCTA primaryClassName={styles.ctaPrimary} />
           </div>

@@ -10,6 +10,7 @@ Collectstory is the collector's companion app — a Next.js 16 web application f
 - **Social login** — Google, Facebook, and X (Twitter) via Supabase Auth
 - **Design system** — fully themed with `@dezkareid/design-tokens` and `@dezkareid/components`
 - **Analytics** — G4 integration with privacy-focused user tracking and cookie consent
+- **Internationalization (i18n)** — Full support for English and Spanish with automatic detection and URL-based routing
 
 ## Tech Stack
 
@@ -181,6 +182,21 @@ collection_items
 ```
 
 Row-Level Security is enabled. Users can only access their own `collection_items`.
+
+## Internationalization (i18n)
+
+The application uses `next-intl` for full internationalization support.
+
+### Architecture
+- **Routing**: URL-based locale prefixes (e.g., `/en/username`, `/es/username`).
+- **Detection**: Automatic language detection with fallback to Spanish (`es`).
+- **Translations**: JSON files located in `messages/` (`en.json`, `es.json`).
+- **Strategy**: Components remain agnostic of i18n, receiving translated strings via props from pages/server components.
+
+### Adding Translations
+1. Add the key to both `messages/en.json` and `messages/es.json`.
+2. Use `getTranslations` in Server Components or `useTranslations` in Client Components.
+3. Pass the translated string to the component's props.
 
 ## Roadmap
 

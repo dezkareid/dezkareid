@@ -5,6 +5,7 @@ import {
   use,
   Suspense,
 } from 'react';
+import { getTranslations } from 'next-intl/server';
 import {
   getPublicCollectionsByUsername,
 } from '@/lib/collections';
@@ -12,49 +13,55 @@ import { Image } from '@dezkareid/components/react-server';
 import { OwnerProfileActions } from '@/src/features/owner-profile-actions';
 import { SocialShare } from '@/src/features/social-share';
 import styles from './page.module.css';
+import { routing } from '@/app/i18n/routing';
 
 type Properties = {
-  params: Promise<{ username: string }>;
+  params: Promise<{ username: string; locale: string }>;
 };
 
 // User profile pages are rendered on-demand — usernames are not known at build time.
 export function generateStaticParams() {
-  return [{
+  const { locales } = routing;
+  return locales.map(locale => ({
     username: '_placeholder',
-  }];
+    locale,
+  }));
 }
 
 export async function generateMetadata({ params }: Properties): Promise<Metadata> {
   const { username } = await params;
+  const t = await getTranslations('Common.profile.metadata');
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 
   return {
-    title: `${username}'s Collections`,
-    description: `Browse ${username}'s collectible collections on Collectstory.`,
+    title: t('title', { username }),
+    description: t('description', { username }),
     alternates: { canonical: `${baseUrl}/${username}` },
     openGraph: {
-      title: `${username}'s Collections — Collectstory`,
-      description: `Browse ${username}'s collectible collections on Collectstory.`,
+      title: t('title', { username }),
+      description: t('description', { username }),
       url: `${baseUrl}/${username}`,
       type: 'profile',
     },
   };
 }
 
-function ProfileEmptyState({ username }: { username: string }) {
+async function ProfileEmptyState({ username }: { username: string }) {
+  const t = await getTranslations('Common');
   return (
     <div className={styles.empty}>
-      <p className={styles.emptyTitle}>No public collections yet</p>
+      <p className={styles.emptyTitle}>{t('no_public_collections')}</p>
       <p className={styles.emptyDesc}>
         {username}
         {' '}
-        hasn&apos;t made any collections public yet.
+        {t('has_not_made_public')}
       </p>
     </div>
   );
 }
 
 async function ProfileContent({ username }: { username: string }) {
+  const t = await getTranslations('Common.profile');
   const result = await getPublicCollectionsByUsername(username);
   if (!result) notFound();
 
@@ -66,28 +73,27 @@ async function ProfileContent({ username }: { username: string }) {
         {collections.length === 0
           ? <ProfileEmptyState username={username} />
           : collections.map(col => (
-              <Link
-                key={col.id}
-                href={`/${username}/${col.slug}`}
-                className={styles.collectionCard}
-              >
-                <p className={styles.collectionName}>{col.name}</p>
-                {col.description && (
-                  <p className={styles.collectionDesc}>{col.description}</p>
-                )}
-                <p className={styles.collectionMeta}>
-                  {col.item_count}
-                  {' '}
-                  {col.item_count === 1 ? 'item' : 'items'}
-                </p>
-              </Link>
-            ))}
+            <Link
+              key={col.id}
+              href={`/${username}/${col.slug}`}
+              className={styles.collectionCard}
+            >
+              <p className={styles.collectionName}>{col.name}</p>
+              {col.description && (
+                <p className={styles.collectionDesc}>{col.description}</p>
+              )}
+              <p className={styles.collectionMeta}>
+                {t('items_count', { count: col.item_count })}
+              </p>
+            </Link>
+          ))}
       </div>
     </>
   );
 }
 
 async function ProfileHeader({ username }: { username: string }) {
+  const t = await getTranslations('Common.profile');
   const result = await getPublicCollectionsByUsername(username);
   const avatarUrl = result?.avatarUrl;
 
@@ -96,21 +102,21 @@ async function ProfileHeader({ username }: { username: string }) {
       <div className={styles.avatar}>
         {avatarUrl
           ? (
-              <Image
-                strategy="cloudinary"
-                mode="fixed"
-                src={avatarUrl}
-                alt={username}
-                width={72}
-                height={72}
-                className={styles.avatarImage}
-              />
-            )
+            <Image
+              strategy="cloudinary"
+              mode="fixed"
+              src={avatarUrl}
+              alt={username}
+              width={72}
+              height={72}
+              className={styles.avatarImage}
+            />
+          )
           : (
-              <span className={styles.avatarInitial} aria-hidden="true">
-                {username[0].toUpperCase()}
-              </span>
-            )}
+            <span className={styles.avatarInitial} aria-hidden="true">
+              {username[0].toUpperCase()}
+            </span>
+          )}
       </div>
       <div className={styles.headerText}>
         <div className={styles['header__username-wrapper']}>
@@ -119,7 +125,7 @@ async function ProfileHeader({ username }: { username: string }) {
             {username}
           </h1>
           <SocialShare
-            title={`@${username}'s Profile on Collectstory`}
+            title={t('share', { username })}
             baseUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/${username}`}
             entityType="profile"
           />
@@ -136,11 +142,13 @@ async function ProfileHeader({ username }: { username: string }) {
 
 export default function UserProfilePage({ params }: Properties) {
   const { username } = use(params);
+  const t = use(getTranslations('Common.profile'));
+
   return (
     <div className={`container ${styles.page}`}>
       <ProfileHeader username={username} />
 
-      <p className={styles.sectionLabel}>Collections</p>
+      <p className={styles.sectionLabel}>{t('collections')}</p>
 
       <ProfileContent username={username} />
     </div>

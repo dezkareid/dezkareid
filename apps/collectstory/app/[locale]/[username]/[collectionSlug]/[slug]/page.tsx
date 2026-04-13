@@ -6,6 +6,9 @@ import {
   use,
   Suspense,
 } from 'react';
+import { getTranslations } from 'next-intl/server';
+import { Breadcrumb } from '@dezkareid/components/react-server';
+import { routing } from '@/app/i18n/routing';
 import {
   getPublicCollectionBySlug,
   getPublicItemBySlug,
@@ -13,7 +16,6 @@ import {
   type PublicItemDetail,
   type LinkedStore,
 } from '@/lib/collections';
-import { Breadcrumb } from '@dezkareid/components/react-server';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { generateCollectionItemSchema } from '@/lib/seo';
 import { getBreadcrumbSchema } from '@/src/shared/lib/schema/breadcrumb';
@@ -30,20 +32,23 @@ import { WhereToBuy } from '@/src/features/where-to-buy';
 import styles from './page.module.css';
 
 type Properties = {
-  params: Promise<{ username: string; collectionSlug: string; slug: string }>;
+  params: Promise<{ username: string; collectionSlug: string; slug: string; locale: string }>;
 };
 
 // Item pages are rendered on-demand — slugs are not known at build time.
 export function generateStaticParams() {
-  return [{
+  const { locales } = routing;
+  return locales.map(locale => ({
     username: '_placeholder',
     collectionSlug: '_placeholder',
     slug: '_placeholder',
-  }];
+    locale,
+  }));
 }
 
 export async function generateMetadata({ params }: Properties): Promise<Metadata> {
   const { username, collectionSlug, slug } = await params;
+  const t = await getTranslations('Common.profile.item.metadata');
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 
   const collectionResult = await getPublicCollectionBySlug(username, collectionSlug);
@@ -54,18 +59,19 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
 
   const brand = item.lines?.brands?.name;
   const line = item.lines?.name;
+  const collectionName = collectionResult.collection.name;
 
   const description = item.description
     ?? (brand && line
-      ? `${item.name} from ${line} by ${brand}. Part of ${username}'s ${collectionResult.collection.name} collection on Collectstory.`
-      : `${item.name} — part of ${username}'s ${collectionResult.collection.name} collection on Collectstory.`);
+      ? t('description', { itemName: item.name, line, brand, username, collectionName })
+      : t('description_fallback', { itemName: item.name, username, collectionName }));
 
   return {
-    title: `${item.name} — ${collectionResult.collection.name} by ${username}`,
+    title: t('title', { itemName: item.name, collectionName, username }),
     description,
     alternates: { canonical: `${baseUrl}/${username}/${collectionSlug}/${slug}` },
     openGraph: {
-      title: `${item.name} — ${collectionResult.collection.name} by ${username} — Collectstory`,
+      title: t('title', { itemName: item.name, collectionName, username }),
       description,
       url: `${baseUrl}/${username}/${collectionSlug}/${slug}`,
       images: item.image_url ? [{ url: item.image_url }] : [],
@@ -80,7 +86,8 @@ function resolveVariantLabel(item: PublicItemDetail): string | undefined {
   return match?.display_name ?? item.variant;
 }
 
-function ItemMetaDetails({ item }: { item: PublicItemDetail }) {
+async function ItemMetaDetails({ item }: { item: PublicItemDetail }) {
+  const t = await getTranslations('Common.profile.item.meta');
   const brand = item.lines?.brands?.name;
   const line = item.lines?.name;
   const category = item.lines?.categories?.name;
@@ -89,19 +96,19 @@ function ItemMetaDetails({ item }: { item: PublicItemDetail }) {
 
   type MetaRow = { label: string; value: React.ReactNode };
   const rowCandidates: Array<MetaRow | undefined> = [
-    brand ? { label: 'Brand', value: brand } : undefined,
-    line ? { label: 'Line', value: line } : undefined,
-    variantLabel ? { label: 'Variant', value: variantLabel } : undefined,
-    category ? { label: 'Category', value: category } : undefined,
+    brand ? { label: t('brand'), value: brand } : undefined,
+    line ? { label: t('line'), value: line } : undefined,
+    variantLabel ? { label: t('variant'), value: variantLabel } : undefined,
+    category ? { label: t('category'), value: category } : undefined,
     franchise
       ? {
-          label: 'Franchise',
-          value: (
-            <Link href={`/franchises/${franchise.slug}`} className={styles['item-page__meta-link']}>
-              {franchise.name}
-            </Link>
-          ),
-        }
+        label: t('franchise'),
+        value: (
+          <Link href={`/franchises/${franchise.slug}`} className={styles['item-page__meta-link']}>
+            {franchise.name}
+          </Link>
+        ),
+      }
       : undefined,
   ];
   const rows = rowCandidates.filter((row): row is MetaRow => row !== undefined);
@@ -163,19 +170,22 @@ async function getCatalogStoresForItem(catalogItemId: string): Promise<CatalogSt
   });
 }
 
-function ItemMeta({
+async function ItemMeta({
   item,
   username,
   collectionSlug,
   linkedStores,
   catalogStores,
+  locale,
 }: {
   item: PublicItemDetail;
   username: string;
   collectionSlug: string;
   linkedStores: LinkedStore[];
   catalogStores: CatalogStore[];
+  locale: string;
 }) {
+  const t = await getTranslations('Common.profile.item');
   const showWhereToFind = linkedStores.length > 0;
   const isPublic = item.visibility === 'public';
 
@@ -187,7 +197,7 @@ function ItemMeta({
         <h1 className={styles['item-page__name']}>{item.name}</h1>
         <div className={styles['item-page__actions']}>
           <SocialShare
-            title={`${item.name} from ${collectionSlug} by ${username} on Collectstory`}
+            title={t('share', { itemName: item.name, collectionSlug, username })}
             baseUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/${username}/${collectionSlug}/${item.slug}`}
             entityType="item"
           />
@@ -212,9 +222,9 @@ function ItemMeta({
 
       {item.date_acquired && (
         <time className={styles['item-page__date']} dateTime={item.date_acquired}>
-          Acquired
+          {t('status.acquired')}
           {' '}
-          {new Date(item.date_acquired).toLocaleDateString('en-US', {
+          {new Date(item.date_acquired).toLocaleDateString(locale, {
             year: 'numeric',
             month: 'long',
             day: 'numeric',
@@ -250,10 +260,12 @@ async function ItemDetail({
   username,
   collectionSlug,
   slug,
+  locale,
 }: {
   username: string;
   collectionSlug: string;
   slug: string;
+  locale: string;
 }) {
   const collectionResult = await getPublicCollectionBySlug(username, collectionSlug);
 
@@ -308,6 +320,7 @@ async function ItemDetail({
         collectionSlug={collectionSlug}
         linkedStores={linkedStores}
         catalogStores={catalogStores}
+        locale={locale}
       />
     </div>
   );
@@ -354,11 +367,11 @@ async function BreadcrumbNav({
 }
 
 export default function ItemDetailPage({ params }: Properties) {
-  const { username, collectionSlug, slug } = use(params);
+  const { username, collectionSlug, slug, locale } = use(params);
   return (
     <div className={styles['item-page']}>
       <BreadcrumbNav username={username} collectionSlug={collectionSlug} slug={slug} />
-      <ItemDetail username={username} collectionSlug={collectionSlug} slug={slug} />
+      <ItemDetail username={username} collectionSlug={collectionSlug} slug={slug} locale={locale} />
     </div>
   );
 }

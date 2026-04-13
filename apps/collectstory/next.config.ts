@@ -43,5 +43,5 @@ const nextConfig: NextConfig = {
     ];
   },
 };
-console.log('withNextIntl(nextConfig)', withNextIntl(nextConfig)?.i18n);
+
 export default withNextIntl(nextConfig);

@@ -61,6 +61,11 @@ We strictly use semantic design tokens from `@dezkareid/design-tokens` to ensure
   - Border Radius: `var(--border-radius-small)` (`0.25rem`).
   - Focused State: `2px solid var(--color-primary)` (Light: `#2563eb` / Dark: `#dbeafe`).
 
+## Translation Strategy
+- **Namespace-based**: Use namespaces like `Landing`, `Profile`, or `Common` to organize keys.
+- **Component Agnostic**: Components should not import i18n hooks if they are intended to be reusable. Pass translated strings via props.
+- **Dynamic Values**: Use ICU message format for pluralization and variables (e.g., `{count} {count, plural, =1 {item} other {items}}`).
+
 ## Do’s and Don’ts (Guardrails)
 - **Do:** Use semantic tokens to ensure seamless light/dark mode transitions.
 - **Do:** Prioritize accessibility by ensuring all text elements use `primary` or `secondary` text tokens.
