@@ -52,3 +52,25 @@
   text-transform: uppercase;
   letter-spacing: var(--font-letter-spacing-widest, 0.05em);
 }
+
+.skeletonNumber {
+  height: 2.5rem;
+  width: 80px;
+  background-color: var(--color-background-tertiary);
+  border-radius: 4px;
+  margin: 0 auto;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@media (min-width: 60rem) {
+  .skeletonNumber {
+    height: 3.5rem;
+    width: 120px;
+  }
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
