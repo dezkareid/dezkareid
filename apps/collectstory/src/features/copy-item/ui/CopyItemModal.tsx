@@ -115,7 +115,7 @@ function useCopyItemModalActions(
       onClose();
       // Navigation is handled by the server action redirect if applicable,
       // but here we just refresh to show the new item.
-      window.location.href = `/${state.username}/${state.collectionSlug}/${state.itemSlug}`;
+      globalThis.location.href = `/${state.username}/${state.collectionSlug}/${state.itemSlug}`;
     }
   }, [onClose]);
 

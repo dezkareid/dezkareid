@@ -43,7 +43,7 @@ export function Features() {
           <p className={styles.subtitle}>{t('header.subtitle')}</p>
         </div>
         <div className={styles.grid}>
-          {filteredFeatures.map(feature => {
+          {filteredFeatures.map((feature) => {
             const key = featureKeys[feature.title];
             return (
               <FeatureItem

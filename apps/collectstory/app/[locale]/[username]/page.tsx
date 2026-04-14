@@ -73,20 +73,20 @@ async function ProfileContent({ username }: { username: string }) {
         {collections.length === 0
           ? <ProfileEmptyState username={username} />
           : collections.map(col => (
-            <Link
-              key={col.id}
-              href={`/${username}/${col.slug}`}
-              className={styles.collectionCard}
-            >
-              <p className={styles.collectionName}>{col.name}</p>
-              {col.description && (
-                <p className={styles.collectionDesc}>{col.description}</p>
-              )}
-              <p className={styles.collectionMeta}>
-                {t('items_count', { count: col.item_count })}
-              </p>
-            </Link>
-          ))}
+              <Link
+                key={col.id}
+                href={`/${username}/${col.slug}`}
+                className={styles.collectionCard}
+              >
+                <p className={styles.collectionName}>{col.name}</p>
+                {col.description && (
+                  <p className={styles.collectionDesc}>{col.description}</p>
+                )}
+                <p className={styles.collectionMeta}>
+                  {t('items_count', { count: col.item_count })}
+                </p>
+              </Link>
+            ))}
       </div>
     </>
   );
@@ -102,21 +102,21 @@ async function ProfileHeader({ username }: { username: string }) {
       <div className={styles.avatar}>
         {avatarUrl
           ? (
-            <Image
-              strategy="cloudinary"
-              mode="fixed"
-              src={avatarUrl}
-              alt={username}
-              width={72}
-              height={72}
-              className={styles.avatarImage}
-            />
-          )
+              <Image
+                strategy="cloudinary"
+                mode="fixed"
+                src={avatarUrl}
+                alt={username}
+                width={72}
+                height={72}
+                className={styles.avatarImage}
+              />
+            )
           : (
-            <span className={styles.avatarInitial} aria-hidden="true">
-              {username[0].toUpperCase()}
-            </span>
-          )}
+              <span className={styles.avatarInitial} aria-hidden="true">
+                {username[0].toUpperCase()}
+              </span>
+            )}
       </div>
       <div className={styles.headerText}>
         <div className={styles['header__username-wrapper']}>
