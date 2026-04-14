@@ -102,6 +102,11 @@
       "description": "El hogar moderno para coleccionistas. Organiza, rastrea y muestra tus cartas coleccionables, figuras de acción y hallazgos raros en una bóveda digital encantadora.",
       "cta": "Comienza tu colección"
     },
+    "Metrics": {
+      "total_collections": "Colecciones Totales",
+      "total_items": "Piezas Totales",
+      "total_users": "Coleccionistas Activos"
+    },
     "Stats": {
       "items_cataloged": "Artículos Catalogados",
       "active_vaults": "Bóvedas Activas",
