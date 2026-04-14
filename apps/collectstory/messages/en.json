@@ -102,6 +102,11 @@
       "description": "The modern home for collectors. Organise, track, and showcase your trading cards, action figures, and rare finds in a delightful digital vault.",
       "cta": "Start your collection"
     },
+    "Metrics": {
+      "total_collections": "Total Collections",
+      "total_items": "Total Items",
+      "total_users": "Active Collectors"
+    },
     "Stats": {
       "items_cataloged": "Items Cataloged",
       "active_vaults": "Active Vaults",
