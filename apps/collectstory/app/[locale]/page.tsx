@@ -1,7 +1,8 @@
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { Hero } from '@/components/landing/Hero';
-import { Metrics } from '@/components/landing/Metrics';
+import { Metrics, MetricsSkeleton } from '@/components/landing/Metrics';
 import { LatestArrivals } from '@/components/landing/LatestArrivals';
 import { Features } from '@/components/landing/Features';
 import { CallToAction } from '@/components/landing/CallToAction';
@@ -40,7 +41,9 @@ export default function HomePage() {
     <>
       <div>
         <Hero />
-        <Metrics />
+        <Suspense fallback={<MetricsSkeleton />}>
+          <Metrics />
+        </Suspense>
         <LatestArrivals />
         <Features />
         <CallToAction />

@@ -62,6 +62,15 @@
   animation: pulse 1.5s infinite ease-in-out;
 }
 
+.skeletonLabel {
+  height: 1rem;
+  width: 100px;
+  background-color: var(--color-background-tertiary);
+  border-radius: 4px;
+  margin: var(--spacing-8) auto 0;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
 @media (min-width: 60rem) {
   .skeletonNumber {
     height: 3.5rem;
