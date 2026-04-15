@@ -81,6 +81,12 @@ importers:
       '@dezkareid/eslint-plugin-web':
         specifier: workspace:*
         version: link:../../linters/eslint-plugin-web
+      '@testing-library/jest-dom':
+        specifier: ^6.9.1
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: ^16.3.2
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@types/node':
         specifier: 25.0.10
         version: 25.0.10
@@ -96,6 +102,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: 5.1.4
         version: 5.1.4(vite@7.3.1(@types/node@25.0.10)(jiti@2.6.0)(less@4.6.4)(lightningcss@1.29.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0))
+      '@vitest/coverage-v8':
+        specifier: 4.0.18
+        version: 4.0.18(@vitest/browser@4.0.18(vite@7.3.1(@types/node@25.0.10)(jiti@2.6.0)(less@4.6.4)(lightningcss@1.29.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0))(vitest@4.0.18))(vitest@4.0.18)
       eslint:
         specifier: 9.39.2
         version: 9.39.2(jiti@2.6.0)
@@ -19606,7 +19615,7 @@ snapshots:
       magicast: 0.5.2
       obug: 2.1.1
       std-env: 3.10.0
-      tinyrainbow: 3.0.3
+      tinyrainbow: 3.1.0
       vitest: 4.0.18(@opentelemetry/api@1.9.1)(@types/node@24.10.1)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.0)(jsdom@29.0.1)(less@4.6.4)(lightningcss@1.29.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)
     optionalDependencies:
       '@vitest/browser': 4.0.18(vite@7.3.1(@types/node@24.10.1)(jiti@2.6.0)(less@4.6.4)(lightningcss@1.29.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0))(vitest@4.0.18)
@@ -19622,8 +19631,8 @@ snapshots:
       magicast: 0.5.2
       obug: 2.1.1
       std-env: 3.10.0
-      tinyrainbow: 3.0.3
-      vitest: 4.0.18(@opentelemetry/api@1.9.1)(@types/node@25.0.10)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.0)(jsdom@29.0.1)(less@4.6.4)(lightningcss@1.29.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)
+      tinyrainbow: 3.1.0
+      vitest: 4.0.18(@opentelemetry/api@1.9.1)(@types/node@25.0.10)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.0)(jsdom@27.4.0)(less@4.6.4)(lightningcss@1.29.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)
     optionalDependencies:
       '@vitest/browser': 4.0.18(vite@7.3.1(@types/node@25.0.10)(jiti@2.6.0)(less@4.6.4)(lightningcss@1.29.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0))(vitest@4.0.18)
 

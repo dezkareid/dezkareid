@@ -426,12 +426,55 @@ No global state library is used. State is managed at the closest responsible lay
 
 ## Testing Conventions
 
-> Tests are not yet established for this app. When adding tests:
-> - Use **Vitest** (monorepo standard) with **React Testing Library**.
-> - Place test files adjacent to the component/module: `ComponentName.test.tsx`.
-> - Test Server Components by rendering them in a Node environment (no browser APIs).
-> - Mock Supabase clients at the module level using `vi.mock`.
-> - Do not test implementation details — assert on rendered output and user interactions.
+This project uses **Vitest** with **React Testing Library** and **jsdom**.
+
+### Principles
+- **BDD & Table-Driven**: Use `it.each` for multi-case scenarios to keep tests declarative.
+- **Component-Focused**: Prioritize user-facing behavior over implementation details.
+- **Simplicity**: Keep tests simple. Mock complex dependencies (like Supabase) to focus on UI logic.
+- **FSD Alignment**: Place test files adjacent to the component: `ComponentName.test.tsx`.
+
+### Custom Render
+Always use the custom `render` from `@/src/shared/lib/testing/render` to ensure common providers (like `next-intl`) are available.
+
+```tsx
+import { render, screen } from '@/src/shared/lib/testing/render';
+import { MyComponent } from './MyComponent';
+
+it('should render', () => {
+  render(<MyComponent />);
+  expect(screen.getByText('Hello')).toBeInTheDocument();
+});
+```
+
+### Mocking Examples
+
+**Next.js APIs:**
+Mocks for `next/router` and `next/navigation` are pre-configured in `vitest.setup.ts`.
+
+**Supabase:**
+Standard mocks for Supabase clients are available in `vitest.setup.ts`. If you need custom behavior:
+```tsx
+import { vi } from 'vitest';
+import { createClient } from '@/lib/supabase/client';
+
+vi.mock('@/lib/supabase/client', () => ({
+  createClient: vi.fn(() => ({
+    auth: { getUser: vi.fn(async () => ({ data: { user: { id: '123' } } })) }
+  }))
+}));
+```
+
+### Running Tests
+Always run tasks from the monorepo root via Turbo:
+
+```bash
+# Run all tests
+pnpm turbo run test --filter=@dezkareid/collectstory
+
+# Run with coverage (50% threshold enforced)
+pnpm turbo run test:coverage --filter=@dezkareid/collectstory
+```
 
 ## Debugging & Troubleshooting
 
