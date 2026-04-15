@@ -24,6 +24,28 @@
     "has_not_made_public": "no ha hecho pública ninguna colección aún.",
     "no_items_in_collection": "No hay artículos en esta colección",
     "items_will_appear_here": "Los artículos añadidos a esta colección aparecerán aquí.",
+    "owner_actions": {
+      "add_item": "+ Añadir artículo",
+      "delete": "Eliminar",
+      "deleting": "Eliminando…",
+      "delete_item": {
+        "modal_title": "Eliminar artículo",
+        "message": "¿Eliminar {itemName}? Esta acción no se puede deshacer.",
+        "aria_label": "Eliminar {name}"
+      },
+      "delete_collection": {
+        "modal_title": "Eliminar colección",
+        "message_with_items": "¿Eliminar {collectionName}? {count, plural, =1 {1 artículo} other {{count} artículos}} de esta colección se eliminarán permanentemente y no se podrán recuperar.",
+        "message_empty": "¿Eliminar {collectionName}? Esta acción no se puede deshacer.",
+        "confirm_button": "Eliminar colección",
+        "aria_label": "Eliminar {name}"
+      },
+      "empty_state": {
+        "title": "Tu colección está vacía",
+        "description": "Añade tu primer artículo para empezar."
+      },
+      "items_count": "{count, plural, =1 {1 artículo} other {{count} artículos}}"
+    },
     "profile": {
       "metadata": {
         "title": "Colecciones de {username}",
@@ -101,6 +123,11 @@
       "title": "Cada pieza tiene una historia.",
       "description": "El hogar moderno para coleccionistas. Organiza, rastrea y muestra tus cartas coleccionables, figuras de acción y hallazgos raros en una bóveda digital encantadora.",
       "cta": "Comienza tu colección"
+    },
+    "Metrics": {
+      "total_collections": "Colecciones Totales",
+      "total_items": "Piezas Totales",
+      "total_users": "Coleccionistas Activos"
     },
     "Stats": {
       "items_cataloged": "Artículos Catalogados",

@@ -1,8 +1,9 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { AddItemModal, type AddItemModalHandle } from '@/components/AddItemModal/AddItemModal';
+import { DeleteCollectionModal } from './DeleteCollectionModal';
 import styles from './OwnerCollectionActions.module.css';
 
 type Brand = { id: string; name: string };
@@ -12,6 +13,8 @@ type Properties = {
   username: string;
   collectionSlug: string;
   collectionId: string;
+  collectionName: string;
+  itemCount: number;
   brands: Brand[];
   franchises: Franchise[];
 };
@@ -20,10 +23,13 @@ export function OwnerCollectionActionsClient({
   username,
   collectionSlug,
   collectionId,
+  collectionName,
+  itemCount,
   brands,
   franchises,
 }: Properties) {
   const modalRef = useRef<AddItemModalHandle>(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   return (
     <div className={styles.actions}>
@@ -32,6 +38,16 @@ export function OwnerCollectionActionsClient({
         brands={brands}
         franchises={franchises}
         collectionId={collectionId}
+        username={username}
+        collectionSlug={collectionSlug}
+      />
+      <DeleteCollectionModal
+        open={deleteOpen}
+        collectionId={collectionId}
+        collectionName={collectionName}
+        itemCount={itemCount}
+        username={username}
+        onClose={() => setDeleteOpen(false)}
       />
       <button
         type="button"
@@ -46,6 +62,13 @@ export function OwnerCollectionActionsClient({
       >
         Edit
       </Link>
+      <button
+        type="button"
+        className={styles.deleteButton}
+        onClick={() => setDeleteOpen(true)}
+      >
+        Delete
+      </button>
     </div>
   );
 }

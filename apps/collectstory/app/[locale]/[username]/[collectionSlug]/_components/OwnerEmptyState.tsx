@@ -9,16 +9,18 @@ type Franchise = { id: string; name: string };
 
 type Properties = {
   collectionId: string;
+  username: string;
+  collectionSlug: string;
   brands: Brand[];
   franchises: Franchise[];
 };
 
-export function OwnerEmptyState({ collectionId, brands, franchises }: Properties) {
+export function OwnerEmptyState({ collectionId, username, collectionSlug, brands, franchises }: Properties) {
   const modalRef = useRef<AddItemModalHandle>(null);
 
   return (
     <div className={styles.container}>
-      <AddItemModal ref={modalRef} brands={brands} franchises={franchises} collectionId={collectionId} />
+      <AddItemModal ref={modalRef} brands={brands} franchises={franchises} collectionId={collectionId} username={username} collectionSlug={collectionSlug} />
       <p className={styles.title}>Your collection is empty</p>
       <p className={styles.desc}>Add your first item to get started.</p>
       <button

@@ -10,7 +10,7 @@ import {
   getPublicCollectionsByUsername,
 } from '@/lib/collections';
 import { Image } from '@dezkareid/components/react-server';
-import { OwnerProfileActions } from '@/src/features/owner-profile-actions';
+import { OwnerProfileActions, OwnerProfileGrid } from '@/src/features/owner-profile-actions';
 import { SocialShare } from '@/src/features/social-share';
 import styles from './page.module.css';
 import { routing } from '@/app/i18n/routing';
@@ -150,7 +150,17 @@ export default function UserProfilePage({ params }: Properties) {
 
       <p className={styles.sectionLabel}>{t('collections')}</p>
 
-      <ProfileContent username={username} />
+      {/* Public cached grid — visible to visitors and search engines */}
+      <div className={styles.publicGrid}>
+        <ProfileContent username={username} />
+      </div>
+
+      {/* Owner grid with delete — streams in and hides the public grid via CSS :has() */}
+      <Suspense fallback={undefined}>
+        <div className={styles.ownerGridWrapper}>
+          <OwnerProfileGrid username={username} />
+        </div>
+      </Suspense>
     </div>
   );
 }

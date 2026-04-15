@@ -45,3 +45,24 @@
 .editLink:hover {
   opacity: 0.88;
 }
+
+.deleteButton {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-8) var(--spacing-16);
+  background-color: transparent;
+  /* TODO(design-system): needs token for destructive text color */
+  color: #dc2626;
+  border: 1px solid #dc2626;
+  border-radius: var(--border-radius-medium);
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s ease;
+}
+
+.deleteButton:hover {
+  opacity: 0.8;
+}
