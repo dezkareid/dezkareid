@@ -26,13 +26,23 @@ export async function OwnerCollectionActions({ username, collectionSlug }: Prope
   const result = await getPublicCollectionBySlug(username, collectionSlug);
   if (!result || user.id !== result.userId) return;
 
-  const [brands, franchises] = await Promise.all([getAllBrands(), getAllFranchises()]);
+  const [brands, franchises, itemCountResult] = await Promise.all([
+    getAllBrands(),
+    getAllFranchises(),
+    supabase
+      .from('collection_items')
+      .select('id', { count: 'exact', head: true })
+      .eq('collection_id', result.collection.id),
+  ]);
+  const itemCount = itemCountResult.count ?? 0;
 
   return (
     <OwnerCollectionActionsClient
       username={username}
       collectionSlug={collectionSlug}
       collectionId={result.collection.id}
+      collectionName={result.collection.name}
+      itemCount={itemCount}
       brands={brands}
       franchises={franchises}
     />
