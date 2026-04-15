@@ -107,24 +107,18 @@ type CollectionItemState
     | { success: true }
     | undefined;
 
-export async function createCollectionItem(
-  _previousState: CollectionItemState,
+type InsertItemResult = { error: { code: string } } | { collection_id: string; username: string | undefined; collectionSlug: string | undefined };
+
+async function insertCollectionItem(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string,
   formData: FormData,
-): Promise<CollectionItemState> {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: 'Not authenticated.' };
-
+): Promise<InsertItemResult> {
   const name = getOptional(formData, 'name') ?? '';
-  if (!name) return { error: 'Name is required.' };
-
-  const slug = await generateUniqueSlug(supabase, user.id, name);
-
-  const collection_id = getOptional(formData, 'collection_id');
-  if (!collection_id) return { error: 'Collection is required.' };
-
+  const slug = await generateUniqueSlug(supabase, userId, name);
+  const collection_id = getOptional(formData, 'collection_id') ?? '';
   const { error } = await supabase.from('collection_items').insert({
-    user_id: user.id,
+    user_id: userId,
     collection_id,
     name,
     slug,
@@ -136,21 +130,43 @@ export async function createCollectionItem(
     date_acquired: getOptional(formData, 'date_acquired'),
     visibility: getOptional(formData, 'visibility') ?? 'public',
   });
+  if (error) return { error };
+  return {
+    collection_id,
+    username: getOptional(formData, 'username'),
+    collectionSlug: getOptional(formData, 'collection_slug'),
+  };
+}
 
-  if (error) {
-    if (error.code === '23505') return { error: 'An item with this name already exists in your collection.' };
-    if (error.code === '23503') return { error: 'The selected brand or line no longer exists. Please refresh and try again.' };
-    return { error: 'Failed to save item. Please try again.' };
-  }
+function mapInsertError(code: string): CollectionItemState {
+  if (code === '23505') return { error: 'An item with this name already exists in your collection.' };
+  if (code === '23503') return { error: 'The selected brand or line no longer exists. Please refresh and try again.' };
+  return { error: 'Failed to save item. Please try again.' };
+}
 
-  const username = getOptional(formData, 'username');
-  const collectionSlug = getOptional(formData, 'collection_slug');
+export async function createCollectionItem(
+  _previousState: CollectionItemState,
+  formData: FormData,
+): Promise<CollectionItemState> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated.' };
+
+  const name = getOptional(formData, 'name') ?? '';
+  if (!name) return { error: 'Name is required.' };
+  const collection_id = getOptional(formData, 'collection_id');
+  if (!collection_id) return { error: 'Collection is required.' };
+
+  const result = await insertCollectionItem(supabase, user.id, formData);
+  if ('error' in result) return mapInsertError(result.error.code);
+
+  const { username, collectionSlug } = result;
   if (username && collectionSlug) {
     revalidatePath(`/${username}/${collectionSlug}`);
     revalidateTag(`collection:${username}:${collectionSlug}`, 'max');
   }
-  // Fallback: always invalidate by collectionId (always present in form data)
   revalidateTag(`collection-items:${collection_id}`, 'max');
+  if (username) revalidateTag(`profile:${username}`, 'max');
   return { success: true };
 }
 
@@ -170,40 +186,18 @@ export async function createCollectionItemSilent(
 
   const name = getOptional(formData, 'name') ?? '';
   if (!name) return { error: 'Name is required.' };
-
-  const slug = await generateUniqueSlug(supabase, user.id, name);
-
   const collection_id = getOptional(formData, 'collection_id');
   if (!collection_id) return { error: 'Collection is required.' };
 
-  const { error } = await supabase.from('collection_items').insert({
-    user_id: user.id,
-    collection_id,
-    name,
-    slug,
-    image_url: getOptional(formData, 'image_url'),
-    line_id: getOptional(formData, 'line_id'),
-    franchise_id: getOptional(formData, 'franchise_id'),
-    variant: getOptional(formData, 'variant') ?? null, // eslint-disable-line unicorn/no-null -- null required to clear value in database
-    description: getOptional(formData, 'description'),
-    date_acquired: getOptional(formData, 'date_acquired'),
-    visibility: getOptional(formData, 'visibility') ?? 'public',
-  });
-
-  if (error) {
-    if (error.code === '23505') return { error: 'An item with this name already exists in your collection.' };
-    if (error.code === '23503') return { error: 'The selected brand or line no longer exists. Please refresh and try again.' };
-    return { error: 'Failed to save item. Please try again.' };
-  }
+  const result = await insertCollectionItem(supabase, user.id, formData);
+  if ('error' in result) return mapInsertError(result.error.code);
 
   // Only invalidate tags — no revalidatePath. The caller (OwnerItemGrid's
   // handleAddSuccess) fetches fresh items client-side so no RSC refresh needed.
-  const username = getOptional(formData, 'username');
-  const collectionSlug = getOptional(formData, 'collection_slug');
-  if (username && collectionSlug) {
-    revalidateTag(`collection:${username}:${collectionSlug}`, 'max');
-  }
+  const { username, collectionSlug } = result;
+  if (username && collectionSlug) revalidateTag(`collection:${username}:${collectionSlug}`, 'max');
   revalidateTag(`collection-items:${collection_id}`, 'max');
+  if (username) revalidateTag(`profile:${username}`, 'max');
   return { success: true };
 }
 
@@ -525,6 +519,8 @@ export async function deleteItem(
   // refresh that briefly shows the stale public grid (the flash).
   revalidateTag(`collection:${username}:${collectionSlug}`, 'max');
   revalidateTag(`collection-items:${username}:${collectionSlug}`, 'max');
+  // Invalidate the profile page so item counters on collection cards update.
+  revalidateTag(`profile:${username}`, 'max');
 
   return { success: true };
 }

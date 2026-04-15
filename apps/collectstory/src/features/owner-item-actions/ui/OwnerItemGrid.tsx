@@ -1,12 +1,13 @@
 'use client';
 
-import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { Image } from '@dezkareid/components/react-server';
 import { AddItemModal, type AddItemModalHandle } from '@/components/AddItemModal/AddItemModal';
 import { Trash } from '@dezkareid/icons/react';
 import { getCollectionItems, deleteItem, createCollectionItemSilent } from '@/app/[locale]/[username]/[collectionSlug]/actions';
+import { OPEN_ADD_ITEM_MODAL_EVENT } from '@/src/shared/lib/owner-events';
 import type { OwnerItem } from '../model/types';
 import { DeleteItemModal } from './DeleteItemModal';
 import styles from './OwnerItemGrid.module.css';
@@ -101,6 +102,13 @@ export function OwnerItemGrid({
   const tCommon = useTranslations('Common.profile.collection');
   const addModalRef = useRef<AddItemModalHandle>(null);
 
+  // Open this grid's modal when the header "+ Add Item" button fires the event.
+  useEffect(() => {
+    const handler = () => addModalRef.current?.open();
+    globalThis.addEventListener(OPEN_ADD_ITEM_MODAL_EVENT, handler);
+    return () => globalThis.removeEventListener(OPEN_ADD_ITEM_MODAL_EVENT, handler);
+  }, []);
+
   // Single state object — itemMap + itemIds updated together to avoid the
   // two-render cycle that caused OwnerItemCard to re-render unnecessarily.
   const [grid, setGrid] = useState<GridState>(() => buildInitialState(initialItems));
@@ -113,7 +121,7 @@ export function OwnerItemGrid({
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Derive the visible items list from the ordered id list + map.
-  // Only recomputes when itemIds or itemMap changes.
+  // Only recomputes when grid changes.
   const items = useMemo(
     () => grid.itemIds
       .map(id => grid.itemMap.get(id))
@@ -123,12 +131,11 @@ export function OwnerItemGrid({
 
   const handleAddSuccess = useCallback(async () => {
     const fresh = await getCollectionItems(collectionId);
-    // Merge fresh items — preserve object identity for items that haven't changed.
+    if (!fresh || fresh.length === 0) return;
     setGrid((previous) => {
       const nextMap = new Map(previous.itemMap);
       for (const item of fresh as OwnerItem[]) {
         const existing = previous.itemMap.get(item.id);
-        // Only update the reference if the data actually changed.
         const changed = !existing
           || existing.name !== item.name
           || existing.image_url !== item.image_url
@@ -151,9 +158,6 @@ export function OwnerItemGrid({
     if (!deleteTarget) return;
     const { itemId } = deleteTarget;
 
-    // Read current state via ref — avoids capturing itemIds/itemMap in deps
-    // which would recreate this callback (and OwnerItemCard's onDelete prop)
-    // on every state change.
     const snapshot = gridRef.current;
 
     // Batch: close modal + optimistic remove + mark pending
@@ -171,8 +175,6 @@ export function OwnerItemGrid({
       // Roll back to snapshot taken before the optimistic update
       setGrid(snapshot);
     }
-  // username and collectionSlug are stable route params — no need to list
-  // itemIds/itemMap since we read via ref to avoid re-creating this callback.
   }, [deleteTarget, username, collectionSlug]);
 
   return (
@@ -231,17 +233,6 @@ export function OwnerItemGrid({
             ))}
       </div>
 
-      {items.length > 0 && (
-        <div className={styles['owner-grid__add-bar']}>
-          <button
-            type="button"
-            className={styles['owner-grid__add-btn']}
-            onClick={() => addModalRef.current?.open()}
-          >
-            {t('add_item')}
-          </button>
-        </div>
-      )}
     </>
   );
 }

@@ -37,6 +37,9 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin: 0;
+  margin-top: auto;
+  padding-top: var(--spacing-8);
+  border-top: 1px solid var(--color-background-secondary);
 }
 
 /* Delete button — structure */

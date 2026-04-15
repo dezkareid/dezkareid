@@ -3,7 +3,7 @@ import nextConfig from '@dezkareid/eslint-plugin-web/next';
 
 export default [
   {
-    ignores: ['dist/', 'node_modules/', '.next/', 'next-env.d.ts', 'scripts/'],
+    ignores: ['dist/', 'node_modules/', '.next/', 'next-env.d.ts', 'scripts/', 'coverage/'],
   },
   ...tsBase,
   ...nextConfig,

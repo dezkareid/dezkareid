@@ -166,8 +166,8 @@ export async function getCollectionFirstImage(
     .select('image_url')
     .eq('collection_id', collectionId)
     .eq('visibility', 'public')
-    .not('image_url', 'is', undefined)
-    .order('created_at', { ascending: false })
+    .not('image_url', 'is', null)
+    .order('created_at', { ascending: true })
     .limit(1)
     .maybeSingle();
 
