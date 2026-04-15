@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from 'next-intl';
 
 // Mocking dependencies
 vi.mock('@dezkareid/components/react', () => ({
+  // eslint-disable-next-line @next/next/no-img-element
   Image: ({ alt }: { alt: string }) => <img alt={alt} data-testid="image" />,
 }));
 

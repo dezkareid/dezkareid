@@ -55,6 +55,18 @@ describe('SEO Schema Utilities', () => {
       expect(creator.name).toBe(username);
       expect(schema.acquireLicensePage).toBe(`${baseUrl}/${username}/${collectionSlug}/${mockItem.slug}`);
     });
+
+    it('should handle missing description', () => {
+      const itemWithoutDesc = { ...mockItem, description: undefined };
+      const schema = generateCollectionItemSchema({
+        item: itemWithoutDesc,
+        username,
+        collectionSlug,
+        baseUrl,
+      });
+
+      expect(schema.description).toBeUndefined();
+    });
   });
 
   describe('generateCollectionListingSchema', () => {
@@ -81,6 +93,18 @@ describe('SEO Schema Utilities', () => {
       expect(firstElement.item).toBeDefined();
       expect(firstElement.item['@type']).toBe('ImageObject');
       expect(firstElement.item.name).toBe(mockItem.name);
+    });
+
+    it('should handle missing collection description', () => {
+      const collectionWithoutDesc = { ...mockCollection, description: undefined };
+      const schema = generateCollectionListingSchema({
+        collection: collectionWithoutDesc,
+        username,
+        items: [mockItem],
+        baseUrl,
+      });
+
+      expect(schema.description).toBeUndefined();
     });
   });
 });

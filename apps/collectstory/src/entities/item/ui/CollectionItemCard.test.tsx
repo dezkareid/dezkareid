@@ -14,6 +14,7 @@ vi.mock('react', async (importOriginal) => {
 // Mocking @dezkareid/components to avoid issues with server components in jsdom
 vi.mock('@dezkareid/components/react-server', () => ({
   Tag: ({ children }: { children: React.ReactNode }) => <span data-testid="tag">{children}</span>,
+  // eslint-disable-next-line @next/next/no-img-element
   Image: ({ alt }: { alt: string }) => <img alt={alt} data-testid="image" />,
 }));
 
