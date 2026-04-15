@@ -1,0 +1,229 @@
+/* ─── Owner Item Grid — structure ─────────────────────────────────────────── */
+
+.owner-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-24);
+}
+
+@media (max-width: 1024px) {
+  .owner-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .owner-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-16);
+  }
+}
+
+@media (max-width: 420px) {
+  .owner-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Item card — structure ────────────────────────────────────────────────── */
+
+.item-card {
+  position: relative;
+}
+
+.item-card__link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  text-decoration: none;
+  color: inherit;
+}
+
+.item-card__image {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--border-radius-large);
+  overflow: hidden;
+  background-color: var(--color-background-secondary);
+}
+
+.item-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.item-card__placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-700);
+}
+
+.item-card__name {
+  font-size: var(--font-size-300);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--font-line-height-tight);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-card__line {
+  font-size: var(--font-size-200);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Delete button — structure */
+
+.item-card__delete {
+  position: absolute;
+  top: var(--spacing-8);
+  right: var(--spacing-8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--border-radius-medium);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  --icon-size: 16px;
+}
+
+/* ─── Item card — skin ─────────────────────────────────────────────────────── */
+
+.item-card__link {
+  transition: transform 0.18s ease;
+}
+
+.item-card:hover .item-card__link {
+  transform: translateY(-2px);
+}
+
+.item-card__image {
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.18s ease;
+}
+
+.item-card:hover .item-card__image {
+  box-shadow: var(--shadow-card-hover);
+}
+
+.item-card__placeholder {
+  opacity: 0.2;
+}
+
+.item-card__name {
+  color: var(--color-text-primary);
+}
+
+.item-card__line {
+  color: var(--color-text-secondary);
+}
+
+/* Delete button — skin */
+
+.item-card__delete {
+  /* TODO(design-system): needs token for destructive/danger color */
+  background-color: rgba(220, 38, 38, 0.08);
+  color: #dc2626;
+  opacity: 0;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.item-card:hover .item-card__delete {
+  opacity: 1;
+}
+
+.item-card__delete:hover {
+  background-color: rgba(220, 38, 38, 0.16);
+}
+
+.item-card__delete:focus-visible {
+  opacity: 1;
+  outline: 2px solid #dc2626;
+  outline-offset: 2px;
+}
+
+/* ─── Item count — structure ───────────────────────────────────────────────── */
+
+.owner-grid__count {
+  font-size: var(--font-size-100);
+  color: var(--color-text-secondary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 var(--spacing-48);
+}
+
+/* ─── Empty state — structure ──────────────────────────────────────────────── */
+
+.owner-grid__empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-16);
+  padding: var(--spacing-64) var(--spacing-24);
+  text-align: center;
+}
+
+.owner-grid__empty-title {
+  font-size: var(--font-size-400);
+  font-weight: var(--font-weight-medium);
+  margin: 0;
+}
+
+.owner-grid__empty-desc {
+  font-size: var(--font-size-300);
+  margin: 0;
+  max-width: 320px;
+  line-height: var(--font-line-height-normal);
+}
+
+/* ─── Empty state — skin ───────────────────────────────────────────────────── */
+
+.owner-grid__empty-title {
+  color: var(--color-text-primary);
+}
+
+.owner-grid__empty-desc {
+  color: var(--color-text-secondary);
+}
+
+/* ─── Add item bar — structure ─────────────────────────────────────────────── */
+
+.owner-grid__add-bar {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacing-32);
+}
+
+.owner-grid__add-btn {
+  padding: var(--spacing-8) var(--spacing-24);
+  border-radius: var(--border-radius-pill);
+  border: 1px dashed var(--color-border-primary);
+  background: transparent;
+  font-size: var(--font-size-300);
+  cursor: pointer;
+}
+
+/* ─── Add item bar — skin ──────────────────────────────────────────────────── */
+
+.owner-grid__add-btn {
+  color: var(--color-text-secondary);
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.owner-grid__add-btn:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}

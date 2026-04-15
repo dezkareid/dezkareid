@@ -16,6 +16,7 @@ import {
 import { generateCollectionListingSchema } from '@/lib/seo';
 import { NonOwnerItemActions } from '@/src/features/non-owner-item-actions';
 import { OwnerCollectionActions } from '@/src/features/owner-collection-actions';
+import { OwnerItemActions } from '@/src/features/owner-item-actions';
 import { SocialShare } from '@/src/features/social-share';
 import { getBreadcrumbSchema } from '@/src/shared/lib/schema/breadcrumb';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
@@ -134,6 +135,12 @@ async function CollectionContent({
         </div>
       </header>
 
+      {/*
+        Non-owner grid: cached RSC, visible to visitors and search engines.
+        OwnerItemActions streams in via Suspense and replaces this grid for
+        the authenticated owner. When OwnerItemActions returns null (not owner),
+        this cached grid stays visible.
+      */}
       <div className={styles.grid}>
         {items.length === 0
           ? (
@@ -204,6 +211,14 @@ async function CollectionContent({
               </div>
             ))}
       </div>
+
+      {/* Owner interactive grid — streams in via Suspense. When non-empty it
+          replaces the public grid above via CSS :has() on the page container. */}
+      <Suspense fallback={undefined}>
+        <div className={styles.ownerGrid}>
+          <OwnerItemActions username={username} collectionSlug={collectionSlug} />
+        </div>
+      </Suspense>
     </>
   );
 }

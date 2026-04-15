@@ -24,6 +24,28 @@
     "has_not_made_public": "hasn't made any collections public yet.",
     "no_items_in_collection": "No items in this collection",
     "items_will_appear_here": "Items added to this collection will appear here.",
+    "owner_actions": {
+      "add_item": "+ Add Item",
+      "delete": "Delete",
+      "deleting": "Deleting…",
+      "delete_item": {
+        "modal_title": "Delete item",
+        "message": "Delete {itemName}? This action cannot be undone.",
+        "aria_label": "Delete {name}"
+      },
+      "delete_collection": {
+        "modal_title": "Delete collection",
+        "message_with_items": "Delete {collectionName}? {count, plural, =1 {1 item} other {{count} items}} in this collection will be permanently deleted and cannot be recovered.",
+        "message_empty": "Delete {collectionName}? This action cannot be undone.",
+        "confirm_button": "Delete Collection",
+        "aria_label": "Delete {name}"
+      },
+      "empty_state": {
+        "title": "Your collection is empty",
+        "description": "Add your first item to get started."
+      },
+      "items_count": "{count, plural, =1 {1 item} other {{count} items}}"
+    },
     "profile": {
       "metadata": {
         "title": "{username}'s Collections",
