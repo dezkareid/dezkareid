@@ -1,6 +1,7 @@
 'use client';
 
-import { useActionState, useEffect, useState, useTransition, useCallback } from 'react';
+import { useActionState, useEffect, useRef, useState, useTransition, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { createCollectionItem, getLinesByBrand } from '@/app/[locale]/[username]/[collectionSlug]/actions';
 
 type Franchise = { id: string; name: string };
@@ -31,6 +32,8 @@ type Properties<T extends ActionState = ActionState> = {
   brands: Brand[];
   franchises: Franchise[];
   collectionId: string;
+  username?: string;
+  collectionSlug?: string;
   onSuccess: (state: T) => void;
   initialData?: InitialItemData;
   action?: (previousState: T, formData: FormData) => Promise<T>;
@@ -290,37 +293,43 @@ function useAddItemFormLogic<T extends ActionState>(
   const defaultAction = useCallback(async (previousState: ActionState, formData: FormData) => createCollectionItem(previousState, formData), []) as unknown as (state: Awaited<T>, payload: FormData) => Promise<T>;
   const finalAction = (action as unknown as (state: Awaited<T>, payload: FormData) => Promise<T>) || defaultAction;
   const [state, formAction, pending] = useActionState(finalAction, undefined as unknown as Awaited<T>);
+
+  // Keep onSuccess in a ref so the effect below only re-runs when `state`
+  // changes — not when the parent re-renders and recreates the callback.
+  const onSuccessRef = useRef(onSuccess);
+  onSuccessRef.current = onSuccess;
+
   const [fileError, setFileError] = useState<string>();
   const [uploadFailed, setUploadFailed] = useState(false);
   const [preview, setPreview] = useState<string | undefined>(initialData?.image_url);
   const [uploadedUrl, setUploadedUrl] = useState<string | undefined>(initialData?.image_url);
   const [uploading, setUploading] = useState(false);
-  const [lines, setLines] = useState<Line[]>([]);
   const [selectedBrandId, setSelectedBrandId] = useState<string>(initialData?.brand_id ?? '');
   const [selectedLine, setSelectedLine] = useState<Line | undefined>(undefined);
   const [selectedVariant, setSelectedVariant] = useState(initialData?.variant ?? '');
-  const [loadingLines, startLoadingLines] = useTransition();
   const [, startTransition] = useTransition();
 
-  useEffect(() => {
-    if (state && typeof state === 'object' && 'success' in state) onSuccess(state as T);
-  }, [state, onSuccess]);
+  // Deduplicated lines fetch — React Query caches by brandId across re-renders.
+  const { data: lines = [], isFetching: loadingLines } = useQuery({
+    queryKey: ['lines', selectedBrandId],
+    queryFn: () => getLinesByBrand(selectedBrandId),
+    enabled: !!selectedBrandId,
+    staleTime: 5 * 60 * 1000,
+  });
 
-  const loadLines = useCallback((brandId: string, lineId?: string) => {
-    startLoadingLines(async () => {
-      const result = await getLinesByBrand(brandId);
-      setLines(result);
-      if (lineId) {
-        setSelectedLine(result.find(l => l.id === lineId));
-      }
-    });
-  }, []);
-
+  // Depend only on `state` — reading onSuccess via ref means a new callback
+  // identity on a parent re-render won't re-trigger this effect.
   useEffect(() => {
-    if (initialData?.brand_id) {
-      loadLines(initialData.brand_id, initialData.line_id);
+    if (state && typeof state === 'object' && 'success' in state) onSuccessRef.current(state as T);
+  }, [state]); // intentional: onSuccess is read via ref, not listed as a dep
+
+  // When lines load and there's an initial lineId, select the matching line.
+  useEffect(() => {
+    if (initialData?.line_id && lines.length > 0) {
+      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect -- syncing derived state from async data load
+      setSelectedLine(lines.find(l => l.id === initialData.line_id));
     }
-  }, [initialData, loadLines]);
+  }, [lines, initialData?.line_id]);
 
   const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -341,11 +350,9 @@ function useAddItemFormLogic<T extends ActionState>(
   const handleBrandChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     const brandId = event.target.value;
     setSelectedBrandId(brandId);
-    setLines([]);
     setSelectedLine(undefined);
     setSelectedVariant('');
-    if (brandId) loadLines(brandId);
-  }, [loadLines]);
+  }, []);
 
   const handleLineChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     const lineId = event.target.value;
@@ -478,6 +485,8 @@ export function AddItemForm<T extends ActionState = ActionState>(properties: Pro
   return (
     <form onSubmit={handleSubmit} className={styles.form} noValidate>
       <input type="hidden" name="collection_id" value={properties.collectionId} />
+      {properties.username && <input type="hidden" name="username" value={properties.username} />}
+      {properties.collectionSlug && <input type="hidden" name="collection_slug" value={properties.collectionSlug} />}
 
       {stateAsError && (
         <p id="form-error" className={styles.formError} role="alert">{stateAsError}</p>

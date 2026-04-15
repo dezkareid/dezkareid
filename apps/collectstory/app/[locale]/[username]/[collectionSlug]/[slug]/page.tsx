@@ -19,7 +19,7 @@ import {
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { generateCollectionItemSchema } from '@/lib/seo';
 import { getBreadcrumbSchema } from '@/src/shared/lib/schema/breadcrumb';
-import { OwnerItemActions } from '@/src/features/owner-item-actions';
+import { OwnerItemEditActions } from '@/src/features/owner-item-actions';
 import { ItemImageSection } from './ItemImageSection';
 import { OwnerImageSection } from './_components/OwnerImageSection';
 import { LikeSection } from './_components/LikeSection';
@@ -245,7 +245,7 @@ async function ItemMeta({
 
       {/* Owner-only: edit button — dynamic server component, streams in via Suspense */}
       <Suspense fallback={undefined}>
-        <OwnerItemActions
+        <OwnerItemEditActions
           username={username}
           collectionSlug={collectionSlug}
           itemId={item.id}

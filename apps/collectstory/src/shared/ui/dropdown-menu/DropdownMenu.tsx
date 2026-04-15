@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback, type HTMLAttributes, type ReactNode } from 'react';
+import { memo, useState, useRef, useEffect, useCallback, type HTMLAttributes, type ReactNode } from 'react';
 import styles from './DropdownMenu.module.css';
 
 interface Properties extends HTMLAttributes<HTMLDivElement> {
@@ -9,7 +9,7 @@ interface Properties extends HTMLAttributes<HTMLDivElement> {
   align?: 'left' | 'center' | 'right';
 }
 
-export function DropdownMenu({ trigger, children, align = 'right', className, ...rest }: Properties) {
+export const DropdownMenu = memo(function DropdownMenu({ trigger, children, align = 'right', className, ...rest }: Properties) {
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -62,4 +62,4 @@ export function DropdownMenu({ trigger, children, align = 'right', className, ..
       )}
     </div>
   );
-}
+});
