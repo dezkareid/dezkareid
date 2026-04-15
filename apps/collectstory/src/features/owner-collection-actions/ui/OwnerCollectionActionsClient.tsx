@@ -1,13 +1,10 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import { AddItemModal, type AddItemModalHandle } from '@/components/AddItemModal/AddItemModal';
+import { OPEN_ADD_ITEM_MODAL_EVENT } from '@/src/shared/lib/owner-events';
 import { DeleteCollectionModal } from './DeleteCollectionModal';
 import styles from './OwnerCollectionActions.module.css';
-
-type Brand = { id: string; name: string };
-type Franchise = { id: string; name: string };
 
 type Properties = {
   username: string;
@@ -15,8 +12,6 @@ type Properties = {
   collectionId: string;
   collectionName: string;
   itemCount: number;
-  brands: Brand[];
-  franchises: Franchise[];
 };
 
 export function OwnerCollectionActionsClient({
@@ -25,22 +20,11 @@ export function OwnerCollectionActionsClient({
   collectionId,
   collectionName,
   itemCount,
-  brands,
-  franchises,
 }: Properties) {
-  const modalRef = useRef<AddItemModalHandle>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   return (
     <div className={styles.actions}>
-      <AddItemModal
-        ref={modalRef}
-        brands={brands}
-        franchises={franchises}
-        collectionId={collectionId}
-        username={username}
-        collectionSlug={collectionSlug}
-      />
       <DeleteCollectionModal
         open={deleteOpen}
         collectionId={collectionId}
@@ -52,7 +36,7 @@ export function OwnerCollectionActionsClient({
       <button
         type="button"
         className={styles.addButton}
-        onClick={() => modalRef.current?.open()}
+        onClick={() => globalThis.dispatchEvent(new CustomEvent(OPEN_ADD_ITEM_MODAL_EVENT))}
       >
         + Add Item
       </button>

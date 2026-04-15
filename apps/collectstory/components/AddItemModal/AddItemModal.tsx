@@ -46,16 +46,18 @@ export const AddItemModal = function AddItemModal({ ref, brands, franchises, col
       onClose={close}
       title="Add to Collection"
     >
-      <AddItemForm
-        brands={brands}
-        franchises={franchises}
-        collectionId={collectionId}
-        username={username}
-        collectionSlug={collectionSlug}
-        onSuccess={handleSuccess}
-        initialData={initialData}
-        action={action}
-      />
+      {isOpen && (
+        <AddItemForm
+          brands={brands}
+          franchises={franchises}
+          collectionId={collectionId}
+          username={username}
+          collectionSlug={collectionSlug}
+          onSuccess={handleSuccess}
+          initialData={initialData}
+          action={action}
+        />
+      )}
     </Modal>
   );
 };
