@@ -145,10 +145,65 @@ export async function createCollectionItem(
 
   const username = getOptional(formData, 'username');
   const collectionSlug = getOptional(formData, 'collection_slug');
-  revalidatePath(`/${username}/${collectionSlug}`);
+  if (username && collectionSlug) {
+    revalidatePath(`/${username}/${collectionSlug}`);
+    revalidateTag(`collection:${username}:${collectionSlug}`, 'max');
+  }
+  // Fallback: always invalidate by collectionId (always present in form data)
+  revalidateTag(`collection-items:${collection_id}`, 'max');
+  return { success: true };
+}
+
+/**
+ * Same as createCollectionItem but skips revalidatePath — used by OwnerItemGrid
+ * where handleAddSuccess already refreshes the grid client-side via getCollectionItems.
+ * Skipping revalidatePath prevents the router from triggering a background RSC
+ * re-render that would cause the whole grid to re-mount via the Suspense boundary.
+ */
+export async function createCollectionItemSilent(
+  _previousState: CollectionItemState,
+  formData: FormData,
+): Promise<CollectionItemState> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated.' };
+
+  const name = getOptional(formData, 'name') ?? '';
+  if (!name) return { error: 'Name is required.' };
+
+  const slug = await generateUniqueSlug(supabase, user.id, name);
+
+  const collection_id = getOptional(formData, 'collection_id');
+  if (!collection_id) return { error: 'Collection is required.' };
+
+  const { error } = await supabase.from('collection_items').insert({
+    user_id: user.id,
+    collection_id,
+    name,
+    slug,
+    image_url: getOptional(formData, 'image_url'),
+    line_id: getOptional(formData, 'line_id'),
+    franchise_id: getOptional(formData, 'franchise_id'),
+    variant: getOptional(formData, 'variant') ?? null, // eslint-disable-line unicorn/no-null -- null required to clear value in database
+    description: getOptional(formData, 'description'),
+    date_acquired: getOptional(formData, 'date_acquired'),
+    visibility: getOptional(formData, 'visibility') ?? 'public',
+  });
+
+  if (error) {
+    if (error.code === '23505') return { error: 'An item with this name already exists in your collection.' };
+    if (error.code === '23503') return { error: 'The selected brand or line no longer exists. Please refresh and try again.' };
+    return { error: 'Failed to save item. Please try again.' };
+  }
+
+  // Only invalidate tags — no revalidatePath. The caller (OwnerItemGrid's
+  // handleAddSuccess) fetches fresh items client-side so no RSC refresh needed.
+  const username = getOptional(formData, 'username');
+  const collectionSlug = getOptional(formData, 'collection_slug');
   if (username && collectionSlug) {
     revalidateTag(`collection:${username}:${collectionSlug}`, 'max');
   }
+  revalidateTag(`collection-items:${collection_id}`, 'max');
   return { success: true };
 }
 
@@ -262,6 +317,8 @@ export async function copyItemToCollection(
 
   revalidatePath(`/${profile.username}`);
   revalidatePath(`/${profile.username}/${collectionSlug}`);
+  revalidateTag(`collection:${profile.username}:${collectionSlug}`, 'max');
+  revalidateTag(`collection-items:${collectionId}`, 'max');
 
   return {
     success: true,
@@ -395,7 +452,82 @@ export async function getLinesByBrand(
   }));
 }
 
+// ─── Owner item queries ───────────────────────────────────────────────────────
+
+export async function getCollectionItems(collectionId: string): Promise<{
+  id: string;
+  name: string;
+  slug: string;
+  image_url: string | null;
+  description: string | null;
+  date_acquired: string | null;
+  likes_count: number;
+  lines: {
+    id: string;
+    name: string;
+    brands: { id: string; name: string } | null;
+    categories: { name: string } | null;
+    variants: unknown[];
+  } | null;
+}[]> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  const { data } = await supabase
+    .from('collection_items')
+    .select(`
+      id,
+      name,
+      slug,
+      image_url,
+      description,
+      date_acquired,
+      likes_count,
+      lines (
+        id,
+        name,
+        brands ( id, name ),
+        categories ( name ),
+        variants
+      )
+    `)
+    .eq('collection_id', collectionId)
+    .eq('user_id', user.id)
+    .eq('visibility', 'public')
+    .order('created_at', { ascending: false });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Supabase nested select types don't match manually defined shape
+  return (data ?? []) as any[];
+}
+
 // ─── Like actions ─────────────────────────────────────────────────────────────
+
+export async function deleteItem(
+  itemId: string,
+  username: string,
+  collectionSlug: string,
+): Promise<{ success: true } | { error: string }> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated.' };
+
+  const { error } = await supabase
+    .from('collection_items')
+    .delete()
+    .eq('id', itemId)
+    .eq('user_id', user.id);
+
+  if (error) return { error: 'Failed to delete item. Please try again.' };
+
+  // Only invalidate the tag — the optimistic update already removed the item
+  // from the owner grid. Calling revalidatePath here would trigger a router
+  // refresh that briefly shows the stale public grid (the flash).
+  revalidateTag(`collection:${username}:${collectionSlug}`, 'max');
+  revalidateTag(`collection-items:${username}:${collectionSlug}`, 'max');
+
+  return { success: true };
+}
 
 export async function likeItem(
   itemId: string,

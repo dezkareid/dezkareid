@@ -17,6 +17,7 @@
     "@dezkareid/design-tokens": "workspace:*",
     "@dezkareid/icons": "workspace:*",
     "@next/third-parties": "16.2.3",
+    "@tanstack/react-query": "5.99.0",
     "@supabase/ssr": "0.9.0",
     "@supabase/supabase-js": "2.100.0",
     "classnames": "2.5.1",

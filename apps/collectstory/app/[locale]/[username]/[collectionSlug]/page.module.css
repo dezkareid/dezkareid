@@ -94,6 +94,35 @@
   gap: var(--spacing-24);
 }
 
+/*
+ * When the owner interactive grid (OwnerItemActions) resolves and renders
+ * inside .ownerGrid, hide the public cached .grid so owners don't see
+ * duplicates. Uses CSS :has() (supported in all modern browsers).
+ */
+.ownerGrid:not(:empty) ~ .grid,
+.ownerGrid > *:not(:empty) ~ .grid {
+  display: none;
+}
+
+/* When .ownerGrid has content, hide the public grid that comes before it.
+   We use :has() on the shared parent (CollectionContent renders both). */
+.page:has(.ownerGrid > * > *) .grid {
+  display: none;
+}
+
+/*
+ * Hide the RSC-rendered item count (.collectionMeta) when the owner grid
+ * is present — the owner grid renders its own live count that stays in sync
+ * with add/delete operations without needing a full RSC re-render.
+ */
+.page:has(.ownerGrid > * > *) .collectionMeta {
+  display: none;
+}
+
+.ownerGrid {
+  /* Wrapper for the streamed owner interactive grid */
+}
+
 @media (max-width: 1024px) {
   .grid {
     grid-template-columns: repeat(3, 1fr);

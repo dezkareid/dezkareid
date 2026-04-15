@@ -29,6 +29,8 @@ export async function OwnerEmptyStateFallback({ username, collectionSlug }: Prop
   return (
     <OwnerEmptyState
       collectionId={result.collection.id}
+      username={username}
+      collectionSlug={collectionSlug}
       brands={brands}
       franchises={franchises}
     />
