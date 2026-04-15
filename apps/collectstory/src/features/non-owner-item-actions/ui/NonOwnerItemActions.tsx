@@ -25,8 +25,10 @@ export async function NonOwnerItemActions({ username, collectionSlug, item }: Pr
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
+  if (!user) return;
+
   const result = await getPublicCollectionBySlug(username, collectionSlug);
-  const isOwner = !!user && !!result && user.id === result.userId;
+  const isOwner = !!result && user.id === result.userId;
 
   if (isOwner) return;
 
