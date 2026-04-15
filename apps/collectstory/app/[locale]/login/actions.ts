@@ -6,7 +6,8 @@ import { headers } from 'next/headers';
 export async function signInWithGoogle(next?: string) {
   const supabase = await createClient();
   const headersList = await headers();
-  const origin = headersList.get('origin');
+  const origin = headersList.get('origin')
+    ?? `https://${headersList.get('host')}`;
 
   // Validate next is a safe internal path before appending to callback URL.
   const safeNext
