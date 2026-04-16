@@ -610,11 +610,14 @@ export async function addItem(
   const username = getOptional(formData, 'username');
   const collectionSlug = getOptional(formData, 'collection_slug');
 
-  revalidatePath(`/${username}/${collectionSlug}`);
   if (username && collectionSlug) {
+    revalidatePath(`/${username}/${collectionSlug}`);
     revalidateTag(`collection:${username}:${collectionSlug}`, 'max');
   }
-  redirect(`/${username}/${collectionSlug}`);
+
+  // Return success so the client can redirect — calling redirect() inside
+  // useActionState causes a 500 in Next.js App Router.
+  return { success: true };
 }
 
 export async function updateCollection(

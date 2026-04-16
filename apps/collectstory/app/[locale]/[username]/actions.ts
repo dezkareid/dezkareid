@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { generateUniqueCollectionSlug, generateUniqueSlug } from '@/lib/slug';
 
@@ -59,6 +59,8 @@ export async function quickStartCollection(
   }
 
   revalidatePath(`/${username}`);
+  revalidateTag(`profile:${username}`, 'max');
+  revalidateTag(`collection:${username}:${collectionSlug}`, 'max');
 
   return { success: true, collectionSlug };
 }
