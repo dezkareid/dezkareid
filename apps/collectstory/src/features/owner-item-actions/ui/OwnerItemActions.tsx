@@ -2,7 +2,6 @@ import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getPublicCollectionBySlug, getOwnerCollectionBySlug } from '@/lib/collections';
 import { getAllBrands, getAllFranchises } from '@/app/[locale]/[username]/[collectionSlug]/actions';
-import { PrivateBadge } from '@/src/shared/ui/PrivateBadge';
 import type { OwnerItem } from '../model/types';
 import { OwnerItemGrid } from './OwnerItemGrid';
 
@@ -62,15 +61,6 @@ export async function OwnerItemActions({ username, collectionSlug }: Properties)
     getAllFranchises(),
   ]);
 
-  // Build private badges in the RSC layer (server component) so the client
-  // OwnerItemGrid can render them without needing async access.
-  const privateBadgeEntries = await Promise.all(
-    items
-      .filter(item => item.visibility !== 'public')
-      .map(async item => [item.id, <PrivateBadge key={item.id} overlay />] as const),
-  );
-  const privateBadges = Object.fromEntries(privateBadgeEntries);
-
   return (
     <OwnerItemGrid
       initialItems={items}
@@ -79,7 +69,6 @@ export async function OwnerItemActions({ username, collectionSlug }: Properties)
       collectionSlug={collectionSlug}
       brands={brands}
       franchises={franchises}
-      privateBadges={privateBadges}
     />
   );
 }
