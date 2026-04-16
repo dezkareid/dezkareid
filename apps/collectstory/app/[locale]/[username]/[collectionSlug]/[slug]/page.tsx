@@ -260,7 +260,9 @@ async function ItemMeta({
   );
 }
 
-async function ItemDetail({
+// ─── Public (static/cached) item content ─────────────────────────────────────
+
+async function ItemContent({
   username,
   collectionSlug,
   slug,
@@ -271,29 +273,88 @@ async function ItemDetail({
   slug: string;
   locale: string;
 }) {
-  // Step 1: resolve the collection — public cached path first (SEO + caching).
-  // Owner path is only queried on a miss (private collection), avoiding an extra
-  // DB round-trip on every public page visit.
-  const publicCollectionResult = await getPublicCollectionBySlug(username, collectionSlug);
-  const collectionResult = publicCollectionResult
-    ?? await getOwnerCollectionBySlug(username, collectionSlug);
+  // Pure cached path — no dynamic data, no cookies.
+  const collectionResult = await getPublicCollectionBySlug(username, collectionSlug);
+  if (!collectionResult) return; // Private or missing — OwnerPrivateItemGuard handles it.
 
-  if (!collectionResult) notFound();
-
-  // Step 2: resolve the item — same pattern: public first, owner only on miss.
-  const publicItem = await getPublicItemBySlug(
+  const item = await getPublicItemBySlug(
     collectionResult.collection.id,
     slug,
     username,
     collectionSlug,
   );
-  const item = publicItem ?? await getOwnerItemBySlug(collectionResult.collection.id, slug);
+  if (!item) return; // Private item — OwnerPrivateItemGuard handles it.
 
+  return <ItemDetail item={item} username={username} collectionSlug={collectionSlug} locale={locale} isPrivate={false} />;
+}
+
+// ─── Dynamic guard — handles private collections/items and true 404s ──────────
+// Always runs inside <Suspense> so connection() never blocks the static path.
+// Short-circuits immediately when the public path already resolved the item.
+
+async function OwnerPrivateItemGuard({
+  username,
+  collectionSlug,
+  slug,
+  locale,
+}: {
+  username: string;
+  collectionSlug: string;
+  slug: string;
+  locale: string;
+}) {
+  // Re-use cached public queries — free via 'use cache' dedup.
+  const publicCollectionResult = await getPublicCollectionBySlug(username, collectionSlug);
+
+  if (publicCollectionResult) {
+    // Collection is public — check if item itself is private.
+    const publicItem = await getPublicItemBySlug(
+      publicCollectionResult.collection.id,
+      slug,
+      username,
+      collectionSlug,
+    );
+    if (publicItem) return; // Already rendered by ItemContent — nothing to do.
+
+    // Private item in a public collection — try owner query.
+    // getOwnerItemBySlug calls connection() — safe here inside <Suspense>.
+    const ownerItem = await getOwnerItemBySlug(publicCollectionResult.collection.id, slug);
+    if (!ownerItem) notFound();
+    return <ItemDetail item={ownerItem} username={username} collectionSlug={collectionSlug} locale={locale} isPrivate={true} />;
+  }
+
+  // Private collection — resolve via owner query.
+  // getOwnerCollectionBySlug calls connection() — safe here inside <Suspense>.
+  const ownerCollectionResult = await getOwnerCollectionBySlug(username, collectionSlug);
+  if (!ownerCollectionResult) notFound();
+
+  const publicItem = await getPublicItemBySlug(
+    ownerCollectionResult.collection.id,
+    slug,
+    username,
+    collectionSlug,
+  );
+  const item = publicItem ?? await getOwnerItemBySlug(ownerCollectionResult.collection.id, slug);
   if (!item) notFound();
 
-  const isPrivate = item.visibility !== 'public';
+  return <ItemDetail item={item} username={username} collectionSlug={collectionSlug} locale={locale} isPrivate={item.visibility !== 'public'} />;
+}
 
-  // Step 3: linked stores and catalog stores are independent of each other — run in parallel.
+// ─── Shared item body renderer ────────────────────────────────────────────────
+
+async function ItemDetail({
+  item,
+  username,
+  collectionSlug,
+  locale,
+  isPrivate,
+}: {
+  item: PublicItemDetail;
+  username: string;
+  collectionSlug: string;
+  locale: string;
+  isPrivate: boolean;
+}) {
   const [linkedStores, catalogStores] = await Promise.all([
     getLinkedStores(item.id),
     item.catalog_item_id
@@ -315,12 +376,9 @@ async function ItemDetail({
   return (
     <div className={styles['item-page__layout']}>
       {schema && <DataSchema schema={schema} />}
-      {/* ItemImageSection renders the image immediately. It receives
-          OwnerImageSection (a Suspense-wrapped Server Component) as a child
-          to preserve the server-to-client boundary. */}
       <ItemImageSection
         key={item.image_url}
-        slug={slug}
+        slug={item.slug}
         imageUrl={item.image_url}
         name={item.name}
       >
@@ -357,18 +415,13 @@ async function BreadcrumbNav({
 }) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 
-  // Collection: public first, owner only on miss.
-  const publicCollectionResult = await getPublicCollectionBySlug(username, collectionSlug);
-  const collectionResult = publicCollectionResult
-    ?? await getOwnerCollectionBySlug(username, collectionSlug);
+  // Pure cached path — use slug as label fallback for private collections/items.
+  const collectionResult = await getPublicCollectionBySlug(username, collectionSlug);
   const collectionName = collectionResult?.collection.name ?? collectionSlug;
 
-  // Item: public first, owner only on miss. Skipped entirely if collection not found.
-  const publicItem = collectionResult
+  const item = collectionResult
     ? await getPublicItemBySlug(collectionResult.collection.id, slug, username, collectionSlug)
     : undefined;
-  const item = publicItem
-    ?? (collectionResult ? await getOwnerItemBySlug(collectionResult.collection.id, slug) : undefined);
   const itemName = item?.name ?? slug;
 
   const breadcrumbSchema = getBreadcrumbSchema([
@@ -396,8 +449,28 @@ export default function ItemDetailPage({ params }: Properties) {
   const { username, collectionSlug, slug, locale } = use(params);
   return (
     <div className={styles['item-page']}>
-      <BreadcrumbNav username={username} collectionSlug={collectionSlug} slug={slug} />
-      <ItemDetail username={username} collectionSlug={collectionSlug} slug={slug} locale={locale} />
+      {/*
+        BreadcrumbNav and ItemContent use only 'use cache' queries — rendered
+        statically in the prerender, visible to search engines in initial HTML.
+
+        OwnerPrivateItemGuard must stay in <Suspense> because it calls connection()
+        via getOwnerCollectionBySlug / getOwnerItemBySlug. It short-circuits
+        immediately when the public path already resolved the item.
+      */}
+      <Suspense fallback={undefined}>
+        <BreadcrumbNav username={username} collectionSlug={collectionSlug} slug={slug} />
+      </Suspense>
+      <Suspense fallback={undefined}>
+        <ItemContent username={username} collectionSlug={collectionSlug} slug={slug} locale={locale} />
+      </Suspense>
+      <Suspense fallback={undefined}>
+        <OwnerPrivateItemGuard
+          username={username}
+          collectionSlug={collectionSlug}
+          slug={slug}
+          locale={locale}
+        />
+      </Suspense>
     </div>
   );
 }

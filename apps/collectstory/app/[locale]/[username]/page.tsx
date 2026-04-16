@@ -148,13 +148,17 @@ export default function UserProfilePage({ params }: Properties) {
 
   return (
     <div className={`container ${styles.page}`}>
-      <ProfileHeader username={username} />
+      <Suspense fallback={undefined}>
+        <ProfileHeader username={username} />
+      </Suspense>
 
       <p className={styles.sectionLabel}>{t('collections')}</p>
 
       {/* Public cached grid — visible to visitors and search engines */}
       <div className={styles.publicGrid}>
-        <ProfileContent username={username} />
+        <Suspense fallback={undefined}>
+          <ProfileContent username={username} />
+        </Suspense>
       </div>
 
       {/* Owner grid with delete — streams in and hides the public grid via CSS :has() */}

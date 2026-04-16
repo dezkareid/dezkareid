@@ -346,8 +346,12 @@ export default async function CollectionPage({ params }: Properties) {
         via getOwnerCollectionBySlug. It short-circuits immediately for public collections
         (publicResult exists) so connection() is never reached on the public path.
       */}
-      <BreadcrumbNav username={username} collectionSlug={collectionSlug} />
-      <CollectionContent username={username} collectionSlug={collectionSlug} />
+      <Suspense fallback={undefined}>
+        <BreadcrumbNav username={username} collectionSlug={collectionSlug} />
+      </Suspense>
+      <Suspense fallback={undefined}>
+        <CollectionContent username={username} collectionSlug={collectionSlug} />
+      </Suspense>
       <Suspense fallback={undefined}>
         <OwnerPrivateCollectionGuard
           username={username}
