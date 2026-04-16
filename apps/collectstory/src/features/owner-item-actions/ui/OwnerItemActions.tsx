@@ -1,6 +1,6 @@
 import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { getPublicCollectionBySlug } from '@/lib/collections';
+import { getPublicCollectionBySlug, getOwnerCollectionBySlug } from '@/lib/collections';
 import { getAllBrands, getAllFranchises } from '@/app/[locale]/[username]/[collectionSlug]/actions';
 import type { OwnerItem } from '../model/types';
 import { OwnerItemGrid } from './OwnerItemGrid';
@@ -12,9 +12,12 @@ type Properties = {
 
 /**
  * Dynamic RSC — opts out of caching via connection().
- * Checks if the current user owns the collection. If yes, fetches items
- * fresh (no cache) and renders the interactive OwnerItemGrid. If not,
+ * Checks if the current user owns the collection. If yes, fetches all items
+ * (public + private) and renders the interactive OwnerItemGrid. If not,
  * returns null so the cached non-owner grid remains visible.
+ *
+ * Falls back to getOwnerCollectionBySlug when the collection is private so
+ * the owner can still manage private collections.
  */
 export async function OwnerItemActions({ username, collectionSlug }: Properties) {
   await connection();
@@ -23,11 +26,15 @@ export async function OwnerItemActions({ username, collectionSlug }: Properties)
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return;
 
-  const result = await getPublicCollectionBySlug(username, collectionSlug);
+  // Try the public path first; for private collections fall back to owner path.
+  const publicResult = await getPublicCollectionBySlug(username, collectionSlug);
+  const ownerResult = publicResult ? undefined : await getOwnerCollectionBySlug(username, collectionSlug);
+  const result = publicResult ?? ownerResult;
+
   if (!result || user.id !== result.userId) return;
 
   const [items, brands, franchises] = await Promise.all([
-    // Fetch directly without cache — owner always sees fresh data
+    // Fetch all items (public + private) — owner always sees fresh, complete data
     supabase
       .from('collection_items')
       .select(`
@@ -38,6 +45,7 @@ export async function OwnerItemActions({ username, collectionSlug }: Properties)
         description,
         date_acquired,
         likes_count,
+        visibility,
         lines (
           id,
           name,
@@ -47,7 +55,6 @@ export async function OwnerItemActions({ username, collectionSlug }: Properties)
         )
       `)
       .eq('collection_id', result.collection.id)
-      .eq('visibility', 'public')
       .order('created_at', { ascending: false })
       .then(({ data }) => (data ?? []) as unknown as OwnerItem[]),
     getAllBrands(),

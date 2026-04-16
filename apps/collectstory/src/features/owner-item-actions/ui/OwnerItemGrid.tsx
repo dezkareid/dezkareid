@@ -8,6 +8,7 @@ import { AddItemModal, type AddItemModalHandle } from '@/components/AddItemModal
 import { Trash } from '@dezkareid/icons/react';
 import { getCollectionItems, deleteItem, createCollectionItemSilent } from '@/app/[locale]/[username]/[collectionSlug]/actions';
 import { OPEN_ADD_ITEM_MODAL_EVENT } from '@/src/shared/lib/owner-events';
+import { PrivateBadgeOverlay } from '@/src/shared/ui/PrivateBadge';
 import type { OwnerItem } from '../model/types';
 import { DeleteItemModal } from './DeleteItemModal';
 import styles from './OwnerItemGrid.module.css';
@@ -43,6 +44,7 @@ const OwnerItemCard = memo(function OwnerItemCard({
     <div className={styles['item-card']}>
       <Link href={href} className={styles['item-card__link']}>
         <div className={styles['item-card__image']}>
+          {item.visibility !== 'public' && <PrivateBadgeOverlay />}
           {item.image_url
             ? (
                 <Image

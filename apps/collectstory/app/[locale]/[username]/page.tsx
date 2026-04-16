@@ -11,6 +11,7 @@ import {
 } from '@/lib/collections';
 import { Image } from '@dezkareid/components/react-server';
 import { OwnerProfileActions, OwnerProfileGrid } from '@/src/features/owner-profile-actions';
+import { CollectionCard } from '@/src/entities/collection';
 import { SocialShare } from '@/src/features/social-share';
 import styles from './page.module.css';
 import { routing } from '@/app/i18n/routing';
@@ -78,13 +79,14 @@ async function ProfileContent({ username }: { username: string }) {
                 href={`/${username}/${col.slug}`}
                 className={styles.collectionCard}
               >
-                <p className={styles.collectionName}>{col.name}</p>
-                {col.description && (
-                  <p className={styles.collectionDesc}>{col.description}</p>
-                )}
-                <p className={styles.collectionMeta}>
-                  {t('items_count', { count: col.item_count })}
-                </p>
+                <CollectionCard
+                  collection={{
+                    name: col.name,
+                    description: col.description,
+                    item_count: col.item_count,
+                    itemCountLabel: t('items_count', { count: col.item_count }),
+                  }}
+                />
               </Link>
             ))}
       </div>

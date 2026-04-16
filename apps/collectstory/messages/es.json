@@ -5,6 +5,10 @@
       "accept": "Aceptar",
       "decline": "Rechazar"
     },
+    "private_badge": {
+      "label": "Privado",
+      "aria_label": "Este contenido es privado"
+    },
     "search": "Buscar",
     "close": "Cerrar",
     "home": "Inicio",

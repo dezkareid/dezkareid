@@ -5,6 +5,10 @@
       "accept": "Accept",
       "decline": "Decline"
     },
+    "private_badge": {
+      "label": "Private",
+      "aria_label": "This content is private"
+    },
     "search": "Search",
     "close": "Close",
     "home": "Home",

@@ -1,13 +1,20 @@
-import { connection } from 'next/server';
-import { getSessionAndRole } from '@/lib/auth/role';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
 import { ReportProblemButton } from './ReportProblemButton';
 
-export async function ReportProblem() {
-  await connection();
-  const session = await getSessionAndRole();
+export function ReportProblem() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Only show the report button for authenticated users
-  if (!session) return;
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setIsAuthenticated(!!user);
+    });
+  }, []);
+
+  if (!isAuthenticated) return;
 
   return <ReportProblemButton />;
 }

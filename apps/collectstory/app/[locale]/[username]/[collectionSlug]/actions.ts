@@ -478,6 +478,7 @@ export async function getCollectionItems(collectionId: string): Promise<{
       description,
       date_acquired,
       likes_count,
+      visibility,
       lines (
         id,
         name,
@@ -488,7 +489,6 @@ export async function getCollectionItems(collectionId: string): Promise<{
     `)
     .eq('collection_id', collectionId)
     .eq('user_id', user.id)
-    .eq('visibility', 'public')
     .order('created_at', { ascending: false });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Supabase nested select types don't match manually defined shape
