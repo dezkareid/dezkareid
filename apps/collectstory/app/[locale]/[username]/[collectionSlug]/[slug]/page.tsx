@@ -457,12 +457,8 @@ export default function ItemDetailPage({ params }: Properties) {
         via getOwnerCollectionBySlug / getOwnerItemBySlug. It short-circuits
         immediately when the public path already resolved the item.
       */}
-      <Suspense fallback={undefined}>
-        <BreadcrumbNav username={username} collectionSlug={collectionSlug} slug={slug} />
-      </Suspense>
-      <Suspense fallback={undefined}>
-        <ItemContent username={username} collectionSlug={collectionSlug} slug={slug} locale={locale} />
-      </Suspense>
+      <BreadcrumbNav username={username} collectionSlug={collectionSlug} slug={slug} />
+      <ItemContent username={username} collectionSlug={collectionSlug} slug={slug} locale={locale} />
       <Suspense fallback={undefined}>
         <OwnerPrivateItemGuard
           username={username}

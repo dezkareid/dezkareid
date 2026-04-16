@@ -192,11 +192,10 @@ export async function getPublicCollectionsByUsername(
     .eq('username', username)
     .single();
 
-  // Do not cache a missing profile — the username may not exist yet (new user
-  // setting up their profile) and caching undefined would cause a persistent
-  // 404 for up to the full cache TTL (7 days with 'user-content').
   if (!profile) {
-    cacheLife({ stale: 0, revalidate: 0, expire: 0 });
+    // Cache misses briefly so Next.js treats this as cached data (not blocking).
+    // revalidateTag('profile:username') handles invalidation when the profile is created.
+    cacheLife({ stale: 0, revalidate: 60, expire: 60 });
     return undefined;
   }
 
@@ -245,8 +244,9 @@ export async function getPublicCollectionBySlug(
     .single();
 
   if (!profile) {
-    // Do not cache a missing profile — prevents a persistent 404 for new users.
-    cacheLife({ stale: 0, revalidate: 0, expire: 0 });
+    // Cache misses briefly so Next.js treats this as cached data (not blocking).
+    // revalidateTag handles invalidation when the profile or collection is created.
+    cacheLife({ stale: 0, revalidate: 60, expire: 60 });
     return undefined;
   }
 
@@ -259,9 +259,7 @@ export async function getPublicCollectionBySlug(
     .single();
 
   if (!collection) {
-    // Do not cache a missing collection — it may have just been created and the
-    // cache tag invalidation races with the first navigation to this page.
-    cacheLife({ stale: 0, revalidate: 0, expire: 0 });
+    cacheLife({ stale: 0, revalidate: 60, expire: 60 });
     return undefined;
   }
 
@@ -354,8 +352,9 @@ export async function getPublicItemBySlug(
     .single();
 
   if (!item) {
-    // Do not cache a missing item — prevents a persistent 404 for newly created items.
-    cacheLife({ stale: 0, revalidate: 0, expire: 0 });
+    // Cache misses briefly so Next.js treats this as cached data (not blocking).
+    // revalidateTag handles invalidation when the item is created or made public.
+    cacheLife({ stale: 0, revalidate: 60, expire: 60 });
     return undefined;
   }
 
