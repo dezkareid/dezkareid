@@ -195,7 +195,7 @@ export async function getPublicCollectionsByUsername(
   if (!profile) {
     // Cache misses briefly so Next.js treats this as cached data (not blocking).
     // revalidateTag('profile:username') handles invalidation when the profile is created.
-    cacheLife({ stale: 0, revalidate: 60, expire: 60 });
+    cacheLife('user-content');
     return undefined;
   }
 
@@ -246,7 +246,7 @@ export async function getPublicCollectionBySlug(
   if (!profile) {
     // Cache misses briefly so Next.js treats this as cached data (not blocking).
     // revalidateTag handles invalidation when the profile or collection is created.
-    cacheLife({ stale: 0, revalidate: 60, expire: 60 });
+    cacheLife('user-content');
     return undefined;
   }
 
@@ -259,7 +259,7 @@ export async function getPublicCollectionBySlug(
     .single();
 
   if (!collection) {
-    cacheLife({ stale: 0, revalidate: 60, expire: 60 });
+    cacheLife('user-content');
     return undefined;
   }
 
@@ -354,7 +354,7 @@ export async function getPublicItemBySlug(
   if (!item) {
     // Cache misses briefly so Next.js treats this as cached data (not blocking).
     // revalidateTag handles invalidation when the item is created or made public.
-    cacheLife({ stale: 0, revalidate: 60, expire: 60 });
+    cacheLife('user-content');
     return undefined;
   }
 
