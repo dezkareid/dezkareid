@@ -1,6 +1,7 @@
 'use client';
 
-import { useActionState, useState, useTransition } from 'react';
+import { useActionState, useEffect, useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { addItem } from '../../actions';
 import { getLinesByBrand } from '@/app/[locale]/[username]/[collectionSlug]/actions';
 import { stripMetadata } from '@/lib/image/strip-metadata';
@@ -111,6 +112,7 @@ async function uploadFile(file: File): Promise<{ url: string } | { error: string
 }
 
 export function AddItemPageForm({ brands, franchises, collectionId, username, collectionSlug }: Properties) {
+  const router = useRouter();
   const [state, formAction, pending] = useActionState(addItem, undefined);
   const [fileError, setFileError] = useState<string>();
   const [uploadFailed, setUploadFailed] = useState(false);
@@ -122,6 +124,12 @@ export function AddItemPageForm({ brands, franchises, collectionId, username, co
   const [selectedVariant, setSelectedVariant] = useState('');
   const [loadingLines, startLoadingLines] = useTransition();
   const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    if (state && 'success' in state && state.success) {
+      router.push(`/${username}/${collectionSlug}`);
+    }
+  }, [state, username, collectionSlug, router]);
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];

@@ -190,7 +190,13 @@ export async function getPublicCollectionsByUsername(
     .eq('username', username)
     .single();
 
-  if (!profile) return undefined;
+  // Do not cache a missing profile — the username may not exist yet (new user
+  // setting up their profile) and caching undefined would cause a persistent
+  // 404 for up to the full cache TTL (7 days with 'user-content').
+  if (!profile) {
+    cacheLife({ stale: 0, revalidate: 0, expire: 0 });
+    return undefined;
+  }
 
   const { data: collections } = await supabase
     .from('collections')
@@ -236,7 +242,11 @@ export async function getPublicCollectionBySlug(
     .eq('username', username)
     .single();
 
-  if (!profile) return undefined;
+  if (!profile) {
+    // Do not cache a missing profile — prevents a persistent 404 for new users.
+    cacheLife({ stale: 0, revalidate: 0, expire: 0 });
+    return undefined;
+  }
 
   const { data: collection } = await supabase
     .from('collections')
@@ -246,7 +256,12 @@ export async function getPublicCollectionBySlug(
     .eq('visibility', 'public')
     .single();
 
-  if (!collection) return undefined;
+  if (!collection) {
+    // Do not cache a missing collection — it may have just been created and the
+    // cache tag invalidation races with the first navigation to this page.
+    cacheLife({ stale: 0, revalidate: 0, expire: 0 });
+    return undefined;
+  }
 
   return {
     collection: { ...collection, description: collection.description ?? undefined },
@@ -336,7 +351,11 @@ export async function getPublicItemBySlug(
     .eq('visibility', 'public')
     .single();
 
-  if (!item) return undefined;
+  if (!item) {
+    // Do not cache a missing item — prevents a persistent 404 for newly created items.
+    cacheLife({ stale: 0, revalidate: 0, expire: 0 });
+    return undefined;
+  }
 
   return item as unknown as PublicItemDetail;
 }
