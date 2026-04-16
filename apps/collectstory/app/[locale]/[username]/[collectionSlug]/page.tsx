@@ -337,16 +337,24 @@ export default async function CollectionPage({ params }: Properties) {
 
   return (
     <div className={`container ${styles.page}`}>
-      <BreadcrumbNav username={username} collectionSlug={collectionSlug} />
       {/*
+        All three components call getPublicCollectionBySlug which has a zero-TTL
+        branch for missing profiles/collections — Next.js treats this as potentially
+        blocking. Wrapping each in <Suspense> lets them stream without blocking
+        navigation. Content is still server-rendered and included in the HTML.
+
         CollectionContent renders the cached public view (returns undefined on miss).
-        OwnerPrivateCollectionGuard streams in via Suspense and either renders the
-        private collection for the owner, or calls notFound() for visitors/missing slugs.
-        The guard re-runs getPublicCollectionBySlug internally (free via 'use cache'
-        dedup) and short-circuits immediately for public collections so connection()
-        is never reached on the public path.
+        OwnerPrivateCollectionGuard handles private collections and true 404s.
+        The guard re-runs getPublicCollectionBySlug (free via 'use cache' dedup)
+        and short-circuits for public collections so connection() is never called
+        on the public path.
       */}
-      <CollectionContent username={username} collectionSlug={collectionSlug} />
+      <Suspense fallback={undefined}>
+        <BreadcrumbNav username={username} collectionSlug={collectionSlug} />
+      </Suspense>
+      <Suspense fallback={undefined}>
+        <CollectionContent username={username} collectionSlug={collectionSlug} />
+      </Suspense>
       <Suspense fallback={undefined}>
         <OwnerPrivateCollectionGuard
           username={username}
