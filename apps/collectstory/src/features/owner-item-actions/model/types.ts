@@ -6,6 +6,7 @@ export type OwnerItem = {
   description: string | null;
   date_acquired: string | null;
   likes_count: number;
+  visibility: string;
   lines: {
     id: string;
     name: string;

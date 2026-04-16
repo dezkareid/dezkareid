@@ -22,6 +22,8 @@ type Properties = {
   collectionSlug: string;
   brands: Brand[];
   franchises: Franchise[];
+  /** Map of item id → pre-rendered PrivateBadge node (from RSC parent) */
+  privateBadges?: Record<string, React.ReactNode>;
 };
 
 // ─── Item card — memoized so it only re-renders when its own data changes ────
@@ -31,6 +33,8 @@ type ItemCardProperties = {
   href: string;
   onDelete: (itemId: string, itemName: string) => void;
   deleteAriaLabel: string;
+  /** Pre-rendered PrivateBadge node passed from the RSC parent for private items */
+  privateBadge?: React.ReactNode;
 };
 
 const OwnerItemCard = memo(function OwnerItemCard({
@@ -38,11 +42,13 @@ const OwnerItemCard = memo(function OwnerItemCard({
   href,
   onDelete,
   deleteAriaLabel,
+  privateBadge,
 }: ItemCardProperties) {
   return (
     <div className={styles['item-card']}>
       <Link href={href} className={styles['item-card__link']}>
         <div className={styles['item-card__image']}>
+          {privateBadge}
           {item.image_url
             ? (
                 <Image
@@ -97,6 +103,7 @@ export function OwnerItemGrid({
   collectionSlug,
   brands,
   franchises,
+  privateBadges,
 }: Properties) {
   const t = useTranslations('Common.owner_actions');
   const tCommon = useTranslations('Common.profile.collection');
@@ -229,6 +236,7 @@ export function OwnerItemGrid({
                 href={`/${username}/${collectionSlug}/${item.slug}`}
                 onDelete={handleOpenDelete}
                 deleteAriaLabel={t('delete_item.aria_label', { name: item.name })}
+                privateBadge={privateBadges?.[item.id]}
               />
             ))}
       </div>

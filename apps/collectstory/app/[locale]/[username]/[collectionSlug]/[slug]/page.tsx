@@ -12,6 +12,8 @@ import { routing } from '@/app/i18n/routing';
 import {
   getPublicCollectionBySlug,
   getPublicItemBySlug,
+  getOwnerCollectionBySlug,
+  getOwnerItemBySlug,
   getLinkedStores,
   type PublicItemDetail,
   type LinkedStore,
@@ -51,6 +53,8 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
   const t = await getTranslations('Common.profile.item.metadata');
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 
+  // Intentionally uses public-only queries: private collections/items return {} here,
+  // producing no OG tags or canonical URL — preventing search engine indexing of private content.
   const collectionResult = await getPublicCollectionBySlug(username, collectionSlug);
   if (!collectionResult) return {};
 
@@ -267,34 +271,50 @@ async function ItemDetail({
   slug: string;
   locale: string;
 }) {
-  const collectionResult = await getPublicCollectionBySlug(username, collectionSlug);
+  // Step 1: resolve the collection — public cached path first (SEO + caching).
+  // Owner path is only queried on a miss (private collection), avoiding an extra
+  // DB round-trip on every public page visit.
+  const publicCollectionResult = await getPublicCollectionBySlug(username, collectionSlug);
+  const collectionResult = publicCollectionResult
+    ?? await getOwnerCollectionBySlug(username, collectionSlug);
 
   if (!collectionResult) notFound();
 
-  const item = await getPublicItemBySlug(collectionResult.collection.id, slug, username, collectionSlug);
-  if (!item) notFound();
-
-  // Linked stores are public — fetched via cached query for all visitors.
-  const linkedStores = await getLinkedStores(item.id);
-  // Catalog-driven stores — public data, use admin client (no cookies) so this
-  // fetch is treated as cached by cacheComponents.
-  const catalogItemId = item.catalog_item_id;
-
-  const catalogStores = await (catalogItemId
-    ? getCatalogStoresForItem(catalogItemId)
-    : Promise.resolve([]));
-
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
-  const schema = generateCollectionItemSchema({
-    item,
+  // Step 2: resolve the item — same pattern: public first, owner only on miss.
+  const publicItem = await getPublicItemBySlug(
+    collectionResult.collection.id,
+    slug,
     username,
     collectionSlug,
-    baseUrl,
-  });
+  );
+  const item = publicItem ?? await getOwnerItemBySlug(collectionResult.collection.id, slug);
+
+  if (!item) notFound();
+
+  const isPrivate = item.visibility !== 'public';
+
+  // Step 3: linked stores and catalog stores are independent of each other — run in parallel.
+  const [linkedStores, catalogStores] = await Promise.all([
+    getLinkedStores(item.id),
+    item.catalog_item_id
+      ? getCatalogStoresForItem(item.catalog_item_id)
+      : Promise.resolve([]),
+  ]);
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
+  // Structured data is only emitted for public items to avoid indexing private content.
+  const schema = isPrivate
+    ? undefined
+    : generateCollectionItemSchema({
+        item,
+        username,
+        collectionSlug,
+        baseUrl,
+      });
 
   return (
     <div className={styles['item-page__layout']}>
-      <DataSchema schema={schema} />
+      {schema && <DataSchema schema={schema} />}
       {/* ItemImageSection renders the image immediately. It receives
           OwnerImageSection (a Suspense-wrapped Server Component) as a child
           to preserve the server-to-client boundary. */}
@@ -337,12 +357,18 @@ async function BreadcrumbNav({
 }) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 
-  const collectionResult = await getPublicCollectionBySlug(username, collectionSlug);
+  // Collection: public first, owner only on miss.
+  const publicCollectionResult = await getPublicCollectionBySlug(username, collectionSlug);
+  const collectionResult = publicCollectionResult
+    ?? await getOwnerCollectionBySlug(username, collectionSlug);
   const collectionName = collectionResult?.collection.name ?? collectionSlug;
 
-  const item = collectionResult
+  // Item: public first, owner only on miss. Skipped entirely if collection not found.
+  const publicItem = collectionResult
     ? await getPublicItemBySlug(collectionResult.collection.id, slug, username, collectionSlug)
     : undefined;
+  const item = publicItem
+    ?? (collectionResult ? await getOwnerItemBySlug(collectionResult.collection.id, slug) : undefined);
   const itemName = item?.name ?? slug;
 
   const breadcrumbSchema = getBreadcrumbSchema([
