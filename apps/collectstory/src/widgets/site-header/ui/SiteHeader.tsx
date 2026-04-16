@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
-import { connection } from 'next/server';
 import { headers } from 'next/headers';
 import { Shelves } from '@dezkareid/icons/react';
 import { ThemeToggleWrapper } from '@/src/features/theme';
@@ -14,7 +13,6 @@ import { HeaderTracker } from './HeaderTracker';
 import styles from './SiteHeader.module.css';
 
 async function HeaderAuthSlot() {
-  await connection();
   const session = await getSessionAndRole();
 
   if (!session) {
