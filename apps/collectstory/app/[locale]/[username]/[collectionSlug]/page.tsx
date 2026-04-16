@@ -262,21 +262,22 @@ async function CollectionContent({
 
 // ─── Dynamic guard — handles private collections and true 404s ────────────────
 // Always runs inside <Suspense> so connection() never blocks the static path.
-// For public collections it returns null immediately (publicResult exists, no work done).
+// Checks public query first (cached, free dedup) to short-circuit on public collections.
 // For private collections owned by the current user it renders the content.
 // For visitors or truly missing slugs it calls notFound().
 
 async function OwnerPrivateCollectionGuard({
   username,
   collectionSlug,
-  publicFound,
 }: {
   username: string;
   collectionSlug: string;
-  publicFound: boolean;
 }) {
+  // Re-use the cached public query — Next.js 'use cache' deduplicates this call,
+  // so it's free when CollectionContent already ran getPublicCollectionBySlug.
   // Public collections are already rendered by CollectionContent — nothing to do.
-  if (publicFound) return;
+  const publicResult = await getPublicCollectionBySlug(username, collectionSlug);
+  if (publicResult) return;
 
   // getOwnerCollectionBySlug calls connection() — safe here because this component
   // is always wrapped in <Suspense>.
@@ -334,28 +335,22 @@ async function BreadcrumbNav({
 export default async function CollectionPage({ params }: Properties) {
   const { username, collectionSlug } = await params;
 
-  // Check the public query once at the page level so both CollectionContent and
-  // OwnerPrivateCollectionGuard can share the result without duplicate fetches.
-  // This is a cached call — safe in the page component.
-  const publicResult = await getPublicCollectionBySlug(username, collectionSlug);
-  const publicFound = publicResult !== undefined;
-
   return (
     <div className={`container ${styles.page}`}>
       <BreadcrumbNav username={username} collectionSlug={collectionSlug} />
       {/*
-        CollectionContent renders the cached public view (returns null on miss).
+        CollectionContent renders the cached public view (returns undefined on miss).
         OwnerPrivateCollectionGuard streams in via Suspense and either renders the
         private collection for the owner, or calls notFound() for visitors/missing slugs.
-        For public collections publicFound=true so the guard returns null immediately,
-        meaning connection() is never called on the public path.
+        The guard re-runs getPublicCollectionBySlug internally (free via 'use cache'
+        dedup) and short-circuits immediately for public collections so connection()
+        is never reached on the public path.
       */}
       <CollectionContent username={username} collectionSlug={collectionSlug} />
       <Suspense fallback={undefined}>
         <OwnerPrivateCollectionGuard
           username={username}
           collectionSlug={collectionSlug}
-          publicFound={publicFound}
         />
       </Suspense>
     </div>
