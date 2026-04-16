@@ -1,10 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import {
-  use,
-  Suspense,
-} from 'react';
+import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { Image, Breadcrumb } from '@dezkareid/components/react-server';
 import { routing } from '@/app/i18n/routing';
@@ -13,6 +10,7 @@ import {
   getOwnerCollectionBySlug,
   getPublicCollectionBySlug,
   getPublicItemsInCollection,
+  type PublicItem,
 } from '@/lib/collections';
 import { getCloudinaryUrl } from '@/lib/image/cloudinary';
 import { generateCollectionListingSchema } from '@/lib/seo';
@@ -82,46 +80,39 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
   };
 }
 
-async function CollectionContent({
+// ─── Shared collection body renderer ─────────────────────────────────────────
+
+type CollectionData = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | undefined;
+};
+
+async function CollectionBody({
+  collection,
+  items,
   username,
   collectionSlug,
+  isPrivate,
 }: {
+  collection: CollectionData;
+  items: PublicItem[];
   username: string;
   collectionSlug: string;
+  isPrivate: boolean;
 }) {
-  // Translations and the public query are independent — fire in parallel.
-  // getPublicItemsInCollection depends on collection.id so it runs after.
-  const [t, tCol, publicResult] = await Promise.all([
+  const [t, tCol] = await Promise.all([
     getTranslations('Common'),
     getTranslations('Common.profile.collection'),
-    getPublicCollectionBySlug(username, collectionSlug),
   ]);
 
-  // Only query the owner path when the public query found nothing (private collection).
-  // This avoids an extra DB round-trip on every public collection page visit.
-  const result = publicResult ?? await getOwnerCollectionBySlug(username, collectionSlug);
-  if (!result) notFound();
-
-  const { collection } = result;
-  // If publicResult exists the collection is always public (query filters by visibility).
-  // isPrivate is only true when we fell back to the owner path (ownerResult).
-  const isPrivate = !publicResult;
-
-  // For public collections use the cached public items query (SEO-safe).
-  // For private collections (owner only) use the public query too — OwnerItemActions
-  // (streamed in below) will render all items including private ones.
-  const items = await getPublicItemsInCollection(collection.id, username, collectionSlug);
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 
-  // Structured data is only emitted for public collections to avoid indexing private content.
+  // Structured data only for public collections — never index private content.
   const schema = isPrivate
     ? undefined
-    : generateCollectionListingSchema({
-        collection,
-        username,
-        items,
-        baseUrl,
-      });
+    : generateCollectionListingSchema({ collection, username, items, baseUrl });
 
   return (
     <>
@@ -130,7 +121,6 @@ async function CollectionContent({
         <div className={styles.headerLeft}>
           <div className={styles['header__name-wrapper']}>
             <h1 className={styles.collectionName}>{collection.name}</h1>
-            {/* Social share is only shown for public collections */}
             {!isPrivate && (
               <SocialShare
                 title={tCol('share', { collectionName: collection.name, username })}
@@ -159,8 +149,7 @@ async function CollectionContent({
       {/*
         Non-owner grid: cached RSC, visible to visitors and search engines.
         OwnerItemActions streams in via Suspense and replaces this grid for
-        the authenticated owner. When OwnerItemActions returns null (not owner),
-        this cached grid stays visible.
+        the authenticated owner via CSS :has().
       */}
       <div className={styles.grid}>
         {items.length === 0
@@ -244,6 +233,72 @@ async function CollectionContent({
   );
 }
 
+// ─── Public (static/cached) collection content ───────────────────────────────
+
+async function CollectionContent({
+  username,
+  collectionSlug,
+}: {
+  username: string;
+  collectionSlug: string;
+}) {
+  // Pure cached path — no dynamic data, no cookies. Safe for static rendering.
+  const result = await getPublicCollectionBySlug(username, collectionSlug);
+  if (!result) return; // Private or missing — OwnerPrivateCollectionGuard handles it.
+
+  const { collection } = result;
+  const items = await getPublicItemsInCollection(collection.id, username, collectionSlug);
+
+  return (
+    <CollectionBody
+      collection={collection}
+      items={items}
+      username={username}
+      collectionSlug={collectionSlug}
+      isPrivate={false}
+    />
+  );
+}
+
+// ─── Dynamic guard — handles private collections and true 404s ────────────────
+// Always runs inside <Suspense> so connection() never blocks the static path.
+// For public collections it returns null immediately (publicResult exists, no work done).
+// For private collections owned by the current user it renders the content.
+// For visitors or truly missing slugs it calls notFound().
+
+async function OwnerPrivateCollectionGuard({
+  username,
+  collectionSlug,
+  publicFound,
+}: {
+  username: string;
+  collectionSlug: string;
+  publicFound: boolean;
+}) {
+  // Public collections are already rendered by CollectionContent — nothing to do.
+  if (publicFound) return;
+
+  // getOwnerCollectionBySlug calls connection() — safe here because this component
+  // is always wrapped in <Suspense>.
+  const ownerResult = await getOwnerCollectionBySlug(username, collectionSlug);
+  if (!ownerResult) notFound();
+
+  const { collection } = ownerResult;
+  const items = await getPublicItemsInCollection(collection.id, username, collectionSlug);
+
+  return (
+    <CollectionBody
+      collection={collection}
+      items={items}
+      username={username}
+      collectionSlug={collectionSlug}
+      isPrivate={true}
+    />
+  );
+}
+
+// ─── Breadcrumb ───────────────────────────────────────────────────────────────
+
 async function BreadcrumbNav({
   username,
   collectionSlug,
@@ -253,8 +308,8 @@ async function BreadcrumbNav({
 }) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 
-  const publicResult = await getPublicCollectionBySlug(username, collectionSlug);
-  const result = publicResult ?? await getOwnerCollectionBySlug(username, collectionSlug);
+  // Pure cached path — use slug as label fallback for private collections.
+  const result = await getPublicCollectionBySlug(username, collectionSlug);
   const collectionName = result?.collection.name ?? collectionSlug;
 
   const breadcrumbSchema = getBreadcrumbSchema([
@@ -276,12 +331,33 @@ async function BreadcrumbNav({
   );
 }
 
-export default function CollectionPage({ params }: Properties) {
-  const { username, collectionSlug } = use(params);
+export default async function CollectionPage({ params }: Properties) {
+  const { username, collectionSlug } = await params;
+
+  // Check the public query once at the page level so both CollectionContent and
+  // OwnerPrivateCollectionGuard can share the result without duplicate fetches.
+  // This is a cached call — safe in the page component.
+  const publicResult = await getPublicCollectionBySlug(username, collectionSlug);
+  const publicFound = publicResult !== undefined;
+
   return (
     <div className={`container ${styles.page}`}>
       <BreadcrumbNav username={username} collectionSlug={collectionSlug} />
+      {/*
+        CollectionContent renders the cached public view (returns null on miss).
+        OwnerPrivateCollectionGuard streams in via Suspense and either renders the
+        private collection for the owner, or calls notFound() for visitors/missing slugs.
+        For public collections publicFound=true so the guard returns null immediately,
+        meaning connection() is never called on the public path.
+      */}
       <CollectionContent username={username} collectionSlug={collectionSlug} />
+      <Suspense fallback={undefined}>
+        <OwnerPrivateCollectionGuard
+          username={username}
+          collectionSlug={collectionSlug}
+          publicFound={publicFound}
+        />
+      </Suspense>
     </div>
   );
 }

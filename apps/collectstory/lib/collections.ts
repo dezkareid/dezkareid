@@ -1,4 +1,5 @@
 import { cacheLife, cacheTag } from 'next/cache';
+import { connection } from 'next/server';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/server';
 
@@ -414,6 +415,7 @@ export async function getOwnerCollectionBySlug(
   username: string,
   collectionSlug: string,
 ): Promise<OwnerCollectionResult | undefined> {
+  await connection();
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return undefined;
@@ -448,6 +450,7 @@ export async function getOwnerCollectionBySlug(
 export async function getOwnerItemsInCollection(
   collectionId: string,
 ): Promise<OwnerItem[]> {
+  await connection();
   const supabase = await createClient();
 
   const { data: items } = await supabase
@@ -482,6 +485,7 @@ export async function getOwnerItemBySlug(
   collectionId: string,
   itemSlug: string,
 ): Promise<PublicItemDetail | undefined> {
+  await connection();
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return undefined;
