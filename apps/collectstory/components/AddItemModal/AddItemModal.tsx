@@ -3,7 +3,7 @@
 import { useCallback, useImperativeHandle, useState } from 'react';
 import { Modal } from '@dezkareid/components/react';
 import { AddItemForm, type InitialItemData } from '@/components/AddItemForm/AddItemForm';
-import type { CollectionItemState } from '@/app/[locale]/[username]/[collectionSlug]/actions';
+import type { CollectionItemState, CollectionOwnerItem } from '@/app/[locale]/[username]/[collectionSlug]/actions';
 
 type Brand = { id: string; name: string };
 type Franchise = { id: string; name: string };
@@ -16,7 +16,7 @@ type Properties = {
   collectionId: string;
   username: string;
   collectionSlug: string;
-  onSuccess?: () => void;
+  onSuccess?: (item?: CollectionOwnerItem) => void;
   initialData?: InitialItemData;
   action?: (previousState: ActionState, formData: FormData) => Promise<ActionState>;
 };
@@ -36,9 +36,10 @@ export const AddItemModal = function AddItemModal({ ref, brands, franchises, col
 
   const close = useCallback(() => setIsOpen(false), []);
 
-  const handleSuccess = useCallback(() => {
+  const handleSuccess = useCallback((state: ActionState) => {
     close();
-    onSuccess?.();
+    const item = state && 'item' in state ? state.item : undefined;
+    onSuccess?.(item);
   }, [close, onSuccess]);
 
   return (

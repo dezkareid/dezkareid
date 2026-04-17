@@ -188,12 +188,20 @@
 
 /* ─── Item count — structure ───────────────────────────────────────────────── */
 
+.owner-grid__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-16);
+  margin-bottom: var(--spacing-48);
+}
+
 .owner-grid__count {
   font-size: var(--font-size-100);
   color: var(--color-text-secondary);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin: 0 0 var(--spacing-48);
+  margin: 0;
 }
 
 /* ─── Empty state — structure ──────────────────────────────────────────────── */

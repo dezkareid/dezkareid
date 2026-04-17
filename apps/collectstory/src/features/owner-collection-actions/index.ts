@@ -1,1 +1,1 @@
-export { OwnerCollectionActions } from './ui/OwnerCollectionActions';
+export { OwnerCollectionActionsClient } from './ui/OwnerCollectionActionsClient';

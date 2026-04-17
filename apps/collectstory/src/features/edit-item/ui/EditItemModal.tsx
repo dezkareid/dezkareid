@@ -1,9 +1,10 @@
 'use client';
 
 import { useCallback, useImperativeHandle, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Modal } from '@dezkareid/components/react';
 import { AddItemForm, type InitialItemData } from '@/components/AddItemForm/AddItemForm';
-import { updateItemSilent } from '@/app/[locale]/[username]/[collectionSlug]/actions';
+import { updateItemSilent, type CollectionOwnerItem } from '@/app/[locale]/[username]/[collectionSlug]/actions';
 
 type Brand = { id: string; name: string };
 type Franchise = { id: string; name: string };
@@ -18,7 +19,7 @@ type Properties = {
   collectionId: string;
   username: string;
   collectionSlug: string;
-  onSuccess?: () => void;
+  onSuccess?: (item?: CollectionOwnerItem) => void;
   initialData: FullItemData;
 };
 
@@ -27,6 +28,7 @@ export type EditItemModalHandle = {
 };
 
 export const EditItemModal = function EditItemModal({ ref, brands, franchises, collectionId, username, collectionSlug, onSuccess, initialData }: Properties & { ref?: React.RefObject<EditItemModalHandle | null> }) {
+  const t = useTranslations('Common.owner_actions.edit_item');
   const [isOpen, setIsOpen] = useState(false);
 
   useImperativeHandle(ref, () => ({
@@ -37,16 +39,17 @@ export const EditItemModal = function EditItemModal({ ref, brands, franchises, c
 
   const close = useCallback(() => setIsOpen(false), []);
 
-  const handleSuccess = useCallback(() => {
+  const handleSuccess = useCallback((state: Awaited<ReturnType<typeof updateItemSilent>>) => {
     close();
-    onSuccess?.();
+    const item = state && 'item' in state ? state.item : undefined;
+    onSuccess?.(item);
   }, [close, onSuccess]);
 
   return (
     <Modal
       open={isOpen}
       onClose={close}
-      title="Edit Item"
+      title={t('modal_title')}
     >
       {isOpen && (
         <AddItemForm
@@ -58,7 +61,8 @@ export const EditItemModal = function EditItemModal({ ref, brands, franchises, c
           onSuccess={handleSuccess}
           initialData={initialData}
           action={updateItemSilent}
-          submitLabel="Save Changes"
+          submitLabel={t('submit_label')}
+          isEditing={true}
         />
       )}
     </Modal>

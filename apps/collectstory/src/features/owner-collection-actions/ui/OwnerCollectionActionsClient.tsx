@@ -2,34 +2,26 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useCollectionItems } from '@/src/features/owner-item-actions/model/CollectionItemsContext';
 import { OPEN_ADD_ITEM_MODAL_EVENT } from '@/src/shared/lib/owner-events';
 import { DeleteCollectionModal } from './DeleteCollectionModal';
 import styles from './OwnerCollectionActions.module.css';
 
-type Properties = {
-  username: string;
-  collectionSlug: string;
-  collectionId: string;
-  collectionName: string;
-  itemCount: number;
-};
+export function OwnerCollectionActionsClient() {
+  const { pageData, ownerItems } = useCollectionItems();
+  const { username, collection, isOwner } = pageData;
 
-export function OwnerCollectionActionsClient({
-  username,
-  collectionSlug,
-  collectionId,
-  collectionName,
-  itemCount,
-}: Properties) {
   const [deleteOpen, setDeleteOpen] = useState(false);
+
+  if (!isOwner) return null;
 
   return (
     <div className={styles.actions}>
       <DeleteCollectionModal
         open={deleteOpen}
-        collectionId={collectionId}
-        collectionName={collectionName}
-        itemCount={itemCount}
+        collectionId={collection.id}
+        collectionName={collection.name}
+        itemCount={ownerItems.length}
         username={username}
         onClose={() => setDeleteOpen(false)}
       />
@@ -40,10 +32,7 @@ export function OwnerCollectionActionsClient({
       >
         + Add Item
       </button>
-      <Link
-        href={`/${username}/${collectionSlug}/edit`}
-        className={styles.editLink}
-      >
+      <Link href={`/${username}/${collection.slug}/edit`} className={styles.editLink}>
         Edit
       </Link>
       <button

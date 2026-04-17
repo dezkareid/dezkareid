@@ -13,8 +13,8 @@ import { Image } from '@dezkareid/components/react-server';
 import { OwnerProfileActions, OwnerProfileGrid } from '@/src/features/owner-profile-actions';
 import { CollectionCard } from '@/src/entities/collection';
 import { SocialShare } from '@/src/features/social-share';
-import styles from './page.module.css';
 import { routing } from '@/app/i18n/routing';
+import styles from './page.module.css';
 
 type Properties = {
   params: Promise<{ username: string; locale: string }>;

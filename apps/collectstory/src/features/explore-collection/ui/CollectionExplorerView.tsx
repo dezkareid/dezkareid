@@ -2,6 +2,7 @@
 
 import { createPortal } from 'react-dom';
 import { useEffect, useState, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 import { Close, ChevronLeft, ChevronRight } from '@dezkareid/icons/react';
 import { Image } from '@dezkareid/components/react';
 import { LikeButton } from '@/src/features/like-item';
@@ -17,6 +18,7 @@ type Properties = {
 };
 
 export function CollectionExplorerView({ items, isAuthenticated, onClose }: Properties) {
+  const t = useTranslations('CollectionExplorer');
   const [currentIndex, setCurrentIndex] = useState(0);
   const currentItem = items[currentIndex];
 
@@ -76,12 +78,12 @@ export function CollectionExplorerView({ items, isAuthenticated, onClose }: Prop
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
     >
-      <button className={styles.closeBtn} onClick={onClose} aria-label="Close explorer" type="button">
+      <button className={styles.closeBtn} onClick={onClose} aria-label={t('close_aria')} type="button">
         <Close />
       </button>
 
       <div className={styles.content}>
-        <button className={styles.navBtn} onClick={handlePrevious} aria-label="Previous item" type="button">
+        <button className={styles.navBtn} onClick={handlePrevious} aria-label={t('prev_aria')} type="button">
           <ChevronLeft />
         </button>
 
@@ -116,16 +118,14 @@ export function CollectionExplorerView({ items, isAuthenticated, onClose }: Prop
           </div>
         </div>
 
-        <button className={styles.navBtn} onClick={handleNext} aria-label="Next item" type="button">
+        <button className={styles.navBtn} onClick={handleNext} aria-label={t('next_aria')} type="button">
           <ChevronRight />
         </button>
       </div>
 
       <div className={styles.footer}>
         <p>
-          {currentIndex + 1}
-          {' / '}
-          {items.length}
+          {t('counter', { current: currentIndex + 1, total: items.length })}
         </p>
       </div>
     </div>,
