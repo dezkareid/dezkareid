@@ -45,7 +45,6 @@ export async function createLine(formData: FormData) {
       name,
       slug: slugify(name),
       brand_id: brandId,
-      // eslint-disable-next-line unicorn/no-null -- null required to clear FK in database
       category_id: parseOptionalString(formData, 'category_id') ?? null,
       image_url: parseOptionalString(formData, 'image_url'),
       variants: parseVariantsJson(formData),
@@ -73,7 +72,6 @@ export async function updateLine(id: string, formData: FormData) {
     name,
     slug: slugify(name),
     brand_id: brandId,
-    // eslint-disable-next-line unicorn/no-null -- null required to clear FK in database
     category_id: parseOptionalString(formData, 'category_id') ?? null,
     variants: parseVariantsJson(formData),
   };

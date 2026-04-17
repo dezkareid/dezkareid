@@ -42,7 +42,7 @@ export async function quickStartCollection(
     return { error: 'Failed to create collection. Please try again.' };
   }
 
-  const itemSlug = await generateUniqueSlug(supabase, user.id, itemName);
+  const itemSlug = await generateUniqueSlug(supabase, newCollection.id, itemName);
 
   const { error: itemError } = await supabase
     .from('collection_items')

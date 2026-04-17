@@ -3,11 +3,12 @@
 import { useCallback, useImperativeHandle, useState } from 'react';
 import { Modal } from '@dezkareid/components/react';
 import { AddItemForm, type InitialItemData } from '@/components/AddItemForm/AddItemForm';
+import type { CollectionItemState } from '@/app/[locale]/[username]/[collectionSlug]/actions';
 
 type Brand = { id: string; name: string };
 type Franchise = { id: string; name: string };
 
-type ActionState = { error: string; field?: string } | { success: true } | undefined;
+type ActionState = CollectionItemState;
 
 type Properties = {
   brands: Brand[];
