@@ -77,7 +77,7 @@ export function EditCollectionForm({
           name="visibility"
           className={styles.select}
           value={visibility}
-          onChange={e => setVisibility(e.target.value)}
+          onChange={event => setVisibility(event.target.value)}
         >
           <option value="public">Public</option>
           <option value="private">Private</option>

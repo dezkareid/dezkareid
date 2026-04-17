@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@dezkareid/components/react';
 import { Share, TwitterX, Facebook, Linkedin, Copy, Check } from '@dezkareid/icons/react';
 import { DropdownMenu, DropdownMenuItem } from '@/src/shared/ui/dropdown-menu';
@@ -18,6 +19,7 @@ interface SocialShareProperties {
 export function SocialShare({ title, baseUrl, entityType }: SocialShareProperties) {
   const [isCopied, setIsCopied] = useState(false);
   const { track } = useAnalytics();
+  const t = useTranslations('SocialShare');
 
   const handleTrackShare = useCallback((platform: string) => {
     track({ action: 'share', category: 'social', label: entityType, platform });
@@ -40,14 +42,14 @@ export function SocialShare({ title, baseUrl, entityType }: SocialSharePropertie
   }), [baseUrl, entityType, title]);
 
   const trigger = useCallback((open: boolean) => (
-    <Button variant="ghost" size="sm" aria-label="Share options" aria-expanded={open}>
+    <Button variant="ghost" size="sm" aria-label={t('share_options_aria_label')} aria-expanded={open}>
       <Share />
     </Button>
-  ), []);
+  ), [t]);
 
   return (
     <>
-      <Toast message="Link copied!" visible={isCopied} />
+      <Toast message={t('link_copied')} visible={isCopied} />
       <DropdownMenu trigger={trigger}>
         <DropdownMenuItem
           variant="anchor"
@@ -58,7 +60,7 @@ export function SocialShare({ title, baseUrl, entityType }: SocialSharePropertie
         >
           <div className={styles['social-share-item']}>
             <TwitterX className={styles['social-share-icon']} />
-            <span>Twitter (X)</span>
+            <span>{t('twitter')}</span>
           </div>
         </DropdownMenuItem>
         <DropdownMenuItem
@@ -70,7 +72,7 @@ export function SocialShare({ title, baseUrl, entityType }: SocialSharePropertie
         >
           <div className={styles['social-share-item']}>
             <Facebook className={styles['social-share-icon']} />
-            <span>Facebook</span>
+            <span>{t('facebook')}</span>
           </div>
         </DropdownMenuItem>
         <DropdownMenuItem
@@ -82,13 +84,13 @@ export function SocialShare({ title, baseUrl, entityType }: SocialSharePropertie
         >
           <div className={styles['social-share-item']}>
             <Linkedin className={styles['social-share-icon']} />
-            <span>LinkedIn</span>
+            <span>{t('linkedin')}</span>
           </div>
         </DropdownMenuItem>
         <DropdownMenuItem variant="action" onClick={handleCopyLink}>
           <div className={styles['social-share-item']}>
             {isCopied ? <Check className={styles['social-share-icon']} /> : <Copy className={styles['social-share-icon']} />}
-            <span>{isCopied ? 'Copied!' : 'Copy Link'}</span>
+            <span>{isCopied ? t('copied') : t('copy_link')}</span>
           </div>
         </DropdownMenuItem>
       </DropdownMenu>
