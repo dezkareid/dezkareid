@@ -5,6 +5,11 @@ import { redirect } from 'next/navigation';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/server';
 import { generateUniqueSlug, generateUniqueCollectionSlug, toSlugField } from '@/lib/slug';
+import {
+  getPublicCollectionBySlug,
+  getPublicItemsInCollection,
+  type PublicItem,
+} from '@/lib/collections';
 
 // ─── Shared types ─────────────────────────────────────────────────────────────
 
@@ -164,7 +169,7 @@ export async function deleteCollection(collectionId: string): Promise<{ error: s
 export type CollectionItemState
   = | { error: string }
     | { slugOptions: SlugOption[] }
-    | { success: true }
+    | { success: true; item?: CollectionOwnerItem }
     | undefined;
 
 type InsertItemResult = { error: { code: string } } | { collection_id: string; username: string | undefined; collectionSlug: string | undefined };
@@ -234,7 +239,7 @@ export async function createCollectionItem(
 
 /**
  * Same as createCollectionItem but skips revalidatePath — used by OwnerItemGrid
- * where handleAddSuccess already refreshes the grid client-side via getCollectionItems.
+ * where handleAddSuccess updates the context store directly from the returned item.
  * Skipping revalidatePath prevents the router from triggering a background RSC
  * re-render that would cause the whole grid to re-mount via the Suspense boundary.
  */
@@ -254,13 +259,22 @@ export async function createCollectionItemSilent(
   const result = await insertCollectionItem(supabase, user.id, formData);
   if ('error' in result) return mapInsertError(result.error.code);
 
-  // Only invalidate tags — no revalidatePath. The caller (OwnerItemGrid's
-  // handleAddSuccess) fetches fresh items client-side so no RSC refresh needed.
   const { username, collectionSlug } = result;
   if (username && collectionSlug) revalidateTag(`collection:${username}:${collectionSlug}`, 'max');
   revalidateTag(`collection-items:${collection_id}`, 'max');
   if (username) revalidateTag(`profile:${username}`, 'max');
-  return { success: true };
+
+  const { data: inserted } = await supabase
+    .from('collection_items')
+    .select(`id, name, slug, image_url, description, date_acquired, likes_count, visibility, franchise_id, variant,
+      lines ( id, name, brands ( id, name ), categories ( name ), variants )`)
+    .eq('collection_id', collection_id)
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  return { success: true, item: inserted ? (inserted as unknown as CollectionOwnerItem) : undefined };
 }
 
 export type CopyItemState
@@ -519,6 +533,9 @@ export async function getCollectionItems(collectionId: string): Promise<{
   description: string | null;
   date_acquired: string | null;
   likes_count: number;
+  visibility: string;
+  franchise_id: string | null;
+  variant: string | null;
   lines: {
     id: string;
     name: string;
@@ -542,6 +559,8 @@ export async function getCollectionItems(collectionId: string): Promise<{
       date_acquired,
       likes_count,
       visibility,
+      franchise_id,
+      variant,
       lines (
         id,
         name,
@@ -556,6 +575,114 @@ export async function getCollectionItems(collectionId: string): Promise<{
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Supabase nested select types don't match manually defined shape
   return (data ?? []) as any[];
+}
+
+// ─── Page data loader ────────────────────────────────────────────────────────
+
+export type CollectionOwnerItem = {
+  id: string;
+  name: string;
+  slug: string;
+  image_url: string | null;
+  description: string | null;
+  date_acquired: string | null;
+  likes_count: number;
+  visibility: string;
+  franchise_id: string | null;
+  variant: string | null;
+  lines: {
+    id: string;
+    name: string;
+    brands: { id: string; name: string } | null;
+    categories: { name: string } | null;
+    variants: unknown[];
+  } | null;
+};
+
+export type CollectionOwnerData = {
+  items: CollectionOwnerItem[];
+  brands: { id: string; name: string }[];
+  franchises: { id: string; name: string }[];
+};
+
+export type CollectionPageData = {
+  username: string;
+  collection: { id: string; name: string; slug: string; description: string | undefined };
+  collectionUserId: string;
+  items: PublicItem[];
+  isPrivate: boolean;
+  isAuthenticated: boolean;
+  isOwner: boolean;
+  ownerData: CollectionOwnerData | null;
+};
+
+/**
+ * Public data only — no auth, no cookies. Safe to call directly in the page
+ * without a Suspense boundary. Returns null when the collection doesn't exist.
+ */
+export async function getPublicPageData(
+  username: string,
+  collectionSlug: string,
+): Promise<CollectionPageData | null> {
+  const publicResult = await getPublicCollectionBySlug(username, collectionSlug);
+
+  if (!publicResult) return null;
+
+  const { collection, userId: collectionUserId } = publicResult;
+  const items = await getPublicItemsInCollection(collection.id, username, collectionSlug);
+  return {
+    username,
+    collection,
+    collectionUserId,
+    items,
+    isPrivate: false,
+    isAuthenticated: false,
+    isOwner: false,
+    ownerData: null,
+  };
+}
+
+export type CollectionAuthData = {
+  isAuthenticated: boolean;
+  isOwner: boolean;
+  ownerData: CollectionOwnerData | null;
+};
+
+/**
+ * Auth-dependent data — calls createClient() which reads cookies and makes a
+ * network request. Must be called inside a <Suspense> boundary.
+ * Returns null when the collection is private and the user is not the owner.
+ */
+export async function getCollectionAuthData(
+  username: string,
+  collectionSlug: string,
+  collectionId: string,
+  collectionUserId: string,
+): Promise<CollectionAuthData> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const isAuthenticated = !!user;
+  const isOwner = isAuthenticated && user!.id === collectionUserId;
+
+  const ownerData = isOwner
+    ? await Promise.all([
+        supabase
+          .from('collection_items')
+          .select(`
+            id, name, slug, image_url, description, date_acquired,
+            likes_count, visibility, franchise_id, variant,
+            lines ( id, name, brands ( id, name ), categories ( name ), variants )
+          `)
+          .eq('collection_id', collectionId)
+          .order('created_at', { ascending: false })
+          .then(({ data }) => (data ?? []) as unknown as CollectionOwnerItem[]),
+        getAllBrands(),
+        getAllFranchises(),
+      ]).then(([ownerItems, brands, franchises]) => ({ items: ownerItems, brands, franchises }))
+    : null;
+
+  return { isAuthenticated, isOwner, ownerData };
 }
 
 // ─── Like actions ─────────────────────────────────────────────────────────────
@@ -780,4 +907,64 @@ export async function updateItem(
   }
 
   redirect(`/${username}/${collectionSlug}/${item.slug}`);
+}
+
+/**
+ * Same as updateItem but skips redirect — used for inline editing where
+ * the UI handles the success state without a full page navigation.
+ */
+export async function updateItemSilent(
+  _previousState: ItemState,
+  formData: FormData,
+): Promise<ItemState> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated.' };
+
+  const itemId = getOptional(formData, 'item_id');
+  if (!itemId) return { error: 'Item not found.' };
+
+  const name = getOptional(formData, 'name') ?? '';
+  if (!name) return { error: 'Name is required.' };
+
+  const collection_id = getOptional(formData, 'collection_id');
+
+  const { error } = await supabase
+    .from('collection_items')
+    .update({
+      name,
+      image_url: orNull(getOptional(formData, 'image_url')),
+      line_id: orNull(getOptional(formData, 'line_id')),
+      franchise_id: orNull(getOptional(formData, 'franchise_id')),
+      variant: orNull(getOptional(formData, 'variant')),
+      description: orNull(getOptional(formData, 'description')),
+      date_acquired: orNull(getOptional(formData, 'date_acquired')),
+      visibility: getOptional(formData, 'visibility') ?? 'public',
+      catalog_item_id: orNull(getOptional(formData, 'catalog_item_id')),
+    })
+    .eq('id', itemId)
+    .eq('user_id', user.id);
+
+  if (error) return { error: 'Failed to update item. Please try again.' };
+
+  if (collection_id) {
+    revalidateTag(`collection-items:${collection_id}`, 'max');
+  }
+
+  const username = getOptional(formData, 'username');
+  const collectionSlug = getOptional(formData, 'collection_slug');
+
+  const { data: updated } = await supabase
+    .from('collection_items')
+    .select(`id, name, slug, image_url, description, date_acquired, likes_count, visibility, franchise_id, variant,
+      lines ( id, name, brands ( id, name ), categories ( name ), variants )`)
+    .eq('id', itemId)
+    .eq('user_id', user.id)
+    .single();
+
+  if (username && collectionSlug && updated) {
+    revalidateTag(`item:${username}:${collectionSlug}:${updated.slug}`, 'max');
+  }
+
+  return { success: true, item: updated ? (updated as unknown as CollectionOwnerItem) : undefined };
 }

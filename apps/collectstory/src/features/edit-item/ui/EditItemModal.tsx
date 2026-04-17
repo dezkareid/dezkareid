@@ -1,14 +1,17 @@
 'use client';
 
 import { useCallback, useImperativeHandle, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Modal } from '@dezkareid/components/react';
 import { AddItemForm, type InitialItemData } from '@/components/AddItemForm/AddItemForm';
-import type { CollectionItemState, CollectionOwnerItem } from '@/app/[locale]/[username]/[collectionSlug]/actions';
+import { updateItemSilent, type CollectionOwnerItem } from '@/app/[locale]/[username]/[collectionSlug]/actions';
 
 type Brand = { id: string; name: string };
 type Franchise = { id: string; name: string };
 
-type ActionState = CollectionItemState;
+export type FullItemData = InitialItemData & {
+  id: string;
+};
 
 type Properties = {
   brands: Brand[];
@@ -17,15 +20,15 @@ type Properties = {
   username: string;
   collectionSlug: string;
   onSuccess?: (item?: CollectionOwnerItem) => void;
-  initialData?: InitialItemData;
-  action?: (previousState: ActionState, formData: FormData) => Promise<ActionState>;
+  initialData: FullItemData;
 };
 
-export type AddItemModalHandle = {
+export type EditItemModalHandle = {
   open: () => void;
 };
 
-export const AddItemModal = function AddItemModal({ ref, brands, franchises, collectionId, username, collectionSlug, onSuccess, initialData, action }: Properties & { ref?: React.RefObject<AddItemModalHandle | null> }) {
+export const EditItemModal = function EditItemModal({ ref, brands, franchises, collectionId, username, collectionSlug, onSuccess, initialData }: Properties & { ref?: React.RefObject<EditItemModalHandle | null> }) {
+  const t = useTranslations('Common.owner_actions.edit_item');
   const [isOpen, setIsOpen] = useState(false);
 
   useImperativeHandle(ref, () => ({
@@ -36,7 +39,7 @@ export const AddItemModal = function AddItemModal({ ref, brands, franchises, col
 
   const close = useCallback(() => setIsOpen(false), []);
 
-  const handleSuccess = useCallback((state: ActionState) => {
+  const handleSuccess = useCallback((state: Awaited<ReturnType<typeof updateItemSilent>>) => {
     close();
     const item = state && 'item' in state ? state.item : undefined;
     onSuccess?.(item);
@@ -46,7 +49,7 @@ export const AddItemModal = function AddItemModal({ ref, brands, franchises, col
     <Modal
       open={isOpen}
       onClose={close}
-      title="Add to Collection"
+      title={t('modal_title')}
     >
       {isOpen && (
         <AddItemForm
@@ -57,7 +60,9 @@ export const AddItemModal = function AddItemModal({ ref, brands, franchises, col
           collectionSlug={collectionSlug}
           onSuccess={handleSuccess}
           initialData={initialData}
-          action={action}
+          action={updateItemSilent}
+          submitLabel={t('submit_label')}
+          isEditing={true}
         />
       )}
     </Modal>

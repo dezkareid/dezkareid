@@ -40,6 +40,7 @@ type Properties<T extends ActionState = ActionState> = {
   initialData?: InitialItemData;
   action?: (previousState: T, formData: FormData) => Promise<T>;
   submitLabel?: string;
+  isEditing?: boolean;
 };
 
 async function uploadFile(file: File): Promise<{ url: string } | { error: string }> {
@@ -309,6 +310,7 @@ function useAddItemFormLogic<T extends ActionState>(
   action: Properties<T>['action'],
   onSuccess: Properties<T>['onSuccess'],
   t: ReturnType<typeof useTranslations<'AddItemForm'>>,
+  isEditing: boolean,
 ) {
   const defaultAction = useCallback(async (previousState: ActionState, formData: FormData) => createCollectionItem(previousState, formData), []) as unknown as (state: Awaited<T>, payload: FormData) => Promise<T>;
   const finalAction = (action as unknown as (state: Awaited<T>, payload: FormData) => Promise<T>) || defaultAction;
@@ -439,7 +441,12 @@ function useAddItemFormLogic<T extends ActionState>(
       return;
     }
 
-    // Phase 0: check for collision before first save.
+    // Phase 0: check for collision before first save (skip when editing — slug is immutable).
+    if (isEditing) {
+      startTransition(() => formAction(data));
+      return;
+    }
+
     setChecking(true);
     const options = await checkCollision(
       nameValue,
@@ -583,7 +590,7 @@ function FormBody<T extends ActionState>({
 
 export function AddItemForm<T extends ActionState = ActionState>(properties: Properties<T>) {
   const t = useTranslations('AddItemForm');
-  const logic = useAddItemFormLogic<T>(properties.initialData, properties.action, properties.onSuccess, t);
+  const logic = useAddItemFormLogic<T>(properties.initialData, properties.action, properties.onSuccess, t, properties.isEditing ?? false);
   const { state, handleSubmit, formRef } = logic;
   const stateAsError = state && typeof state === 'object' && 'error' in state ? (state as { error: string }).error : undefined;
 
@@ -592,6 +599,9 @@ export function AddItemForm<T extends ActionState = ActionState>(properties: Pro
       <input type="hidden" name="collection_id" value={properties.collectionId} />
       {properties.username && <input type="hidden" name="username" value={properties.username} />}
       {properties.collectionSlug && <input type="hidden" name="collection_slug" value={properties.collectionSlug} />}
+      {properties.initialData && 'id' in properties.initialData && (properties.initialData as { id: string }).id && (
+        <input type="hidden" name="item_id" value={(properties.initialData as { id: string }).id} />
+      )}
 
       {stateAsError && (
         <p id="form-error" className={styles.formError} role="alert">{stateAsError}</p>

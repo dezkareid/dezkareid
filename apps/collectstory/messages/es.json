@@ -37,6 +37,11 @@
         "message": "¿Eliminar {itemName}? Esta acción no se puede deshacer.",
         "aria_label": "Eliminar {name}"
       },
+      "edit_item": {
+        "modal_title": "Editar artículo",
+        "submit_label": "Guardar cambios",
+        "aria_label": "Editar {name}"
+      },
       "delete_collection": {
         "modal_title": "Eliminar colección",
         "message_with_items": "¿Eliminar {collectionName}? {count, plural, =1 {1 artículo} other {{count} artículos}} de esta colección se eliminarán permanentemente y no se podrán recuperar.",
@@ -272,6 +277,13 @@
     "error_upload": "Error al subir. Inténtalo de nuevo.",
     "slug_picker_legend": "Este nombre ya existe en esta colección. Elige una URL única para tu artículo:",
     "slug_picker_hint": "O edita el nombre de arriba para usar uno diferente."
+  },
+  "CollectionExplorer": {
+    "explore_button": "Explorar colección",
+    "close_aria": "Cerrar explorador",
+    "prev_aria": "Artículo anterior",
+    "next_aria": "Siguiente artículo",
+    "counter": "{current} / {total}"
   },
   "Manifest": {
     "name": "Collectstory",

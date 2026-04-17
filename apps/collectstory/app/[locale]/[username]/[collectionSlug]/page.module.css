@@ -78,6 +78,10 @@
   text-transform: uppercase;
 }
 
+.exploreWrapper {
+  margin-top: var(--spacing-16);
+}
+
 .ownerActions {
   display: flex;
   align-items: center;

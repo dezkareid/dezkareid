@@ -7,6 +7,8 @@ export type OwnerItem = {
   date_acquired: string | null;
   likes_count: number;
   visibility: string;
+  franchise_id: string | null;
+  variant: string | null;
   lines: {
     id: string;
     name: string;

@@ -37,6 +37,11 @@
         "message": "Delete {itemName}? This action cannot be undone.",
         "aria_label": "Delete {name}"
       },
+      "edit_item": {
+        "modal_title": "Edit item",
+        "submit_label": "Save changes",
+        "aria_label": "Edit {name}"
+      },
       "delete_collection": {
         "modal_title": "Delete collection",
         "message_with_items": "Delete {collectionName}? {count, plural, =1 {1 item} other {{count} items}} in this collection will be permanently deleted and cannot be recovered.",
@@ -272,6 +277,13 @@
     "error_upload": "Upload failed. Please try again.",
     "slug_picker_legend": "This name is already taken in this collection. Choose a unique URL for your item:",
     "slug_picker_hint": "Or edit the name above to use a different one."
+  },
+  "CollectionExplorer": {
+    "explore_button": "Explore Collection",
+    "close_aria": "Close explorer",
+    "prev_aria": "Previous item",
+    "next_aria": "Next item",
+    "counter": "{current} / {total}"
   },
   "Manifest": {
     "name": "Collectstory",
