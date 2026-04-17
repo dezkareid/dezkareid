@@ -25,18 +25,6 @@
     "paths": {
       "@/*": [
         "./*"
-      ],
-      "@testing-library/react": [
-        "../../node_modules/.pnpm/node_modules/@testing-library/react"
-      ],
-      "@testing-library/user-event": [
-        "../../node_modules/.pnpm/node_modules/@testing-library/user-event"
-      ],
-      "@testing-library/jest-dom": [
-        "../../node_modules/.pnpm/node_modules/@testing-library/jest-dom"
-      ],
-      "@testing-library/jest-dom/vitest": [
-        "../../node_modules/.pnpm/node_modules/@testing-library/jest-dom/vitest"
       ]
     }
   },
