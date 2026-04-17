@@ -97,6 +97,9 @@
       "outputs": []
     },
     "test": {
+      "dependsOn": [
+        "^build"
+      ],
       "outputs": [],
       "inputs": [
         "src/**/*.tsx",

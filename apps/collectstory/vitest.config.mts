@@ -7,9 +7,13 @@ export default defineConfig({
     react(),
     tsconfigPaths(),
   ],
+  resolve: {
+    conditions: ['import', 'module', 'browser', 'default'],
+  },
   test: {
     globals: true,
     environment: 'jsdom',
     include: ['**/*.test.{ts,tsx}'],
+    setupFiles: ['./vitest.setup.ts'],
   },
 });

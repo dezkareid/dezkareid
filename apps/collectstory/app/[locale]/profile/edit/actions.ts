@@ -4,6 +4,33 @@ import { revalidatePath, revalidateTag } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { RESERVED_USERNAMES } from '@/lib/reserved-usernames';
 
+export type ChangePasswordState = { success: true } | { error: string } | undefined;
+
+export async function changePassword(
+  _previousState: ChangePasswordState,
+  formData: FormData,
+): Promise<ChangePasswordState> {
+  const password = (formData.get('password') as string | null) ?? '';
+
+  if (!password) return { error: 'Password is required.' };
+  if (password.length < 8) return { error: 'Password must be at least 8 characters.' };
+
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) return { error: 'Not authenticated.' };
+
+  // Only allow password change for users with an email/password identity.
+  const hasEmailIdentity = user.identities?.some(identity => identity.provider === 'email');
+  if (!hasEmailIdentity) return { error: 'Password change is not available for your account.' };
+
+  const { error } = await supabase.auth.updateUser({ password });
+
+  if (error) return { error: 'Could not update password. Please try again.' };
+
+  return { success: true };
+}
+
 const USERNAME_PATTERN = /^[a-z0-9][a-z0-9-]{1,}[a-z0-9]$/;
 
 type ProfileState
