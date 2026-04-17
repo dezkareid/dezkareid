@@ -456,6 +456,9 @@ export async function getCollectionItems(collectionId: string): Promise<{
   description: string | null;
   date_acquired: string | null;
   likes_count: number;
+  visibility: string;
+  franchise_id: string | null;
+  variant: string | null;
   lines: {
     id: string;
     name: string;
@@ -479,6 +482,8 @@ export async function getCollectionItems(collectionId: string): Promise<{
       date_acquired,
       likes_count,
       visibility,
+      franchise_id,
+      variant,
       lines (
         id,
         name,
@@ -719,4 +724,59 @@ export async function updateItem(
   }
 
   redirect(`/${username}/${collectionSlug}/${item.slug}`);
+}
+
+/**
+ * Same as updateItem but skips redirect — used for inline editing where
+ * the UI handles the success state without a full page navigation.
+ */
+export async function updateItemSilent(
+  _previousState: ItemState,
+  formData: FormData,
+): Promise<ItemState> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated.' };
+
+  const itemId = getOptional(formData, 'item_id');
+  if (!itemId) return { error: 'Item not found.' };
+
+  const name = getOptional(formData, 'name') ?? '';
+  if (!name) return { error: 'Name is required.' };
+
+  const collection_id = getOptional(formData, 'collection_id');
+
+  const { error } = await supabase
+    .from('collection_items')
+    .update({
+      name,
+      image_url: orNull(getOptional(formData, 'image_url')),
+      line_id: orNull(getOptional(formData, 'line_id')),
+      franchise_id: orNull(getOptional(formData, 'franchise_id')),
+      variant: orNull(getOptional(formData, 'variant')),
+      description: orNull(getOptional(formData, 'description')),
+      date_acquired: orNull(getOptional(formData, 'date_acquired')),
+      visibility: getOptional(formData, 'visibility') ?? 'public',
+      catalog_item_id: orNull(getOptional(formData, 'catalog_item_id')),
+    })
+    .eq('id', itemId)
+    .eq('user_id', user.id);
+
+  if (error) return { error: 'Failed to update item. Please try again.' };
+
+  if (collection_id) {
+    revalidateTag(`collection-items:${collection_id}`, 'max');
+  }
+
+  const username = getOptional(formData, 'username');
+  const collectionSlug = getOptional(formData, 'collection_slug');
+
+  if (username && collectionSlug) {
+    const item = await fetchItemSlug(supabase, itemId, user.id);
+    if (item) {
+      revalidateTag(`item:${username}:${collectionSlug}:${item.slug}`, 'max');
+    }
+  }
+
+  return { success: true };
 }

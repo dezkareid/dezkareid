@@ -487,6 +487,9 @@ export function AddItemForm<T extends ActionState = ActionState>(properties: Pro
       <input type="hidden" name="collection_id" value={properties.collectionId} />
       {properties.username && <input type="hidden" name="username" value={properties.username} />}
       {properties.collectionSlug && <input type="hidden" name="collection_slug" value={properties.collectionSlug} />}
+      {properties.initialData && 'id' in properties.initialData && (properties.initialData as { id: string }).id && (
+        <input type="hidden" name="item_id" value={(properties.initialData as { id: string }).id} />
+      )}
 
       {stateAsError && (
         <p id="form-error" className={styles.formError} role="alert">{stateAsError}</p>

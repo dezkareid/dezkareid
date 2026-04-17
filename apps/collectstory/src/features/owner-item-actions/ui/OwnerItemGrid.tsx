@@ -1,11 +1,12 @@
 'use client';
 
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState, ViewTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { Image } from '@dezkareid/components/react-server';
+import { Image } from '@dezkareid/components/react';
 import { AddItemModal, type AddItemModalHandle } from '@/components/AddItemModal/AddItemModal';
-import { Trash } from '@dezkareid/icons/react';
+import { EditItemModal, type EditItemModalHandle } from '@/src/features/edit-item/ui/EditItemModal';
+import { Trash, Edit } from '@dezkareid/icons/react';
 import { getCollectionItems, deleteItem, createCollectionItemSilent } from '@/app/[locale]/[username]/[collectionSlug]/actions';
 import { OPEN_ADD_ITEM_MODAL_EVENT } from '@/src/shared/lib/owner-events';
 import { PrivateBadgeOverlay } from '@/src/shared/ui/PrivateBadge';
@@ -30,14 +31,18 @@ type Properties = {
 type ItemCardProperties = {
   item: OwnerItem;
   href: string;
+  onEdit: (item: OwnerItem) => void;
   onDelete: (itemId: string, itemName: string) => void;
+  editAriaLabel: string;
   deleteAriaLabel: string;
 };
 
 const OwnerItemCard = memo(function OwnerItemCard({
   item,
   href,
+  onEdit,
   onDelete,
+  editAriaLabel,
   deleteAriaLabel,
 }: ItemCardProperties) {
   return (
@@ -47,12 +52,14 @@ const OwnerItemCard = memo(function OwnerItemCard({
           {item.visibility !== 'public' && <PrivateBadgeOverlay />}
           {item.image_url
             ? (
-                <Image
-                  src={item.image_url}
-                  alt={item.name}
-                  strategy="cloudinary"
-                  sizes="(max-width: 420px) 100vw, (max-width: 720px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                />
+                <ViewTransition name={`item-image-${item.slug}`}>
+                  <Image
+                    src={item.image_url}
+                    alt={item.name}
+                    strategy="cloudinary"
+                    sizes="(max-width: 420px) 100vw, (max-width: 720px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  />
+                </ViewTransition>
               )
             : (
                 <div className={styles['item-card__placeholder']}>📦</div>
@@ -63,6 +70,14 @@ const OwnerItemCard = memo(function OwnerItemCard({
           <p className={styles['item-card__line']}>{item.lines.name}</p>
         )}
       </Link>
+      <button
+        type="button"
+        className={styles['item-card__edit']}
+        aria-label={editAriaLabel}
+        onClick={() => onEdit(item)}
+      >
+        <Edit />
+      </button>
       <button
         type="button"
         className={styles['item-card__delete']}
@@ -92,6 +107,192 @@ function buildInitialState(initialItems: OwnerItem[]): GridState {
   };
 }
 
+function OwnerItemDeleteModal({
+  target,
+  isPending,
+  onClose,
+  onConfirm,
+}: {
+  target: DeleteTarget;
+  isPending: boolean;
+  onClose: () => void;
+  onConfirm: () => Promise<void>;
+}) {
+  if (!target) return;
+  return (
+    <DeleteItemModal
+      open={true}
+      itemName={target.itemName}
+      isPending={isPending}
+      onClose={onClose}
+      onConfirm={onConfirm}
+    />
+  );
+}
+
+function mapItemToInitialData(item: OwnerItem) {
+  return {
+    id: item.id,
+    name: item.name,
+    description: item.description ?? undefined,
+    image_url: item.image_url ?? undefined,
+    brand_id: item.lines?.brands?.id ?? '',
+    line_id: item.lines?.id ?? '',
+    franchise_id: item.franchise_id ?? '',
+    variant: item.variant ?? '',
+    date_acquired: item.date_acquired ?? '',
+    visibility: item.visibility ?? 'public',
+  };
+}
+
+function OwnerItemEditModal({
+  target,
+  modalRef,
+  brands,
+  franchises,
+  collectionId,
+  username,
+  collectionSlug,
+  onSuccess,
+}: {
+  target: OwnerItem | undefined;
+  modalRef: React.RefObject<EditItemModalHandle | null>;
+  brands: Brand[];
+  franchises: Franchise[];
+  collectionId: string;
+  username: string;
+  collectionSlug: string;
+  onSuccess: () => Promise<void>;
+}) {
+  if (!target) return;
+  return (
+    <EditItemModal
+      ref={modalRef}
+      brands={brands}
+      franchises={franchises}
+      collectionId={collectionId}
+      username={username}
+      collectionSlug={collectionSlug}
+      onSuccess={onSuccess}
+      initialData={mapItemToInitialData(target)}
+    />
+  );
+}
+
+function OwnerItemAddModal({
+  modalRef,
+  brands,
+  franchises,
+  collectionId,
+  username,
+  collectionSlug,
+  onSuccess,
+}: {
+  modalRef: React.RefObject<AddItemModalHandle | null>;
+  brands: Brand[];
+  franchises: Franchise[];
+  collectionId: string;
+  username: string;
+  collectionSlug: string;
+  onSuccess: () => Promise<void>;
+}) {
+  return (
+    <AddItemModal
+      ref={modalRef}
+      brands={brands}
+      franchises={franchises}
+      collectionId={collectionId}
+      username={username}
+      collectionSlug={collectionSlug}
+      onSuccess={onSuccess}
+      action={createCollectionItemSilent}
+    />
+  );
+}
+
+function OwnerItemGridModals({
+  deleteTarget,
+  isDeleting,
+  handleCloseDelete,
+  handleDeleteConfirm,
+  editTarget,
+  editModalRef,
+  addModalRef,
+  brands,
+  franchises,
+  collectionId,
+  username,
+  collectionSlug,
+  handleAddSuccess,
+}: {
+  deleteTarget: DeleteTarget;
+  isDeleting: boolean;
+  handleCloseDelete: () => void;
+  handleDeleteConfirm: () => Promise<void>;
+  editTarget: OwnerItem | undefined;
+  editModalRef: React.RefObject<EditItemModalHandle | null>;
+  addModalRef: React.RefObject<AddItemModalHandle | null>;
+  brands: Brand[];
+  franchises: Franchise[];
+  collectionId: string;
+  username: string;
+  collectionSlug: string;
+  handleAddSuccess: () => Promise<void>;
+}) {
+  return (
+    <>
+      <OwnerItemDeleteModal
+        target={deleteTarget}
+        isPending={isDeleting}
+        onClose={handleCloseDelete}
+        onConfirm={handleDeleteConfirm}
+      />
+
+      <OwnerItemEditModal
+        target={editTarget}
+        modalRef={editModalRef}
+        brands={brands}
+        franchises={franchises}
+        collectionId={collectionId}
+        username={username}
+        collectionSlug={collectionSlug}
+        onSuccess={handleAddSuccess}
+      />
+
+      <OwnerItemAddModal
+        modalRef={addModalRef}
+        brands={brands}
+        franchises={franchises}
+        collectionId={collectionId}
+        username={username}
+        collectionSlug={collectionSlug}
+        onSuccess={handleAddSuccess}
+      />
+    </>
+  );
+}
+
+function OwnerItemGridEmpty({
+  onAdd,
+}: {
+  onAdd: () => void;
+}) {
+  const t = useTranslations('Common.owner_actions');
+  return (
+    <div className={styles['owner-grid__empty']}>
+      <p className={styles['owner-grid__empty-title']}>{t('empty_state.title')}</p>
+      <p className={styles['owner-grid__empty-desc']}>{t('empty_state.description')}</p>
+      <button
+        type="button"
+        className={styles['owner-grid__add-btn']}
+        onClick={onAdd}
+      >
+        {t('add_item')}
+      </button>
+    </div>
+  );
+}
+
 export function OwnerItemGrid({
   initialItems,
   collectionId,
@@ -103,6 +304,7 @@ export function OwnerItemGrid({
   const t = useTranslations('Common.owner_actions');
   const tCommon = useTranslations('Common.profile.collection');
   const addModalRef = useRef<AddItemModalHandle>(null);
+  const editModalRef = useRef<EditItemModalHandle>(null);
 
   // Open this grid's modal when the header "+ Add Item" button fires the event.
   useEffect(() => {
@@ -121,6 +323,7 @@ export function OwnerItemGrid({
 
   const [deleteTarget, setDeleteTarget] = useState<DeleteTarget>(undefined);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [editTarget, setEditTarget] = useState<OwnerItem | undefined>(undefined);
 
   // Derive the visible items list from the ordered id list + map.
   // Only recomputes when grid changes.
@@ -152,6 +355,12 @@ export function OwnerItemGrid({
     setDeleteTarget({ itemId, itemName });
   }, []);
 
+  const handleOpenEdit = useCallback((item: OwnerItem) => {
+    setEditTarget(item);
+    // Use setTimeout to ensure the target state is updated before opening
+    setTimeout(() => editModalRef.current?.open(), 0);
+  }, []);
+
   const handleCloseDelete = useCallback(() => {
     setDeleteTarget(undefined);
   }, []);
@@ -181,25 +390,20 @@ export function OwnerItemGrid({
 
   return (
     <>
-      {deleteTarget && (
-        <DeleteItemModal
-          open={true}
-          itemName={deleteTarget.itemName}
-          isPending={isDeleting}
-          onClose={handleCloseDelete}
-          onConfirm={handleDeleteConfirm}
-        />
-      )}
-
-      <AddItemModal
-        ref={addModalRef}
+      <OwnerItemGridModals
+        deleteTarget={deleteTarget}
+        isDeleting={isDeleting}
+        handleCloseDelete={handleCloseDelete}
+        handleDeleteConfirm={handleDeleteConfirm}
+        editTarget={editTarget}
+        editModalRef={editModalRef}
+        addModalRef={addModalRef}
         brands={brands}
         franchises={franchises}
         collectionId={collectionId}
         username={username}
         collectionSlug={collectionSlug}
-        onSuccess={handleAddSuccess}
-        action={createCollectionItemSilent}
+        handleAddSuccess={handleAddSuccess}
       />
 
       {/* Item count — rendered here so it reflects live client state and stays
@@ -212,24 +416,16 @@ export function OwnerItemGrid({
       <div className={styles['owner-grid']}>
         {items.length === 0
           ? (
-              <div className={styles['owner-grid__empty']}>
-                <p className={styles['owner-grid__empty-title']}>{t('empty_state.title')}</p>
-                <p className={styles['owner-grid__empty-desc']}>{t('empty_state.description')}</p>
-                <button
-                  type="button"
-                  className={styles['owner-grid__add-btn']}
-                  onClick={() => addModalRef.current?.open()}
-                >
-                  {t('add_item')}
-                </button>
-              </div>
+              <OwnerItemGridEmpty onAdd={() => addModalRef.current?.open()} />
             )
           : items.map(item => (
               <OwnerItemCard
                 key={item.id}
                 item={item}
                 href={`/${username}/${collectionSlug}/${item.slug}`}
+                onEdit={handleOpenEdit}
                 onDelete={handleOpenDelete}
+                editAriaLabel={t('edit_item.aria_label', { name: item.name })}
                 deleteAriaLabel={t('delete_item.aria_label', { name: item.name })}
               />
             ))}

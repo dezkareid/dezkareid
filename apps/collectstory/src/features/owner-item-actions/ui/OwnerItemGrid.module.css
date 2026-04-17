@@ -81,12 +81,12 @@
   text-overflow: ellipsis;
 }
 
-/* Delete button — structure */
+/* Edit and Delete buttons — structure */
 
+.item-card__edit,
 .item-card__delete {
   position: absolute;
   top: var(--spacing-8);
-  right: var(--spacing-8);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -97,6 +97,14 @@
   padding: 0;
   cursor: pointer;
   --icon-size: 16px;
+}
+
+.item-card__delete {
+  right: var(--spacing-8);
+}
+
+.item-card__edit {
+  right: calc(var(--spacing-8) + 32px + var(--spacing-4));
 }
 
 /* ─── Item card — skin ─────────────────────────────────────────────────────── */
@@ -130,27 +138,51 @@
   color: var(--color-text-secondary);
 }
 
-/* Delete button — skin */
+/* Edit and Delete buttons — skin */
+
+.item-card__edit,
+.item-card__delete {
+  opacity: 0;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.item-card:hover .item-card__edit,
+.item-card:hover .item-card__delete {
+  opacity: 1;
+}
 
 .item-card__delete {
   /* TODO(design-system): needs token for destructive/danger color */
   background-color: rgba(220, 38, 38, 0.08);
   color: #dc2626;
-  opacity: 0;
-  transition: opacity 0.15s ease, background-color 0.15s ease;
 }
 
-.item-card:hover .item-card__delete {
-  opacity: 1;
+.item-card__edit {
+  background-color: var(--color-background-secondary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-primary);
 }
 
 .item-card__delete:hover {
   background-color: rgba(220, 38, 38, 0.16);
 }
 
+.item-card__edit:hover {
+  background-color: var(--color-background-tertiary);
+}
+
+.item-card__edit:focus-visible,
 .item-card__delete:focus-visible {
   opacity: 1;
+}
+
+.item-card__delete:focus-visible {
   outline: 2px solid #dc2626;
+  outline-offset: 2px;
+}
+
+.item-card__edit:focus-visible {
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 

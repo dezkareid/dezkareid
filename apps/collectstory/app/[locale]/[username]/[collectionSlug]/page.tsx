@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
+import { ViewTransition } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { Image, Breadcrumb } from '@dezkareid/components/react-server';
 import { routing } from '@/app/i18n/routing';
@@ -14,9 +15,11 @@ import {
 } from '@/lib/collections';
 import { getCloudinaryUrl } from '@/lib/image/cloudinary';
 import { generateCollectionListingSchema } from '@/lib/seo';
+import { createClient } from '@/lib/supabase/server';
 import { NonOwnerItemActions } from '@/src/features/non-owner-item-actions';
 import { OwnerCollectionActions } from '@/src/features/owner-collection-actions';
 import { OwnerItemActions } from '@/src/features/owner-item-actions';
+import { ExploreButton } from '@/src/features/explore-collection/ui/ExploreButton';
 import { SocialShare } from '@/src/features/social-share';
 import { getBreadcrumbSchema } from '@/src/shared/lib/schema/breadcrumb';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
@@ -107,6 +110,10 @@ async function CollectionBody({
     getTranslations('Common.profile.collection'),
   ]);
 
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const isAuthenticated = !!user;
+
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 
   // Structured data only for public collections — never index private content.
@@ -135,6 +142,14 @@ async function CollectionBody({
           <p className={styles.collectionMeta}>
             {tCol('items_count', { count: items.length })}
           </p>
+          <div className={styles.exploreWrapper}>
+            <ExploreButton
+              items={items}
+              username={username}
+              collectionSlug={collectionSlug}
+              isAuthenticated={isAuthenticated}
+            />
+          </div>
         </div>
         <div className={styles.ownerActions}>
           <Suspense fallback={undefined}>
@@ -176,14 +191,17 @@ async function CollectionBody({
                   <div className={styles.itemImage}>
                     {item.image_url
                       ? (
-                          <Image
-                            src={item.image_url}
-                            alt={item.name}
-                            strategy="cloudinary"
-                            sizes="(max-width: 420px) 100vw, (max-width: 720px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                          />
+                          <ViewTransition name={`item-image-${item.slug}`}>
+                            <Image
+                              src={item.image_url}
+                              alt={item.name}
+                              strategy="cloudinary"
+                              sizes="(max-width: 420px) 100vw, (max-width: 720px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                            />
+                          </ViewTransition>
                         )
                       : (
+
                           <div className={styles.itemImagePlaceholder}>
                             📦
                           </div>
