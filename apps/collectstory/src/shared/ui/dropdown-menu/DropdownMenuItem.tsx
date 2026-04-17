@@ -21,13 +21,17 @@ function itemClassName(className: string | undefined) {
 
 export function DropdownMenuItem(properties: Properties) {
   if (properties.variant === 'anchor') {
+    const { href, children, className, onClick, target, rel } = properties;
     return (
       <Link
-        href={properties.href}
+        href={href}
         role="menuitem"
-        className={itemClassName(properties.className)}
+        className={itemClassName(className)}
+        onClick={onClick}
+        target={target}
+        rel={rel}
       >
-        {properties.children}
+        {children}
       </Link>
     );
   }

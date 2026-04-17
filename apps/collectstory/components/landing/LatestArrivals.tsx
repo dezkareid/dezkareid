@@ -11,9 +11,7 @@ export async function LatestArrivals() {
     getLastArrivals(),
   ]);
 
-  if (items.length === 0) {
-    return null;
-  }
+  if (items.length === 0) return;
 
   return (
     <section className={styles['latest-arrivals']} aria-label={t('aria_label')}>
@@ -37,20 +35,20 @@ export async function LatestArrivals() {
                     <div className={styles['latest-arrivals__image-wrapper']}>
                       {item.image_url
                         ? (
-                          <ViewTransition name={`item-image-${item.slug}`}>
-                            <Image
-                              src={item.image_url}
-                              alt={item.name}
-                              strategy="cloudinary"
-                              sizes="(min-width: 60rem) 25vw, (min-width: 37.5rem) 50vw, 100vw"
-                              priority={index === 0}
-                              className={styles['latest-arrivals__image']}
-                            />
-                          </ViewTransition>
-                        )
+                            <ViewTransition name={`item-image-${item.slug}`}>
+                              <Image
+                                src={item.image_url}
+                                alt={item.name}
+                                strategy="cloudinary"
+                                sizes="(min-width: 60rem) 25vw, (min-width: 37.5rem) 50vw, 100vw"
+                                priority={index === 0}
+                                className={styles['latest-arrivals__image']}
+                              />
+                            </ViewTransition>
+                          )
                         : (
-                          <div className={styles['latest-arrivals__image-placeholder']} aria-hidden="true">📦</div>
-                        )}
+                            <div className={styles['latest-arrivals__image-placeholder']} aria-hidden="true">📦</div>
+                          )}
                     </div>
                     <div className={styles['latest-arrivals__info']}>
                       <h3 className={styles['latest-arrivals__item-title']}>{item.name}</h3>
@@ -64,7 +62,7 @@ export async function LatestArrivals() {
                             alt={item.username}
                             width={16}
                             height={16}
-                            loading='lazy'
+                            loading="lazy"
                             className={styles['latest-arrivals__avatar']}
                           />
                         )}

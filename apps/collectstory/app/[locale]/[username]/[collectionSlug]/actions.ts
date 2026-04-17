@@ -4,9 +4,15 @@ import { revalidatePath, revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/server';
-import { generateUniqueSlug, generateUniqueCollectionSlug } from '@/lib/slug';
+import { generateUniqueSlug, generateUniqueCollectionSlug, toSlugField } from '@/lib/slug';
 
 // ─── Shared types ─────────────────────────────────────────────────────────────
+
+export type SlugOption = {
+  priority: number;
+  slug: string;
+  label: string;
+};
 
 export type Store = {
   id: string;
@@ -27,6 +33,59 @@ export type ItemLink = {
   label: string | undefined;
   created_at: string;
 };
+
+// ─── Slug collision check ─────────────────────────────────────────────────────
+
+/**
+ * Returns ranked slug options when the base slug is already taken in the collection,
+ * or null when no collision is detected (base slug is free).
+ */
+export async function checkSlugCollision(
+  collectionId: string,
+  name: string,
+  lineName: string | undefined,
+  variant: string | undefined,
+  brandName: string | undefined,
+): Promise<SlugOption[] | null> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  // Strip meaningless values (e.g. "Unknown", "N/A") before sending to RPC —
+  // the RPC also filters these, but doing it here avoids a pointless round-trip.
+  const { data, error } = await supabase.rpc('get_slug_options', {
+    p_collection_id: collectionId,
+    p_name: name,
+    p_line_name: toSlugField(lineName) ? lineName ?? null : null,
+    p_variant: toSlugField(variant) ? variant ?? null : null,
+    p_brand_name: toSlugField(brandName) ? brandName ?? null : null,
+    p_exclude_slug: null,
+  });
+
+  if (error || !data) return null;
+
+  const options = data as SlugOption[];
+
+  // If only the ID fallback came back, or if options include non-fallback entries
+  // alongside the fallback, a collision exists. If no options returned at all,
+  // the base slug itself was free (RPC would not return anything except fallback).
+  // We detect "no collision" when the base slug is free: the RPC returns only the
+  // ID fallback (priority 7) because all field-based candidates are also free but
+  // the base slug is free too — actually check directly.
+  const { toSlug } = await import('@/lib/slug');
+  const baseSlug = toSlug(name);
+
+  const { data: existing } = await supabase
+    .from('collection_items')
+    .select('slug')
+    .eq('collection_id', collectionId)
+    .eq('slug', baseSlug)
+    .limit(1);
+
+  if (!existing || existing.length === 0) return null; // no collision
+
+  return options;
+}
 
 // ─── Collection actions ───────────────────────────────────────────────────────
 
@@ -102,8 +161,9 @@ export async function deleteCollection(collectionId: string): Promise<{ error: s
 
 // ─── Collection item actions ──────────────────────────────────────────────────
 
-type CollectionItemState
+export type CollectionItemState
   = | { error: string }
+    | { slugOptions: SlugOption[] }
     | { success: true }
     | undefined;
 
@@ -115,8 +175,10 @@ async function insertCollectionItem(
   formData: FormData,
 ): Promise<InsertItemResult> {
   const name = getOptional(formData, 'name') ?? '';
-  const slug = await generateUniqueSlug(supabase, userId, name);
   const collection_id = getOptional(formData, 'collection_id') ?? '';
+  // Use the user-chosen slug when provided (disambiguation flow); otherwise generate one.
+  const chosenSlug = getOptional(formData, 'slug');
+  const slug = chosenSlug ?? await generateUniqueSlug(supabase, collection_id, name);
   const { error } = await supabase.from('collection_items').insert({
     user_id: userId,
     collection_id,
@@ -125,7 +187,7 @@ async function insertCollectionItem(
     image_url: getOptional(formData, 'image_url'),
     line_id: getOptional(formData, 'line_id'),
     franchise_id: getOptional(formData, 'franchise_id'),
-    variant: getOptional(formData, 'variant') ?? null, // eslint-disable-line unicorn/no-null -- null required to clear value in database
+    variant: getOptional(formData, 'variant') ?? null,
     description: getOptional(formData, 'description'),
     date_acquired: getOptional(formData, 'date_acquired'),
     visibility: getOptional(formData, 'visibility') ?? 'public',
@@ -285,7 +347,7 @@ export async function copyItemToCollection(
   const name = getOptional(formData, 'name') ?? '';
   if (!name) return { error: 'Name is required.' };
 
-  const itemSlug = await generateUniqueSlug(supabase, user.id, name);
+  const itemSlug = await generateUniqueSlug(supabase, collectionId, name);
 
   const { error: insertError } = await supabase
     .from('collection_items')
@@ -296,7 +358,7 @@ export async function copyItemToCollection(
       slug: itemSlug,
       description: getOptional(formData, 'description'),
       image_url: getOptional(formData, 'image_url'),
-      date_acquired: getOptional(formData, 'date_acquired') || null, // eslint-disable-line unicorn/no-null
+      date_acquired: getOptional(formData, 'date_acquired') || null,
       visibility: getOptional(formData, 'visibility') ?? 'public',
       variant: getOptional(formData, 'variant'),
       line_id: getOptional(formData, 'line_id'),
@@ -430,11 +492,11 @@ export async function getAllBrands(): Promise<{ id: string; name: string }[]> {
 
 export async function getLinesByBrand(
   brandId: string,
-): Promise<{ id: string; name: string; categoryName: string | undefined; variants: LineVariant[] }[]> {
+): Promise<{ id: string; name: string; categoryName: string | undefined; variants: LineVariant[]; brandName: string | undefined }[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from('lines')
-    .select('id, name, variants, categories ( name )')
+    .select('id, name, variants, categories ( name ), brands ( name )')
     .eq('brand_id', brandId)
     .order('name');
 
@@ -442,6 +504,7 @@ export async function getLinesByBrand(
     id: l.id,
     name: l.name,
     categoryName: (l.categories as unknown as { name: string } | undefined)?.name ?? undefined,
+    brandName: (l.brands as unknown as { name: string } | undefined)?.name ?? undefined,
     variants: Array.isArray(l.variants) ? (l.variants as LineVariant[]) : [],
   }));
 }
@@ -591,7 +654,9 @@ export async function addItem(
   const collection_id = getOptional(formData, 'collection_id');
   if (!collection_id) return { error: 'Collection is required.' };
 
-  const slug = await generateUniqueSlug(supabase, user.id, name);
+  // Use the user-chosen slug when provided (disambiguation flow); otherwise generate one.
+  const chosenSlug = getOptional(formData, 'slug');
+  const slug = chosenSlug ?? await generateUniqueSlug(supabase, collection_id, name);
 
   const { error } = await supabase.from('collection_items').insert({
     user_id: user.id,
@@ -603,14 +668,10 @@ export async function addItem(
     description: getOptional(formData, 'description'),
     date_acquired: getOptional(formData, 'date_acquired'),
     visibility: getOptional(formData, 'visibility') ?? 'public',
-    catalog_item_id: getOptional(formData, 'catalog_item_id') ?? null, // eslint-disable-line unicorn/no-null -- null required to clear value in database
+    catalog_item_id: getOptional(formData, 'catalog_item_id') ?? null,
   });
 
-  if (error) {
-    if (error.code === '23505') return { error: 'An item with this name already exists in your collection.' };
-    if (error.code === '23503') return { error: 'The selected brand or line no longer exists. Please refresh and try again.' };
-    return { error: 'Failed to save item. Please try again.' };
-  }
+  if (error) return mapInsertError(error.code);
 
   const username = getOptional(formData, 'username');
   const collectionSlug = getOptional(formData, 'collection_slug');
@@ -662,7 +723,6 @@ export async function updateCollection(
   return { success: true, slug: updated.slug };
 }
 
-// eslint-disable-next-line unicorn/no-null -- Supabase distinguishes null (clear) from undefined (skip)
 const orNull = (value: string | undefined) => value ?? null;
 
 async function fetchItemSlug(
@@ -696,6 +756,7 @@ export async function updateItem(
   const item = await fetchItemSlug(supabase, itemId, user.id);
   if (!item) return { error: 'Item not found.' };
 
+  // slug intentionally omitted — slugs are immutable after creation
   const { error } = await supabase
     .from('collection_items')
     .update({

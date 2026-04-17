@@ -30,7 +30,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { data: profiles } = await supabase
     .from('profiles')
     .select('username, updated_at')
-    // eslint-disable-next-line unicorn/no-null -- Supabase filter for IS NOT NULL requires null literal
     .not('username', 'is', null);
 
   const profileRoutes: MetadataRoute.Sitemap = (profiles ?? []).map(p => ({

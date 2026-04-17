@@ -167,7 +167,6 @@ export async function getCollectionFirstImage(
     .select('image_url')
     .eq('collection_id', collectionId)
     .eq('visibility', 'public')
-    // eslint-disable-next-line unicorn/no-null -- Supabase PostgREST filter requires null literal
     .not('image_url', 'is', null)
     .order('created_at', { ascending: true })
     .limit(1)
