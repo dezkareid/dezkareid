@@ -2,7 +2,9 @@
 
 import { useActionState, useEffect, useRef, useState, useTransition, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { createCollectionItem, getLinesByBrand } from '@/app/[locale]/[username]/[collectionSlug]/actions';
+import { useTranslations } from 'next-intl';
+import { createCollectionItem, getLinesByBrand, type CollectionItemState } from '@/app/[locale]/[username]/[collectionSlug]/actions';
+import { SlugPicker, useSlugDisambiguation } from '@/src/features/slug-picker';
 
 type Franchise = { id: string; name: string };
 import styles from './AddItemForm.module.css';
@@ -12,7 +14,7 @@ const MAX_BYTES = 5 * 1024 * 1024;
 
 type Brand = { id: string; name: string };
 type LineVariant = { value: string; display_name: string };
-type Line = { id: string; name: string; categoryName: string | undefined; variants: LineVariant[] };
+type Line = { id: string; name: string; categoryName: string | undefined; variants: LineVariant[]; brandName: string | undefined };
 
 export type InitialItemData = {
   name?: string;
@@ -26,7 +28,7 @@ export type InitialItemData = {
   visibility?: string;
 };
 
-type ActionState = { error: string; field?: string } | { success: true } | undefined;
+type ActionState = CollectionItemState;
 
 type Properties<T extends ActionState = ActionState> = {
   brands: Brand[];
@@ -45,14 +47,8 @@ async function uploadFile(file: File): Promise<{ url: string } | { error: string
   uploadData.set('file', file);
   const response = await fetch('/api/upload', { method: 'POST', body: uploadData });
   const result = (await response.json()) as { url?: string; error?: string };
-  if (!response.ok || !result.url) return { error: result.error ?? 'Upload failed. Please try again.' };
+  if (!response.ok || !result.url) return { error: result.error ?? '' };
   return { url: result.url };
-}
-
-function validateImageFile(file: File): string | undefined {
-  if (!ALLOWED_TYPES.has(file.type)) return 'Only JPEG, PNG, and WebP images are allowed.';
-  if (file.size > MAX_BYTES) return 'Image must be 5 MB or smaller.';
-  return undefined;
 }
 
 function ImageUploadField({
@@ -61,17 +57,19 @@ function ImageUploadField({
   uploadFailed,
   uploading,
   onFileChange,
+  t,
 }: {
   preview: string | undefined;
   fileError: string | undefined;
   uploadFailed: boolean;
   uploading: boolean;
   onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  t: ReturnType<typeof useTranslations<'AddItemForm'>>;
 }) {
   return (
     <div className={styles.field}>
       <label className={styles.label} htmlFor="item-image">
-        Image
+        {t('field_image')}
       </label>
       <div className={styles.uploadArea}>
         {preview
@@ -82,7 +80,7 @@ function ImageUploadField({
           : (
               <div className={styles.uploadPlaceholder}>
                 <span className={styles.uploadIcon}>↑</span>
-                <span className={styles.uploadHint}>JPEG, PNG or WebP · max 5 MB</span>
+                <span className={styles.uploadHint}>{t('field_image_hint')}</span>
               </div>
             )}
         <input
@@ -100,7 +98,7 @@ function ImageUploadField({
         <p id="image-error" className={styles.fieldError} role="alert">
           {fileError}
           {uploadFailed && (
-            <span className={styles.retryHint}> — choose the file again to retry.</span>
+            <span className={styles.retryHint}>{t('field_image_retry')}</span>
           )}
         </p>
       )}
@@ -112,15 +110,17 @@ function VariantSelectField({
   line,
   selectedVariant,
   onVariantChange,
+  t,
 }: {
   line: Line | undefined;
   selectedVariant: string;
   onVariantChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  t: ReturnType<typeof useTranslations<'AddItemForm'>>;
 }) {
   if (!line || line.variants.length === 0) return;
   return (
     <div className={styles.field}>
-      <label className={styles.label} htmlFor="item-variant">Variant</label>
+      <label className={styles.label} htmlFor="item-variant">{t('field_variant')}</label>
       <select
         id="item-variant"
         name="variant"
@@ -128,7 +128,7 @@ function VariantSelectField({
         value={selectedVariant}
         onChange={onVariantChange}
       >
-        <option value="">— none —</option>
+        <option value="">{t('field_none')}</option>
         {line.variants.map(v => (
           <option key={v.value} value={v.value}>
             {v.display_name}
@@ -139,11 +139,21 @@ function VariantSelectField({
   );
 }
 
-function NameField({ defaultValue, error }: { defaultValue?: string; error?: string }) {
+function NameField({
+  value,
+  error,
+  onChange,
+  t,
+}: {
+  value: string;
+  error?: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  t: ReturnType<typeof useTranslations<'AddItemForm'>>;
+}) {
   return (
     <div className={styles.field}>
       <label className={styles.label} htmlFor="item-name">
-        Name
+        {t('field_name')}
         {' '}
         <span className={styles.required}>*</span>
       </label>
@@ -154,8 +164,9 @@ function NameField({ defaultValue, error }: { defaultValue?: string; error?: str
         className={styles.input}
         required
         autoComplete="off"
-        defaultValue={defaultValue}
-        placeholder="e.g. S.H. Figuarts Spider-Man"
+        value={value}
+        onChange={onChange}
+        placeholder={t('field_name_placeholder')}
         aria-describedby={error ? 'form-error' : undefined}
       />
     </div>
@@ -170,6 +181,7 @@ function BrandLineFields({
   loadingLines,
   onBrandChange,
   onLineChange,
+  t,
 }: {
   brands: Brand[];
   selectedBrandId: string;
@@ -178,13 +190,14 @@ function BrandLineFields({
   loadingLines: boolean;
   onBrandChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   onLineChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  t: ReturnType<typeof useTranslations<'AddItemForm'>>;
 }) {
   return (
     <div className={styles.row}>
       <div className={styles.field}>
-        <label className={styles.label} htmlFor="item-brand">Brand</label>
+        <label className={styles.label} htmlFor="item-brand">{t('field_brand')}</label>
         <select id="item-brand" className={styles.select} onChange={onBrandChange} value={selectedBrandId}>
-          <option value="">— none —</option>
+          <option value="">{t('field_none')}</option>
           {brands.map(b => (
             <option key={b.id} value={b.id}>
               {b.name}
@@ -195,7 +208,7 @@ function BrandLineFields({
 
       <div className={styles.field}>
         <label className={styles.label} htmlFor="item-line">
-          Line
+          {t('field_line')}
           {' '}
           {loadingLines && <span className={styles.loadingDot} aria-hidden="true" />}
         </label>
@@ -207,7 +220,7 @@ function BrandLineFields({
           value={selectedLineId}
           onChange={onLineChange}
         >
-          <option value="">— none —</option>
+          <option value="">{t('field_none')}</option>
           {lines.map(l => (
             <option key={l.id} value={l.id}>
               {l.name}
@@ -219,13 +232,13 @@ function BrandLineFields({
   );
 }
 
-function MetaFields({ franchises, initialData }: { franchises: Franchise[]; initialData?: InitialItemData }) {
+function MetaFields({ franchises, initialData, t }: { franchises: Franchise[]; initialData?: InitialItemData; t: ReturnType<typeof useTranslations<'AddItemForm'>> }) {
   return (
     <>
       <div className={styles.field}>
-        <label className={styles.label} htmlFor="item-franchise">Franchise</label>
+        <label className={styles.label} htmlFor="item-franchise">{t('field_franchise')}</label>
         <select id="item-franchise" name="franchise_id" className={styles.select} defaultValue={initialData?.franchise_id ?? ''}>
-          <option value="">— none —</option>
+          <option value="">{t('field_none')}</option>
           {franchises.map(f => (
             <option key={f.id} value={f.id}>
               {f.name}
@@ -235,46 +248,52 @@ function MetaFields({ franchises, initialData }: { franchises: Franchise[]; init
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label} htmlFor="item-description">Description</label>
-        <textarea id="item-description" name="description" className={styles.textarea} rows={3} defaultValue={initialData?.description} placeholder="What makes this piece special?" />
+        <label className={styles.label} htmlFor="item-description">{t('field_description')}</label>
+        <textarea id="item-description" name="description" className={styles.textarea} rows={3} defaultValue={initialData?.description} placeholder={t('field_description_placeholder')} />
       </div>
     </>
   );
 }
 
-function AcquisitionFields({ initialData }: { initialData?: InitialItemData }) {
+function AcquisitionFields({ initialData, t }: { initialData?: InitialItemData; t: ReturnType<typeof useTranslations<'AddItemForm'>> }) {
   return (
     <div className={styles.row}>
       <div className={styles.field}>
-        <label className={styles.label} htmlFor="item-date">Date Acquired</label>
+        <label className={styles.label} htmlFor="item-date">{t('field_date')}</label>
         <input id="item-date" name="date_acquired" type="date" className={styles.input} defaultValue={initialData?.date_acquired} />
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label} htmlFor="item-visibility">Visibility</label>
+        <label className={styles.label} htmlFor="item-visibility">{t('field_visibility')}</label>
         <select id="item-visibility" name="visibility" className={styles.select} defaultValue={initialData?.visibility ?? 'public'}>
-          <option value="public">Public</option>
-          <option value="private">Private</option>
-          <option value="draft">Draft</option>
+          <option value="public">{t('visibility_public')}</option>
+          <option value="private">{t('visibility_private')}</option>
+          <option value="draft">{t('visibility_draft')}</option>
         </select>
       </div>
     </div>
   );
 }
 
-function CategoryDisplay({ line }: { line: Line | undefined }) {
+function CategoryDisplay({ line, t }: { line: Line | undefined; t: ReturnType<typeof useTranslations<'AddItemForm'>> }) {
   if (!line) return <></>;
   return (
     <div className={styles.field}>
-      <label className={styles.label}>Category</label>
+      <label className={styles.label}>{t('field_category')}</label>
       <p className={styles.derivedValue}>{line.categoryName ?? '—'}</p>
     </div>
   );
 }
 
-function FormActions({ uploading, pending, submitLabel }: { uploading: boolean; pending: boolean; submitLabel?: string }) {
-  const isBusy = pending || uploading;
-  const label = uploading ? 'Uploading…' : (pending ? 'Saving…' : (submitLabel || 'Add to Collection'));
+function FormActions({ uploading, checking, pending, needsSelection, submitLabel, t }: { uploading: boolean; checking: boolean; pending: boolean; needsSelection: boolean; submitLabel?: string; t: ReturnType<typeof useTranslations<'AddItemForm'>> }) {
+  const isBusy = pending || uploading || checking || needsSelection;
+  function computeLabel() {
+    if (uploading) return t('submit_uploading');
+    if (checking) return t('submit_checking');
+    if (pending) return t('submit_saving');
+    return submitLabel ?? t('submit_add');
+  }
+  const label = computeLabel();
 
   return (
     <div className={styles.actions}>
@@ -289,6 +308,7 @@ function useAddItemFormLogic<T extends ActionState>(
   initialData: InitialItemData | undefined,
   action: Properties<T>['action'],
   onSuccess: Properties<T>['onSuccess'],
+  t: ReturnType<typeof useTranslations<'AddItemForm'>>,
 ) {
   const defaultAction = useCallback(async (previousState: ActionState, formData: FormData) => createCollectionItem(previousState, formData), []) as unknown as (state: Awaited<T>, payload: FormData) => Promise<T>;
   const finalAction = (action as unknown as (state: Awaited<T>, payload: FormData) => Promise<T>) || defaultAction;
@@ -304,10 +324,14 @@ function useAddItemFormLogic<T extends ActionState>(
   const [preview, setPreview] = useState<string | undefined>(initialData?.image_url);
   const [uploadedUrl, setUploadedUrl] = useState<string | undefined>(initialData?.image_url);
   const [uploading, setUploading] = useState(false);
+  const [checking, setChecking] = useState(false);
   const [selectedBrandId, setSelectedBrandId] = useState<string>(initialData?.brand_id ?? '');
   const [selectedLine, setSelectedLine] = useState<Line | undefined>(undefined);
   const [selectedVariant, setSelectedVariant] = useState(initialData?.variant ?? '');
+  const [nameValue, setNameValue] = useState(initialData?.name ?? '');
   const [, startTransition] = useTransition();
+  const { slugOptions, selectedSlug, needsSelection, checkCollision, selectSlug, reset } = useSlugDisambiguation();
+  const formRef = useRef<HTMLFormElement>(null);
 
   // Deduplicated lines fetch — React Query caches by brandId across re-renders.
   const { data: lines = [], isFetching: loadingLines } = useQuery({
@@ -322,6 +346,18 @@ function useAddItemFormLogic<T extends ActionState>(
   useEffect(() => {
     if (state && typeof state === 'object' && 'success' in state) onSuccessRef.current(state as T);
   }, [state]); // intentional: onSuccess is read via ref, not listed as a dep
+
+  useEffect(() => {
+    if (slugOptions === null) return;
+    let element: HTMLElement | null = formRef.current?.parentElement ?? null;
+    while (element) {
+      if (element.scrollHeight > element.clientHeight) {
+        element.scrollTo({ top: 0, behavior: 'smooth' });
+        break;
+      }
+      element = element.parentElement;
+    }
+  }, [slugOptions]);
 
   // When lines load and there's an initial lineId, select the matching line.
   useEffect(() => {
@@ -338,14 +374,18 @@ function useAddItemFormLogic<T extends ActionState>(
     setPreview(undefined);
     setUploadedUrl(undefined);
     if (!file) return;
-    const error = validateImageFile(file);
-    if (error) {
-      setFileError(error);
+    if (!ALLOWED_TYPES.has(file.type)) {
+      setFileError(t('error_image_type'));
+      event.target.value = '';
+      return;
+    }
+    if (file.size > MAX_BYTES) {
+      setFileError(t('error_image_size'));
       event.target.value = '';
       return;
     }
     setPreview(URL.createObjectURL(file));
-  }, []);
+  }, [t]);
 
   const handleBrandChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     const brandId = event.target.value;
@@ -365,7 +405,7 @@ function useAddItemFormLogic<T extends ActionState>(
     const file = fileInput?.files?.[0];
     if (file && !uploadedUrl) {
       setUploading(true);
-      const result = await uploadFile(file).catch(() => ({ error: 'Upload failed. Please try again.' }));
+      const result = await uploadFile(file).catch(() => ({ error: t('error_upload') }));
       setUploading(false);
       if ('error' in result) {
         setFileError(result.error);
@@ -387,7 +427,31 @@ function useAddItemFormLogic<T extends ActionState>(
     const form = event.currentTarget;
     const data = new FormData(form);
     const ok = await resolveImageUrl(form, data);
-    if (ok) startTransition(() => formAction(data));
+    if (!ok) return;
+
+    const collectionId = (form.elements.namedItem('collection_id') as HTMLInputElement)?.value;
+
+    // Phase 1: options showing and slug chosen → attach chosen slug and save.
+    if (slugOptions !== null) {
+      if (!selectedSlug) return;
+      data.set('slug', selectedSlug);
+      startTransition(() => formAction(data));
+      return;
+    }
+
+    // Phase 0: check for collision before first save.
+    setChecking(true);
+    const options = await checkCollision(
+      nameValue,
+      collectionId,
+      selectedLine?.name,
+      selectedVariant || undefined,
+      selectedLine?.brandName,
+    );
+    setChecking(false);
+    if (options === null) {
+      startTransition(() => formAction(data));
+    }
   };
 
   return {
@@ -402,20 +466,31 @@ function useAddItemFormLogic<T extends ActionState>(
     selectedLine,
     selectedVariant,
     setSelectedVariant,
+    nameValue,
+    setNameValue,
+    slugOptions,
+    selectedSlug,
+    needsSelection,
+    selectSlug,
+    reset,
     loadingLines,
     handleFileChange,
     handleBrandChange,
     handleLineChange,
     handleSubmit,
+    formRef,
+    checking,
   };
 }
 
 function FormBody<T extends ActionState>({
   properties,
   logic,
+  t,
 }: {
   properties: Properties<T>;
   logic: ReturnType<typeof useAddItemFormLogic<T>>;
+  t: ReturnType<typeof useTranslations<'AddItemForm'>>;
 }) {
   const { brands, franchises, initialData, submitLabel } = properties;
   const {
@@ -430,17 +505,43 @@ function FormBody<T extends ActionState>({
     loadingLines,
     selectedVariant,
     setSelectedVariant,
+    nameValue,
+    setNameValue,
+    slugOptions,
+    selectedSlug,
+    needsSelection,
+    selectSlug,
+    reset,
     handleFileChange,
     handleBrandChange,
     handleLineChange,
     pending,
+    checking,
   } = logic;
 
   const stateAsError = state && typeof state === 'object' && 'error' in state ? (state as { error: string }).error : undefined;
 
   return (
     <>
-      <NameField defaultValue={initialData?.name} error={stateAsError} />
+      <NameField
+        value={nameValue}
+        error={stateAsError}
+        onChange={(event) => {
+          setNameValue(event.target.value);
+          reset();
+        }}
+        t={t}
+      />
+
+      {slugOptions !== null && (
+        <SlugPicker
+          options={slugOptions}
+          selectedSlug={selectedSlug}
+          onSelect={selectSlug}
+          legend={t('slug_picker_legend')}
+          hint={t('slug_picker_hint')}
+        />
+      )}
 
       <ImageUploadField
         preview={preview}
@@ -448,6 +549,7 @@ function FormBody<T extends ActionState>({
         uploadFailed={uploadFailed}
         uploading={uploading}
         onFileChange={handleFileChange}
+        t={t}
       />
 
       <BrandLineFields
@@ -458,32 +560,35 @@ function FormBody<T extends ActionState>({
         loadingLines={loadingLines}
         onBrandChange={handleBrandChange}
         onLineChange={handleLineChange}
+        t={t}
       />
 
-      <CategoryDisplay line={selectedLine} />
+      <CategoryDisplay line={selectedLine} t={t} />
 
       <VariantSelectField
         line={selectedLine}
         selectedVariant={selectedVariant}
         onVariantChange={event => setSelectedVariant(event.target.value)}
+        t={t}
       />
 
-      <MetaFields franchises={franchises} initialData={initialData} />
+      <MetaFields franchises={franchises} initialData={initialData} t={t} />
 
-      <AcquisitionFields initialData={initialData} />
+      <AcquisitionFields initialData={initialData} t={t} />
 
-      <FormActions uploading={uploading} pending={pending} submitLabel={submitLabel} />
+      <FormActions uploading={uploading} checking={checking} pending={pending} needsSelection={needsSelection} submitLabel={submitLabel} t={t} />
     </>
   );
 }
 
 export function AddItemForm<T extends ActionState = ActionState>(properties: Properties<T>) {
-  const logic = useAddItemFormLogic<T>(properties.initialData, properties.action, properties.onSuccess);
-  const { state, handleSubmit } = logic;
+  const t = useTranslations('AddItemForm');
+  const logic = useAddItemFormLogic<T>(properties.initialData, properties.action, properties.onSuccess, t);
+  const { state, handleSubmit, formRef } = logic;
   const stateAsError = state && typeof state === 'object' && 'error' in state ? (state as { error: string }).error : undefined;
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form} noValidate>
+    <form ref={formRef} onSubmit={handleSubmit} className={styles.form} noValidate>
       <input type="hidden" name="collection_id" value={properties.collectionId} />
       {properties.username && <input type="hidden" name="username" value={properties.username} />}
       {properties.collectionSlug && <input type="hidden" name="collection_slug" value={properties.collectionSlug} />}
@@ -492,7 +597,7 @@ export function AddItemForm<T extends ActionState = ActionState>(properties: Pro
         <p id="form-error" className={styles.formError} role="alert">{stateAsError}</p>
       )}
 
-      <FormBody<T> properties={properties} logic={logic} />
+      <FormBody<T> properties={properties} logic={logic} t={t} />
     </form>
   );
 }
