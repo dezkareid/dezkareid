@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useEffect } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { updateCollection } from '../actions';
 import styles from '@/components/AddItemForm/AddItemForm.module.css';
@@ -9,6 +9,7 @@ type Properties = {
   collectionId: string;
   currentName: string;
   currentDescription: string | undefined;
+  currentVisibility: string;
   username: string;
   collectionSlug: string;
 };
@@ -17,11 +18,13 @@ export function EditCollectionForm({
   collectionId,
   currentName,
   currentDescription,
+  currentVisibility,
   username,
   collectionSlug,
 }: Properties) {
   const router = useRouter();
   const [state, formAction, pending] = useActionState(updateCollection, undefined);
+  const [visibility, setVisibility] = useState(currentVisibility);
 
   useEffect(() => {
     if (state && 'success' in state) {
@@ -65,6 +68,20 @@ export function EditCollectionForm({
           rows={3}
           defaultValue={currentDescription ?? ''}
         />
+      </div>
+
+      <div className={styles.field}>
+        <label className={styles.label} htmlFor="collection-visibility">Visibility</label>
+        <select
+          id="collection-visibility"
+          name="visibility"
+          className={styles.select}
+          value={visibility}
+          onChange={e => setVisibility(e.target.value)}
+        >
+          <option value="public">Public</option>
+          <option value="private">Private</option>
+        </select>
       </div>
 
       <div className={styles.actions}>
