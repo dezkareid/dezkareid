@@ -234,6 +234,15 @@
       "button": "Únete Ahora"
     }
   },
+  "SocialShare": {
+    "share_options_aria_label": "Opciones para compartir",
+    "link_copied": "¡Enlace copiado!",
+    "twitter": "Twitter (X)",
+    "facebook": "Facebook",
+    "linkedin": "LinkedIn",
+    "copy_link": "Copiar enlace",
+    "copied": "¡Copiado!"
+  },
   "Manifest": {
     "name": "Collectstory",
     "short_name": "Collectstory",
