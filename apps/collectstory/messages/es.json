@@ -119,7 +119,73 @@
     },
     "welcome": "Bienvenido a Collectstory",
     "subtitle": "Inicia sesión para gestionar tu colección",
-    "continue_google": "Continuar con Google"
+    "continue_google": "Continuar con Google",
+    "or": "o",
+    "sign_in": {
+      "email_label": "Correo electrónico",
+      "email_placeholder": "tu@ejemplo.com",
+      "password_label": "Contraseña",
+      "password_placeholder": "Mín. 8 caracteres",
+      "forgot_password": "¿Olvidaste tu contraseña?",
+      "submit": "Iniciar sesión",
+      "submitting": "Iniciando sesión…",
+      "error_required": "El correo y la contraseña son obligatorios.",
+      "error_invalid": "Correo o contraseña incorrectos."
+    },
+    "sign_up": {
+      "button": "Crear cuenta",
+      "modal_title": "Crea tu cuenta",
+      "email_label": "Correo electrónico",
+      "email_placeholder": "tu@ejemplo.com",
+      "username_label": "Nombre de usuario",
+      "username_placeholder": "ej. coleccionista42",
+      "username_hint": "Letras minúsculas, números y guiones. Al menos 3 caracteres.",
+      "password_label": "Contraseña",
+      "password_placeholder": "Mín. 8 caracteres",
+      "password_rules_label": "Requisitos de contraseña",
+      "rule_met": "Cumplido",
+      "rule_unmet": "No cumplido",
+      "rule_min_length": "Al menos 8 caracteres",
+      "rule_max_length": "Máximo 60 caracteres",
+      "rule_uppercase": "Una letra mayúscula",
+      "rule_digit": "Un número",
+      "rule_symbol": "Un símbolo (ej. !@#$)",
+      "confirm_label": "Confirmar contraseña",
+      "confirm_placeholder": "Repite tu contraseña",
+      "submit": "Crear cuenta",
+      "submitting": "Creando cuenta…"
+    },
+    "reset_password": {
+      "page_title": "Restablecer contraseña",
+      "email_label": "Correo electrónico",
+      "email_placeholder": "tu@ejemplo.com",
+      "submit": "Enviar enlace de restablecimiento",
+      "submitting": "Enviando…",
+      "success": "Revisa tu bandeja de entrada — si existe una cuenta con ese correo, te hemos enviado un enlace.",
+      "error_required": "El correo es obligatorio."
+    },
+    "new_password": {
+      "password_label": "Nueva contraseña",
+      "password_placeholder": "Mín. 8 caracteres",
+      "confirm_label": "Confirmar nueva contraseña",
+      "confirm_placeholder": "Repite tu nueva contraseña",
+      "submit": "Establecer nueva contraseña",
+      "submitting": "Guardando…",
+      "confirm_error": "Las contraseñas no coinciden.",
+      "loading": "Verificando tu enlace de restablecimiento…",
+      "error_expired": "Tu enlace ha caducado. Por favor, solicita uno nuevo."
+    },
+    "change_password": {
+      "section_title": "Cambiar contraseña",
+      "password_label": "Nueva contraseña",
+      "password_placeholder": "Mín. 8 caracteres",
+      "confirm_label": "Confirmar nueva contraseña",
+      "confirm_placeholder": "Repite tu nueva contraseña",
+      "submit": "Actualizar contraseña",
+      "submitting": "Guardando…",
+      "success": "Contraseña actualizada correctamente.",
+      "confirm_error": "Las contraseñas no coinciden."
+    }
   },
   "Landing": {
     "Hero": {

@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { EditProfileForm } from '@/components/EditProfileForm/EditProfileForm';
+import { ChangePasswordForm } from '@/src/features/auth-email';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -23,11 +24,16 @@ async function ProfileFormLoader() {
     .eq('id', user.id)
     .single();
 
+  const hasEmailIdentity = user.identities?.some(identity => identity.provider === 'email') ?? false;
+
   return (
-    <EditProfileForm
-      currentUsername={profile?.username ?? undefined}
-      currentAvatarUrl={profile?.avatar_url ?? undefined}
-    />
+    <>
+      <EditProfileForm
+        currentUsername={profile?.username ?? undefined}
+        currentAvatarUrl={profile?.avatar_url ?? undefined}
+      />
+      {hasEmailIdentity && <ChangePasswordForm />}
+    </>
   );
 }
 
