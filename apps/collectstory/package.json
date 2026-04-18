@@ -8,6 +8,7 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
@@ -41,6 +42,7 @@
     "@types/react-dom": "19.2.3",
     "@types/sharp": "0.32.0",
     "@vitejs/plugin-react": "5.1.4",
+    "@vitest/coverage-v8": "4.0.18",
     "eslint": "9.39.2",
     "jsdom": "27.4.0",
     "schema-dts": "2.0.0",

@@ -13,7 +13,28 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    include: ['**/*.test.{ts,tsx}'],
     setupFiles: ['./vitest.setup.ts'],
+    include: ['**/*.test.{ts,tsx}'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      thresholds: {
+        lines: 50,
+        functions: 50,
+        branches: 50,
+        statements: 50,
+      },
+      exclude: [
+        'node_modules/**',
+        '.next/**',
+        'dist/**',
+        'coverage/**',
+        '*.config.{ts,js,mjs}',
+        '**/*.d.ts',
+        'app/layout.tsx',
+        'app/globals.css',
+        'working-on/**',
+      ],
+    },
   },
 });
