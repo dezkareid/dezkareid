@@ -15,7 +15,6 @@ async function requireAdmin() {
 
 function parseOptionalString(value: FormDataEntryValue | null): string | null {
   const trimmed = (value as string | null)?.trim();
-  // eslint-disable-next-line unicorn/no-null -- null required to clear nullable Postgres columns
   return trimmed || null;
 }
 

@@ -7,6 +7,9 @@ export default defineConfig({
     react(),
     tsconfigPaths(),
   ],
+  resolve: {
+    conditions: ['import', 'module', 'browser', 'default'],
+  },
   test: {
     globals: true,
     environment: 'jsdom',

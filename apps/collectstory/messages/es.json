@@ -5,6 +5,10 @@
       "accept": "Aceptar",
       "decline": "Rechazar"
     },
+    "private_badge": {
+      "label": "Privado",
+      "aria_label": "Este contenido es privado"
+    },
     "search": "Buscar",
     "close": "Cerrar",
     "home": "Inicio",
@@ -32,6 +36,11 @@
         "modal_title": "Eliminar artículo",
         "message": "¿Eliminar {itemName}? Esta acción no se puede deshacer.",
         "aria_label": "Eliminar {name}"
+      },
+      "edit_item": {
+        "modal_title": "Editar artículo",
+        "submit_label": "Guardar cambios",
+        "aria_label": "Editar {name}"
       },
       "delete_collection": {
         "modal_title": "Eliminar colección",
@@ -115,7 +124,73 @@
     },
     "welcome": "Bienvenido a Collectstory",
     "subtitle": "Inicia sesión para gestionar tu colección",
-    "continue_google": "Continuar con Google"
+    "continue_google": "Continuar con Google",
+    "or": "o",
+    "sign_in": {
+      "email_label": "Correo electrónico",
+      "email_placeholder": "tu@ejemplo.com",
+      "password_label": "Contraseña",
+      "password_placeholder": "Mín. 8 caracteres",
+      "forgot_password": "¿Olvidaste tu contraseña?",
+      "submit": "Iniciar sesión",
+      "submitting": "Iniciando sesión…",
+      "error_required": "El correo y la contraseña son obligatorios.",
+      "error_invalid": "Correo o contraseña incorrectos."
+    },
+    "sign_up": {
+      "button": "Crear cuenta",
+      "modal_title": "Crea tu cuenta",
+      "email_label": "Correo electrónico",
+      "email_placeholder": "tu@ejemplo.com",
+      "username_label": "Nombre de usuario",
+      "username_placeholder": "ej. coleccionista42",
+      "username_hint": "Letras minúsculas, números y guiones. Al menos 3 caracteres.",
+      "password_label": "Contraseña",
+      "password_placeholder": "Mín. 8 caracteres",
+      "password_rules_label": "Requisitos de contraseña",
+      "rule_met": "Cumplido",
+      "rule_unmet": "No cumplido",
+      "rule_min_length": "Al menos 8 caracteres",
+      "rule_max_length": "Máximo 60 caracteres",
+      "rule_uppercase": "Una letra mayúscula",
+      "rule_digit": "Un número",
+      "rule_symbol": "Un símbolo (ej. !@#$)",
+      "confirm_label": "Confirmar contraseña",
+      "confirm_placeholder": "Repite tu contraseña",
+      "submit": "Crear cuenta",
+      "submitting": "Creando cuenta…"
+    },
+    "reset_password": {
+      "page_title": "Restablecer contraseña",
+      "email_label": "Correo electrónico",
+      "email_placeholder": "tu@ejemplo.com",
+      "submit": "Enviar enlace de restablecimiento",
+      "submitting": "Enviando…",
+      "success": "Revisa tu bandeja de entrada — si existe una cuenta con ese correo, te hemos enviado un enlace.",
+      "error_required": "El correo es obligatorio."
+    },
+    "new_password": {
+      "password_label": "Nueva contraseña",
+      "password_placeholder": "Mín. 8 caracteres",
+      "confirm_label": "Confirmar nueva contraseña",
+      "confirm_placeholder": "Repite tu nueva contraseña",
+      "submit": "Establecer nueva contraseña",
+      "submitting": "Guardando…",
+      "confirm_error": "Las contraseñas no coinciden.",
+      "loading": "Verificando tu enlace de restablecimiento…",
+      "error_expired": "Tu enlace ha caducado. Por favor, solicita uno nuevo."
+    },
+    "change_password": {
+      "section_title": "Cambiar contraseña",
+      "password_label": "Nueva contraseña",
+      "password_placeholder": "Mín. 8 caracteres",
+      "confirm_label": "Confirmar nueva contraseña",
+      "confirm_placeholder": "Repite tu nueva contraseña",
+      "submit": "Actualizar contraseña",
+      "submitting": "Guardando…",
+      "success": "Contraseña actualizada correctamente.",
+      "confirm_error": "Las contraseñas no coinciden."
+    }
   },
   "Landing": {
     "Hero": {
@@ -163,6 +238,52 @@
       "description": "Únete a más de 100,000 coleccionistas que confían en collectstory con sus posesiones más preciadas.",
       "button": "Únete Ahora"
     }
+  },
+  "SocialShare": {
+    "share_options_aria_label": "Opciones para compartir",
+    "link_copied": "¡Enlace copiado!",
+    "twitter": "Twitter (X)",
+    "facebook": "Facebook",
+    "linkedin": "LinkedIn",
+    "copy_link": "Copiar enlace",
+    "copied": "¡Copiado!"
+  },
+  "AddItemForm": {
+    "title": "Añadir a la colección",
+    "field_name": "Nombre",
+    "field_name_placeholder": "ej. S.H. Figuarts Spider-Man",
+    "field_image": "Imagen",
+    "field_image_hint": "JPEG, PNG o WebP · máx. 5 MB",
+    "field_image_retry": " — elige el archivo de nuevo para reintentar.",
+    "field_brand": "Marca",
+    "field_line": "Línea",
+    "field_variant": "Variante",
+    "field_category": "Categoría",
+    "field_franchise": "Franquicia",
+    "field_description": "Descripción",
+    "field_description_placeholder": "¿Qué hace especial esta pieza?",
+    "field_date": "Fecha de adquisición",
+    "field_visibility": "Visibilidad",
+    "field_none": "— ninguno —",
+    "visibility_public": "Público",
+    "visibility_private": "Privado",
+    "visibility_draft": "Borrador",
+    "submit_add": "Añadir a la colección",
+    "submit_uploading": "Subiendo…",
+    "submit_checking": "Verificando…",
+    "submit_saving": "Guardando…",
+    "error_image_type": "Solo se permiten imágenes JPEG, PNG y WebP.",
+    "error_image_size": "La imagen debe pesar 5 MB o menos.",
+    "error_upload": "Error al subir. Inténtalo de nuevo.",
+    "slug_picker_legend": "Este nombre ya existe en esta colección. Elige una URL única para tu artículo:",
+    "slug_picker_hint": "O edita el nombre de arriba para usar uno diferente."
+  },
+  "CollectionExplorer": {
+    "explore_button": "Explorar colección",
+    "close_aria": "Cerrar explorador",
+    "prev_aria": "Artículo anterior",
+    "next_aria": "Siguiente artículo",
+    "counter": "{current} / {total}"
   },
   "Manifest": {
     "name": "Collectstory",

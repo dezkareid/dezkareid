@@ -78,6 +78,10 @@
   text-transform: uppercase;
 }
 
+.exploreWrapper {
+  margin-top: var(--spacing-16);
+}
+
 .ownerActions {
   display: flex;
   align-items: center;
@@ -146,6 +150,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 
 .itemActions {

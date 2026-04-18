@@ -23,8 +23,6 @@
     "@dezkareid/react-components",
     "@dezkareid/react-hooks",
     "@dezkareid/scaffolding",
-    "@dezkareid/types",
-    "@dezkareid/website",
-    "@dezkareid/auditor"
+    "@dezkareid/types"
   ]
 }

@@ -34,7 +34,7 @@ async function EditCollectionContent({ params }: Properties) {
 
   const { data: collection } = await supabase
     .from('collections')
-    .select('id, name, slug, description')
+    .select('id, name, slug, description, visibility')
     .eq('user_id', user.id)
     .eq('slug', collectionSlug)
     .single();
@@ -62,6 +62,7 @@ async function EditCollectionContent({ params }: Properties) {
         collectionId={collection.id}
         currentName={collection.name}
         currentDescription={(collection.description as string | null) ?? undefined}
+        currentVisibility={(collection.visibility as string | null) ?? 'public'}
         username={username}
         collectionSlug={collectionSlug}
       />

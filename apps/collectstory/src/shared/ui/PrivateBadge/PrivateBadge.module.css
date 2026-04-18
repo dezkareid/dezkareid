@@ -1,0 +1,33 @@
+/* ─── PrivateBadge — structure ──────────────────────────────────────────────── */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--spacing-8);
+  border-radius: var(--border-radius-pill);
+  font-size: var(--font-size-100);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--font-line-height-tight);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Overlay variant — absolute positioned over a relative parent (image container) */
+.badge--overlay {
+  position: absolute;
+  top: var(--spacing-8);
+  left: var(--spacing-8);
+  z-index: 1;
+}
+
+/* ─── PrivateBadge — skin ───────────────────────────────────────────────────── */
+
+.badge {
+  /* TODO(design-system): needs semantic token for private/draft state background and text */
+  background-color: rgba(0, 0, 0, 0.65);
+  color: #ffffff;
+  backdrop-filter: blur(4px);
+}

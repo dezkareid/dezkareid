@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { Trash } from '@dezkareid/icons/react';
 import { DeleteCollectionModal } from '@/src/features/owner-collection-actions/ui/DeleteCollectionModal';
+import { CollectionCard } from '@/src/entities/collection';
 import styles from './OwnerProfileCollectionCard.module.css';
 
 type Collection = {
@@ -13,27 +14,32 @@ type Collection = {
   slug: string;
   description: string | undefined;
   item_count: number;
+  visibility: string;
 };
 
 type Properties = {
   collection: Collection;
   username: string;
+  /** Pre-rendered PrivateBadge node passed from the RSC parent (server component) */
+  privateBadge?: React.ReactNode;
 };
 
-export function OwnerProfileCollectionCard({ collection, username }: Properties) {
+export function OwnerProfileCollectionCard({ collection, username, privateBadge }: Properties) {
   const t = useTranslations('Common');
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   return (
     <div className={styles['collection-card']}>
       <Link href={`/${username}/${collection.slug}`} className={styles['collection-card__link']}>
-        <p className={styles['collection-card__name']}>{collection.name}</p>
-        {collection.description && (
-          <p className={styles['collection-card__desc']}>{collection.description}</p>
-        )}
-        <p className={styles['collection-card__meta']}>
-          {t('owner_actions.items_count', { count: collection.item_count })}
-        </p>
+        <CollectionCard
+          collection={{
+            name: collection.name,
+            description: collection.description,
+            item_count: collection.item_count,
+            itemCountLabel: t('owner_actions.items_count', { count: collection.item_count }),
+          }}
+          badge={privateBadge}
+        />
       </Link>
       <button
         type="button"

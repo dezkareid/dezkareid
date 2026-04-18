@@ -1,65 +1,38 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import { AddItemModal, type AddItemModalHandle } from '@/components/AddItemModal/AddItemModal';
+import { useCollectionItems } from '@/src/features/owner-item-actions/model/CollectionItemsContext';
+import { OPEN_ADD_ITEM_MODAL_EVENT } from '@/src/shared/lib/owner-events';
 import { DeleteCollectionModal } from './DeleteCollectionModal';
 import styles from './OwnerCollectionActions.module.css';
 
-type Brand = { id: string; name: string };
-type Franchise = { id: string; name: string };
+export function OwnerCollectionActionsClient() {
+  const { pageData, ownerItems } = useCollectionItems();
+  const { username, collection, isOwner } = pageData;
 
-type Properties = {
-  username: string;
-  collectionSlug: string;
-  collectionId: string;
-  collectionName: string;
-  itemCount: number;
-  brands: Brand[];
-  franchises: Franchise[];
-};
-
-export function OwnerCollectionActionsClient({
-  username,
-  collectionSlug,
-  collectionId,
-  collectionName,
-  itemCount,
-  brands,
-  franchises,
-}: Properties) {
-  const modalRef = useRef<AddItemModalHandle>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
+
+  if (!isOwner) return null;
 
   return (
     <div className={styles.actions}>
-      <AddItemModal
-        ref={modalRef}
-        brands={brands}
-        franchises={franchises}
-        collectionId={collectionId}
-        username={username}
-        collectionSlug={collectionSlug}
-      />
       <DeleteCollectionModal
         open={deleteOpen}
-        collectionId={collectionId}
-        collectionName={collectionName}
-        itemCount={itemCount}
+        collectionId={collection.id}
+        collectionName={collection.name}
+        itemCount={ownerItems.length}
         username={username}
         onClose={() => setDeleteOpen(false)}
       />
       <button
         type="button"
         className={styles.addButton}
-        onClick={() => modalRef.current?.open()}
+        onClick={() => globalThis.dispatchEvent(new CustomEvent(OPEN_ADD_ITEM_MODAL_EVENT))}
       >
         + Add Item
       </button>
-      <Link
-        href={`/${username}/${collectionSlug}/edit`}
-        className={styles.editLink}
-      >
+      <Link href={`/${username}/${collection.slug}/edit`} className={styles.editLink}>
         Edit
       </Link>
       <button

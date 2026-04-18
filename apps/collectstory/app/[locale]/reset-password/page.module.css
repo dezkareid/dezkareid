@@ -1,0 +1,36 @@
+/* Structure */
+.reset-password {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-16);
+}
+
+.reset-password__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-24);
+  width: 100%;
+  max-width: 400px;
+  padding: var(--spacing-32);
+}
+
+/* Skin */
+.reset-password {
+  background-color: var(--color-background-secondary);
+}
+
+.reset-password__card {
+  background-color: var(--color-background-primary);
+  border-radius: var(--border-radius-large);
+  box-shadow: var(--shadow-card);
+}
+
+.reset-password__title {
+  margin: 0;
+  font-size: var(--font-size-700);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  text-align: center;
+}

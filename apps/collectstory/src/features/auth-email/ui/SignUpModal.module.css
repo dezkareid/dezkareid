@@ -1,0 +1,117 @@
+/* Structure */
+.signup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+}
+
+.signup__live-region {
+  min-height: 0;
+}
+
+.signup__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.signup__button {
+  width: 100%;
+  margin-top: var(--spacing-8);
+}
+
+/* Skin */
+.signup__label {
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--font-line-height-none);
+  color: var(--color-text-primary);
+}
+
+.signup__input {
+  appearance: none;
+  width: 100%;
+  padding: var(--spacing-12) var(--spacing-16);
+  background-color: var(--color-background-secondary);
+  border: 1.5px solid transparent;
+  border-radius: var(--border-radius-small);
+  font-size: var(--font-size-300);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--font-line-height-normal);
+  color: var(--color-text-primary);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+  box-sizing: border-box;
+}
+
+.signup__input::placeholder {
+  color: var(--color-text-secondary);
+}
+
+.signup__input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  background-color: var(--color-background-primary);
+}
+
+.signup__input:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.signup__input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.signup__hint {
+  margin: 0;
+  font-size: var(--font-size-100);
+  color: var(--color-text-secondary);
+  line-height: var(--font-line-height-normal);
+}
+
+/* Structure */
+.signup__rules {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.signup__rule {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+}
+
+/* Skin */
+.signup__rules {
+  font-size: var(--font-size-100);
+  line-height: var(--font-line-height-normal);
+}
+
+.signup__rule {
+  color: var(--color-text-secondary);
+  transition: color 0.15s ease;
+}
+
+.signup__rule--met {
+  color: var(--color-success, #2d7a4f);
+}
+
+.signup__rule-icon {
+  font-size: var(--font-size-200);
+  line-height: 1;
+  width: 1em;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.signup__error {
+  margin: 0;
+  font-size: var(--font-size-200);
+  color: var(--color-danger);
+  line-height: var(--font-line-height-normal);
+}
