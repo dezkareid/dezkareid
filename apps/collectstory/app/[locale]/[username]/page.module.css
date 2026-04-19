@@ -1,51 +1,45 @@
-/* ─── Profile Page ─────────────────────────────────────────────────────────── */
+/* ─── Profile page — structure ───────────────────────────────────────────────── */
 
-.page {
+.profile-page {
   padding-block: var(--spacing-64) var(--spacing-48);
 }
 
 /* Header */
 
-.header {
+.profile-page__header {
   display: flex;
   align-items: flex-start;
   gap: var(--spacing-24);
   margin-bottom: var(--spacing-48);
   padding-bottom: var(--spacing-48);
-  border-bottom: 1px solid var(--color-background-secondary);
   position: relative;
 }
 
-.avatar {
+.profile-page__avatar {
   width: 72px;
   height: 72px;
   border-radius: var(--border-radius-pill);
-  background-color: var(--color-background-secondary);
   flex-shrink: 0;
-  box-shadow: var(--shadow-subtle);
-  border: 2px solid var(--color-background-primary);
-  outline: 1px solid var(--color-background-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.avatarImage {
+.profile-page__avatar-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: var(--border-radius-pill);
 }
 
-.avatarInitial {
+.profile-page__avatar-initial {
   font-size: var(--font-size-600);
   font-weight: var(--font-weight-bold);
-  color: var(--color-text-secondary);
   line-height: 1;
   user-select: none;
 }
 
-.headerText {
+.profile-page__header-text {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4);
@@ -53,22 +47,21 @@
   padding-top: var(--spacing-8);
 }
 
-.header__username-wrapper {
+.profile-page__username-row {
   display: flex;
   align-items: center;
   gap: var(--spacing-12);
 }
 
-.username {
+.profile-page__username {
   font-size: var(--font-size-600);
   font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
   letter-spacing: -0.025em;
   line-height: var(--font-line-height-tight);
   margin: 0;
 }
 
-.ownerActions {
+.profile-page__owner-actions {
   display: flex;
   align-items: center;
   gap: var(--spacing-8);
@@ -79,75 +72,43 @@
 
 /* Collections grid */
 
-.sectionLabel {
+.profile-page__section-label {
   font-size: var(--font-size-100);
   font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-bottom: var(--spacing-24);
 }
 
-.grid {
+.profile-page__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-24);
 }
 
-@media (max-width: 900px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 560px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* Collection card */
 
-.collectionCard {
+.collection-card {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-12);
   padding: var(--spacing-24);
-  background-color: var(--color-background-primary);
-  border: 1px solid var(--color-background-secondary);
   border-radius: var(--border-radius-large);
   text-decoration: none;
   color: inherit;
-  transition: box-shadow 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
-  box-shadow: var(--shadow-subtle);
+  height: 100%;
 }
 
-.collectionCard:hover {
-  box-shadow: var(--shadow-card-hover);
-  border-color: var(--color-primary);
-  transform: translateY(-2px);
-}
-
-.collectionCardThumb {
-  aspect-ratio: 16 / 9;
-  border-radius: var(--border-radius-medium);
-  background-color: var(--color-background-secondary);
-  overflow: hidden;
-  margin-bottom: var(--spacing-4);
-}
-
-.collectionName {
+.collection-card__name {
   font-size: var(--font-size-400);
   font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
   letter-spacing: -0.01em;
   line-height: var(--font-line-height-tight);
   margin: 0;
 }
 
-.collectionDesc {
+.collection-card__desc {
   font-size: var(--font-size-200);
-  color: var(--color-text-secondary);
   line-height: var(--font-line-height-normal);
   margin: 0;
   display: -webkit-box;
@@ -156,36 +117,17 @@
   overflow: hidden;
 }
 
-.collectionMeta {
+.collection-card__meta {
   font-size: var(--font-size-100);
-  color: var(--color-text-secondary);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   margin-top: auto;
   padding-top: var(--spacing-8);
-  border-top: 1px solid var(--color-background-secondary);
-}
-
-/*
- * When the owner grid wrapper has content, hide the public cached grid.
- * Uses CSS :has() (supported in all modern browsers).
- * The ownerGridWrapper is non-empty when OwnerProfileGrid resolves as owner.
- */
-.page:has(.ownerGridWrapper > * > *) .publicGrid {
-  display: none;
-}
-
-.ownerGridWrapper {
-  /* Wrapper for the streamed owner collection grid */
-}
-
-.publicGrid {
-  /* Wrapper for the cached public collection grid */
 }
 
 /* Empty state */
 
-.empty {
+.profile-page__empty {
   grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
@@ -195,29 +137,112 @@
   text-align: center;
 }
 
-.emptyTitle {
+.profile-page__empty-title {
   font-size: var(--font-size-400);
   font-weight: var(--font-weight-medium);
-  color: var(--color-text-primary);
   margin: 0;
 }
 
-.emptyDesc {
+.profile-page__empty-desc {
   font-size: var(--font-size-300);
-  color: var(--color-text-secondary);
   margin: 0;
   max-width: 320px;
   line-height: var(--font-line-height-normal);
 }
 
-/* Responsive header */
+.profile-page__owner-grid-wrapper {
+  /* Wrapper for the streamed owner collection grid */
+}
+
+.profile-page__public-grid {
+  /* Wrapper for the cached public collection grid */
+}
+
+/*
+ * When the owner grid wrapper has content, hide the public cached grid.
+ * Uses CSS :has() (supported in all modern browsers).
+ */
+.profile-page:has(.profile-page__owner-grid-wrapper > * > *) .profile-page__public-grid {
+  display: none;
+}
+
+/* ─── Profile page — skin ────────────────────────────────────────────────────── */
+
+.profile-page__header {
+  border-bottom: 1px solid var(--color-background-secondary);
+}
+
+.profile-page__avatar {
+  background-color: var(--color-background-secondary);
+  box-shadow: var(--shadow-subtle);
+  border: 2px solid var(--color-background-primary);
+  outline: 1px solid var(--color-background-secondary);
+}
+
+.profile-page__avatar-initial {
+  color: var(--color-text-secondary);
+}
+
+.profile-page__username {
+  color: var(--color-text-primary);
+}
+
+.profile-page__section-label {
+  color: var(--color-text-secondary);
+}
+
+.collection-card {
+  background-color: var(--color-background-primary);
+  border: 1px solid var(--color-background-secondary);
+  box-shadow: var(--shadow-subtle);
+  transition: box-shadow 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+.collection-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.collection-card__name {
+  color: var(--color-text-primary);
+}
+
+.collection-card__desc {
+  color: var(--color-text-secondary);
+}
+
+.collection-card__meta {
+  color: var(--color-text-secondary);
+  border-top: 1px solid var(--color-background-secondary);
+}
+
+.profile-page__empty-title {
+  color: var(--color-text-primary);
+}
+
+.profile-page__empty-desc {
+  color: var(--color-text-secondary);
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .profile-page__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
 @media (max-width: 560px) {
-  .header {
+  .profile-page__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-page__header {
     flex-wrap: wrap;
   }
 
-  .ownerActions {
+  .profile-page__owner-actions {
     width: 100%;
     margin-left: 0;
     padding-top: 0;

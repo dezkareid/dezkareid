@@ -77,7 +77,7 @@ async function BreadcrumbNav({ pageData }: { pageData: CollectionPageData }) {
     <>
       <DataSchema schema={breadcrumbSchema} id="breadcrumb-schema" />
       <Breadcrumb
-        className={styles.breadcrumb}
+        className={styles['collection-page__breadcrumb']}
         items={[
           { label: `@${username}`, href: `/${username}` },
           { label: collection.name },
@@ -96,9 +96,9 @@ async function PublicItemGrid({ pageData }: { pageData: CollectionPageData }) {
   if (items.length === 0) {
     return (
       <>
-        <div className={styles.empty}>
-          <p className={styles.emptyTitle}>{t('no_items_in_collection')}</p>
-          <p className={styles.emptyDesc}>{t('items_will_appear_here')}</p>
+        <div className={styles['collection-page__empty']}>
+          <p className={styles['collection-page__empty-title']}>{t('no_items_in_collection')}</p>
+          <p className={styles['collection-page__empty-desc']}>{t('items_will_appear_here')}</p>
         </div>
         <OwnerEmptyStateFallback />
       </>
@@ -112,14 +112,14 @@ async function PublicItemGrid({ pageData }: { pageData: CollectionPageData }) {
       collectionId={collection.id}
       username={username}
       collectionSlug={collection.slug}
-      gridClassName={styles.grid}
-      itemCardWrapperClassName={styles.itemCardWrapper}
-      itemCardClassName={styles.itemCard}
-      itemImageClassName={styles.itemImage}
-      itemImagePlaceholderClassName={styles.itemImagePlaceholder}
-      itemNameClassName={styles.itemName}
-      itemLineClassName={styles.itemLine}
-      itemActionsClassName={styles.itemActions}
+      gridClassName={styles['collection-page__grid']}
+      itemCardWrapperClassName={styles['item-card']}
+      itemCardClassName={styles['item-card__link']}
+      itemImageClassName={styles['item-card__image']}
+      itemImagePlaceholderClassName={styles['item-card__image-placeholder']}
+      itemNameClassName={styles['item-card__name']}
+      itemLineClassName={styles['item-card__line']}
+      itemActionsClassName={styles['item-card__actions']}
       likeCountClassName={styles['item-card__like-count']}
     />
   );
@@ -133,10 +133,10 @@ async function CollectionHeader({ pageData }: { pageData: CollectionPageData }) 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 
   return (
-    <header className={styles.header}>
-      <div className={styles.headerLeft}>
-        <div className={styles['header__name-wrapper']}>
-          <h1 className={styles.collectionName}>{collection.name}</h1>
+    <header className={styles['collection-page__header']}>
+      <div className={styles['collection-page__header-left']}>
+        <div className={styles['collection-page__name-row']}>
+          <h1 className={styles['collection-page__name']}>{collection.name}</h1>
           {!isPrivate && (
             <SocialShare
               title={tCol('share', { collectionName: collection.name, username })}
@@ -146,18 +146,18 @@ async function CollectionHeader({ pageData }: { pageData: CollectionPageData }) 
           )}
         </div>
         {collection.description && (
-          <p className={styles.collectionDesc}>{collection.description}</p>
+          <p className={styles['collection-page__desc']}>{collection.description}</p>
         )}
-        <p className={styles.collectionMeta}>
+        <p className={styles['collection-page__meta']}>
           {tCol('items_count', { count: total_count })}
         </p>
-        <div className={styles.exploreWrapper}>
+        <div className={styles['collection-page__explore']}>
           <Suspense fallback={<ExploreButtonSkeleton />}>
             <ExploreButton />
           </Suspense>
         </div>
       </div>
-      <div className={styles.ownerActions}>
+      <div className={styles['collection-page__owner-actions']}>
         <OwnerCollectionActionsClient />
       </div>
     </header>
@@ -180,17 +180,16 @@ export default async function CollectionPage({ params }: Properties) {
   return (
     <CollectionItemsProvider pageData={pageData}>
       {schema && <DataSchema schema={schema} />}
-      <div className={`container ${styles.page}`}>
+      <div className={`container ${styles['collection-page']}`}>
         <BreadcrumbNav pageData={pageData} />
         <CollectionHeader pageData={pageData} />
 
         {/*
-          Public grid — SSR first page, then infinite scroll client-side.
-          Owner grid streams in via Suspense and overlays via CSS :has().
+          Owner grid streams in first so the sibling ~ selector can hide the
+          public grid the moment it resolves, eliminating the layout jump.
+          Public grid is SSR-rendered below as the visitor/SEO fallback.
         */}
-        <PublicItemGrid pageData={pageData} />
-
-        <div className={styles.ownerGrid}>
+        <div className={styles['collection-page__owner-grid']}>
           <Suspense fallback={null}>
             <CollectionAuthLoader
               username={username}
@@ -201,6 +200,8 @@ export default async function CollectionPage({ params }: Properties) {
           </Suspense>
           <OwnerItemGrid />
         </div>
+
+        <PublicItemGrid pageData={pageData} />
       </div>
     </CollectionItemsProvider>
   );
