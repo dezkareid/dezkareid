@@ -89,7 +89,9 @@ export function InfiniteItemGrid({
                   : <div className={itemImagePlaceholderClassName}>📦</div>}
               </div>
               <p className={itemNameClassName}>{item.name}</p>
-              {item.lines?.name && <p className={itemLineClassName}>{item.lines.name}</p>}
+              <p className={itemLineClassName} aria-hidden={!item.lines?.name}>
+                {item.lines?.name ?? '\u00A0'}
+              </p>
               {item.likes_count > 0 && (
                 <span className={likeCountClassName}>
                   {/* TODO(design-system): needs tokens --color-like-gradient-from and --color-like-gradient-to */}

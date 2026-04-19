@@ -1,12 +1,12 @@
-/* ─── Collection Page ──────────────────────────────────────────────────────── */
+/* ─── Collection page — structure ────────────────────────────────────────────── */
 
-.page {
+.collection-page {
   padding-block: var(--spacing-48);
 }
 
 /* Breadcrumb */
 
-.breadcrumb {
+.collection-page__breadcrumb {
   display: flex;
   align-items: center;
   gap: var(--spacing-8);
@@ -14,75 +14,55 @@
   font-size: var(--font-size-200);
 }
 
-.breadcrumbLink {
-  color: var(--color-text-secondary);
-  text-decoration: none;
-  transition: color 0.15s ease;
-}
-
-.breadcrumbLink:hover {
-  color: var(--color-primary);
-}
-
-.breadcrumbSep {
-  color: var(--color-text-secondary);
-  opacity: 0.4;
-  font-size: var(--font-size-100);
-}
-
 /* Collection header */
 
-.header {
+.collection-page__header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--spacing-24);
   margin-bottom: var(--spacing-48);
   padding-bottom: var(--spacing-32);
-  border-bottom: 1px solid var(--color-background-secondary);
 }
 
-.headerLeft {
+.collection-page__header-left {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-8);
 }
 
-.header__name-wrapper {
+.collection-page__name-row {
   display: flex;
   align-items: center;
   gap: var(--spacing-16);
 }
 
-.collectionName {
+.collection-page__name {
   font-size: var(--font-size-700);
   font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
   letter-spacing: -0.03em;
   line-height: var(--font-line-height-tight);
   margin: 0;
 }
 
-.collectionDesc {
+.collection-page__desc {
   font-size: var(--font-size-300);
-  color: var(--color-text-secondary);
   line-height: var(--font-line-height-normal);
   margin: 0;
   max-width: 560px;
 }
 
-.collectionMeta {
+.collection-page__meta {
   font-size: var(--font-size-100);
-  color: var(--color-text-secondary);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-.exploreWrapper {
+.collection-page__explore {
   margin-top: var(--spacing-16);
 }
 
-.ownerActions {
+.collection-page__owner-actions {
   display: flex;
   align-items: center;
   gap: var(--spacing-8);
@@ -92,123 +72,70 @@
 
 /* Items grid */
 
-.grid {
+.collection-page__grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--spacing-24);
 }
 
-/*
- * When the owner interactive grid (OwnerItemActions) resolves and renders
- * inside .ownerGrid, hide the public cached .grid so owners don't see
- * duplicates. Uses CSS :has() (supported in all modern browsers).
- */
-.ownerGrid:not(:empty) ~ .grid,
-.ownerGrid > *:not(:empty) ~ .grid {
-  display: none;
-}
-
-/* When .ownerGrid has content, hide the public grid that comes before it.
-   We use :has() on the shared parent (CollectionContent renders both). */
-.page:has(.ownerGrid > * > *) .grid {
-  display: none;
-}
-
-/*
- * Hide the RSC-rendered item count (.collectionMeta) when the owner grid
- * is present — the owner grid renders its own live count that stays in sync
- * with add/delete operations without needing a full RSC re-render.
- */
-.page:has(.ownerGrid > * > *) .collectionMeta {
-  display: none;
-}
-
-.ownerGrid {
+.collection-page__owner-grid {
   /* Wrapper for the streamed owner interactive grid */
 }
 
-@media (max-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
+/* Item card wrapper */
 
-@media (max-width: 720px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-16);
-  }
-}
-
-@media (max-width: 420px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.itemCardWrapper {
+.item-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
-.itemActions {
+.item-card__actions {
   margin-top: var(--spacing-8);
 }
 
-/* Item card */
+/* Item card link */
 
-.itemCard {
+.item-card__link {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-8);
   text-decoration: none;
   color: inherit;
-  transition: transform 0.18s ease;
+  width: 100%;
 }
 
-.itemCard:hover {
-  transform: translateY(-2px);
-}
+/* Item image */
 
-.itemCard:hover .itemImage {
-  box-shadow: var(--shadow-card-hover);
-}
-
-.itemImage {
+.item-card__image {
   aspect-ratio: 3 / 4;
   border-radius: var(--border-radius-large);
   overflow: hidden;
-  background-color: var(--color-background-secondary);
-  box-shadow: var(--shadow-card);
-  transition: box-shadow 0.18s ease;
   position: relative;
 }
 
-.itemImage img {
+.item-card__image img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.itemImagePlaceholder {
+.item-card__image-placeholder {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-background-secondary);
-  font-size: var(--font-size-700);
-  color: var(--color-text-secondary);
-  opacity: 0.2;
 }
 
-.itemName {
+/* Item text */
+
+.item-card__name {
   font-size: var(--font-size-300);
   font-weight: var(--font-weight-medium);
-  color: var(--color-text-primary);
   line-height: var(--font-line-height-tight);
   margin: 0;
   white-space: nowrap;
@@ -216,16 +143,13 @@
   text-overflow: ellipsis;
 }
 
-.itemLine {
+.item-card__line {
   font-size: var(--font-size-200);
-  color: var(--color-text-secondary);
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-/* Item card like count */
 
 .item-card__like-count {
   display: inline-flex;
@@ -233,13 +157,12 @@
   gap: var(--spacing-4);
   margin-top: var(--spacing-4);
   font-size: var(--font-size-100);
-  color: var(--color-text-secondary);
   font-variant-numeric: tabular-nums;
 }
 
 /* Empty state */
 
-.empty {
+.collection-page__empty {
   grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
@@ -249,34 +172,135 @@
   text-align: center;
 }
 
-.emptyTitle {
+.collection-page__empty-title {
   font-size: var(--font-size-400);
   font-weight: var(--font-weight-medium);
-  color: var(--color-text-primary);
   margin: 0;
 }
 
-.emptyDesc {
+.collection-page__empty-desc {
   font-size: var(--font-size-300);
-  color: var(--color-text-secondary);
   margin: 0;
   max-width: 320px;
   line-height: var(--font-line-height-normal);
 }
 
-/* Responsive header */
+/* ─── Collection page — skin ─────────────────────────────────────────────────── */
+
+.collection-page__header {
+  border-bottom: 1px solid var(--color-background-secondary);
+}
+
+.collection-page__name {
+  color: var(--color-text-primary);
+}
+
+.collection-page__desc {
+  color: var(--color-text-secondary);
+}
+
+.collection-page__meta {
+  color: var(--color-text-secondary);
+}
+
+.item-card__link {
+  transition: transform 0.18s ease;
+}
+
+.item-card__link:hover {
+  transform: translateY(-2px);
+}
+
+.item-card__link:hover .item-card__image {
+  box-shadow: var(--shadow-card-hover);
+}
+
+.item-card__image {
+  background-color: var(--color-background-secondary);
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.18s ease;
+}
+
+.item-card__image-placeholder {
+  background-color: var(--color-background-secondary);
+  font-size: var(--font-size-700);
+  color: var(--color-text-secondary);
+  opacity: 0.2;
+}
+
+.item-card__name {
+  color: var(--color-text-primary);
+}
+
+.item-card__line {
+  color: var(--color-text-secondary);
+}
+
+.item-card__like-count {
+  color: var(--color-text-secondary);
+}
+
+.collection-page__empty-title {
+  color: var(--color-text-primary);
+}
+
+.collection-page__empty-desc {
+  color: var(--color-text-secondary);
+}
+
+/*
+ * When the owner interactive grid resolves inside .collection-page__owner-grid,
+ * hide the public cached grid. Uses CSS :has() (all modern browsers).
+ */
+.collection-page__owner-grid:not(:empty) ~ .collection-page__grid,
+.collection-page__owner-grid > *:not(:empty) ~ .collection-page__grid {
+  display: none;
+}
+
+.collection-page:has(.collection-page__owner-grid > * > *) .collection-page__grid {
+  display: none;
+}
+
+/*
+ * Hide the RSC-rendered item count when the owner grid is present —
+ * the owner grid renders its own live count.
+ */
+.collection-page:has(.collection-page__owner-grid > * > *) .collection-page__meta {
+  display: none;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 1024px) {
+  .collection-page__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .collection-page__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-16);
+  }
+}
 
 @media (max-width: 640px) {
-  .header {
+  .collection-page__header {
     flex-direction: column;
     gap: var(--spacing-16);
   }
 
-  .collectionName {
+  .collection-page__name {
     font-size: var(--font-size-600);
   }
 
-  .ownerActions {
+  .collection-page__owner-actions {
     padding-top: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .collection-page__grid {
+    grid-template-columns: 1fr;
   }
 }
