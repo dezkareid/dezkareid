@@ -31,10 +31,13 @@ export function Footer() {
             </p>
           </div>
           <nav className={styles.nav} aria-label={t('main_nav')}>
-            {siteData.navLinks.map(link => {
-              const translationKey = link.label === 'Privacy Policy' ? 'privacy' : 
-                                   link.label === 'Terms of Service' ? 'terms' : 
-                                   link.label === 'Contact' ? 'contact' : 'contact';
+            {siteData.navLinks.map((link) => {
+              const translationMap: Record<string, string> = {
+                'Privacy Policy': 'privacy',
+                'Terms of Service': 'terms',
+                'Contact': 'contact',
+              };
+              const translationKey = translationMap[link.label] ?? 'contact';
               return (
                 <a key={link.label} href={link.href} className={styles.link}>
                   {t(translationKey)}

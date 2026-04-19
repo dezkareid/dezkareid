@@ -2,6 +2,8 @@
 import "../styles/global.css";
 import ThemeToggle from "../components/ThemeToggle.astro";
 import PixelCrab from "../components/PixelCrab.astro";
+import GoogleAnalytics from "../components/Analytics/GoogleAnalytics.astro";
+import { ConsentBanner } from "@dezkareid/components/astro";
 
 interface Properties {
   title?: string;
@@ -57,6 +59,10 @@ const navLinks = [
 
     <slot name="head" />
 
+    {import.meta.env.PUBLIC_GA_MEASUREMENT_ID && (
+      <GoogleAnalytics id={import.meta.env.PUBLIC_GA_MEASUREMENT_ID} />
+    )}
+
     <!-- Theme FOUC guard: apply stored preference before first paint. -->
     <script is:inline set:html={`(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){document.documentElement.style.colorScheme=t;}}catch(_){}})();`}></script>
   </head>
@@ -109,6 +115,8 @@ const navLinks = [
         </div>
       </div>
     </footer>
+
+    <ConsentBanner />
   </body>
 </html>
 

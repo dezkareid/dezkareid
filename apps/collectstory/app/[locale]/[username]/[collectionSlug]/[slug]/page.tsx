@@ -102,13 +102,13 @@ async function ItemMetaDetails({ item }: { item: PublicItemDetail }) {
     category ? { label: t('category'), value: category } : undefined,
     franchise
       ? {
-        label: t('franchise'),
-        value: (
-          <Link href={`/franchises/${franchise.slug}`} className={styles['item-page__meta-link']}>
-            {franchise.name}
-          </Link>
-        ),
-      }
+          label: t('franchise'),
+          value: (
+            <Link href={`/franchises/${franchise.slug}`} className={styles['item-page__meta-link']}>
+              {franchise.name}
+            </Link>
+          ),
+        }
       : undefined,
   ];
   const rows = rowCandidates.filter((row): row is MetaRow => row !== undefined);
