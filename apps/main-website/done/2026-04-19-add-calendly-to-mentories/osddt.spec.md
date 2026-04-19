@@ -32,11 +32,11 @@ This feature directly aligns with the **Innovation & Growth** objective of Dezka
 - [ ] Page performance metrics remain within the "High Quality" rating thresholds.
 - [ ] The page passes basic accessibility audits with the widget present.
 
-## Open Questions
-- **Integration Style**: Should the widget be embedded inline (always visible) or triggered by a "Book a Session" button (popup/overlay)?
-- **Specific Link**: Is there a specific Calendly event link or user profile that should be used as the default?
-- **Global Availability**: Should the booking option be available globally across all services, or exclusively for the Mentoring service for now?
-- **Tracking**: Do we need to implement specific event tracking (e.g., GA4) for successful bookings?
+## Decisions
+1. **Integration Style**: The Calendly widget will be implemented as a Popup/Overlay triggered by a button.
+2. **Specific Link**: The Calendly link to use is `https://calendly.com/dezkareid/mentories`.
+3. **Global Availability**: The booking option will be available exclusively for the Mentoring service for now.
+4. **Tracking**: Implement tracking for the CTA click. Tracking successful bookings is a "nice to have" if the Calendly widget supports it.
 
 ## Session Context
 - The project is identified as `apps/main-website` (Astro-based).
