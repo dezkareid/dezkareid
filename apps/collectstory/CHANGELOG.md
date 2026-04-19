@@ -1,5 +1,15 @@
 # @dezkareid/collectstory
 
+## 1.2.1
+
+### Patch Changes
+
+- Fix inconsistent card sizes in public profile and collection views.
+
+  - `/[username]`: collection cards now stretch to equal height in each grid row; the item count meta is always pinned to the bottom via `margin-top: auto` regardless of whether a description is present. Applies to both the public grid and the owner grid.
+  - `/[username]/[collectionSlug]`: item cards now fill the full grid cell width (`width: 100%`) fixing an issue where `flex: 1` collapsed the card width via `flex-basis: 0%`. Images are absolutely positioned inside their aspect-ratio container to prevent the design-system base `height: auto` from competing with the fill rules. The line name element is always rendered (non-breaking space fallback) to prevent layout shift when navigating between items.
+  - Explore Collection: added a stable `aspect-ratio: 3/4` image wrapper to prevent layout shift while images load, and always renders the line name to avoid content jumping when switching items.
+
 ## 1.2.0
 
 ### Minor Changes

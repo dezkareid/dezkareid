@@ -23,6 +23,9 @@
     "@dezkareid/react-components",
     "@dezkareid/react-hooks",
     "@dezkareid/scaffolding",
-    "@dezkareid/types"
+    "@dezkareid/types",
+    "@dezkareid/auditor",
+    "@dezkareid/website",
+    "storybook-react"
   ]
 }
