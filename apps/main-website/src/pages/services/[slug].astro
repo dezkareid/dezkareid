@@ -80,7 +80,12 @@ const jsonLd = {
           <p class="pricing-note">Scope and pricing are discussed on a discovery call — no commitment required.</p>
         </div>
       )}
-      <a href="mailto:elmaildeldezkareid@gmail.com" class="cta-button">
+      <a
+        href="mailto:elmaildeldezkareid@gmail.com"
+        class="cta-button"
+        data-ga-event="click_service_cta"
+        data-ga-params={JSON.stringify({ service_id: service.id, title })}
+      >
         <span>{cta ?? 'Get in touch'}</span>
         <span class="cta-arrow" aria-hidden="true">→</span>
       </a>

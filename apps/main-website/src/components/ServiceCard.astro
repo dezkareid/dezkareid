@@ -12,7 +12,13 @@ const { title, description, icon } = service.data;
 
 <Card class="service-card">
   <!-- Stretched link covers the full card -->
-  <a class="service-card__link" href={`/services/${service.id}`} aria-label={`Learn about ${title}`}></a>
+  <a
+    class="service-card__link"
+    href={`/services/${service.id}`}
+    aria-label={`Learn about ${title}`}
+    data-ga-event="view_service"
+    data-ga-params={JSON.stringify({ service_id: service.id, title })}
+  ></a>
 
   <div class="service-card__header">
     <span class="service-card__icon" aria-hidden="true">{icon || "⚙️"}</span>

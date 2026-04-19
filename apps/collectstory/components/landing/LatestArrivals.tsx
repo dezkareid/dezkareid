@@ -35,20 +35,20 @@ export async function LatestArrivals() {
                     <div className={styles['latest-arrivals__image-wrapper']}>
                       {item.image_url
                         ? (
-                            <ViewTransition name={`item-image-${item.slug}`}>
-                              <Image
-                                src={item.image_url}
-                                alt={item.name}
-                                strategy="cloudinary"
-                                sizes="(min-width: 60rem) 25vw, (min-width: 37.5rem) 50vw, 100vw"
-                                priority={index === 0}
-                                className={styles['latest-arrivals__image']}
-                              />
-                            </ViewTransition>
-                          )
+                          <ViewTransition name={`item-image-${item.slug}`}>
+                            <Image
+                              src={item.image_url}
+                              alt={item.name}
+                              strategy="cloudinary"
+                              sizes="(min-width: 60rem) 25vw, (min-width: 37.5rem) 50vw, 100vw"
+                              priority={index === 0}
+                              className={styles['latest-arrivals__image']}
+                            />
+                          </ViewTransition>
+                        )
                         : (
-                            <div className={styles['latest-arrivals__image-placeholder']} aria-hidden="true">📦</div>
-                          )}
+                          <div className={styles['latest-arrivals__image-placeholder']} aria-hidden="true">📦</div>
+                        )}
                     </div>
                     <div className={styles['latest-arrivals__info']}>
                       <h3 className={styles['latest-arrivals__item-title']}>{item.name}</h3>

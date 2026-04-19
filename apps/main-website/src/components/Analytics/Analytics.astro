@@ -1,0 +1,13 @@
+---
+import GoogleAnalytics from './GoogleAnalytics.astro';
+import { ConsentBanner } from '@dezkareid/components/astro';
+
+interface Props {
+  id?: string;
+}
+
+const { id = import.meta.env.PUBLIC_GA_MEASUREMENT_ID } = Astro.props;
+---
+
+{id && <GoogleAnalytics id={id} />}
+<ConsentBanner />

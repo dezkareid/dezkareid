@@ -90,21 +90,21 @@ async function ProfileHeader({ username }: { username: string }) {
       <div className={styles.avatar}>
         {avatarUrl
           ? (
-              <Image
-                strategy="cloudinary"
-                mode="fixed"
-                src={avatarUrl}
-                alt={username}
-                width={72}
-                height={72}
-                className={styles.avatarImage}
-              />
-            )
+            <Image
+              strategy="cloudinary"
+              mode="fixed"
+              src={avatarUrl}
+              alt={username}
+              width={72}
+              height={72}
+              className={styles.avatarImage}
+            />
+          )
           : (
-              <span className={styles.avatarInitial} aria-hidden="true">
-                {username[0].toUpperCase()}
-              </span>
-            )}
+            <span className={styles.avatarInitial} aria-hidden="true">
+              {username[0].toUpperCase()}
+            </span>
+          )}
       </div>
       <div className={styles.headerText}>
         <div className={styles['header__username-wrapper']}>
