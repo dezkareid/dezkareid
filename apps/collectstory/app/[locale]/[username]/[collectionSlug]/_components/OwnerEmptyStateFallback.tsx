@@ -1,36 +1,21 @@
-import { connection } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import { getPublicCollectionBySlug } from '@/lib/collections';
-import { getAllBrands, getAllFranchises } from '@/app/[locale]/[username]/[collectionSlug]/actions';
+'use client';
+
+import { useCollectionItems } from '@/src/features/owner-item-actions/model/CollectionItemsContext';
 import { OwnerEmptyState } from './OwnerEmptyState';
 
-type Properties = {
-  username: string;
-  collectionSlug: string;
-};
+export function OwnerEmptyStateFallback() {
+  const { pageData } = useCollectionItems();
+  const { username, collection, isOwner, ownerData } = pageData;
 
-/**
- * Dynamic Server Component — checks ownership before rendering OwnerEmptyState.
- * Wrapped in <Suspense> on the parent page so it streams in without blocking
- * the cached public content shell.
- */
-export async function OwnerEmptyStateFallback({ username, collectionSlug }: Properties) {
-  await connection();
-
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return;
-
-  const result = await getPublicCollectionBySlug(username, collectionSlug);
-  if (!result || user.id !== result.userId) return;
-
-  const [brands, franchises] = await Promise.all([getAllBrands(), getAllFranchises()]);
+  if (!isOwner || !ownerData) return null;
 
   return (
     <OwnerEmptyState
-      collectionId={result.collection.id}
-      brands={brands}
-      franchises={franchises}
+      collectionId={collection.id}
+      username={username}
+      collectionSlug={collection.slug}
+      brands={ownerData.brands}
+      franchises={ownerData.franchises}
     />
   );
 }

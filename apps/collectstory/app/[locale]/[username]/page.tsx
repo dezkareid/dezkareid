@@ -1,6 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
 import {
   use,
   Suspense,
@@ -10,16 +8,16 @@ import {
   getPublicCollectionsByUsername,
 } from '@/lib/collections';
 import { Image } from '@dezkareid/components/react-server';
-import { OwnerProfileActions } from '@/src/features/owner-profile-actions';
+import { OwnerProfileActions, OwnerProfileGrid } from '@/src/features/owner-profile-actions';
+import { InfiniteCollectionsGrid } from '@/src/features/collections-infinite';
 import { SocialShare } from '@/src/features/social-share';
-import styles from './page.module.css';
 import { routing } from '@/app/i18n/routing';
+import styles from './page.module.css';
 
 type Properties = {
   params: Promise<{ username: string; locale: string }>;
 };
 
-// User profile pages are rendered on-demand — usernames are not known at build time.
 export function generateStaticParams() {
   const { locales } = routing;
   return locales.map(locale => ({
@@ -32,15 +30,16 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
   const { username } = await params;
   const t = await getTranslations('Common.profile.metadata');
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
+  const canonicalUrl = `${baseUrl}/${username}`;
 
   return {
     title: t('title', { username }),
     description: t('description', { username }),
-    alternates: { canonical: `${baseUrl}/${username}` },
+    alternates: { canonical: canonicalUrl },
     openGraph: {
       title: t('title', { username }),
       description: t('description', { username }),
-      url: `${baseUrl}/${username}`,
+      url: canonicalUrl,
       type: 'profile',
     },
   };
@@ -61,34 +60,23 @@ async function ProfileEmptyState({ username }: { username: string }) {
 }
 
 async function ProfileContent({ username }: { username: string }) {
-  const t = await getTranslations('Common.profile');
   const result = await getPublicCollectionsByUsername(username);
-  if (!result) notFound();
+  if (!result) return null;
 
-  const { collections } = result;
+  const { collections, total_count } = result;
+
+  if (collections.length === 0) {
+    return <ProfileEmptyState username={username} />;
+  }
 
   return (
-    <>
-      <div className={styles.grid}>
-        {collections.length === 0
-          ? <ProfileEmptyState username={username} />
-          : collections.map(col => (
-              <Link
-                key={col.id}
-                href={`/${username}/${col.slug}`}
-                className={styles.collectionCard}
-              >
-                <p className={styles.collectionName}>{col.name}</p>
-                {col.description && (
-                  <p className={styles.collectionDesc}>{col.description}</p>
-                )}
-                <p className={styles.collectionMeta}>
-                  {t('items_count', { count: col.item_count })}
-                </p>
-              </Link>
-            ))}
-      </div>
-    </>
+    <InfiniteCollectionsGrid
+      initialCollections={collections}
+      totalCount={total_count}
+      username={username}
+      gridClassName={styles.grid}
+      collectionCardClassName={styles.collectionCard}
+    />
   );
 }
 
@@ -102,21 +90,21 @@ async function ProfileHeader({ username }: { username: string }) {
       <div className={styles.avatar}>
         {avatarUrl
           ? (
-              <Image
-                strategy="cloudinary"
-                mode="fixed"
-                src={avatarUrl}
-                alt={username}
-                width={72}
-                height={72}
-                className={styles.avatarImage}
-              />
-            )
+            <Image
+              strategy="cloudinary"
+              mode="fixed"
+              src={avatarUrl}
+              alt={username}
+              width={72}
+              height={72}
+              className={styles.avatarImage}
+            />
+          )
           : (
-              <span className={styles.avatarInitial} aria-hidden="true">
-                {username[0].toUpperCase()}
-              </span>
-            )}
+            <span className={styles.avatarInitial} aria-hidden="true">
+              {username[0].toUpperCase()}
+            </span>
+          )}
       </div>
       <div className={styles.headerText}>
         <div className={styles['header__username-wrapper']}>
@@ -150,7 +138,17 @@ export default function UserProfilePage({ params }: Properties) {
 
       <p className={styles.sectionLabel}>{t('collections')}</p>
 
-      <ProfileContent username={username} />
+      {/* Public cached grid — visible to visitors and search engines */}
+      <div className={styles.publicGrid}>
+        <ProfileContent username={username} />
+      </div>
+
+      {/* Owner grid with delete — streams in and hides the public grid via CSS :has() */}
+      <Suspense fallback={undefined}>
+        <div className={styles.ownerGridWrapper}>
+          <OwnerProfileGrid username={username} />
+        </div>
+      </Suspense>
     </div>
   );
 }

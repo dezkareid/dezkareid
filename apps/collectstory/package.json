@@ -1,6 +1,6 @@
 {
   "name": "@dezkareid/collectstory",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,6 +8,7 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
@@ -19,6 +20,7 @@
     "@next/third-parties": "16.2.3",
     "@supabase/ssr": "0.9.0",
     "@supabase/supabase-js": "2.100.0",
+    "@tanstack/react-query": "5.99.0",
     "classnames": "2.5.1",
     "cloudinary": "2.9.0",
     "heic2any": "0.0.4",
@@ -32,11 +34,15 @@
   "devDependencies": {
     "@dezkareid/eslint-config-ts-base": "1.0.0",
     "@dezkareid/eslint-plugin-web": "workspace:*",
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/react": "16.3.2",
+    "@testing-library/user-event": "14.5.2",
     "@types/node": "25.0.10",
     "@types/react": "19.2.9",
     "@types/react-dom": "19.2.3",
     "@types/sharp": "0.32.0",
     "@vitejs/plugin-react": "5.1.4",
+    "@vitest/coverage-v8": "4.0.18",
     "eslint": "9.39.2",
     "jsdom": "27.4.0",
     "schema-dts": "2.0.0",

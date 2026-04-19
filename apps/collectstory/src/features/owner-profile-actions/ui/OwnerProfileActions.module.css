@@ -1,0 +1,18 @@
+.ownerGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-24);
+  margin-top: var(--spacing-32);
+}
+
+@media (max-width: 768px) {
+  .ownerGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .ownerGrid {
+    grid-template-columns: 1fr;
+  }
+}

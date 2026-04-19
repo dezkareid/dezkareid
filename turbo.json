@@ -98,7 +98,21 @@
       "outputs": []
     },
     "test": {
+      "dependsOn": [
+        "^build"
+      ],
       "outputs": [],
+      "inputs": [
+        "src/**/*.tsx",
+        "src/**/*.ts",
+        "src/**/*.jsx",
+        "src/**/*.js"
+      ]
+    },
+    "test:coverage": {
+      "outputs": [
+        "coverage/**"
+      ],
       "inputs": [
         "src/**/*.tsx",
         "src/**/*.ts",

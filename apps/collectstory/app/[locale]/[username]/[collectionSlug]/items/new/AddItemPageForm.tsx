@@ -1,10 +1,13 @@
 'use client';
 
-import { useActionState, useState, useTransition } from 'react';
+import { useActionState, useEffect, useRef, useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { addItem } from '../../actions';
 import { getLinesByBrand } from '@/app/[locale]/[username]/[collectionSlug]/actions';
 import { stripMetadata } from '@/lib/image/strip-metadata';
 import { CatalogItemPicker } from '@/src/features/catalog-item-picker';
+import { SlugPicker, useSlugDisambiguation } from '@/src/features/slug-picker';
 import styles from '@/components/AddItemForm/AddItemForm.module.css';
 
 function ImageUploadArea({
@@ -13,16 +16,18 @@ function ImageUploadArea({
   uploadFailed,
   uploading,
   onFileChange,
+  t,
 }: {
   preview: string | undefined;
   fileError: string | undefined;
   uploadFailed: boolean;
   uploading: boolean;
   onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  t: ReturnType<typeof useTranslations<'AddItemForm'>>;
 }) {
   return (
     <div className={styles.field}>
-      <label className={styles.label} htmlFor="item-image">Image</label>
+      <label className={styles.label} htmlFor="item-image">{t('field_image')}</label>
       <div className={styles.uploadArea}>
         {preview
           ? (
@@ -32,7 +37,7 @@ function ImageUploadArea({
           : (
               <div className={styles.uploadPlaceholder}>
                 <span className={styles.uploadIcon}>↑</span>
-                <span className={styles.uploadHint}>JPEG, PNG or WebP · max 5 MB</span>
+                <span className={styles.uploadHint}>{t('field_image_hint')}</span>
               </div>
             )}
         <input
@@ -48,7 +53,7 @@ function ImageUploadArea({
       {fileError && (
         <p className={styles.fieldError} role="alert">
           {fileError}
-          {uploadFailed && <span className={styles.retryHint}> — choose the file again to retry.</span>}
+          {uploadFailed && <span className={styles.retryHint}>{t('field_image_retry')}</span>}
         </p>
       )}
     </div>
@@ -59,15 +64,17 @@ function VariantSelect({
   line,
   selectedVariant,
   onVariantChange,
+  t,
 }: {
   line: { variants: { value: string; display_name: string }[] } | undefined;
   selectedVariant: string;
   onVariantChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  t: ReturnType<typeof useTranslations<'AddItemForm'>>;
 }) {
   if (!line || line.variants.length === 0) return;
   return (
     <div className={styles.field}>
-      <label className={styles.label} htmlFor="item-variant">Variant</label>
+      <label className={styles.label} htmlFor="item-variant">{t('field_variant')}</label>
       <select
         id="item-variant"
         name="variant"
@@ -75,7 +82,7 @@ function VariantSelect({
         value={selectedVariant}
         onChange={onVariantChange}
       >
-        <option value="">— none —</option>
+        <option value="">{t('field_none')}</option>
         {line.variants.map(v => (
           <option key={v.value} value={v.value}>{v.display_name}</option>
         ))}
@@ -86,7 +93,7 @@ function VariantSelect({
 
 type Brand = { id: string; name: string };
 type LineVariant = { value: string; display_name: string };
-type Line = { id: string; name: string; categoryName: string | undefined; variants: LineVariant[] };
+type Line = { id: string; name: string; categoryName: string | undefined; variants: LineVariant[]; brandName: string | undefined };
 
 type Properties = {
   brands: Brand[];
@@ -111,17 +118,41 @@ async function uploadFile(file: File): Promise<{ url: string } | { error: string
 }
 
 export function AddItemPageForm({ brands, franchises, collectionId, username, collectionSlug }: Properties) {
+  const t = useTranslations('AddItemForm');
+  const router = useRouter();
   const [state, formAction, pending] = useActionState(addItem, undefined);
   const [fileError, setFileError] = useState<string>();
   const [uploadFailed, setUploadFailed] = useState(false);
   const [preview, setPreview] = useState<string>();
   const [uploadedUrl, setUploadedUrl] = useState<string>();
   const [uploading, setUploading] = useState(false);
+  const [checking, setChecking] = useState(false);
   const [lines, setLines] = useState<Line[]>([]);
   const [selectedLine, setSelectedLine] = useState<Line | undefined>(undefined);
   const [selectedVariant, setSelectedVariant] = useState('');
+  const [nameValue, setNameValue] = useState('');
   const [loadingLines, startLoadingLines] = useTransition();
   const [, startTransition] = useTransition();
+  const { slugOptions, selectedSlug, needsSelection, checkCollision, selectSlug, reset } = useSlugDisambiguation();
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if (state && 'success' in state && state.success) {
+      router.push(`/${username}/${collectionSlug}`);
+    }
+  }, [state, username, collectionSlug, router]);
+
+  useEffect(() => {
+    if (slugOptions === null) return;
+    let element: HTMLElement | null = formRef.current?.parentElement ?? null;
+    while (element) {
+      if (element.scrollHeight > element.clientHeight) {
+        element.scrollTo({ top: 0, behavior: 'smooth' });
+        break;
+      }
+      element = element.parentElement;
+    }
+  }, [slugOptions]);
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -131,12 +162,12 @@ export function AddItemPageForm({ brands, franchises, collectionId, username, co
     setUploadedUrl(undefined);
     if (!file) return;
     if (!ALLOWED_TYPES.has(file.type)) {
-      setFileError('Only JPEG, PNG, and WebP images are allowed.');
+      setFileError(t('error_image_type'));
       event.target.value = '';
       return;
     }
     if (file.size > MAX_BYTES) {
-      setFileError('Image must be 5 MB or smaller.');
+      setFileError(t('error_image_size'));
       event.target.value = '';
       return;
     }
@@ -161,22 +192,17 @@ export function AddItemPageForm({ brands, franchises, collectionId, username, co
     setSelectedVariant('');
   }
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (fileError) return;
-    const form = event.currentTarget;
-    const data = new FormData(form);
-
+  async function resolveImageUrl(form: HTMLFormElement, data: FormData): Promise<boolean> {
     const fileInput = form.elements.namedItem('image') as HTMLInputElement;
     const file = fileInput?.files?.[0];
     if (file && !uploadedUrl) {
       setUploading(true);
-      const result = await uploadFile(file).catch(() => ({ error: 'Upload failed. Please try again.' }));
+      const result = await uploadFile(file).catch(() => ({ error: t('error_upload') }));
       setUploading(false);
       if ('error' in result) {
         setFileError(result.error);
         setUploadFailed(true);
-        return;
+        return false;
       }
       setUploadedUrl(result.url);
       data.set('image_url', result.url);
@@ -184,14 +210,53 @@ export function AddItemPageForm({ brands, franchises, collectionId, username, co
     else if (uploadedUrl) {
       data.set('image_url', uploadedUrl);
     }
-
-    startTransition(() => formAction(data));
+    return true;
   }
 
-  const isBusy = pending || uploading;
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (fileError) return;
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    if (!await resolveImageUrl(form, data)) return;
+
+    // Phase 1: options showing and slug chosen → save with chosen slug.
+    if (slugOptions !== null) {
+      if (!selectedSlug) return; // guard: picker visible but nothing selected
+      data.set('slug', selectedSlug);
+      startTransition(() => formAction(data));
+      return;
+    }
+
+    // Phase 0: check for collision before first save attempt.
+    setChecking(true);
+    const options = await checkCollision(
+      nameValue,
+      collectionId,
+      selectedLine?.name,
+      selectedVariant || undefined,
+      selectedLine?.brandName,
+    );
+    setChecking(false);
+    if (options === null) {
+      // No collision — save immediately; server will generate slug.
+      startTransition(() => formAction(data));
+    }
+    // Collision detected: checkCollision set slugOptions state → SlugPicker renders.
+    // User selects an option and re-submits, hitting Phase 1 above.
+  }
+
+  const isBusy = pending || uploading || checking || needsSelection;
+
+  function submitLabel() {
+    if (uploading) return t('submit_uploading');
+    if (checking) return t('submit_checking');
+    if (pending) return t('submit_saving');
+    return t('submit_add');
+  }
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form} noValidate>
+    <form ref={formRef} onSubmit={handleSubmit} className={styles.form} noValidate>
       <input type="hidden" name="collection_id" value={collectionId} />
       <input type="hidden" name="username" value={username} />
       <input type="hidden" name="collection_slug" value={collectionSlug} />
@@ -202,7 +267,7 @@ export function AddItemPageForm({ brands, franchises, collectionId, username, co
 
       <div className={styles.field}>
         <label className={styles.label} htmlFor="item-name">
-          Name
+          {t('field_name')}
           {' '}
           <span className={styles.required}>*</span>
         </label>
@@ -213,9 +278,24 @@ export function AddItemPageForm({ brands, franchises, collectionId, username, co
           className={styles.input}
           required
           autoComplete="off"
-          placeholder="e.g. S.H. Figuarts Spider-Man"
+          placeholder={t('field_name_placeholder')}
+          value={nameValue}
+          onChange={(event) => {
+            setNameValue(event.target.value);
+            reset();
+          }}
         />
       </div>
+
+      {slugOptions !== null && (
+        <SlugPicker
+          options={slugOptions}
+          selectedSlug={selectedSlug}
+          onSelect={selectSlug}
+          legend={t('slug_picker_legend')}
+          hint={t('slug_picker_hint')}
+        />
+      )}
 
       <ImageUploadArea
         preview={preview}
@@ -223,18 +303,19 @@ export function AddItemPageForm({ brands, franchises, collectionId, username, co
         uploadFailed={uploadFailed}
         uploading={uploading}
         onFileChange={handleFileChange}
+        t={t}
       />
 
       <div className={styles.row}>
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="item-brand">Brand</label>
+          <label className={styles.label} htmlFor="item-brand">{t('field_brand')}</label>
           <select
             id="item-brand"
             className={styles.select}
             onChange={handleBrandChange}
             defaultValue=""
           >
-            <option value="">— none —</option>
+            <option value="">{t('field_none')}</option>
             {brands.map(b => (
               <option key={b.id} value={b.id}>{b.name}</option>
             ))}
@@ -243,7 +324,7 @@ export function AddItemPageForm({ brands, franchises, collectionId, username, co
 
         <div className={styles.field}>
           <label className={styles.label} htmlFor="item-line">
-            Line
+            {t('field_line')}
             {loadingLines && <span className={styles.loadingDot} aria-hidden="true" />}
           </label>
           <select
@@ -254,7 +335,7 @@ export function AddItemPageForm({ brands, franchises, collectionId, username, co
             defaultValue=""
             onChange={handleLineChange}
           >
-            <option value="">— none —</option>
+            <option value="">{t('field_none')}</option>
             {lines.map(l => (
               <option key={l.id} value={l.id}>{l.name}</option>
             ))}
@@ -264,7 +345,7 @@ export function AddItemPageForm({ brands, franchises, collectionId, username, co
 
       {selectedLine && (
         <div className={styles.field}>
-          <label className={styles.label}>Category</label>
+          <label className={styles.label}>{t('field_category')}</label>
           <p className={styles.derivedValue}>{selectedLine.categoryName ?? '—'}</p>
         </div>
       )}
@@ -273,17 +354,18 @@ export function AddItemPageForm({ brands, franchises, collectionId, username, co
         line={selectedLine}
         selectedVariant={selectedVariant}
         onVariantChange={event => setSelectedVariant(event.target.value)}
+        t={t}
       />
 
       <div className={styles.field}>
-        <label className={styles.label} htmlFor="item-franchise">Franchise</label>
+        <label className={styles.label} htmlFor="item-franchise">{t('field_franchise')}</label>
         <select
           id="item-franchise"
           name="franchise_id"
           className={styles.select}
           defaultValue=""
         >
-          <option value="">— none —</option>
+          <option value="">{t('field_none')}</option>
           {franchises.map(f => (
             <option key={f.id} value={f.id}>{f.name}</option>
           ))}
@@ -291,13 +373,13 @@ export function AddItemPageForm({ brands, franchises, collectionId, username, co
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label} htmlFor="item-description">Description</label>
+        <label className={styles.label} htmlFor="item-description">{t('field_description')}</label>
         <textarea
           id="item-description"
           name="description"
           className={styles.textarea}
           rows={3}
-          placeholder="What makes this piece special?"
+          placeholder={t('field_description_placeholder')}
         />
       </div>
 
@@ -305,7 +387,7 @@ export function AddItemPageForm({ brands, franchises, collectionId, username, co
 
       <div className={styles.row}>
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="item-date">Date Acquired</label>
+          <label className={styles.label} htmlFor="item-date">{t('field_date')}</label>
           <input
             id="item-date"
             name="date_acquired"
@@ -315,23 +397,23 @@ export function AddItemPageForm({ brands, franchises, collectionId, username, co
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="item-visibility">Visibility</label>
+          <label className={styles.label} htmlFor="item-visibility">{t('field_visibility')}</label>
           <select
             id="item-visibility"
             name="visibility"
             className={styles.select}
             defaultValue="public"
           >
-            <option value="public">Public</option>
-            <option value="private">Private</option>
-            <option value="draft">Draft</option>
+            <option value="public">{t('visibility_public')}</option>
+            <option value="private">{t('visibility_private')}</option>
+            <option value="draft">{t('visibility_draft')}</option>
           </select>
         </div>
       </div>
 
       <div className={styles.actions}>
         <button type="submit" className={styles.submitButton} disabled={isBusy}>
-          {uploading ? 'Uploading…' : (pending ? 'Saving…' : 'Add to Collection')}
+          {submitLabel()}
         </button>
       </div>
     </form>

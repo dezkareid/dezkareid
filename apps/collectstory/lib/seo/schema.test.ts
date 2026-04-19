@@ -34,6 +34,7 @@ describe('SEO Schema Utilities', () => {
     slug: 'cool-items',
     description: 'Collection of the coolest items.',
     item_count: 1,
+    total_count: 1,
   };
 
   describe('generateCollectionItemSchema', () => {
@@ -54,6 +55,18 @@ describe('SEO Schema Utilities', () => {
       expect(creator['@type']).toBe('Person');
       expect(creator.name).toBe(username);
       expect(schema.acquireLicensePage).toBe(`${baseUrl}/${username}/${collectionSlug}/${mockItem.slug}`);
+    });
+
+    it('should handle missing description', () => {
+      const itemWithoutDesc = { ...mockItem, description: undefined };
+      const schema = generateCollectionItemSchema({
+        item: itemWithoutDesc,
+        username,
+        collectionSlug,
+        baseUrl,
+      });
+
+      expect(schema.description).toBeUndefined();
     });
   });
 
@@ -81,6 +94,18 @@ describe('SEO Schema Utilities', () => {
       expect(firstElement.item).toBeDefined();
       expect(firstElement.item['@type']).toBe('ImageObject');
       expect(firstElement.item.name).toBe(mockItem.name);
+    });
+
+    it('should handle missing collection description', () => {
+      const collectionWithoutDesc = { ...mockCollection, description: undefined };
+      const schema = generateCollectionListingSchema({
+        collection: collectionWithoutDesc,
+        username,
+        items: [mockItem],
+        baseUrl,
+      });
+
+      expect(schema.description).toBeUndefined();
     });
   });
 });

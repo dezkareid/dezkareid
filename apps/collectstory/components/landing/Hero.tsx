@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import { Image } from '@dezkareid/components/react';
 import { HomeCTA } from '@/components/HomeCta';
 import { heroData } from '@/lib/mock-data';
 import styles from './Hero.module.css';
@@ -24,7 +24,7 @@ export function Hero() {
               <Image
                 src={heroData.images[0].src}
                 alt={heroData.images[0].alt}
-                fill
+                strategy="cloudinary"
                 sizes="(min-width: 60rem) 33vw, 66vw"
                 className={styles.image}
                 priority
@@ -34,7 +34,7 @@ export function Hero() {
               <Image
                 src={heroData.images[1].src}
                 alt={heroData.images[1].alt}
-                fill
+                strategy="cloudinary"
                 sizes="(min-width: 60rem) 17vw, 33vw"
                 className={styles.image}
               />
@@ -43,7 +43,7 @@ export function Hero() {
               <Image
                 src={heroData.images[2].src}
                 alt={heroData.images[2].alt}
-                fill
+                strategy="cloudinary"
                 sizes="(min-width: 60rem) 17vw, 33vw"
                 className={styles.image}
               />

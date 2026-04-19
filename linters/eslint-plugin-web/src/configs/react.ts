@@ -18,6 +18,9 @@ const config: Linter.Config[] = [
       // because the argument is positionally required by TypeScript. Unicorn's auto-fixer
       // incorrectly removes it. checkArguments:false disables the fixer only for call arguments.
       'unicorn/no-useless-undefined': ['error', { checkArguments: false }],
+      // Supabase requires null (not undefined) to explicitly clear nullable columns and to
+      // pass optional RPC parameters. Enforcing undefined-only breaks the Supabase client API.
+      'unicorn/no-null': 'off',
     },
   } as Linter.Config,
 ];

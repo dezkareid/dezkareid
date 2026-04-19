@@ -1,4 +1,5 @@
 import { cacheLife, cacheTag } from 'next/cache';
+import { connection } from 'next/server';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/server';
 
@@ -15,6 +16,7 @@ export type PublicCollection = {
   slug: string;
   description: string | undefined;
   item_count: number;
+  total_count: number;
 };
 
 export type LineVariant = { value: string; display_name: string };
@@ -34,6 +36,11 @@ export type PublicItem = {
     categories: { name: string } | undefined;
     variants: LineVariant[];
   } | undefined;
+};
+
+export type PaginatedResult<T> = {
+  data: T[];
+  total_count: number;
 };
 
 export type PublicItemDetail = PublicItem & {
@@ -166,8 +173,8 @@ export async function getCollectionFirstImage(
     .select('image_url')
     .eq('collection_id', collectionId)
     .eq('visibility', 'public')
-    .not('image_url', 'is', undefined)
-    .order('created_at', { ascending: false })
+    .not('image_url', 'is', null)
+    .order('created_at', { ascending: true })
     .limit(1)
     .maybeSingle();
 
@@ -178,7 +185,9 @@ export async function getCollectionFirstImage(
 // (not derived from headers/cookies) so it becomes part of the 'use cache' cache key.
 export async function getPublicCollectionsByUsername(
   username: string,
-): Promise<{ collections: PublicCollection[]; userId: string; avatarUrl: string | undefined } | undefined> {
+  page: number = 1,
+  limit: number = 20,
+): Promise<{ collections: PublicCollection[]; total_count: number; userId: string; avatarUrl: string | undefined } | undefined> {
   'use cache';
   cacheLife('user-content');
   cacheTag(`profile:${username}`);
@@ -190,30 +199,46 @@ export async function getPublicCollectionsByUsername(
     .eq('username', username)
     .single();
 
-  if (!profile) return undefined;
+  if (!profile) {
+    // Cache misses briefly so Next.js treats this as cached data (not blocking).
+    // revalidateTag('profile:username') handles invalidation when the profile is created.
+    cacheLife('user-content');
+    return undefined;
+  }
 
-  const { data: collections } = await supabase
+  const from = (page - 1) * limit;
+  const to = page * limit - 1;
+
+  const { data: collections, count: total_count } = await supabase
     .from('collections')
-    .select('id, name, slug, description')
+    .select('id, name, slug, description, public_items', { count: 'exact' })
     .eq('user_id', profile.id)
     .eq('visibility', 'public')
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
+    .range(from, to);
 
-  if (!collections) return { collections: [], userId: profile.id, avatarUrl: profile.avatar_url ?? undefined };
+  if (!collections) return { collections: [], total_count: 0, userId: profile.id, avatarUrl: profile.avatar_url ?? undefined };
 
-  // Count public items per collection
+  // Use the cached public_items counter (public-only count); fall back to a live COUNT
+  // only when null (pre-migration rows). The result is cached via 'use cache' + cacheTag
+  // so the fallback path only runs on cache miss, not on every request.
   const collectionsWithCount = await Promise.all(
     collections.map(async (col) => {
-      const { count } = await supabase
-        .from('collection_items')
-        .select('id', { count: 'exact', head: true })
-        .eq('collection_id', col.id)
-        .eq('visibility', 'public');
-      return { ...col, item_count: count ?? 0, description: col.description ?? undefined };
+      const row = col as unknown as { public_items: number | null };
+      let itemCount = row.public_items;
+      if (itemCount === null || itemCount === undefined) {
+        const { count } = await supabase
+          .from('collection_items')
+          .select('id', { count: 'exact', head: true })
+          .eq('collection_id', col.id)
+          .eq('visibility', 'public');
+        itemCount = count ?? 0;
+      }
+      return { ...col, item_count: itemCount, total_count: itemCount, description: col.description ?? undefined };
     }),
   );
 
-  return { collections: collectionsWithCount, userId: profile.id, avatarUrl: profile.avatar_url ?? undefined };
+  return { collections: collectionsWithCount, total_count: total_count ?? 0, userId: profile.id, avatarUrl: profile.avatar_url ?? undefined };
 }
 
 // i18n note: when a `locale` parameter is added, it must be a named function argument
@@ -236,7 +261,12 @@ export async function getPublicCollectionBySlug(
     .eq('username', username)
     .single();
 
-  if (!profile) return undefined;
+  if (!profile) {
+    // Cache misses briefly so Next.js treats this as cached data (not blocking).
+    // revalidateTag handles invalidation when the profile or collection is created.
+    cacheLife('user-content');
+    return undefined;
+  }
 
   const { data: collection } = await supabase
     .from('collections')
@@ -246,7 +276,10 @@ export async function getPublicCollectionBySlug(
     .eq('visibility', 'public')
     .single();
 
-  if (!collection) return undefined;
+  if (!collection) {
+    cacheLife('user-content');
+    return undefined;
+  }
 
   return {
     collection: { ...collection, description: collection.description ?? undefined },
@@ -260,7 +293,9 @@ export async function getPublicItemsInCollection(
   collectionId: string,
   username: string,
   collectionSlug: string,
-): Promise<PublicItem[]> {
+  page: number = 1,
+  limit: number = 20,
+): Promise<PaginatedResult<PublicItem>> {
   'use cache';
   cacheLife('user-content');
   // Tag with both the slug-based key (for revalidation by Server Actions) and
@@ -269,7 +304,10 @@ export async function getPublicItemsInCollection(
   cacheTag(`collection-items:${collectionId}`);
   const supabase = createPublicClient();
 
-  const { data: items } = await supabase
+  const from = (page - 1) * limit;
+  const to = page * limit - 1;
+
+  const { data: items, count } = await supabase
     .from('collection_items')
     .select(`
       id,
@@ -285,12 +323,13 @@ export async function getPublicItemsInCollection(
         brands ( id, name ),
         categories ( name )
       )
-    `)
+    `, { count: 'exact' })
     .eq('collection_id', collectionId)
     .eq('visibility', 'public')
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
+    .range(from, to);
 
-  return (items ?? []) as unknown as PublicItem[];
+  return { data: (items ?? []) as unknown as PublicItem[], total_count: count ?? 0 };
 }
 
 // i18n note: when a `locale` parameter is added, it must be a named function argument
@@ -336,7 +375,12 @@ export async function getPublicItemBySlug(
     .eq('visibility', 'public')
     .single();
 
-  if (!item) return undefined;
+  if (!item) {
+    // Cache misses briefly so Next.js treats this as cached data (not blocking).
+    // revalidateTag handles invalidation when the item is created or made public.
+    cacheLife('user-content');
+    return undefined;
+  }
 
   return item as unknown as PublicItemDetail;
 }
@@ -366,6 +410,158 @@ export async function getLinkedStores(itemId: string): Promise<LinkedStore[]> {
     return [{ id: s.id, name: s.name, verified: s.verified, url: s.url ?? undefined }];
   });
 }
+
+// ─── Owner-scoped queries ─────────────────────────────────────────────────────
+// These helpers use the authenticated server client (createClient) and have no
+// 'use cache' directive — they always run dynamically and verify ownership before
+// returning data. They are used exclusively by dynamic owner RSC components to
+// show private content to its owner without leaking it through cached paths.
+
+export type OwnerItem = PublicItem & { visibility: string };
+
+type OwnerCollectionResult = {
+  collection: {
+    id: string;
+    name: string;
+    slug: string;
+    description: string | undefined;
+    visibility: string;
+  };
+  userId: string;
+};
+
+/**
+ * Returns a collection regardless of visibility, but only when the authenticated
+ * user owns it. Returns undefined for visitors or non-owners.
+ */
+export async function getOwnerCollectionBySlug(
+  username: string,
+  collectionSlug: string,
+): Promise<OwnerCollectionResult | undefined> {
+  await connection();
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return undefined;
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('username', username)
+    .single();
+
+  if (!profile || user.id !== profile.id) return undefined;
+
+  const { data: collection } = await supabase
+    .from('collections')
+    .select('id, name, slug, description, visibility')
+    .eq('user_id', profile.id)
+    .eq('slug', collectionSlug)
+    .single();
+
+  if (!collection) return undefined;
+
+  return {
+    collection: { ...collection, description: collection.description ?? undefined },
+    userId: profile.id,
+  };
+}
+
+/**
+ * Returns all items in a collection (public + private) for the authenticated owner.
+ * Caller is responsible for verifying ownership before calling this function.
+ */
+export async function getOwnerItemsInCollection(
+  collectionId: string,
+  page: number = 1,
+  limit: number = 20,
+): Promise<PaginatedResult<OwnerItem>> {
+  await connection();
+  const supabase = await createClient();
+
+  const from = (page - 1) * limit;
+  const to = page * limit - 1;
+
+  const { data: items, count } = await supabase
+    .from('collection_items')
+    .select(`
+      id,
+      name,
+      slug,
+      image_url,
+      description,
+      date_acquired,
+      likes_count,
+      visibility,
+      lines (
+        id,
+        name,
+        brands ( id, name ),
+        categories ( name )
+      )
+    `, { count: 'exact' })
+    .eq('collection_id', collectionId)
+    .order('created_at', { ascending: false })
+    .range(from, to);
+
+  return { data: (items ?? []) as unknown as OwnerItem[], total_count: count ?? 0 };
+}
+
+/**
+ * Returns an item by slug regardless of visibility, but only when the authenticated
+ * user owns the collection it belongs to. Returns undefined for visitors or non-owners.
+ */
+export async function getOwnerItemBySlug(
+  collectionId: string,
+  itemSlug: string,
+): Promise<PublicItemDetail | undefined> {
+  await connection();
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return undefined;
+
+  // Verify ownership via the collection
+  const { data: collection } = await supabase
+    .from('collections')
+    .select('user_id')
+    .eq('id', collectionId)
+    .single();
+
+  if (!collection || user.id !== collection.user_id) return undefined;
+
+  const { data: item } = await supabase
+    .from('collection_items')
+    .select(`
+      id,
+      name,
+      slug,
+      image_url,
+      description,
+      date_acquired,
+      likes_count,
+      visibility,
+      user_id,
+      variant,
+      line_id,
+      franchise_id,
+      catalog_item_id,
+      lines (
+        id,
+        name,
+        variants,
+        brands ( id, name ),
+        categories ( name )
+      ),
+      franchises ( id, name, slug )
+    `)
+    .eq('collection_id', collectionId)
+    .eq('slug', itemSlug)
+    .single();
+
+  if (!item) return undefined;
+  return item as unknown as PublicItemDetail;
+}
+
+// ─── End owner-scoped queries ─────────────────────────────────────────────────
 
 export async function getItemLikedByUser(
   itemId: string,

@@ -21,15 +21,15 @@ export const heroData = {
   ctaPrimary: { label: 'Start your collection', href: '#' },
   images: [
     {
-      src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAg37WXfsmjqMas3FmkwWwF5CEXvdfc2_d6vqRdqUScid7nlID9XIhX3W7AbQCZnPz7FQ61pyAGWxUvf8JwKPAYMzbOl2IuIk7c2D2_PQvnp5jioM93yKjrM34G8S8_9l06Bo9BoMIJQS6busUsIztCPbfz9fKNh5x-Fz13syBshiY1JEoH-j0kwPCT61TrLh4AJNeO0Uh9F1ovZStPMEw-KiTsKGqc1Zg8gfk9RewY892soMa4uhs8YZ-G_c_bvYkcHZyS8gnrLDJV',
+      src: 'https://res.cloudinary.com/ddyovtxd2/image/upload/v1776196233/A80D42C4-8CE4-4FD8-AFD3-5827B132E503_1_105_c_cvbdmk.jpg',
       alt: 'Collectible figures',
     },
     {
-      src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDLvEveCIoJ9DXQwPMvgV0H0Dwi81YyiBbC6MLK3_7HEdJECb79b49Aaa90U7JQJ_EEFOmpUymH9pqxjbpV1z-_v2CUgL0fhGRCFFniUx0Xx2COMH_Pz8vGrkOKZq7yKx06J5gUADooYNrulvQtsbJWnpboaqwlaJwGQ2ptBcpiCJ_7DU6BIQVDrnSzgXxHsgHY_pEU3LY2o_QQ08E8RPsHEBKTpS2YW_q85yQCkbQ0F5avuh0JIfqcceLA4zXnvhHzrO0exGNGcoed',
+      src: 'https://res.cloudinary.com/ddyovtxd2/image/upload/v1776196287/074787A5-57AF-425A-AC0C-5C6BB4430A4C_1_105_c_phehos.jpg',
       alt: 'Trading cards',
     },
     {
-      src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBtaLm2JddE8p-BkLrN3HxrDh3XIJMisoycg-U9EMclIxFhVzJR3R8GGnJglZk4vVRsZ6Vs6NodVAl0nOnXxGp73hmN-BvIm_OKNp_WDxIPu2YZOJz2eCaFocUiTwsC-hkxQBCjSPRzdqJF1-67SHg7tsqRVzEXCRhllfXo0INIkDU2abqsYmK3Kn4MdQ04Y56LR9XU37zaft4rORcEO6TZkLefKpDEIPHFdN7XLccWatAGrSWVTAm7mnY9DOSnH0FUvXWPvdgaK3Rt',
+      src: 'https://res.cloudinary.com/ddyovtxd2/image/upload/v1776196360/A142697F-1EBA-4019-95F9-F5EB3742C448_1_105_c_brvrr3.jpg',
       alt: 'Gaming figures',
     },
   ],

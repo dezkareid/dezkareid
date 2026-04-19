@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { generateUniqueCollectionSlug, generateUniqueSlug } from '@/lib/slug';
 
@@ -42,7 +42,7 @@ export async function quickStartCollection(
     return { error: 'Failed to create collection. Please try again.' };
   }
 
-  const itemSlug = await generateUniqueSlug(supabase, user.id, itemName);
+  const itemSlug = await generateUniqueSlug(supabase, newCollection.id, itemName);
 
   const { error: itemError } = await supabase
     .from('collection_items')
@@ -59,6 +59,8 @@ export async function quickStartCollection(
   }
 
   revalidatePath(`/${username}`);
+  revalidateTag(`profile:${username}`, 'max');
+  revalidateTag(`collection:${username}:${collectionSlug}`, 'max');
 
   return { success: true, collectionSlug };
 }

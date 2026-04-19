@@ -27,9 +27,34 @@
   width: 100%;
 }
 
+/* Structure */
+.login__divider {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-12);
+}
+
+.login__divider::before,
+.login__divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+}
+
 /* Skin */
 .login {
   background-color: var(--color-background-secondary);
+}
+
+.login__divider::before,
+.login__divider::after {
+  background-color: var(--color-background-secondary);
+}
+
+.login__divider-text {
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
 }
 
 .login__card {

@@ -32,7 +32,7 @@ const buttonStyle: React.CSSProperties = {
  * Wrapped in <Suspense> on the parent page so it streams in without blocking
  * the cached public content shell.
  */
-export async function OwnerItemActions({ username, collectionSlug, itemId, userId }: Properties) {
+export async function OwnerItemEditActions({ username, collectionSlug, itemId, userId }: Properties) {
   await connection();
 
   const supabase = await createClient();

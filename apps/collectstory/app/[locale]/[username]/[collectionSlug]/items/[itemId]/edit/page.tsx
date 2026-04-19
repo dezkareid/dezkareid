@@ -4,7 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { getPublicCollectionBySlug } from '@/lib/collections';
+import { getPublicCollectionBySlug, getOwnerCollectionBySlug } from '@/lib/collections';
 import { getAllFranchises } from '@/app/[locale]/[username]/[collectionSlug]/actions';
 import { EditItemForm } from './EditItemForm';
 import styles from './page.module.css';
@@ -77,7 +77,9 @@ async function EditItemContent({ params }: Properties) {
   const supabase = await createClient();
   const user = await getAuthorizedUser(supabase, username);
 
-  const result = await getPublicCollectionBySlug(username, collectionSlug);
+  // Try public path first; fall back to owner path for private collections.
+  const result = await getPublicCollectionBySlug(username, collectionSlug)
+    ?? await getOwnerCollectionBySlug(username, collectionSlug);
   if (!result) notFound();
 
   const { item, brands, franchises } = await fetchEditPageData(supabase, itemId, user.id);
