@@ -26,7 +26,7 @@ import { ItemImageSection } from './ItemImageSection';
 import { OwnerImageSection } from './_components/OwnerImageSection';
 import { LikeSection } from './_components/LikeSection';
 import { LikeButtonSkeleton } from './_components/LikeButtonSkeleton';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { createClient } from '@/lib/supabase/server';
 import { SocialShare } from '@/src/features/social-share';
 import { IHaveThisButton } from '@/src/features/copy-item';
 import { WhereToFindButton } from '@/src/features/where-to-find';
@@ -163,7 +163,7 @@ interface CatalogStore {
 
 async function getCatalogStoresForItem(catalogItemId: string): Promise<CatalogStore[]> {
   'use cache';
-  const supabase = createAdminClient();
+  const supabase = await createClient();
   const { data } = await supabase
     .from('catalog_item_stores')
     .select('stores ( id, name, city, country, url )')
