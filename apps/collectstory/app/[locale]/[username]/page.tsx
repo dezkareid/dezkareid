@@ -48,9 +48,9 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
 async function ProfileEmptyState({ username }: { username: string }) {
   const t = await getTranslations('Common');
   return (
-    <div className={styles.empty}>
-      <p className={styles.emptyTitle}>{t('no_public_collections')}</p>
-      <p className={styles.emptyDesc}>
+    <div className={styles['profile-page__empty']}>
+      <p className={styles['profile-page__empty-title']}>{t('no_public_collections')}</p>
+      <p className={styles['profile-page__empty-desc']}>
         {username}
         {' '}
         {t('has_not_made_public')}
@@ -74,8 +74,8 @@ async function ProfileContent({ username }: { username: string }) {
       initialCollections={collections}
       totalCount={total_count}
       username={username}
-      gridClassName={styles.grid}
-      collectionCardClassName={styles.collectionCard}
+      gridClassName={styles['profile-page__grid']}
+      collectionCardClassName={styles['collection-card']}
     />
   );
 }
@@ -86,29 +86,29 @@ async function ProfileHeader({ username }: { username: string }) {
   const avatarUrl = result?.avatarUrl;
 
   return (
-    <header className={styles.header}>
-      <div className={styles.avatar}>
+    <header className={styles['profile-page__header']}>
+      <div className={styles['profile-page__avatar']}>
         {avatarUrl
           ? (
-            <Image
-              strategy="cloudinary"
-              mode="fixed"
-              src={avatarUrl}
-              alt={username}
-              width={72}
-              height={72}
-              className={styles.avatarImage}
-            />
-          )
+              <Image
+                strategy="cloudinary"
+                mode="fixed"
+                src={avatarUrl}
+                alt={username}
+                width={72}
+                height={72}
+                className={styles['profile-page__avatar-image']}
+              />
+            )
           : (
-            <span className={styles.avatarInitial} aria-hidden="true">
-              {username[0].toUpperCase()}
-            </span>
-          )}
+              <span className={styles['profile-page__avatar-initial']} aria-hidden="true">
+                {username[0].toUpperCase()}
+              </span>
+            )}
       </div>
-      <div className={styles.headerText}>
-        <div className={styles['header__username-wrapper']}>
-          <h1 className={styles.username}>
+      <div className={styles['profile-page__header-text']}>
+        <div className={styles['profile-page__username-row']}>
+          <h1 className={styles['profile-page__username']}>
             @
             {username}
           </h1>
@@ -119,7 +119,7 @@ async function ProfileHeader({ username }: { username: string }) {
           />
         </div>
       </div>
-      <div className={styles.ownerActions}>
+      <div className={styles['profile-page__owner-actions']}>
         <Suspense fallback={undefined}>
           <OwnerProfileActions username={username} />
         </Suspense>
@@ -133,19 +133,19 @@ export default function UserProfilePage({ params }: Properties) {
   const t = use(getTranslations('Common.profile'));
 
   return (
-    <div className={`container ${styles.page}`}>
+    <div className={`container ${styles['profile-page']}`}>
       <ProfileHeader username={username} />
 
-      <p className={styles.sectionLabel}>{t('collections')}</p>
+      <p className={styles['profile-page__section-label']}>{t('collections')}</p>
 
       {/* Public cached grid — visible to visitors and search engines */}
-      <div className={styles.publicGrid}>
+      <div className={styles['profile-page__public-grid']}>
         <ProfileContent username={username} />
       </div>
 
       {/* Owner grid with delete — streams in and hides the public grid via CSS :has() */}
       <Suspense fallback={undefined}>
-        <div className={styles.ownerGridWrapper}>
+        <div className={styles['profile-page__owner-grid-wrapper']}>
           <OwnerProfileGrid username={username} />
         </div>
       </Suspense>
