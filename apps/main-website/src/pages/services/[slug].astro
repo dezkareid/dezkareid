@@ -1,10 +1,11 @@
 ---
-import { getCollection, render } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
-import Section from '../../components/Section.astro';
+import { getCollection, render } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import Section from "../../components/Section.astro";
+import CalendlyTrigger from "../../components/CalendlyTrigger.astro";
 
 export async function getStaticPaths() {
-  const services = await getCollection('services');
+  const services = await getCollection("services");
   return services.map(service => ({
     params: { slug: service.id },
     props: { service },
@@ -13,7 +14,16 @@ export async function getStaticPaths() {
 
 const { service } = Astro.props;
 const { Content } = await render(service);
-const { title, description, icon, cta, metaDescription, priceRange, serviceType } = service.data;
+const {
+  title,
+  description,
+  icon,
+  cta,
+  calendlyLink,
+  metaDescription,
+  priceRange,
+  serviceType,
+} = service.data;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const pageDescription = metaDescription ?? description;
@@ -74,21 +84,39 @@ const jsonLd = {
   <Section class="pricing-section">
     <div class="pricing-container">
       <span class="pricing-label">Pricing</span>
-      {priceRange && (
-        <div class="pricing-card">
-          <p class="pricing-amount">{priceRange}</p>
-          <p class="pricing-note">Scope and pricing are discussed on a discovery call — no commitment required.</p>
-        </div>
-      )}
-      <a
-        href="mailto:elmaildeldezkareid@gmail.com"
-        class="cta-button"
-        data-ga-event="click_service_cta"
-        data-ga-params={JSON.stringify({ service_id: service.id, title })}
-      >
-        <span>{cta ?? 'Get in touch'}</span>
-        <span class="cta-arrow" aria-hidden="true">→</span>
-      </a>
+      {
+        priceRange && (
+          <div class="pricing-card">
+            <p class="pricing-amount">{priceRange}</p>
+            <p class="pricing-note">
+              The payment method can be discussed after the session.
+            </p>
+          </div>
+        )
+      }
+      {
+        calendlyLink
+          ? (
+              <CalendlyTrigger
+                url={calendlyLink}
+                text={cta ?? "Book a session"}
+                className="cta-button"
+              />
+            )
+          : (
+              <a
+                href="mailto:elmaildeldezkareid@gmail.com"
+                class="cta-button"
+                data-ga-event="click_service_cta"
+                data-ga-params={JSON.stringify({ service_id: service.id, title })}
+              >
+                <span>{cta ?? "Get in touch"}</span>
+                <span class="cta-arrow" aria-hidden="true">
+                  →
+                </span>
+              </a>
+            )
+      }
     </div>
   </Section>
 </Layout>
@@ -137,10 +165,14 @@ const jsonLd = {
 
   /* Pricing section */
   :global(.pricing-section) {
-    border-top: 1px solid color-mix(in srgb, var(--color-text-primary) 10%, transparent);
+    border-top: 1px solid
+      color-mix(in srgb, var(--color-text-primary) 10%, transparent);
   }
 
   .pricing-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-16);
     max-width: 600px;
     margin: 0 auto;
     padding-inline: var(--spacing-24);
@@ -160,7 +192,6 @@ const jsonLd = {
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--color-primary);
-    margin-bottom: var(--spacing-16);
   }
 
   .pricing-card {
@@ -168,10 +199,15 @@ const jsonLd = {
     align-items: center;
     gap: var(--spacing-32);
     padding: var(--spacing-24) var(--spacing-32);
-    border: 1px solid color-mix(in srgb, var(--color-text-primary) 20%, transparent);
+    border: 1px solid
+      color-mix(in srgb, var(--color-text-primary) 20%, transparent);
     border-left: 3px solid var(--color-primary);
     border-radius: var(--spacing-4);
-    background-color: color-mix(in srgb, var(--color-primary) 5%, var(--color-background-primary));
+    background-color: color-mix(
+      in srgb,
+      var(--color-primary) 5%,
+      var(--color-background-primary)
+    );
   }
 
   @media (max-width: 600px) {
