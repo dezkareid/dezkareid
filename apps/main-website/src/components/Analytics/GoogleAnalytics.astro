@@ -1,5 +1,5 @@
 ---
-interface Props {
+interface Properties {
   id: string;
 }
 
@@ -9,38 +9,38 @@ const { id } = Astro.props;
 <!-- Google tag (gtag.js) -->
 <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${id}`}></script>
 <script is:inline define:vars={{ id }}>
-  window.dataLayer = window.dataLayer || [];
-  function gtag() {
-    dataLayer.push(arguments);
+globalThis.dataLayer = globalThis.dataLayer || [];
+function gtag(...gtagArguments) {
+  dataLayer.push(gtagArguments);
+}
+
+// Initialize with denied consent by default if no preference is set
+const consent = localStorage.getItem('ga_consent');
+
+gtag('consent', 'default', {
+  analytics_storage: consent === 'true' ? 'granted' : 'denied',
+  ad_storage: 'denied', // Default to denied for now
+  wait_for_update: 500,
+});
+
+gtag('js', new Date());
+gtag('config', id, {
+  page_path: globalThis.location.pathname,
+});
+
+// Listen for custom events if needed
+globalThis.addEventListener('ga:event', (event) => {
+  const { name, params } = event.detail;
+  gtag('event', name, params);
+});
+
+// Track data-ga-event attributes
+document.addEventListener('click', (event) => {
+  const target = event.target.closest('[data-ga-event]');
+  if (target) {
+    const eventName = target.dataset.gaEvent;
+    const eventParameters = JSON.parse(target.dataset.gaParams || '{}');
+    gtag('event', eventName, eventParameters);
   }
-
-  // Initialize with denied consent by default if no preference is set
-  const consent = localStorage.getItem('ga_consent');
-
-  gtag('consent', 'default', {
-    'analytics_storage': consent === 'true' ? 'granted' : 'denied',
-    'ad_storage': 'denied', // Default to denied for now
-    'wait_for_update': 500
-  });
-
-  gtag('js', new Date());
-  gtag('config', id, {
-    page_path: window.location.pathname,
-  });
-
-  // Listen for custom events if needed
-  window.addEventListener('ga:event', (event) => {
-    const { name, params } = event.detail;
-    gtag('event', name, params);
-  });
-
-  // Track data-ga-event attributes
-  document.addEventListener('click', (event) => {
-    const target = event.target.closest('[data-ga-event]');
-    if (target) {
-      const eventName = target.getAttribute('data-ga-event');
-      const eventParams = JSON.parse(target.getAttribute('data-ga-params') || '{}');
-      gtag('event', eventName, eventParams);
-    }
-  });
+});
 </script>

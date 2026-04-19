@@ -1,0 +1,55 @@
+---
+import { Button } from '@dezkareid/components/astro';
+
+interface Properties {
+  url: string;
+  text?: string;
+  className?: string;
+}
+
+const { url, text = 'Book a session', className } = Astro.props;
+---
+
+<Button
+  type="button"
+  id="calendly-trigger"
+  data-url={url}
+  class={className}
+  data-ga-event="book_session_click"
+  data-ga-params={JSON.stringify({ service: 'mentoring' })}
+>
+  {text}
+</Button>
+
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet" />
+<script is:inline src="https://assets.calendly.com/assets/external/widget.js" async></script>
+
+<script is:inline>
+  const trigger = document.querySelector('#calendly-trigger');
+  if (trigger) {
+    trigger.addEventListener('click', (event) => {
+      event.preventDefault();
+      const url = trigger.dataset.url;
+      if (globalThis.Calendly) {
+        globalThis.Calendly.initPopupWidget({ url });
+      }
+      else {
+        // Fallback if script didn't load
+        window.open(url, '_blank');
+      }
+    });
+
+    // Track successful bookings
+    window.addEventListener('message', (event) => {
+      if (
+        event.data.event
+        && event.data.event.indexOf('calendly.event_scheduled') === 0
+        && globalThis.gtag
+      ) {
+        globalThis.gtag('event', 'calendly_booking_success', {
+          service: 'mentoring',
+        });
+      }
+    });
+  }
+</script>

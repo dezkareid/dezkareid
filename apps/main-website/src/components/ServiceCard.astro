@@ -18,7 +18,8 @@ const { title, description, icon } = service.data;
     aria-label={`Learn about ${title}`}
     data-ga-event="view_service"
     data-ga-params={JSON.stringify({ service_id: service.id, title })}
-  ></a>
+  >
+  </a>
 
   <div class="service-card__header">
     <span class="service-card__icon" aria-hidden="true">{icon || "⚙️"}</span>

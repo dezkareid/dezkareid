@@ -24,6 +24,7 @@ const servicesCollection = defineCollection({
     description: z.string(),
     icon: z.string().optional(),
     cta: z.string().optional(),
+    calendlyLink: z.string().optional(),
     order: z.number().default(0),
     metaDescription: z.string().optional(),
     priceRange: z.string().optional(),

@@ -4,6 +4,7 @@ description: "Career clarity and accelerated skill growth for developers who kno
 icon: "🎓"
 order: 5
 cta: "Book a session"
+calendlyLink: "https://calendly.com/dezkareid/mentories"
 metaDescription: "1:1 mentoring for developers growing into senior, staff, or leadership roles. Career strategy, code review, system design, and interview prep."
 priceRange: "From $40/session"
 serviceType: "Professional Mentoring"
