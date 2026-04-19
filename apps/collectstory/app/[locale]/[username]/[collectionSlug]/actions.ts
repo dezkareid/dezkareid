@@ -610,6 +610,7 @@ export type CollectionPageData = {
   collection: { id: string; name: string; slug: string; description: string | undefined };
   collectionUserId: string;
   items: PublicItem[];
+  total_count: number;
   isPrivate: boolean;
   isAuthenticated: boolean;
   isOwner: boolean;
@@ -623,18 +624,20 @@ export type CollectionPageData = {
 export async function getPublicPageData(
   username: string,
   collectionSlug: string,
+  page: number = 1,
 ): Promise<CollectionPageData | null> {
   const publicResult = await getPublicCollectionBySlug(username, collectionSlug);
 
   if (!publicResult) return null;
 
   const { collection, userId: collectionUserId } = publicResult;
-  const items = await getPublicItemsInCollection(collection.id, username, collectionSlug);
+  const { data: items, total_count } = await getPublicItemsInCollection(collection.id, username, collectionSlug, page);
   return {
     username,
     collection,
     collectionUserId,
     items,
+    total_count,
     isPrivate: false,
     isAuthenticated: false,
     isOwner: false,

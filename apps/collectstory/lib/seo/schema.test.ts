@@ -34,6 +34,7 @@ describe('SEO Schema Utilities', () => {
     slug: 'cool-items',
     description: 'Collection of the coolest items.',
     item_count: 1,
+    total_count: 1,
   };
 
   describe('generateCollectionItemSchema', () => {

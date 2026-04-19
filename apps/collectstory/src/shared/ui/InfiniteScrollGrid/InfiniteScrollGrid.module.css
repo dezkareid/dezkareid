@@ -1,0 +1,34 @@
+.sentinel {
+  height: 1px;
+  margin-top: var(--spacing-32);
+}
+
+.loader {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-24) 0;
+}
+
+.loaderDot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--border-radius-pill);
+  background-color: var(--color-text-secondary);
+  opacity: 0.4;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.loaderDot:nth-child(2) { animation-delay: 0.2s; }
+.loaderDot:nth-child(3) { animation-delay: 0.4s; }
+
+.loaderDots {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 0.8; transform: scale(1); }
+}

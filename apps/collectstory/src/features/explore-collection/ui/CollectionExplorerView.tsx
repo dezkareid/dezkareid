@@ -1,34 +1,98 @@
 'use client';
 
 import { createPortal } from 'react-dom';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { Close, ChevronLeft, ChevronRight } from '@dezkareid/icons/react';
 import { Image } from '@dezkareid/components/react';
 import { LikeButton } from '@/src/features/like-item';
+import { DEFAULT_PAGE_SIZE } from '@/src/shared/lib/pagination/range';
 import type { PublicItem } from '@/lib/collections';
 import styles from './CollectionExplorerView.module.css';
 
+type Direction = 'next' | 'prev' | 'initial';
+
 type Properties = {
   items: PublicItem[];
+  totalItems: number;
+  collectionId: string;
   username: string;
   collectionSlug: string;
   isAuthenticated: boolean;
+  isOwner: boolean;
   onClose: () => void;
 };
 
-export function CollectionExplorerView({ items, isAuthenticated, onClose }: Properties) {
+async function fetchItemsPage(
+  collectionId: string,
+  username: string,
+  collectionSlug: string,
+  page: number,
+): Promise<PublicItem[]> {
+  const parameters = new URLSearchParams({ collectionId, username, collectionSlug, page: String(page) });
+  const response = await fetch(`/api/collection-items?${parameters}`);
+  if (!response.ok) return [];
+  const json = await response.json() as { data: PublicItem[] };
+  return json.data;
+}
+
+export function CollectionExplorerView({
+  items: initialItems,
+  totalItems,
+  collectionId,
+  username,
+  collectionSlug,
+  isAuthenticated,
+  isOwner,
+  onClose,
+}: Properties) {
   const t = useTranslations('CollectionExplorer');
+  const [allItems, setAllItems] = useState<PublicItem[]>(initialItems);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const currentItem = items[currentIndex];
+  const [direction, setDirection] = useState<Direction>('initial');
+  const [isLoading, setIsLoading] = useState(false);
+  const fetchedPagesRef = useRef<Set<number>>(new Set([1]));
+  // For owners, initialItems already contains all items (from context) — no fetch needed.
+  // Also skip fetching if initialItems already covers all items (e.g. < 1 page total).
+  const effectiveTotalPages = (isOwner || initialItems.length >= totalItems)
+    ? 1
+    : Math.ceil(totalItems / DEFAULT_PAGE_SIZE);
+
+  // Eagerly fetch remaining pages for visitors when there are more than one page
+  useEffect(() => {
+    if (effectiveTotalPages <= 1) return;
+
+    let cancelled = false;
+
+    async function fetchAll() {
+      setIsLoading(true);
+      const pageNumbers = Array.from({ length: effectiveTotalPages - 1 }, (_, index) => index + 2);
+      const results = await Promise.all(
+        pageNumbers.map(p => fetchItemsPage(collectionId, username, collectionSlug, p)),
+      );
+      if (cancelled) return;
+      for (const p of pageNumbers) fetchedPagesRef.current.add(p);
+      setAllItems(previous => [...previous, ...results.flat()]);
+      setIsLoading(false);
+    }
+
+    void fetchAll();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const currentItem = allItems[currentIndex];
 
   const handleNext = useCallback(() => {
-    setCurrentIndex(previous => (previous + 1) % items.length);
-  }, [items.length]);
+    setDirection('next');
+    setCurrentIndex(previous => (previous + 1) % allItems.length);
+  }, [allItems.length]);
 
   const handlePrevious = useCallback(() => {
-    setCurrentIndex(previous => (previous - 1 + items.length) % items.length);
-  }, [items.length]);
+    setDirection('prev');
+    setCurrentIndex(previous => (previous - 1 + allItems.length) % allItems.length);
+  }, [allItems.length]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -40,7 +104,6 @@ export function CollectionExplorerView({ items, isAuthenticated, onClose }: Prop
     return () => globalThis.removeEventListener('keydown', handleKeyDown);
   }, [handleNext, handlePrevious, onClose]);
 
-  // Lock body scroll
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
@@ -65,11 +128,17 @@ export function CollectionExplorerView({ items, isAuthenticated, onClose }: Prop
   const onTouchEnd = () => {
     if (touchStart === undefined || touchEnd === undefined) return;
     const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-    if (isLeftSwipe) handleNext();
-    if (isRightSwipe) handlePrevious();
+    if (distance > minSwipeDistance) handleNext();
+    if (distance < -minSwipeDistance) handlePrevious();
   };
+
+  const directionClass = direction === 'next'
+    ? styles['imageContainer--next']
+    : (direction === 'prev'
+        ? styles['imageContainer--prev']
+        : styles['imageContainer--initial']);
+
+  if (!currentItem) return null;
 
   return createPortal(
     <div
@@ -87,7 +156,7 @@ export function CollectionExplorerView({ items, isAuthenticated, onClose }: Prop
           <ChevronLeft />
         </button>
 
-        <div className={styles.imageContainer}>
+        <div key={currentItem.id} className={`${styles.imageContainer} ${directionClass}`}>
           {currentItem.image_url
             ? (
                 <Image
@@ -125,8 +194,16 @@ export function CollectionExplorerView({ items, isAuthenticated, onClose }: Prop
 
       <div className={styles.footer}>
         <p>
-          {t('counter', { current: currentIndex + 1, total: items.length })}
+          {t('counter', { current: currentIndex + 1, total: allItems.length })}
+          {isLoading && allItems.length < totalItems && (
+            <span>
+              {' '}
+              /
+              {totalItems}
+            </span>
+          )}
         </p>
+        {isLoading && <div className={styles.loadingBar} aria-hidden="true" />}
       </div>
     </div>,
     document.body,
