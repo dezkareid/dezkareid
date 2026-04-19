@@ -1,6 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
 import {
   use,
   Suspense,
@@ -11,7 +9,7 @@ import {
 } from '@/lib/collections';
 import { Image } from '@dezkareid/components/react-server';
 import { OwnerProfileActions, OwnerProfileGrid } from '@/src/features/owner-profile-actions';
-import { CollectionCard } from '@/src/entities/collection';
+import { InfiniteCollectionsGrid } from '@/src/features/collections-infinite';
 import { SocialShare } from '@/src/features/social-share';
 import { routing } from '@/app/i18n/routing';
 import styles from './page.module.css';
@@ -20,7 +18,6 @@ type Properties = {
   params: Promise<{ username: string; locale: string }>;
 };
 
-// User profile pages are rendered on-demand — usernames are not known at build time.
 export function generateStaticParams() {
   const { locales } = routing;
   return locales.map(locale => ({
@@ -33,15 +30,16 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
   const { username } = await params;
   const t = await getTranslations('Common.profile.metadata');
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
+  const canonicalUrl = `${baseUrl}/${username}`;
 
   return {
     title: t('title', { username }),
     description: t('description', { username }),
-    alternates: { canonical: `${baseUrl}/${username}` },
+    alternates: { canonical: canonicalUrl },
     openGraph: {
       title: t('title', { username }),
       description: t('description', { username }),
-      url: `${baseUrl}/${username}`,
+      url: canonicalUrl,
       type: 'profile',
     },
   };
@@ -62,35 +60,23 @@ async function ProfileEmptyState({ username }: { username: string }) {
 }
 
 async function ProfileContent({ username }: { username: string }) {
-  const t = await getTranslations('Common.profile');
   const result = await getPublicCollectionsByUsername(username);
-  if (!result) notFound();
+  if (!result) return null;
 
-  const { collections } = result;
+  const { collections, total_count } = result;
+
+  if (collections.length === 0) {
+    return <ProfileEmptyState username={username} />;
+  }
 
   return (
-    <>
-      <div className={styles.grid}>
-        {collections.length === 0
-          ? <ProfileEmptyState username={username} />
-          : collections.map(col => (
-              <Link
-                key={col.id}
-                href={`/${username}/${col.slug}`}
-                className={styles.collectionCard}
-              >
-                <CollectionCard
-                  collection={{
-                    name: col.name,
-                    description: col.description,
-                    item_count: col.item_count,
-                    itemCountLabel: t('items_count', { count: col.item_count }),
-                  }}
-                />
-              </Link>
-            ))}
-      </div>
-    </>
+    <InfiniteCollectionsGrid
+      initialCollections={collections}
+      totalCount={total_count}
+      username={username}
+      gridClassName={styles.grid}
+      collectionCardClassName={styles.collectionCard}
+    />
   );
 }
 

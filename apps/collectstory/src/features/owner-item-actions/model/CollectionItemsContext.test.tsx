@@ -26,6 +26,7 @@ const BASE_PAGE_DATA: CollectionPageData = {
   collection: { id: 'col-1', name: 'Test Collection', slug: 'test-collection', description: undefined },
   collectionUserId: 'user-1',
   items: [],
+  total_count: 0,
   isPrivate: false,
   isAuthenticated: false,
   isOwner: false,

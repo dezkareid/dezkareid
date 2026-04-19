@@ -33,28 +33,33 @@ export async function OwnerProfileGrid({ username }: Properties) {
 
   if (!profile || user.id !== profile.id) return;
 
-  // Fetch all collections (public + private) fresh — owner always sees current state
+  // Fetch all collections (public + private) fresh — owner always sees current state.
+  // total_items counts all items regardless of visibility, which is exactly right for the owner.
   const { data: collections } = await supabase
     .from('collections')
-    .select('id, name, slug, description, visibility')
+    .select('id, name, slug, description, visibility, total_items')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
 
   if (!collections || collections.length === 0) return;
 
-  // Count all items (public + private) per collection so the owner sees the real total
+  // Use cached total_items; fall back to live COUNT only when null (pre-migration rows).
   const collectionsWithCount = await Promise.all(
     collections.map(async (col) => {
-      const { count } = await supabase
-        .from('collection_items')
-        .select('id', { count: 'exact', head: true })
-        .eq('collection_id', col.id);
+      let itemCount = col.total_items;
+      if (itemCount === null || itemCount === undefined) {
+        const { count } = await supabase
+          .from('collection_items')
+          .select('id', { count: 'exact', head: true })
+          .eq('collection_id', col.id);
+        itemCount = count ?? 0;
+      }
       return {
         id: col.id,
         name: col.name,
         slug: col.slug,
         description: col.description ?? undefined,
-        item_count: count ?? 0,
+        item_count: itemCount,
         visibility: col.visibility as string,
       };
     }),

@@ -13,7 +13,7 @@ export function ExploreButton() {
   const [isOpen, setIsOpen] = useState(false);
 
   const { pageData, ownerItems } = useCollectionItems();
-  const { username, collection, isAuthenticated, isOwner } = pageData;
+  const { username, collection, isAuthenticated, isOwner, total_count } = pageData;
 
   const items: PublicItem[] = isOwner
     ? ownerItems.map(item => ({
@@ -38,6 +38,10 @@ export function ExploreButton() {
 
   if (items.length === 0) return null;
 
+  // For owners the full item list is already in context; use its length as totalItems.
+  // For visitors, use the server-provided total_count so the explorer can fetch remaining pages.
+  const totalItems = isOwner ? ownerItems.length : total_count;
+
   return (
     <>
       <Button variant="secondary" onClick={() => setIsOpen(true)}>
@@ -48,9 +52,12 @@ export function ExploreButton() {
       {isOpen && (
         <CollectionExplorerView
           items={items}
+          totalItems={totalItems}
+          collectionId={collection.id}
           username={username}
           collectionSlug={collection.slug}
           isAuthenticated={isAuthenticated}
+          isOwner={isOwner}
           onClose={() => setIsOpen(false)}
         />
       )}

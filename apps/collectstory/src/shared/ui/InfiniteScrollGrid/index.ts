@@ -1,0 +1,1 @@
+export { InfiniteScrollSentinel } from './InfiniteScrollSentinel';
