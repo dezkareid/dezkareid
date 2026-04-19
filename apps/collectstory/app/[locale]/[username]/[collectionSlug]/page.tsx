@@ -185,11 +185,10 @@ export default async function CollectionPage({ params }: Properties) {
         <CollectionHeader pageData={pageData} />
 
         {/*
-          Public grid — SSR first page, then infinite scroll client-side.
-          Owner grid streams in via Suspense and overlays via CSS :has().
+          Owner grid streams in first so the sibling ~ selector can hide the
+          public grid the moment it resolves, eliminating the layout jump.
+          Public grid is SSR-rendered below as the visitor/SEO fallback.
         */}
-        <PublicItemGrid pageData={pageData} />
-
         <div className={styles['collection-page__owner-grid']}>
           <Suspense fallback={null}>
             <CollectionAuthLoader
@@ -201,6 +200,8 @@ export default async function CollectionPage({ params }: Properties) {
           </Suspense>
           <OwnerItemGrid />
         </div>
+
+        <PublicItemGrid pageData={pageData} />
       </div>
     </CollectionItemsProvider>
   );
