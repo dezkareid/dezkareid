@@ -53,6 +53,7 @@
 
 .explorer__item {
   flex: 1;
+  min-width: 0;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -60,14 +61,14 @@
   justify-content: center;
   gap: var(--spacing-24);
   max-width: 800px;
+  width: 100%;
   margin: 0 auto;
 }
 
 .explorer__image-wrapper {
   flex-shrink: 0;
   position: relative;
-  height: 70vh;
-  max-height: 70vh;
+  width: min(calc(70vh * 3 / 4), 100%);
   aspect-ratio: 3 / 4;
   border-radius: var(--border-radius-large);
   overflow: hidden;

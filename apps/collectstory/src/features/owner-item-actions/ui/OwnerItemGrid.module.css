@@ -29,6 +29,7 @@
 
 .item-card {
   position: relative;
+  min-width: 0;
 }
 
 .item-card__link {

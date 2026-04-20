@@ -1,5 +1,11 @@
 # @dezkareid/collectstory
 
+## 1.2.2
+
+### Patch Changes
+
+- Fix horizontal overflow on iPhone Pro Max across collection and profile pages. Grid item cards, the collection explorer image, and the AddItemForm category field no longer cause x-axis scroll. Category field moved to bottom of AddItemForm and label replaced with an accessible paragraph.
+
 ## 1.2.1
 
 ### Patch Changes
