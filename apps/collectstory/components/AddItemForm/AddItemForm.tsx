@@ -280,8 +280,8 @@ function CategoryDisplay({ line, t }: { line: Line | undefined; t: ReturnType<ty
   if (!line) return <></>;
   return (
     <div className={styles.field}>
-      <label className={styles.label}>{t('field_category')}</label>
-      <p className={styles.derivedValue}>{line.categoryName ?? '—'}</p>
+      <p className={styles.label} id="category-label">{t('field_category')}</p>
+      <p className={styles.derivedValue} aria-labelledby="category-label">{line.categoryName ?? '—'}</p>
     </div>
   );
 }
@@ -570,8 +570,6 @@ function FormBody<T extends ActionState>({
         t={t}
       />
 
-      <CategoryDisplay line={selectedLine} t={t} />
-
       <VariantSelectField
         line={selectedLine}
         selectedVariant={selectedVariant}
@@ -582,6 +580,8 @@ function FormBody<T extends ActionState>({
       <MetaFields franchises={franchises} initialData={initialData} t={t} />
 
       <AcquisitionFields initialData={initialData} t={t} />
+
+      <CategoryDisplay line={selectedLine} t={t} />
 
       <FormActions uploading={uploading} checking={checking} pending={pending} needsSelection={needsSelection} submitLabel={submitLabel} t={t} />
     </>
