@@ -41,14 +41,17 @@ export type Database = {
       catalog_item_stores: {
         Row: {
           catalog_item_id: string;
+          product_url: string | null;
           store_id: string;
         };
         Insert: {
           catalog_item_id: string;
+          product_url?: string | null;
           store_id: string;
         };
         Update: {
           catalog_item_id?: string;
+          product_url?: string | null;
           store_id?: string;
         };
         Relationships: [
@@ -75,6 +78,7 @@ export type Database = {
           franchise_id: string | null;
           id: string;
           image_url: string | null;
+          images: Json;
           line_id: string | null;
           name: string;
           slug: string;
@@ -86,6 +90,7 @@ export type Database = {
           franchise_id?: string | null;
           id?: string;
           image_url?: string | null;
+          images?: Json;
           line_id?: string | null;
           name: string;
           slug: string;
@@ -97,6 +102,7 @@ export type Database = {
           franchise_id?: string | null;
           id?: string;
           image_url?: string | null;
+          images?: Json;
           line_id?: string | null;
           name?: string;
           slug?: string;
@@ -242,7 +248,9 @@ export type Database = {
           description: string | null;
           id: string;
           name: string;
+          public_items: number | null;
           slug: string;
+          total_items: number | null;
           updated_at: string;
           user_id: string;
           visibility: string;
@@ -252,7 +260,9 @@ export type Database = {
           description?: string | null;
           id?: string;
           name: string;
+          public_items?: number | null;
           slug: string;
+          total_items?: number | null;
           updated_at?: string;
           user_id: string;
           visibility?: string;
@@ -262,7 +272,9 @@ export type Database = {
           description?: string | null;
           id?: string;
           name?: string;
+          public_items?: number | null;
           slug?: string;
+          total_items?: number | null;
           updated_at?: string;
           user_id?: string;
           visibility?: string;
@@ -456,37 +468,52 @@ export type Database = {
       };
       stores: {
         Row: {
+          address: string | null;
           city: string | null;
           country: string | null;
+          cover_url: string | null;
           created_at: string;
+          google_place_id: string | null;
           id: string;
           lat: number | null;
           lng: number | null;
+          logo_url: string | null;
           name: string;
+          slug: string;
           url: string | null;
           verified: boolean;
           visible: boolean;
         };
         Insert: {
+          address?: string | null;
           city?: string | null;
           country?: string | null;
+          cover_url?: string | null;
           created_at?: string;
+          google_place_id?: string | null;
           id?: string;
           lat?: number | null;
           lng?: number | null;
+          logo_url?: string | null;
           name: string;
+          slug: string;
           url?: string | null;
           verified?: boolean;
           visible?: boolean;
         };
         Update: {
+          address?: string | null;
           city?: string | null;
           country?: string | null;
+          cover_url?: string | null;
           created_at?: string;
+          google_place_id?: string | null;
           id?: string;
           lat?: number | null;
           lng?: number | null;
+          logo_url?: string | null;
           name?: string;
+          slug?: string;
           url?: string | null;
           verified?: boolean;
           visible?: boolean;
@@ -523,6 +550,21 @@ export type Database = {
       };
     };
     Functions: {
+      get_slug_options: {
+        Args: {
+          p_brand_name?: string;
+          p_collection_id: string;
+          p_exclude_slug?: string;
+          p_line_name?: string;
+          p_name: string;
+          p_variant?: string;
+        };
+        Returns: {
+          label: string;
+          priority: number;
+          slug: string;
+        }[];
+      };
       is_admin: { Args: never; Returns: boolean };
       search_catalog_items: {
         Args: { max_results?: number; query: string };
@@ -540,6 +582,7 @@ export type Database = {
       };
       show_limit: { Args: never; Returns: number };
       show_trgm: { Args: { '': string }; Returns: string[] };
+      unaccent: { Args: { '': string }; Returns: string };
     };
     Enums: {
       [_ in never]: never
