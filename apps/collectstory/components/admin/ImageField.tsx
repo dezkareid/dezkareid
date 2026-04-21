@@ -23,6 +23,8 @@ interface ImageFieldProperties {
   fileError: string | undefined;
   label?: string;
   required?: boolean;
+  /** Prefix for input name/id attributes. Defaults to "image" → names "image_url"/"image_file" */
+  fieldName?: string;
 }
 
 async function processFile(
@@ -69,6 +71,44 @@ async function processFile(
   setPreview(URL.createObjectURL(file));
 }
 
+type UploadAreaProperties = {
+  fileInputId: string;
+  fileInputName: string;
+  preview: string | undefined;
+  uploading: boolean;
+  onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onPaste: (event: React.ClipboardEvent<HTMLDivElement>) => void;
+};
+
+function UploadArea({ fileInputId, fileInputName, preview, uploading, onFileChange, onPaste }: UploadAreaProperties) {
+  return (
+    <div className={styles.uploadArea} tabIndex={0} onPaste={onPaste}>
+      {preview
+        ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={preview} alt="Preview" className={styles.preview} />
+          )
+        : (
+            <div className={styles.uploadPlaceholder}>
+              <span className={styles.uploadIcon}>↑</span>
+              <span className={styles.uploadHint}>
+                JPEG, PNG, WebP or HEIC · max 5 MB · or paste
+              </span>
+            </div>
+          )}
+      <input
+        id={fileInputId}
+        name={fileInputName}
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
+        className={styles.fileInput}
+        onChange={onFileChange}
+        disabled={uploading}
+      />
+    </div>
+  );
+}
+
 export function ImageField({
   defaultImageUrl,
   uploading,
@@ -78,11 +118,14 @@ export function ImageField({
   fileError,
   label = 'Image',
   required = false,
+  fieldName = 'image',
 }: ImageFieldProperties) {
-  const [mode, setMode] = useState<Mode>(defaultImageUrl ? 'url' : 'url');
-  const [preview, setPreview] = useState<string | undefined>(
-    mode === 'url' ? undefined : defaultImageUrl,
-  );
+  const urlInputId = `${fieldName}_url`;
+  const urlInputName = `${fieldName}_url`;
+  const fileInputId = `${fieldName}_file`;
+  const fileInputName = `${fieldName}_file`;
+  const [mode, setMode] = useState<Mode>('url');
+  const [preview, setPreview] = useState<string | undefined>();
   const [urlValue, setUrlValue] = useState(defaultImageUrl ?? '');
 
   function handleModeChange(next: Mode) {
@@ -135,8 +178,8 @@ export function ImageField({
       {mode === 'url'
         ? (
             <input
-              id="image_url"
-              name="image_url"
+              id={urlInputId}
+              name={urlInputName}
               type="url"
               className={styles.input}
               placeholder="https://…"
@@ -145,34 +188,14 @@ export function ImageField({
             />
           )
         : (
-            <div
-              className={styles.uploadArea}
-              tabIndex={0}
+            <UploadArea
+              fileInputId={fileInputId}
+              fileInputName={fileInputName}
+              preview={preview}
+              uploading={uploading}
+              onFileChange={handleFileChange}
               onPaste={handlePaste}
-            >
-              {preview
-                ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={preview} alt="Preview" className={styles.preview} />
-                  )
-                : (
-                    <div className={styles.uploadPlaceholder}>
-                      <span className={styles.uploadIcon}>↑</span>
-                      <span className={styles.uploadHint}>
-                        JPEG, PNG, WebP or HEIC · max 5 MB · or paste
-                      </span>
-                    </div>
-                  )}
-              <input
-                id="image_file"
-                name="image_file"
-                type="file"
-                accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
-                className={styles.fileInput}
-                onChange={handleFileChange}
-                disabled={uploading}
-              />
-            </div>
+            />
           )}
 
       {fileError && (

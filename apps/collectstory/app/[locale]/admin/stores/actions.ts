@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { getSessionAndRole } from '@/lib/auth/role';
@@ -24,14 +24,8 @@ function parseOptionalNumber(value: FormDataEntryValue | undefined): number | un
   return Number.isNaN(number_) ? undefined : number_;
 }
 
-export async function createStore(formData: FormData) {
-  await requireAdmin();
-
-  const name = (formData.get('name') as string).trim();
-  if (!name) throw new Error('Name is required');
-
-  const supabase = createAdminClient();
-  const { error } = await supabase.from('stores').insert({
+function parseStoreFields(formData: FormData, name: string) {
+  return {
     name,
     url: parseOptionalString(formData.get('url') ?? undefined),
     country: parseOptionalString(formData.get('country') ?? undefined),
@@ -39,7 +33,21 @@ export async function createStore(formData: FormData) {
     lat: parseOptionalNumber(formData.get('lat') ?? undefined),
     lng: parseOptionalNumber(formData.get('lng') ?? undefined),
     verified: formData.get('verified') === 'true',
-  });
+    cover_url: parseOptionalString(formData.get('cover_url') ?? undefined),
+    logo_url: parseOptionalString(formData.get('logo_url') ?? undefined),
+    address: parseOptionalString(formData.get('address') ?? undefined),
+    google_place_id: parseOptionalString(formData.get('google_place_id') ?? undefined),
+  };
+}
+
+export async function createStore(formData: FormData) {
+  await requireAdmin();
+
+  const name = (formData.get('name') as string).trim();
+  if (!name) throw new Error('Name is required');
+
+  const supabase = createAdminClient();
+  const { error } = await supabase.from('stores').insert(parseStoreFields(formData, name));
 
   if (error) throw new Error(error.message);
 
@@ -54,18 +62,15 @@ export async function updateStore(id: string, formData: FormData) {
   if (!name) throw new Error('Name is required');
 
   const supabase = createAdminClient();
-  const { error } = await supabase.from('stores').update({
-    name,
-    url: parseOptionalString(formData.get('url') ?? undefined),
-    country: parseOptionalString(formData.get('country') ?? undefined),
-    city: parseOptionalString(formData.get('city') ?? undefined),
-    lat: parseOptionalNumber(formData.get('lat') ?? undefined),
-    lng: parseOptionalNumber(formData.get('lng') ?? undefined),
-    verified: formData.get('verified') === 'true',
-  }).eq('id', id);
+
+  // Fetch the current slug to invalidate the public cache tag
+  const { data: current } = await supabase.from('stores').select('slug').eq('id', id).single();
+
+  const { error } = await supabase.from('stores').update(parseStoreFields(formData, name)).eq('id', id);
 
   if (error) throw new Error(error.message);
 
+  if (current?.slug) revalidateTag(`store-${current.slug}`, 'max');
   revalidatePath('/admin/stores');
   redirect('/admin/stores');
 }
@@ -74,6 +79,7 @@ export async function softDeleteStore(id: string) {
   await requireAdmin();
 
   const supabase = createAdminClient();
+  const { data: current } = await supabase.from('stores').select('slug').eq('id', id).single();
   const { error } = await supabase
     .from('stores')
     .update({ visible: false })
@@ -81,6 +87,7 @@ export async function softDeleteStore(id: string) {
 
   if (error) throw new Error(error.message);
 
+  if (current?.slug) revalidateTag(`store-${current.slug}`, 'max');
   revalidatePath('/admin/stores');
   redirect('/admin/stores');
 }
@@ -89,6 +96,7 @@ export async function toggleStoreVerified(id: string, verified: boolean) {
   await requireAdmin();
 
   const supabase = createAdminClient();
+  const { data: current } = await supabase.from('stores').select('slug').eq('id', id).single();
   const { error } = await supabase
     .from('stores')
     .update({ verified })
@@ -96,7 +104,78 @@ export async function toggleStoreVerified(id: string, verified: boolean) {
 
   if (error) throw new Error(error.message);
 
+  if (current?.slug) revalidateTag(`store-${current.slug}`, 'max');
   revalidatePath('/admin/stores');
+}
+
+export async function addCatalogItemToStore(
+  storeId: string,
+  catalogItemId: string,
+  productUrl?: string,
+): Promise<{ success: true } | { error: string }> {
+  await requireAdmin();
+
+  const supabase = createAdminClient();
+  const { data: store } = await supabase.from('stores').select('slug').eq('id', storeId).single();
+
+  const { error } = await supabase
+    .from('catalog_item_stores')
+    .insert({
+      store_id: storeId,
+      catalog_item_id: catalogItemId,
+      product_url: productUrl?.trim() || null,
+    });
+
+  if (error) {
+    if (error.code === '23505') return { error: 'This item is already linked to the store.' };
+    return { error: 'Failed to add item. Please try again.' };
+  }
+
+  if (store?.slug) revalidateTag(`store-${store.slug}`, 'max');
+  return { success: true };
+}
+
+export async function updateCatalogItemStoreUrl(
+  storeId: string,
+  catalogItemId: string,
+  productUrl: string,
+): Promise<{ success: true } | { error: string }> {
+  await requireAdmin();
+
+  const supabase = createAdminClient();
+  const { data: store } = await supabase.from('stores').select('slug').eq('id', storeId).single();
+
+  const { error } = await supabase
+    .from('catalog_item_stores')
+    .update({ product_url: productUrl.trim() || null })
+    .eq('store_id', storeId)
+    .eq('catalog_item_id', catalogItemId);
+
+  if (error) return { error: 'Failed to update URL. Please try again.' };
+
+  if (store?.slug) revalidateTag(`store-${store.slug}`, 'max');
+  return { success: true };
+}
+
+export async function removeCatalogItemFromStore(
+  storeId: string,
+  catalogItemId: string,
+): Promise<{ success: true } | { error: string }> {
+  await requireAdmin();
+
+  const supabase = createAdminClient();
+  const { data: store } = await supabase.from('stores').select('slug').eq('id', storeId).single();
+
+  const { error } = await supabase
+    .from('catalog_item_stores')
+    .delete()
+    .eq('store_id', storeId)
+    .eq('catalog_item_id', catalogItemId);
+
+  if (error) return { error: 'Failed to remove item. Please try again.' };
+
+  if (store?.slug) revalidateTag(`store-${store.slug}`, 'max');
+  return { success: true };
 }
 
 export async function addStoreToItem(
