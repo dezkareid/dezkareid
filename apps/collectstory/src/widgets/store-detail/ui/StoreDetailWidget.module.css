@@ -1,0 +1,195 @@
+/* ─────────────────────────────────────────
+   Block: store-detail
+   Structure and skin separated (OOCSS).
+   All class names follow BEM convention.
+───────────────────────────────────────── */
+
+/* ── Block ── */
+
+.store-detail {
+  /* structure */
+  display: flex;
+  flex-direction: column;
+  padding-bottom: var(--spacing-64);
+}
+
+/* ── Element: container — max-width wrapper ── */
+
+.store-detail__container {
+  /* structure */
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-48);
+}
+
+@media (max-width: 768px) {
+  .store-detail__container {
+    padding: 0 var(--spacing-24);
+  }
+}
+
+/* ── Element: items-section ── */
+
+.store-detail__items-section {
+  /* structure */
+  padding: var(--spacing-48) 0;
+  /* skin */
+  /* TODO(design-system): needs surface-container-low token for proper Material You surface stack */
+  /* light: same as page so cards pop; dark: slight warm lift off pure-black page */
+  background-color: light-dark(var(--color-background-primary), #1c1b1d);
+}
+
+/* ── Element: section-title ── */
+
+.store-detail__section-title {
+  /* structure */
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-12);
+  margin: 0 0 var(--spacing-24) 0;
+  padding-bottom: var(--spacing-16);
+  padding-left: var(--spacing-12);
+  /* skin */
+  font-size: var(--font-size-600);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+  border-left: 3px solid var(--color-primary);
+  border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+}
+
+/* ── Element: item-count ── */
+
+.store-detail__item-count {
+  /* structure */
+  border-radius: var(--border-radius-pill);
+  padding: 2px var(--spacing-8);
+  /* skin */
+  font-size: var(--font-size-300);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-secondary);
+  background-color: var(--color-background-primary);
+}
+
+/* ── Element: items-scroll ── */
+
+.store-detail__items-scroll {
+  /* structure */
+  display: flex;
+  gap: var(--spacing-16);
+  overflow-x: auto;
+  padding-bottom: var(--spacing-8);
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  /* bleed to container edges on mobile */
+  margin-inline: calc(var(--spacing-48) * -1);
+  padding-inline: var(--spacing-48);
+}
+
+@media (max-width: 768px) {
+  .store-detail__items-scroll {
+    margin-inline: calc(var(--spacing-24) * -1);
+    padding-inline: var(--spacing-24);
+  }
+}
+
+.store-detail__items-scroll > * {
+  scroll-snap-align: start;
+}
+
+/* hide scrollbar visually, keep functionality */
+.store-detail__items-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+.store-detail__items-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.store-detail__items-scroll::-webkit-scrollbar-thumb {
+  /* skin */
+  background: var(--color-text-secondary);
+  border-radius: var(--border-radius-pill);
+}
+
+/* ── Element: empty-state ── */
+
+.store-detail__empty-state {
+  /* structure */
+  margin: 0;
+  padding: var(--spacing-48) var(--spacing-24);
+  text-align: center;
+  border-radius: var(--border-radius-large);
+  /* skin */
+  font-size: var(--font-size-300);
+  color: var(--color-text-secondary);
+  background-color: var(--color-background-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ── Element: bento-section ── */
+
+.store-detail__bento-section {
+  /* structure */
+  padding: var(--spacing-48) 0;
+}
+
+/* ── Element: bento-grid ── */
+
+.store-detail__bento-grid {
+  /* structure */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-24);
+}
+
+@media (max-width: 768px) {
+  .store-detail__bento-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Element: bento-card ── */
+
+.store-detail__bento-card {
+  /* structure */
+  border-radius: var(--border-radius-large);
+  padding: var(--spacing-32);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+  /* skin */
+  background-color: var(--color-background-secondary);
+}
+
+/* ── Element: bento-title ── */
+
+.store-detail__bento-title {
+  /* structure */
+  margin: 0 0 var(--spacing-4) 0;
+  /* skin */
+  font-size: var(--font-size-500);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+}
+
+/* ── Element: bento-text ── */
+
+.store-detail__bento-text {
+  /* structure */
+  margin: 0;
+  /* skin */
+  font-size: var(--font-size-300);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+/* ── Element: bento-address ── */
+
+.store-detail__bento-address {
+  /* structure */
+  margin: 0;
+  /* skin */
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+  line-height: var(--font-line-height-relaxed);
+}

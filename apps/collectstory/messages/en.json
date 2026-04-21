@@ -289,5 +289,16 @@
     "name": "Collectstory",
     "short_name": "Collectstory",
     "description": "Track and showcase your collectibles collection."
+  },
+  "StorePage": {
+    "verified": "Verified",
+    "visitStore": "Visit store",
+    "availableItems": "Available items",
+    "noItemsListed": "No items listed yet",
+    "location": "Location",
+    "showMap": "Show map",
+    "hideMap": "Hide map",
+    "reviews": "Google Maps Reviews",
+    "viewReviews": "View reviews on Google Maps"
   }
 }

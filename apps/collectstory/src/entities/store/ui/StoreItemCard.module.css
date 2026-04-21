@@ -1,0 +1,105 @@
+/* ─────────────────────────────────────────
+   Block: store-item-card
+   Structure and skin separated (OOCSS).
+   All class names follow BEM convention.
+───────────────────────────────────────── */
+
+/* ── Block ── */
+
+.store-item-card {
+  /* structure */
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 220px;
+  text-decoration: none;
+  border-radius: var(--border-radius-large);
+  padding: var(--spacing-16);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  /* skin */
+  /* TODO(design-system): needs surface-container-high token for proper Material You surface stack */
+  background-color: light-dark(#f3f4f6, #2a2a2c);
+  border: 1px solid light-dark(#e5e7eb, transparent);
+  box-shadow: light-dark(0 2px 8px rgba(0, 0, 0, 0.08), 0 10px 30px rgba(0, 0, 0, 0.3));
+}
+
+@media (min-width: 769px) {
+  .store-item-card {
+    width: 240px;
+  }
+}
+
+.store-item-card:hover {
+  /* structure */
+  transform: scale(1.02);
+  /* skin */
+  box-shadow: light-dark(0 6px 20px rgba(0, 0, 0, 0.12), 0 14px 40px rgba(0, 0, 0, 0.4));
+}
+
+.store-item-card:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ── Element: image-wrapper ── */
+
+.store-item-card__image-wrapper {
+  /* structure */
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--border-radius-medium);
+  overflow: hidden;
+  margin-bottom: var(--spacing-12);
+  /* skin */
+  background-color: light-dark(#e4e8ef, #353437);
+}
+
+.store-item-card__image {
+  /* skin */
+  object-fit: cover;
+}
+
+.store-item-card__image-placeholder {
+  /* structure */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  /* skin */
+  font-size: var(--font-size-700);
+  color: var(--color-text-secondary);
+}
+
+/* ── Element: body ── */
+
+.store-item-card__body {
+  /* structure */
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+/* ── Element: name ── */
+
+.store-item-card__name {
+  /* structure */
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* skin */
+  font-size: var(--font-size-300);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+/* ── Element: footer ── */
+
+.store-item-card__footer {
+  /* structure */
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
