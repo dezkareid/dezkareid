@@ -289,5 +289,23 @@
     "name": "Collectstory",
     "short_name": "Collectstory",
     "description": "Rastrea y muestra tu colección de coleccionables."
+  },
+  "Errors": {
+    "NotFound": {
+      "title": "404",
+      "subtitle": "Página no encontrada",
+      "description": "La página que buscas no existe o ha sido movida.",
+      "recommended_links": "Enlaces recomendados",
+      "back_to_home": "Volver al inicio",
+      "browse": "Explorar catálogo"
+    },
+    "ServerError": {
+      "title": "500",
+      "subtitle": "Algo salió mal",
+      "description": "Encontramos un error por nuestra parte. Por favor, inténtalo de nuevo más tarde.",
+      "retry": "Reintentar",
+      "report_problem": "Reportar un problema",
+      "back_to_home": "Volver al inicio"
+    }
   }
 }

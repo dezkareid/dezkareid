@@ -289,5 +289,23 @@
     "name": "Collectstory",
     "short_name": "Collectstory",
     "description": "Track and showcase your collectibles collection."
+  },
+  "Errors": {
+    "NotFound": {
+      "title": "404",
+      "subtitle": "Page Not Found",
+      "description": "The page you are looking for doesn't exist or has been moved.",
+      "recommended_links": "Recommended Links",
+      "back_to_home": "Back to Home",
+      "browse": "Browse Catalog"
+    },
+    "ServerError": {
+      "title": "500",
+      "subtitle": "Something went wrong",
+      "description": "We encountered an error on our end. Please try again later.",
+      "retry": "Retry",
+      "report_problem": "Report a problem",
+      "back_to_home": "Back to Home"
+    }
   }
 }
