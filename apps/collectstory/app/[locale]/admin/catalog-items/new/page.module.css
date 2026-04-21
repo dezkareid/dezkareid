@@ -1,0 +1,9 @@
+.warning {
+  padding: var(--spacing-12) var(--spacing-16);
+  margin-bottom: var(--spacing-24);
+  font-size: var(--font-size-300);
+  color: var(--color-text-primary);
+  background-color: var(--color-background-secondary);
+  border-left: 3px solid var(--color-primary);
+  border-radius: var(--border-radius-medium);
+}

@@ -1,0 +1,154 @@
+.image-list-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+}
+
+.image-list-field__label {
+  font-size: var(--font-size-300);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.image-list-field__label-hint {
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-secondary);
+}
+
+.image-list-field__optional {
+  margin-left: var(--spacing-4);
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-secondary);
+}
+
+.image-list-field__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.image-list-field__item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+  padding: var(--spacing-8) var(--spacing-12);
+  background-color: var(--color-background-secondary);
+  border-radius: var(--border-radius-medium);
+  cursor: grab;
+}
+
+.image-list-field__item:active {
+  cursor: grabbing;
+}
+
+.image-list-field__drag-handle {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-400);
+  cursor: grab;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.image-list-field__thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: var(--border-radius-small);
+  flex-shrink: 0;
+}
+
+.image-list-field__alt {
+  flex: 1;
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.image-list-field__order-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  flex-shrink: 0;
+}
+
+.image-list-field__order-btn {
+  padding: 0 var(--spacing-4);
+  background: none;
+  border: 1px solid var(--color-text-secondary);
+  border-radius: var(--border-radius-small);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-200);
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.image-list-field__order-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.image-list-field__order-btn:not(:disabled):hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-text-primary);
+}
+
+.image-list-field__remove-btn {
+  padding: var(--spacing-4) var(--spacing-8);
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-300);
+  cursor: pointer;
+  border-radius: var(--border-radius-small);
+  flex-shrink: 0;
+}
+
+.image-list-field__remove-btn:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-background-primary);
+}
+
+/* Add-image slot — wraps the reused ImageField-style widget */
+.image-list-field__slot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  padding: var(--spacing-12);
+  border: 1px dashed var(--color-text-secondary);
+  border-radius: var(--border-radius-medium);
+}
+
+.image-list-field__add-btn {
+  align-self: flex-start;
+  padding: var(--spacing-8) var(--spacing-16);
+  font-size: var(--font-size-300);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-inverse);
+  background-color: var(--color-primary);
+  border: none;
+  border-radius: var(--border-radius-medium);
+  cursor: pointer;
+}
+
+.image-list-field__add-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.image-list-field__limit-msg {
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.image-list-field__error {
+  font-size: var(--font-size-200);
+  color: var(--color-primary);
+  margin: 0;
+}

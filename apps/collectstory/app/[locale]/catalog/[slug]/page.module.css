@@ -81,3 +81,30 @@
 .stores {
   margin-top: var(--spacing-8);
 }
+
+.catalog-detail__gallery {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+}
+
+.catalog-detail__gallery-thumbnails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-8);
+}
+
+.catalog-detail__gallery-thumb {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--border-radius-medium);
+  overflow: hidden;
+  background-color: var(--color-background-secondary);
+  flex-shrink: 0;
+}
+
+.catalog-detail__gallery-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
