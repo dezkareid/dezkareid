@@ -1,0 +1,264 @@
+/* ─────────────────────────────────────────
+   Block: store-hero
+   Structure and skin separated (OOCSS).
+   All class names follow BEM convention.
+───────────────────────────────────────── */
+
+/* ── Block ── */
+
+.store-hero {
+  /* full viewport width, no extra height below cover */
+  display: block;
+  width: 100%;
+}
+
+/* ── Element: cover ── */
+
+.store-hero__cover {
+  /* structure */
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  /* skin */
+  background-color: var(--color-background-secondary);
+  border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+}
+
+/* Height caps — never viewport-filling on tablet/desktop */
+.store-hero__cover {
+  max-height: 44vh;
+  min-height: 200px;
+}
+
+@media (max-width: 768px) {
+  .store-hero__cover {
+    max-height: 36vh;
+    min-height: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .store-hero__cover {
+    max-height: 30vh;
+    min-height: 140px;
+  }
+}
+
+/* Aspect ratio drives natural height — the max-height cap overrides when too tall */
+.store-hero__cover::before {
+  content: '';
+  display: block;
+  padding-top: 40%; /* ~2.5:1 — comfortable for all screens */
+}
+
+.store-hero__cover-image {
+  /* structure */
+  position: absolute !important;
+  inset: 0;
+  /* skin */
+  object-fit: cover;
+}
+
+.store-hero__cover-placeholder {
+  /* structure */
+  position: absolute;
+  inset: 0;
+  /* skin */
+  background: linear-gradient(
+    135deg,
+    var(--color-background-secondary) 0%,
+    var(--color-background-primary) 100%
+  );
+}
+
+/* ── Element: overlay ── */
+/* Sits INSIDE the cover at the bottom — no space wasted below.
+   Always dark regardless of theme — it overlays a photo. */
+
+.store-hero__overlay {
+  /* structure */
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 1;
+  /* skin — always dark: photo overlays must darken regardless of app theme */
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.35) 40%,
+    rgba(0, 0, 0, 0.72) 100%
+  );
+}
+
+/* ── Element: inner — max-width container inside overlay ── */
+
+.store-hero__inner {
+  /* structure */
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: var(--spacing-32) var(--spacing-48) var(--spacing-24);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-16);
+}
+
+@media (max-width: 768px) {
+  .store-hero__inner {
+    padding: var(--spacing-24) var(--spacing-24) var(--spacing-16);
+    gap: var(--spacing-12);
+  }
+}
+
+@media (max-width: 480px) {
+  .store-hero__inner {
+    flex-wrap: wrap;
+    padding: var(--spacing-16) var(--spacing-16) var(--spacing-12);
+  }
+}
+
+/* ── Element: logo-wrap ── */
+
+.store-hero__logo-wrap {
+  /* structure */
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--border-radius-pill);
+  overflow: hidden;
+  /* skin */
+  border: 3px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  background-color: var(--color-background-secondary);
+}
+
+@media (min-width: 769px) {
+  .store-hero__logo-wrap {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+.store-hero__logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Element: meta ── */
+
+.store-hero__meta {
+  /* structure */
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+/* ── Element: name-row ── */
+
+.store-hero__name-row {
+  /* structure */
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-8);
+}
+
+/* ── Element: name ── */
+
+.store-hero__name {
+  /* structure */
+  margin: 0;
+  line-height: var(--font-line-height-tight);
+  /* skin */
+  font-size: var(--font-size-700);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 768px) {
+  .store-hero__name {
+    font-size: var(--font-size-600);
+  }
+}
+
+@media (max-width: 480px) {
+  .store-hero__name {
+    font-size: var(--font-size-500);
+  }
+}
+
+/* ── Element: verified ── */
+
+.store-hero__verified {
+  /* structure */
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  flex-shrink: 0;
+  border-radius: var(--border-radius-pill);
+  padding: 2px var(--spacing-8);
+  /* skin */
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+.store-hero__verified-text {
+  /* skin */
+  font-size: var(--font-size-100);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.04em;
+}
+
+/* ── Element: location ── */
+
+.store-hero__location {
+  /* structure */
+  margin: 0;
+  /* skin */
+  font-size: var(--font-size-200);
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ── Element: visit-link ── */
+
+.store-hero__visit-link {
+  /* structure */
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  white-space: nowrap;
+  border-radius: var(--border-radius-pill);
+  padding: var(--spacing-8) var(--spacing-16);
+  text-decoration: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  /* skin — always white on dark overlay */
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.store-hero__visit-link:hover {
+  background-color: rgba(255, 255, 255, 0.28);
+  border-color: #fff;
+}
+
+.store-hero__visit-link:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .store-hero__visit-link {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+}

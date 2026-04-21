@@ -81,6 +81,12 @@
   color: var(--color-text-secondary);
 }
 
+.helpText {
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-100);
+}
+
 .fieldCheckbox {
   display: flex;
   align-items: center;

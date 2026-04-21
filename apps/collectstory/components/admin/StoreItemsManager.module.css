@@ -1,0 +1,337 @@
+/* ─────────────────────────────────────────
+   Block: store-items-manager
+   Structure and skin separated (OOCSS).
+   All class names follow BEM convention.
+───────────────────────────────────────── */
+
+/* ── Block ── */
+
+.store-items-manager {
+  /* structure */
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+  max-width: 480px;
+  margin-top: var(--spacing-32);
+}
+
+/* ── Element: heading ── */
+
+.store-items-manager__heading {
+  /* structure */
+  margin: 0;
+  /* skin */
+  font-size: var(--font-size-500);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+/* ── Element: item-list ── */
+
+.store-items-manager__item-list {
+  /* structure */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+/* ── Element: item ── */
+
+.store-items-manager__item {
+  /* structure */
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-12);
+  padding: var(--spacing-12);
+  border-radius: var(--border-radius-medium);
+  /* skin */
+  background-color: var(--color-background-secondary);
+}
+
+/* ── Element: item-body ── */
+
+.store-items-manager__item-body {
+  /* structure */
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+/* ── Element: item-name ── */
+
+.store-items-manager__item-name {
+  /* structure */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* skin */
+  font-size: var(--font-size-300);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+/* ── Element: url-row ── */
+
+.store-items-manager__url-row {
+  /* structure */
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+  flex-wrap: wrap;
+}
+
+/* ── Element: url-link ── */
+
+.store-items-manager__url-link {
+  /* structure */
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 240px;
+  text-decoration: none;
+  /* skin */
+  font-size: var(--font-size-200);
+  color: var(--color-primary);
+}
+
+.store-items-manager__url-link:hover {
+  text-decoration: underline;
+}
+
+/* ── Element: url-missing ── */
+
+.store-items-manager__url-missing {
+  /* structure */
+  flex: 1;
+  /* skin */
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+/* ── Element: edit-url-button ── */
+
+.store-items-manager__edit-url-button {
+  /* structure */
+  flex-shrink: 0;
+  white-space: nowrap;
+  border-radius: var(--border-radius-small);
+  padding: 2px var(--spacing-8);
+  cursor: pointer;
+  /* skin */
+  font-size: var(--font-size-100);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  background: none;
+  border: 1px solid var(--color-text-secondary);
+}
+
+.store-items-manager__edit-url-button:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+/* ── Element: url-edit-row ── */
+
+.store-items-manager__url-edit-row {
+  /* structure */
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+  flex-wrap: wrap;
+}
+
+/* ── Element: save-button ── */
+
+.store-items-manager__save-button {
+  /* structure */
+  flex-shrink: 0;
+  white-space: nowrap;
+  border: none;
+  border-radius: var(--border-radius-small);
+  padding: var(--spacing-4) var(--spacing-12);
+  cursor: pointer;
+  /* skin */
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-inverse);
+  background-color: var(--color-primary);
+}
+
+/* ── Element: cancel-button ── */
+
+.store-items-manager__cancel-button {
+  /* structure */
+  flex-shrink: 0;
+  white-space: nowrap;
+  border-radius: var(--border-radius-small);
+  padding: var(--spacing-4) var(--spacing-12);
+  cursor: pointer;
+  /* skin */
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+  background: none;
+  border: 1px solid var(--color-text-secondary);
+}
+
+/* ── Element: remove-button ── */
+
+.store-items-manager__remove-button {
+  /* structure */
+  flex-shrink: 0;
+  line-height: 1;
+  border-radius: var(--border-radius-small);
+  padding: var(--spacing-4) var(--spacing-8);
+  cursor: pointer;
+  /* skin */
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+  background: none;
+  border: 1px solid var(--color-text-secondary);
+}
+
+.store-items-manager__remove-button:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-text-primary);
+}
+
+/* ── Element: add-section ── */
+
+.store-items-manager__add-section {
+  /* structure */
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  padding: var(--spacing-12);
+  border-radius: var(--border-radius-medium);
+  /* skin */
+  background-color: var(--color-background-secondary);
+}
+
+/* ── Element: add-row ── */
+
+.store-items-manager__add-row {
+  /* structure */
+  display: flex;
+  gap: var(--spacing-8);
+  align-items: center;
+}
+
+/* ── Element: url-label ── */
+
+.store-items-manager__url-label {
+  /* structure */
+  flex-shrink: 0;
+  white-space: nowrap;
+  /* skin */
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+/* ── Element: url-input ── */
+
+.store-items-manager__url-input {
+  /* structure */
+  flex: 1;
+  min-width: 0;
+  border-radius: var(--border-radius-medium);
+  padding: var(--spacing-8) var(--spacing-12);
+  outline: none;
+  /* skin */
+  font-size: var(--font-size-300);
+  color: var(--color-text-primary);
+  background-color: var(--color-background-primary);
+  border: 1px solid var(--color-text-secondary);
+}
+
+.store-items-manager__url-input:focus {
+  border-color: var(--color-primary);
+}
+
+/* ── Element: select ── */
+
+.store-items-manager__select {
+  /* structure */
+  flex: 1;
+  min-width: 0;
+  border-radius: var(--border-radius-medium);
+  padding: var(--spacing-8) var(--spacing-12);
+  outline: none;
+  /* skin */
+  font-size: var(--font-size-300);
+  color: var(--color-text-primary);
+  background-color: var(--color-background-primary);
+  border: 1px solid var(--color-text-secondary);
+}
+
+.store-items-manager__select:focus {
+  border-color: var(--color-primary);
+}
+
+/* ── Element: add-button ── */
+
+.store-items-manager__add-button {
+  /* structure */
+  flex-shrink: 0;
+  white-space: nowrap;
+  border: none;
+  border-radius: var(--border-radius-medium);
+  padding: var(--spacing-8) var(--spacing-16);
+  cursor: pointer;
+  /* skin */
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-inverse);
+  background-color: var(--color-primary);
+}
+
+.store-items-manager__add-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Element: empty ── */
+
+.store-items-manager__empty {
+  /* structure */
+  margin: 0;
+  /* skin */
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+}
+
+/* ── Element: error ── */
+
+.store-items-manager__error {
+  /* structure */
+  margin: 0;
+  border-radius: var(--border-radius-small);
+  padding: var(--spacing-8) var(--spacing-12);
+  /* skin */
+  font-size: var(--font-size-200);
+  color: var(--color-text-primary);
+  background-color: var(--color-background-secondary);
+  border: 1px solid var(--color-text-secondary);
+}
+
+/* ── Element: sr-only — visually hidden, accessible to screen readers ── */
+
+.store-items-manager__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

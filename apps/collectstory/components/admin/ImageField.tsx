@@ -17,6 +17,8 @@ interface ImageFieldProperties {
   fileError: string | undefined;
   label?: string;
   required?: boolean;
+  /** Prefix for input name/id attributes. Defaults to "image" → names "image_url"/"image_file" */
+  fieldName?: string;
 }
 
 export function isValidHttpUrl(value: string): boolean {
@@ -51,6 +53,44 @@ function useDebouncedUrlPreview(urlValue: string): string | undefined {
   return urlPreview;
 }
 
+type UploadAreaProperties = {
+  fileInputId: string;
+  fileInputName: string;
+  preview: string | undefined;
+  uploading: boolean;
+  onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onPaste: (event: React.ClipboardEvent<HTMLDivElement>) => void;
+};
+
+function UploadArea({ fileInputId, fileInputName, preview, uploading, onFileChange, onPaste }: UploadAreaProperties) {
+  return (
+    <div className={styles.uploadArea} tabIndex={0} onPaste={onPaste}>
+      {preview
+        ? (
+          // eslint-disable-next-line @next/next/no-img-element
+            <img src={preview} alt="Preview" className={styles.preview} />
+          )
+        : (
+            <div className={styles.uploadPlaceholder}>
+              <span className={styles.uploadIcon}>↑</span>
+              <span className={styles.uploadHint}>
+                JPEG, PNG, WebP or HEIC · max 5 MB · or paste
+              </span>
+            </div>
+          )}
+      <input
+        id={fileInputId}
+        name={fileInputName}
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
+        className={styles.fileInput}
+        onChange={onFileChange}
+        disabled={uploading}
+      />
+    </div>
+  );
+}
+
 export function ImageField({
   defaultImageUrl,
   uploading,
@@ -60,9 +100,14 @@ export function ImageField({
   fileError,
   label = 'Image',
   required = false,
+  fieldName = 'image',
 }: ImageFieldProperties) {
+  const urlInputId = `${fieldName}_url`;
+  const urlInputName = `${fieldName}_url`;
+  const fileInputId = `${fieldName}_file`;
+  const fileInputName = `${fieldName}_file`;
   const [mode, setMode] = useState<Mode>('url');
-  const [uploadPreview, setUploadPreview] = useState<string | undefined>();
+  const [preview, setPreview] = useState<string | undefined>();
   const [urlValue, setUrlValue] = useState(defaultImageUrl ?? '');
   const urlPreview = useDebouncedUrlPreview(urlValue);
 
@@ -70,13 +115,13 @@ export function ImageField({
     setMode(next);
     onFileError(undefined);
     onUploadedUrl(undefined);
-    setUploadPreview(undefined);
+    setPreview(undefined);
   }
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
-    processImageFile(file, onFileError, onUploadedUrl, onFile, setUploadPreview);
+    processImageFile(file, onFileError, onUploadedUrl, onFile, setPreview);
     event.target.value = '';
   }
 
@@ -85,7 +130,7 @@ export function ImageField({
       .find(item => item.kind === 'file' && item.type.startsWith('image/'))
       ?.getAsFile();
     if (!file) return;
-    processImageFile(file, onFileError, onUploadedUrl, onFile, setUploadPreview);
+    processImageFile(file, onFileError, onUploadedUrl, onFile, setPreview);
   }
 
   return (
@@ -117,8 +162,8 @@ export function ImageField({
         ? (
             <>
               <input
-                id="image_url"
-                name="image_url"
+                id={urlInputId}
+                name={urlInputName}
                 type="url"
                 className={styles.input}
                 placeholder="https://…"
@@ -126,7 +171,7 @@ export function ImageField({
                 onChange={event => setUrlValue(event.target.value)}
               />
               {urlPreview && (
-                // eslint-disable-next-line @next/next/no-img-element
+              // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={urlPreview}
                   alt="Preview"
@@ -136,34 +181,14 @@ export function ImageField({
             </>
           )
         : (
-            <div
-              className={styles.uploadArea}
-              tabIndex={0}
+            <UploadArea
+              fileInputId={fileInputId}
+              fileInputName={fileInputName}
+              preview={preview}
+              uploading={uploading}
+              onFileChange={handleFileChange}
               onPaste={handlePaste}
-            >
-              {uploadPreview
-                ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={uploadPreview} alt="Preview" className={styles.preview} />
-                  )
-                : (
-                    <div className={styles.uploadPlaceholder}>
-                      <span className={styles.uploadIcon}>↑</span>
-                      <span className={styles.uploadHint}>
-                        JPEG, PNG, WebP or HEIC · max 5 MB · or paste
-                      </span>
-                    </div>
-                  )}
-              <input
-                id="image_file"
-                name="image_file"
-                type="file"
-                accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
-                className={styles.fileInput}
-                onChange={handleFileChange}
-                disabled={uploading}
-              />
-            </div>
+            />
           )}
 
       {fileError && (

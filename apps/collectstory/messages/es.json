@@ -289,5 +289,16 @@
     "name": "Collectstory",
     "short_name": "Collectstory",
     "description": "Rastrea y muestra tu colección de coleccionables."
+  },
+  "StorePage": {
+    "verified": "Verificado",
+    "visitStore": "Visitar tienda",
+    "availableItems": "Artículos disponibles",
+    "noItemsListed": "No hay artículos listados aún",
+    "location": "Ubicación",
+    "showMap": "Ver mapa",
+    "hideMap": "Ocultar mapa",
+    "reviews": "Reseñas en Google Maps",
+    "viewReviews": "Ver reseñas en Google Maps"
   }
 }

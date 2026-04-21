@@ -1,0 +1,92 @@
+/* ─────────────────────────────────────────
+   Block: store-reviews-embed
+   Structure and skin separated (OOCSS).
+   All class names follow BEM convention.
+───────────────────────────────────────── */
+
+/* ── Block ── */
+
+.store-reviews-embed {
+  /* structure */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Element: card ── */
+
+.store-reviews-embed__card {
+  /* structure */
+  border-radius: var(--border-radius-large);
+  padding: var(--spacing-24);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+  /* skin */
+  background-color: var(--color-background-primary);
+  box-shadow: var(--shadow-subtle);
+}
+
+/* ── Element: card-header ── */
+
+.store-reviews-embed__card-header {
+  /* structure */
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+}
+
+/* ── Element: google-logo ── */
+
+.store-reviews-embed__google-logo {
+  /* structure */
+  flex-shrink: 0;
+}
+
+/* ── Element: card-source ── */
+
+.store-reviews-embed__card-source {
+  /* skin */
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  letter-spacing: 0.02em;
+}
+
+/* ── Element: store-name ── */
+
+.store-reviews-embed__store-name {
+  /* structure */
+  margin: 0;
+  /* skin */
+  font-size: var(--font-size-400);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  line-height: var(--font-line-height-tight);
+}
+
+/* ── Element: review-link ── */
+
+.store-reviews-embed__review-link {
+  /* structure */
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  align-self: flex-start;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+  /* skin */
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary);
+}
+
+.store-reviews-embed__review-link:hover {
+  opacity: 0.75;
+}
+
+.store-reviews-embed__review-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--border-radius-small);
+}

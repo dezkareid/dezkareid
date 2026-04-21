@@ -47,14 +47,17 @@ export type Database = {
       catalog_item_stores: {
         Row: {
           catalog_item_id: string;
+          product_url: string | null;
           store_id: string;
         };
         Insert: {
           catalog_item_id: string;
+          product_url?: string | null;
           store_id: string;
         };
         Update: {
           catalog_item_id?: string;
+          product_url?: string | null;
           store_id?: string;
         };
         Relationships: [
@@ -471,37 +474,52 @@ export type Database = {
       };
       stores: {
         Row: {
+          address: string | null;
           city: string | null;
           country: string | null;
+          cover_url: string | null;
           created_at: string;
+          google_place_id: string | null;
           id: string;
           lat: number | null;
           lng: number | null;
+          logo_url: string | null;
           name: string;
+          slug: string;
           url: string | null;
           verified: boolean;
           visible: boolean;
         };
         Insert: {
+          address?: string | null;
           city?: string | null;
           country?: string | null;
+          cover_url?: string | null;
           created_at?: string;
+          google_place_id?: string | null;
           id?: string;
           lat?: number | null;
           lng?: number | null;
+          logo_url?: string | null;
           name: string;
+          slug: string;
           url?: string | null;
           verified?: boolean;
           visible?: boolean;
         };
         Update: {
+          address?: string | null;
           city?: string | null;
           country?: string | null;
+          cover_url?: string | null;
           created_at?: string;
+          google_place_id?: string | null;
           id?: string;
           lat?: number | null;
           lng?: number | null;
+          logo_url?: string | null;
           name?: string;
+          slug?: string;
           url?: string | null;
           verified?: boolean;
           visible?: boolean;

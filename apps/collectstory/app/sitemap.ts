@@ -86,5 +86,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...catalogRoute, ...catalogItemRoutes, ...profileRoutes, ...collectionRoutes, ...itemRoutes];
+  const { data: stores } = await supabase
+    .from('stores')
+    .select('slug, created_at')
+    .eq('visible', true)
+    .not('slug', 'is', null);
+
+  const storeRoutes: MetadataRoute.Sitemap = (stores ?? []).map(store => ({
+    url: `${baseUrl}/stores/${store.slug}`,
+    lastModified: new Date(store.created_at),
+    changeFrequency: 'weekly' as const,
+    priority: 0.6,
+  }));
+
+  return [...staticRoutes, ...catalogRoute, ...catalogItemRoutes, ...storeRoutes, ...profileRoutes, ...collectionRoutes, ...itemRoutes];
 }
