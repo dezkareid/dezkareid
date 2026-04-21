@@ -6,6 +6,12 @@ export type Json
     | { [key: string]: Json | undefined }
     | Json[];
 
+export type CatalogImage = {
+  src: string;
+  alt: string;
+  order: number;
+};
+
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import type { CatalogImage } from '@/lib/supabase/types';
 import { CatalogItemForm } from '@/components/admin/CatalogItemForm';
 import { CatalogItemStoreManager } from '@/components/admin/CatalogItemStoreManager';
 import { updateCatalogItem, addStoreToCatalogItem, removeStoreFromCatalogItem } from '../../actions';
@@ -24,7 +25,7 @@ export default async function EditCatalogItemPage({
   ] = await Promise.all([
     supabase
       .from('catalog_items')
-      .select('id, name, description, image_url, franchise_id, line_id')
+      .select('id, name, description, image_url, images, franchise_id, line_id')
       .eq('id', id)
       .single(),
     supabase.from('franchises').select('id, name').order('name'),
@@ -64,6 +65,7 @@ export default async function EditCatalogItemPage({
       <CatalogItemForm
         action={updateWithId}
         defaultValues={item}
+        defaultImages={Array.isArray(item.images) ? (item.images as CatalogImage[]) : []}
         franchises={franchises ?? []}
         lines={(lines ?? []).map(l => ({ ...l, franchise_id: undefined }))}
         submitLabel="Save Changes"

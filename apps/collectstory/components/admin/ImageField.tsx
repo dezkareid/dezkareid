@@ -1,16 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { processImageFile } from './image-utilities';
 import styles from './ImageField.module.css';
 
-const ALLOWED_TYPES = new Set([
-  'image/jpeg',
-  'image/png',
-  'image/webp',
-  'image/heic',
-  'image/heif',
-]);
-const MAX_BYTES = 5 * 1024 * 1024;
+const URL_PREVIEW_DELAY_MS = 600;
 
 type Mode = 'url' | 'upload';
 
@@ -27,48 +21,36 @@ interface ImageFieldProperties {
   fieldName?: string;
 }
 
-async function processFile(
-  file: File,
-  onFileError: (error: string | undefined) => void,
-  onUploadedUrl: (url: string | undefined) => void,
-  onFile: (file: File | undefined) => void,
-  setPreview: (url: string | undefined) => void,
-): Promise<void> {
-  onFileError(undefined);
-  onUploadedUrl(undefined);
-  onFile(undefined);
-  setPreview(undefined);
-
-  const isHeic = file.type === 'image/heic' || file.type === 'image/heif'
-    || /\.heic$/i.test(file.name) || /\.heif$/i.test(file.name);
-
-  if (!ALLOWED_TYPES.has(file.type) && !isHeic) {
-    onFileError('Only JPEG, PNG, WebP, or HEIC images are allowed.');
-    return;
+export function isValidHttpUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'http:' || url.protocol === 'https:';
   }
-
-  if (file.size > MAX_BYTES) {
-    onFileError('Image must be 5 MB or smaller.');
-    return;
+  catch {
+    return false;
   }
+}
 
-  if (isHeic) {
-    try {
-      const heic2anyModule = await import('heic2any');
-      const heic2any = heic2anyModule.default ?? heic2anyModule;
-      const result = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.9 });
-      const blob = Array.isArray(result) ? result[0] : result;
-      onFile(new File([blob], file.name, { type: 'image/jpeg' }));
-      setPreview(URL.createObjectURL(blob));
-    }
-    catch {
-      onFileError('Could not convert HEIC image. Please try a different format.');
-    }
-    return;
-  }
+function useDebouncedUrlPreview(urlValue: string): string | undefined {
+  const [urlPreview, setUrlPreview] = useState<string | undefined>(() => {
+    const trimmed = urlValue.trim();
+    return isValidHttpUrl(trimmed) ? trimmed : undefined;
+  });
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  onFile(file);
-  setPreview(URL.createObjectURL(file));
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    const trimmed = urlValue.trim();
+    const next = isValidHttpUrl(trimmed) ? trimmed : undefined;
+    debounceRef.current = setTimeout(() => {
+      setUrlPreview(next);
+    }, next ? URL_PREVIEW_DELAY_MS : 0);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [urlValue]);
+
+  return urlPreview;
 }
 
 type UploadAreaProperties = {
@@ -85,7 +67,7 @@ function UploadArea({ fileInputId, fileInputName, preview, uploading, onFileChan
     <div className={styles.uploadArea} tabIndex={0} onPaste={onPaste}>
       {preview
         ? (
-            // eslint-disable-next-line @next/next/no-img-element
+          // eslint-disable-next-line @next/next/no-img-element
             <img src={preview} alt="Preview" className={styles.preview} />
           )
         : (
@@ -127,6 +109,7 @@ export function ImageField({
   const [mode, setMode] = useState<Mode>('url');
   const [preview, setPreview] = useState<string | undefined>();
   const [urlValue, setUrlValue] = useState(defaultImageUrl ?? '');
+  const urlPreview = useDebouncedUrlPreview(urlValue);
 
   function handleModeChange(next: Mode) {
     setMode(next);
@@ -138,7 +121,7 @@ export function ImageField({
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
-    processFile(file, onFileError, onUploadedUrl, onFile, setPreview);
+    processImageFile(file, onFileError, onUploadedUrl, onFile, setPreview);
     event.target.value = '';
   }
 
@@ -147,7 +130,7 @@ export function ImageField({
       .find(item => item.kind === 'file' && item.type.startsWith('image/'))
       ?.getAsFile();
     if (!file) return;
-    processFile(file, onFileError, onUploadedUrl, onFile, setPreview);
+    processImageFile(file, onFileError, onUploadedUrl, onFile, setPreview);
   }
 
   return (
@@ -177,15 +160,25 @@ export function ImageField({
 
       {mode === 'url'
         ? (
-            <input
-              id={urlInputId}
-              name={urlInputName}
-              type="url"
-              className={styles.input}
-              placeholder="https://…"
-              value={urlValue}
-              onChange={event => setUrlValue(event.target.value)}
-            />
+            <>
+              <input
+                id={urlInputId}
+                name={urlInputName}
+                type="url"
+                className={styles.input}
+                placeholder="https://…"
+                value={urlValue}
+                onChange={event => setUrlValue(event.target.value)}
+              />
+              {urlPreview && (
+              // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={urlPreview}
+                  alt="Preview"
+                  className={styles.preview}
+                />
+              )}
+            </>
           )
         : (
             <UploadArea

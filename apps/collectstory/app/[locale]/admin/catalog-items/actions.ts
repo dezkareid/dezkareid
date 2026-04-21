@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { getSessionAndRole } from '@/lib/auth/role';
 import { toSlug } from '@/lib/slug';
+import type { CatalogImage } from '@/lib/supabase/types';
 
 async function requireAdmin() {
   const session = await getSessionAndRole();
@@ -16,6 +17,25 @@ async function requireAdmin() {
 function parseOptionalString(value: FormDataEntryValue | null): string | null {
   const trimmed = (value as string | null)?.trim();
   return trimmed || null;
+}
+
+function parseImages(value: FormDataEntryValue | null): CatalogImage[] {
+  if (!value || typeof value !== 'string') return [];
+  try {
+    const parsed = JSON.parse(value);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (item): item is CatalogImage =>
+        typeof item === 'object'
+        && item !== null
+        && typeof item.src === 'string'
+        && typeof item.alt === 'string'
+        && typeof item.order === 'number',
+    );
+  }
+  catch {
+    return [];
+  }
 }
 
 async function generateUniqueCatalogSlug(name: string): Promise<string> {
@@ -41,19 +61,31 @@ export async function createCatalogItem(formData: FormData) {
   const name = (formData.get('name') as string).trim();
   if (!name) throw new Error('Name is required');
 
+  const images = parseImages(formData.get('images'));
+  if (images.length > 5) throw new Error('Maximum 5 images allowed');
+
   const slug = await generateUniqueCatalogSlug(name);
   const supabase = createAdminClient();
 
-  const { error } = await supabase.from('catalog_items').insert({
+  const { data: newItem, error } = await supabase.from('catalog_items').insert({
     name,
     slug,
     description: parseOptionalString(formData.get('description')),
     image_url: parseOptionalString(formData.get('image_url')),
     franchise_id: parseOptionalString(formData.get('franchise_id')),
     line_id: parseOptionalString(formData.get('line_id')),
-  });
+    images,
+  }).select('id').single();
 
   if (error) throw new Error(error.message);
+
+  const sourceItemId = parseOptionalString(formData.get('source_item_id'));
+  if (sourceItemId && newItem) {
+    await supabase
+      .from('collection_items')
+      .update({ catalog_item_id: newItem.id })
+      .eq('id', sourceItemId);
+  }
 
   revalidatePath('/admin/catalog-items');
   redirect('/admin/catalog-items');
@@ -65,6 +97,9 @@ export async function updateCatalogItem(id: string, formData: FormData) {
   const name = (formData.get('name') as string).trim();
   if (!name) throw new Error('Name is required');
 
+  const images = parseImages(formData.get('images'));
+  if (images.length > 5) throw new Error('Maximum 5 images allowed');
+
   const supabase = createAdminClient();
 
   const { error } = await supabase.from('catalog_items').update({
@@ -73,6 +108,7 @@ export async function updateCatalogItem(id: string, formData: FormData) {
     image_url: parseOptionalString(formData.get('image_url')),
     franchise_id: parseOptionalString(formData.get('franchise_id')),
     line_id: parseOptionalString(formData.get('line_id')),
+    images,
   }).eq('id', id);
 
   if (error) throw new Error(error.message);
