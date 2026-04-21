@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { Suspense } from 'react';
 import type { WithContext, Thing } from 'schema-dts';
 import { createAdminClient } from '@/lib/supabase/admin';
+import type { CatalogImage } from '@/lib/supabase/types';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { WhereToBuy } from '@/src/features/where-to-buy';
 import styles from './page.module.css';
@@ -26,16 +27,22 @@ function extractStore(row: unknown): StoreRow | undefined {
 }
 
 function buildProductSchema(
-  item: { name: string; description: string | null; image_url: string | null; slug: string },
+  item: { name: string; description: string | null; image_url: string | null; images: CatalogImage[]; slug: string },
   stores: StoreRow[],
   baseUrl: string,
 ): WithContext<Thing> {
+  const allImageUrls = [
+    ...(item.image_url ? [item.image_url] : []),
+    ...item.images.map(img => img.src),
+  ];
   return {
     '@context': 'https://schema.org' as const,
     '@type': 'Product' as const,
     'name': item.name,
     'description': item.description ?? undefined,
-    'image': item.image_url ?? undefined,
+    'image': allImageUrls.length === 1
+      ? allImageUrls[0]
+      : (allImageUrls.length > 1 ? allImageUrls : undefined),
     'url': `${baseUrl}/catalog/${item.slug}`,
     'offers': stores
       .filter(s => s.url)
@@ -63,11 +70,17 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
   const supabase = createAdminClient();
   const { data: item } = await supabase
     .from('catalog_items')
-    .select('name, description, image_url')
+    .select('name, description, image_url, images')
     .eq('slug', slug)
     .single();
 
   if (!item) return {};
+
+  const extraImages = Array.isArray(item.images) ? (item.images as CatalogImage[]) : [];
+  const ogImages = [
+    ...(item.image_url ? [{ url: item.image_url }] : []),
+    ...extraImages.map(img => ({ url: img.src })),
+  ];
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
   return {
@@ -77,14 +90,13 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
     openGraph: {
       title: `${item.name} — Collectstory Catalog`,
       description: item.description ?? `${item.name} collectible on Collectstory.`,
-      images: item.image_url ? [{ url: item.image_url }] : [],
+      images: ogImages,
     },
   };
 }
 
-async function CatalogItemContent({ slug }: { slug: string }) {
+async function fetchCatalogItem(slug: string) {
   const supabase = createAdminClient();
-
   const { data: item } = await supabase
     .from('catalog_items')
     .select(`
@@ -93,6 +105,7 @@ async function CatalogItemContent({ slug }: { slug: string }) {
       slug,
       description,
       image_url,
+      images,
       franchises ( id, name, slug ),
       lines ( id, name )
     `)
@@ -107,36 +120,63 @@ async function CatalogItemContent({ slug }: { slug: string }) {
     .eq('catalog_item_id', item.id);
 
   const stores = (catalogStoreRows ?? []).flatMap((row: unknown) => {
-    const s = extractStore(row);
-    return s ? [s] : [];
+    const storeRow = extractStore(row);
+    return storeRow ? [storeRow] : [];
   });
+
+  return { item, stores };
+}
+
+async function CatalogItemContent({ slug }: { slug: string }) {
+  const { item, stores } = await fetchCatalogItem(slug);
 
   const franchise = Array.isArray(item.franchises) ? item.franchises[0] : item.franchises;
   const line = Array.isArray(item.lines) ? item.lines[0] : item.lines;
+  const extraImages = Array.isArray(item.images) ? (item.images as CatalogImage[]) : [];
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
-  const productSchema = buildProductSchema(item, stores, baseUrl);
+  const productSchema = buildProductSchema({ ...item, images: extraImages }, stores, baseUrl);
 
   return (
     <>
       <DataSchema schema={productSchema} id="product-schema" />
       <div className={styles.layout}>
-        <div className={styles.imageWrapper}>
+        <div className={styles['catalog-detail__gallery']}>
           {item.image_url
             ? (
-                <Image
-                  src={item.image_url}
-                  alt={item.name}
-                  width={600}
-                  height={600}
-                  className={styles.image}
-                  priority
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
+                <div className={styles.imageWrapper}>
+                  <Image
+                    src={item.image_url}
+                    alt={item.name}
+                    width={600}
+                    height={600}
+                    className={styles.image}
+                    priority
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                </div>
               )
             : (
-                <div className={styles.imagePlaceholder} aria-hidden="true">📦</div>
+                <div className={styles.imageWrapper}>
+                  <div className={styles.imagePlaceholder} aria-hidden="true">📦</div>
+                </div>
               )}
+          {extraImages.length > 0 && (
+            <div className={styles['catalog-detail__gallery-thumbnails']} role="list" aria-label="Additional images">
+              {extraImages.map((img, index) => (
+                <div key={img.src} className={styles['catalog-detail__gallery-thumb']} role="listitem">
+                  <Image
+                    src={img.src}
+                    alt={img.alt || `${item.name} image ${index + 2}`}
+                    width={120}
+                    height={120}
+                    className={styles['catalog-detail__gallery-thumb-img']}
+                    sizes="120px"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className={styles.details}>

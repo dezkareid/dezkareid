@@ -6,6 +6,12 @@ export type Json
     | { [key: string]: Json | undefined }
     | Json[];
 
+export type CatalogImage = {
+  src: string;
+  alt: string;
+  order: number;
+};
+
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
@@ -75,6 +81,7 @@ export type Database = {
           franchise_id: string | null;
           id: string;
           image_url: string | null;
+          images: Json;
           line_id: string | null;
           name: string;
           slug: string;
@@ -86,6 +93,7 @@ export type Database = {
           franchise_id?: string | null;
           id?: string;
           image_url?: string | null;
+          images?: Json;
           line_id?: string | null;
           name: string;
           slug: string;
@@ -97,6 +105,7 @@ export type Database = {
           franchise_id?: string | null;
           id?: string;
           image_url?: string | null;
+          images?: Json;
           line_id?: string | null;
           name?: string;
           slug?: string;
@@ -242,7 +251,9 @@ export type Database = {
           description: string | null;
           id: string;
           name: string;
+          public_items: number | null;
           slug: string;
+          total_items: number | null;
           updated_at: string;
           user_id: string;
           visibility: string;
@@ -252,7 +263,9 @@ export type Database = {
           description?: string | null;
           id?: string;
           name: string;
+          public_items?: number | null;
           slug: string;
+          total_items?: number | null;
           updated_at?: string;
           user_id: string;
           visibility?: string;
@@ -262,7 +275,9 @@ export type Database = {
           description?: string | null;
           id?: string;
           name?: string;
+          public_items?: number | null;
           slug?: string;
+          total_items?: number | null;
           updated_at?: string;
           user_id?: string;
           visibility?: string;
@@ -523,6 +538,21 @@ export type Database = {
       };
     };
     Functions: {
+      get_slug_options: {
+        Args: {
+          p_brand_name?: string;
+          p_collection_id: string;
+          p_exclude_slug?: string;
+          p_line_name?: string;
+          p_name: string;
+          p_variant?: string;
+        };
+        Returns: {
+          label: string;
+          priority: number;
+          slug: string;
+        }[];
+      };
       is_admin: { Args: never; Returns: boolean };
       search_catalog_items: {
         Args: { max_results?: number; query: string };
@@ -540,6 +570,7 @@ export type Database = {
       };
       show_limit: { Args: never; Returns: number };
       show_trgm: { Args: { '': string }; Returns: string[] };
+      unaccent: { Args: { '': string }; Returns: string };
     };
     Enums: {
       [_ in never]: never

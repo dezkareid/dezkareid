@@ -2,7 +2,9 @@
 
 import { useActionState, useState, useTransition } from 'react';
 import Link from 'next/link';
+import type { CatalogImage } from '@/lib/supabase/types';
 import { ImageField } from './ImageField';
+import { ImageListField } from './ImageListField';
 import styles from './form.module.css';
 
 interface FranchiseOption {
@@ -27,6 +29,8 @@ interface CatalogItemDefaults {
 interface CatalogItemFormProperties {
   action: (formData: FormData) => Promise<void>;
   defaultValues?: CatalogItemDefaults;
+  defaultImages?: CatalogImage[];
+  sourceItemId?: string;
   franchises: FranchiseOption[];
   lines: LineOption[];
   submitLabel: string;
@@ -91,10 +95,18 @@ async function resolveImageUrl(
   return true;
 }
 
+async function uploadFileForImageList(file: File): Promise<string | null> {
+  const result = await uploadFile(file).catch(() => ({ error: 'Upload failed. Please try again.' }));
+  if ('error' in result) return null;
+  return result.url;
+}
+
 // eslint-disable-next-line complexity -- form component with multiple optional fields; splitting would require excessive prop drilling
 export function CatalogItemForm({
   action,
   defaultValues,
+  defaultImages = [],
+  sourceItemId,
   franchises,
   lines,
   submitLabel,
@@ -108,11 +120,15 @@ export function CatalogItemForm({
   const [uploadedUrl, setUploadedUrl] = useState<string | undefined>(defaultValues?.image_url ?? undefined);
   const [pendingFile, setPendingFile] = useState<File | undefined>();
   const [fileError, setFileError] = useState<string | undefined>();
+
+  const [extraImages, setExtraImages] = useState<CatalogImage[]>(defaultImages);
+  const [imageListError, setImageListError] = useState<string | undefined>();
+
   const [, startTransition] = useTransition();
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (fileError) return;
+    if (fileError || imageListError) return;
 
     const form = event.currentTarget;
     const data = new FormData(form);
@@ -124,6 +140,8 @@ export function CatalogItemForm({
     );
     if (!ok) return;
 
+    data.set('images', JSON.stringify(extraImages));
+
     startTransition(() => formAction(data));
   }
 
@@ -132,6 +150,10 @@ export function CatalogItemForm({
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
       {state?.error && <p className={styles.error} role="alert">{state.error}</p>}
+
+      {sourceItemId && (
+        <input type="hidden" name="source_item_id" value={sourceItemId} />
+      )}
 
       <div className={styles.field}>
         <label htmlFor="name" className={styles.label}>
@@ -212,8 +234,17 @@ export function CatalogItemForm({
         }}
         onFileError={setFileError}
         fileError={fileError}
-        label="Image"
+        label="Primary Image"
         required={false}
+      />
+
+      <ImageListField
+        defaultImages={defaultImages}
+        uploading={uploading}
+        onImagesChange={setExtraImages}
+        onUploadFile={uploadFileForImageList}
+        error={imageListError}
+        onError={setImageListError}
       />
 
       <div className={styles.actions}>

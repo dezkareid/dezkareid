@@ -31,6 +31,7 @@ import { SocialShare } from '@/src/features/social-share';
 import { IHaveThisButton } from '@/src/features/copy-item';
 import { WhereToFindButton } from '@/src/features/where-to-find';
 import { WhereToBuy } from '@/src/features/where-to-buy';
+import { CopyToCatalogButton } from '@/src/features/copy-to-catalog';
 import styles from './page.module.css';
 
 type Properties = {
@@ -254,6 +255,14 @@ async function ItemMeta({
           collectionSlug={collectionSlug}
           itemId={item.id}
           userId={item.user_id}
+        />
+      </Suspense>
+
+      {/* Admin-only: copy to catalog — dynamic server component, streams in via Suspense */}
+      <Suspense fallback={undefined}>
+        <CopyToCatalogButton
+          itemId={item.id}
+          catalogItemId={item.catalog_item_id}
         />
       </Suspense>
     </div>
