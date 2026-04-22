@@ -10,7 +10,11 @@ export type AnalyticsEvent
     | { action: 'onboarding_complete'; category: 'onboarding'; label: 'quick_start' }
     | { action: 'page_view'; category: 'navigation'; label: string }
     | { action: 'like_item'; category: 'engagement'; label: string }
-    | { action: 'unlike_item'; category: 'engagement'; label: string };
+    | { action: 'unlike_item'; category: 'engagement'; label: string }
+    | { action: 'create_session'; category: 'engagement'; label: string }
+    | { action: 'like_session'; category: 'engagement'; label: string }
+    | { action: 'unlike_session'; category: 'engagement'; label: string }
+    | { action: 'explore_session_open'; category: 'engagement'; label: string };
 
 /**
  * Dispatches a custom GA event.

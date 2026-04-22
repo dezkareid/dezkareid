@@ -1,0 +1,100 @@
+/* ─── SessionPhotoGrid — structure ──────────────────────────────────────────── */
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--spacing-12);
+}
+
+.photo-grid__item {
+  position: relative;
+  border-radius: var(--border-radius-medium);
+  overflow: visible;
+}
+
+.photo-grid__image-wrapper {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--border-radius-medium);
+  overflow: hidden;
+  cursor: grab;
+}
+
+.photo-grid__image-wrapper:active {
+  cursor: grabbing;
+}
+
+.photo-grid__image {
+  object-fit: cover;
+}
+
+.photo-grid__drag-hint {
+  position: absolute;
+  top: var(--spacing-8);
+  left: var(--spacing-8);
+  font-size: var(--font-size-300);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.photo-grid__item:hover .photo-grid__drag-hint {
+  opacity: 1;
+}
+
+.photo-grid__delete {
+  position: absolute;
+  top: calc(-1 * var(--spacing-8));
+  right: calc(-1 * var(--spacing-8));
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--border-radius-circle);
+  cursor: pointer;
+  font-size: var(--font-size-100);
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.photo-grid__item:hover .photo-grid__delete {
+  opacity: 1;
+}
+
+/* ─── SessionPhotoGrid — skin ───────────────────────────────────────────────── */
+
+.photo-grid__image-wrapper {
+  background-color: var(--color-background-secondary);
+}
+
+.photo-grid__drag-hint {
+  color: var(--color-text-inverse);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.photo-grid__delete {
+  background-color: var(--color-background-primary);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-subtle);
+}
+
+.photo-grid__delete:hover {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.photo-grid__delete:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .photo-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: var(--spacing-8);
+  }
+}

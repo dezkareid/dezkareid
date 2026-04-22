@@ -84,6 +84,28 @@
   margin-bottom: var(--spacing-24);
 }
 
+.profile-page__nav {
+  display: flex;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-24);
+  border-bottom: 1px solid var(--color-background-secondary);
+}
+
+.profile-page__nav-link {
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  padding: var(--spacing-8) var(--spacing-16);
+  border-radius: var(--border-radius-medium) var(--border-radius-medium) 0 0;
+  color: var(--color-text-secondary);
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.profile-page__nav-link:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-background-secondary);
+}
+
 .profile-page__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

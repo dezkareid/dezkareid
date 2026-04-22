@@ -131,12 +131,16 @@ async function ProfileHeader({ username }: { username: string }) {
 export default function UserProfilePage({ params }: Properties) {
   const { username } = use(params);
   const t = use(getTranslations('Common.profile'));
+  const tSessions = use(getTranslations('PhotoSessions'));
 
   return (
     <div className={`container ${styles['profile-page']}`}>
       <ProfileHeader username={username} />
 
-      <p className={styles['profile-page__section-label']}>{t('collections')}</p>
+      <nav className={styles['profile-page__nav']} aria-label="Profile sections">
+        <a href={`/${username}`} className={styles['profile-page__nav-link']}>{t('collections')}</a>
+        <a href={`/${username}/sessions`} className={styles['profile-page__nav-link']}>{tSessions('page_title')}</a>
+      </nav>
 
       {/* Public cached grid — visible to visitors and search engines */}
       <div className={styles['profile-page__public-grid']}>

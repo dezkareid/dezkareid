@@ -7,44 +7,11 @@ import { Close, ChevronLeft, ChevronRight } from '@dezkareid/icons/react';
 import { Image } from '@dezkareid/components/react';
 import { LikeButton } from '@/src/features/like-item';
 import { DEFAULT_PAGE_SIZE } from '@/src/shared/lib/pagination/range';
+import { useKeyboardNav, useSwipe } from '@/src/shared/lib/explorer';
 import type { PublicItem } from '@/lib/collections';
 import styles from './CollectionExplorerView.module.css';
 
 type Direction = 'next' | 'prev' | 'initial';
-
-function useKeyboardNav({ onNext, onPrevious, onClose }: { onNext: () => void; onPrevious: () => void; onClose: () => void }) {
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'ArrowRight') onNext();
-      if (event.key === 'ArrowLeft') onPrevious();
-      if (event.key === 'Escape') onClose();
-    };
-    globalThis.addEventListener('keydown', handleKeyDown);
-    return () => globalThis.removeEventListener('keydown', handleKeyDown);
-  }, [onNext, onPrevious, onClose]);
-}
-
-function useSwipe({ onSwipeLeft, onSwipeRight }: { onSwipeLeft: () => void; onSwipeRight: () => void }) {
-  const touchStartXRef = useRef<number | undefined>(undefined);
-  const touchEndXRef = useRef<number | undefined>(undefined);
-  const MIN_SWIPE = 50;
-
-  return {
-    onTouchStart: (event: React.TouchEvent) => {
-      touchStartXRef.current = event.targetTouches[0].clientX;
-      touchEndXRef.current = undefined;
-    },
-    onTouchMove: (event: React.TouchEvent) => {
-      touchEndXRef.current = event.targetTouches[0].clientX;
-    },
-    onTouchEnd: () => {
-      if (touchStartXRef.current === undefined || touchEndXRef.current === undefined) return;
-      const distance = touchStartXRef.current - touchEndXRef.current;
-      if (distance > MIN_SWIPE) onSwipeLeft();
-      if (distance < -MIN_SWIPE) onSwipeRight();
-    },
-  };
-}
 
 type Properties = {
   items: PublicItem[];
