@@ -1,0 +1,9 @@
+.owner-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-24);
+}
+
+.owner-section__upload {
+  max-width: 480px;
+}

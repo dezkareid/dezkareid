@@ -1,0 +1,100 @@
+/* ─── CreateSessionModal — structure ────────────────────────────────────────── */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-index-modal, 1000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-16);
+}
+
+.modal {
+  width: 100%;
+  max-width: 480px;
+  border-radius: var(--border-radius-large);
+  padding: var(--spacing-32);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.modal__title {
+  margin: 0 0 var(--spacing-24);
+  font-size: var(--font-size-600);
+  font-weight: var(--font-weight-bold);
+}
+
+.modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+}
+
+.modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.modal__label {
+  font-size: var(--font-size-300);
+  font-weight: var(--font-weight-medium);
+}
+
+.modal__input,
+.modal__textarea {
+  width: 100%;
+  padding: var(--spacing-12) var(--spacing-16);
+  border-radius: var(--border-radius-medium);
+  border: 1px solid;
+  font-size: var(--font-size-300);
+  font-family: inherit;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.modal__textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.modal__error {
+  margin: 0;
+  font-size: var(--font-size-200);
+}
+
+.modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-12);
+  padding-top: var(--spacing-8);
+}
+
+/* ─── CreateSessionModal — skin ─────────────────────────────────────────────── */
+
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+.modal {
+  background-color: var(--color-background-primary);
+  color: var(--color-text-primary);
+}
+
+.modal__input,
+.modal__textarea {
+  border-color: var(--color-background-secondary);
+  background-color: var(--color-background-primary);
+  color: var(--color-text-primary);
+}
+
+.modal__input:focus,
+.modal__textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.modal__error {
+  color: var(--color-primary);
+}
