@@ -1,7 +1,7 @@
 import { v2 as cloudinary } from 'cloudinary';
 import { NextResponse } from 'next/server';
-import sharp from 'sharp';
 import { createClient } from '@/lib/supabase/server';
+import { optimizeImage, UPLOAD_CONFIG, type UploadType } from '@/lib/image/optimize';
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -10,25 +10,6 @@ cloudinary.config({
 });
 
 const ALLOWED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
-
-const UPLOAD_CONFIG = {
-  item: { maxBytes: 5 * 1024 * 1024, maxDimension: 1200, quality: 80 },
-  avatar: { maxBytes: 3 * 1024 * 1024, maxDimension: 400, quality: 80 },
-} as const;
-
-type UploadType = keyof typeof UPLOAD_CONFIG;
-
-async function optimizeImage(input: Buffer, type: UploadType): Promise<Buffer> {
-  const { maxDimension, quality } = UPLOAD_CONFIG[type];
-  const optimized = await sharp(input)
-    .resize(maxDimension, maxDimension, { fit: 'inside', withoutEnlargement: true })
-    .webp({ quality })
-    .toBuffer();
-  if (optimized.byteLength > input.byteLength) {
-    throw new Error('Optimized image is larger than the original');
-  }
-  return optimized;
-}
 
 export async function POST(request: Request) {
   const supabase = await createClient();

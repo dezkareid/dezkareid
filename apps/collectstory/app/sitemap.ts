@@ -99,5 +99,39 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticRoutes, ...catalogRoute, ...catalogItemRoutes, ...storeRoutes, ...profileRoutes, ...collectionRoutes, ...itemRoutes];
+  // Photo sessions
+  const { data: photoSessions } = await supabase
+    .from('photo_sessions')
+    .select('slug, created_at, updated_at, profiles!inner ( username )')
+    .not('profiles.username', 'is', null);
+
+  const sessionListRoutes: MetadataRoute.Sitemap = [
+    ...new Set(
+      (photoSessions ?? []).map(s => (s.profiles as unknown as { username: string }).username),
+    ),
+  ].map(username => ({
+    url: `${baseUrl}/${username}/sessions`,
+    lastModified: new Date(),
+    changeFrequency: 'daily' as const,
+    priority: 0.7,
+  }));
+
+  const sessionDetailRoutes: MetadataRoute.Sitemap = (photoSessions ?? []).map(s => ({
+    url: `${baseUrl}/${(s.profiles as unknown as { username: string }).username}/sessions/${s.slug}`,
+    lastModified: new Date(s.updated_at ?? s.created_at),
+    changeFrequency: 'weekly' as const,
+    priority: 0.6,
+  }));
+
+  return [
+    ...staticRoutes,
+    ...catalogRoute,
+    ...catalogItemRoutes,
+    ...storeRoutes,
+    ...profileRoutes,
+    ...collectionRoutes,
+    ...itemRoutes,
+    ...sessionListRoutes,
+    ...sessionDetailRoutes,
+  ];
 }

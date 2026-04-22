@@ -1,0 +1,70 @@
+/* ─── Session detail page — structure ───────────────────────────────────────── */
+
+.session-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-48) var(--spacing-24);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-48);
+}
+
+.session-page__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+}
+
+.session-page__title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-16);
+  flex-wrap: wrap;
+}
+
+.session-page__title {
+  margin: 0;
+  font-size: var(--font-size-700);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--font-line-height-tight);
+}
+
+.session-page__description {
+  margin: 0;
+  font-size: var(--font-size-400);
+  max-width: 640px;
+  line-height: var(--font-line-height-relaxed);
+}
+
+.session-page__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-16);
+  flex-wrap: wrap;
+}
+
+.session-page__empty {
+  padding: var(--spacing-64) 0;
+  text-align: center;
+}
+
+/* ─── Session detail page — skin ────────────────────────────────────────────── */
+
+.session-page__description {
+  color: var(--color-text-secondary);
+}
+
+.session-page__empty {
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 640px) {
+  .session-page {
+    padding: var(--spacing-32) var(--spacing-16);
+    gap: var(--spacing-32);
+  }
+
+  .session-page__title {
+    font-size: var(--font-size-600);
+  }
+}

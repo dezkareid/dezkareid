@@ -1,0 +1,79 @@
+/* ─── SessionCard — structure ────────────────────────────────────────────────── */
+
+.session-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--border-radius-large);
+  transition: box-shadow 0.2s ease;
+  text-decoration: none;
+}
+
+.session-card__image-wrapper {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.session-card__image {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.session-card__placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+}
+
+.session-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  padding: var(--spacing-16);
+}
+
+.session-card__name {
+  margin: 0;
+  font-size: var(--font-size-400);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--font-line-height-tight);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.session-card__meta {
+  display: flex;
+  gap: var(--spacing-12);
+  font-size: var(--font-size-200);
+}
+
+/* ─── SessionCard — skin ─────────────────────────────────────────────────────── */
+
+.session-card {
+  background-color: var(--color-background-primary);
+  box-shadow: var(--shadow-card);
+  color: var(--color-text-primary);
+}
+
+.session-card:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+.session-card__image-wrapper {
+  background-color: var(--color-background-secondary);
+}
+
+.session-card__placeholder {
+  background-color: var(--color-background-secondary);
+  opacity: 0.4;
+}
+
+.session-card__meta {
+  color: var(--color-text-secondary);
+}

@@ -1,0 +1,146 @@
+/* ─── SessionActionsMenu — structure ────────────────────────────────────────── */
+
+.actions-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-8) var(--spacing-12);
+  border-radius: var(--border-radius-medium);
+  border: 1px solid;
+  cursor: pointer;
+  font-size: var(--font-size-400);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.1em;
+  line-height: 1;
+  transition: background-color 0.2s;
+}
+
+.rename-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-index-modal, 1000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-16);
+}
+
+.rename-modal {
+  width: 100%;
+  max-width: 400px;
+  border-radius: var(--border-radius-large);
+  padding: var(--spacing-24);
+}
+
+.rename-modal__title {
+  margin: 0 0 var(--spacing-16);
+  font-size: var(--font-size-500);
+  font-weight: var(--font-weight-bold);
+}
+
+.rename-modal__body {
+  margin: 0 0 var(--spacing-16);
+  font-size: var(--font-size-300);
+}
+
+.rename-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+}
+
+.rename-modal__input {
+  width: 100%;
+  padding: var(--spacing-12) var(--spacing-16);
+  border-radius: var(--border-radius-medium);
+  border: 1px solid;
+  font-size: var(--font-size-300);
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.rename-modal__error {
+  margin: 0;
+  font-size: var(--font-size-200);
+}
+
+.rename-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-12);
+}
+
+.rename-modal__cancel,
+.rename-modal__confirm {
+  padding: var(--spacing-8) var(--spacing-16);
+  border-radius: var(--border-radius-medium);
+  border: none;
+  font-size: var(--font-size-300);
+  font-family: inherit;
+  cursor: pointer;
+  font-weight: var(--font-weight-medium);
+  transition: background-color 0.2s;
+}
+
+.rename-modal__cancel:disabled,
+.rename-modal__confirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── SessionActionsMenu — skin ─────────────────────────────────────────────── */
+
+.actions-trigger {
+  border-color: var(--color-background-secondary);
+  background: transparent;
+  color: var(--color-text-primary);
+}
+
+.actions-trigger:hover {
+  background-color: var(--color-background-secondary);
+}
+
+.rename-overlay {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+.rename-modal {
+  background-color: var(--color-background-primary);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.rename-modal__input {
+  border-color: var(--color-background-secondary);
+  background-color: var(--color-background-primary);
+  color: var(--color-text-primary);
+}
+
+.rename-modal__input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.rename-modal__error {
+  color: var(--color-primary);
+}
+
+.rename-modal__cancel {
+  background-color: var(--color-background-secondary);
+  color: var(--color-text-primary);
+}
+
+.rename-modal__confirm {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.rename-modal__confirm:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.rename-modal__confirm--danger {
+  background-color: #c0392b;
+  color: #fff;
+}

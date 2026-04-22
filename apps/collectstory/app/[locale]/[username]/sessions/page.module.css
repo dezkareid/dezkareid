@@ -1,0 +1,60 @@
+/* ─── Sessions list page — structure ────────────────────────────────────────── */
+
+.sessions-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-48) var(--spacing-24);
+}
+
+.sessions-page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-24);
+  margin-bottom: var(--spacing-48);
+  flex-wrap: wrap;
+}
+
+.sessions-page__title {
+  margin: 0;
+  font-size: var(--font-size-700);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--font-line-height-tight);
+}
+
+.sessions-page__subtitle {
+  margin: var(--spacing-4) 0 0;
+  font-size: var(--font-size-300);
+}
+
+.sessions-page__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--spacing-24);
+}
+
+.sessions-page__empty {
+  padding: var(--spacing-64) 0;
+  text-align: center;
+}
+
+/* ─── Sessions list page — skin ─────────────────────────────────────────────── */
+
+.sessions-page__subtitle {
+  color: var(--color-text-secondary);
+}
+
+.sessions-page__empty {
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 640px) {
+  .sessions-page {
+    padding: var(--spacing-32) var(--spacing-16);
+  }
+
+  .sessions-page__grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: var(--spacing-16);
+  }
+}

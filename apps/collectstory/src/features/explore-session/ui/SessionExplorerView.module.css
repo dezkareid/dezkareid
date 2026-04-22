@@ -1,0 +1,164 @@
+/* ─── SessionExplorerView — structure ───────────────────────────────────────── */
+
+.explorer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-index-modal, 1000);
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.explorer__close {
+  position: absolute;
+  top: var(--spacing-24);
+  right: var(--spacing-24);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-8);
+  border: none;
+  border-radius: var(--border-radius-circle);
+  cursor: pointer;
+  z-index: 2;
+  transition: background-color 0.2s;
+}
+
+.explorer__content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-24);
+  position: relative;
+}
+
+.explorer__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--border-radius-circle);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  z-index: 2;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.explorer__item {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.explorer__image-wrapper {
+  position: relative;
+  width: min(calc(70vh * 3 / 4), 100%);
+  aspect-ratio: 3 / 4;
+  border-radius: var(--border-radius-large);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.explorer__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: var(--border-radius-large);
+  z-index: 1;
+}
+
+.explorer__footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-24);
+  text-align: center;
+}
+
+/* ─── Direction modifiers ───────────────────────────────────────────────────── */
+
+.explorer__item--next .explorer__image {
+  animation: slideInFromRight 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.explorer__item--prev .explorer__image {
+  animation: slideInFromLeft 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.explorer__item--initial .explorer__image {
+  animation: fadeInUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes slideInFromRight {
+  from { transform: translateX(48px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInFromLeft {
+  from { transform: translateX(-48px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ─── SessionExplorerView — skin ────────────────────────────────────────────── */
+
+.explorer {
+  background-color: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(8px);
+  color: white;
+}
+
+.explorer__close {
+  background: transparent;
+  color: white;
+}
+
+.explorer__close:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.explorer__nav {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+.explorer__nav:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: scale(1.1);
+}
+
+.explorer__image {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.explorer__footer {
+  font-size: var(--font-size-200);
+  color: var(--color-text-secondary);
+  letter-spacing: 0.1em;
+}
+
+@media (max-width: 768px) {
+  .explorer__nav {
+    display: none;
+  }
+}

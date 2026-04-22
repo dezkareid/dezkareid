@@ -1,0 +1,82 @@
+/* ─── PhotoUploadZone — structure ───────────────────────────────────────────── */
+
+.upload-zone__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.upload-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-8);
+  padding: var(--spacing-32);
+  border-radius: var(--border-radius-large);
+  border: 2px dashed;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+  min-height: 140px;
+  text-align: center;
+}
+
+.upload-zone__input {
+  display: none;
+}
+
+.upload-zone__icon {
+  font-size: 32px;
+}
+
+.upload-zone__label {
+  margin: 0;
+  font-size: var(--font-size-300);
+  font-weight: var(--font-weight-medium);
+}
+
+.upload-zone__hint {
+  margin: 0;
+  font-size: var(--font-size-200);
+}
+
+.upload-zone__error {
+  margin: 0;
+  font-size: var(--font-size-200);
+}
+
+/* ─── PhotoUploadZone — skin ────────────────────────────────────────────────── */
+
+.upload-zone {
+  border-color: var(--color-background-secondary);
+  background-color: var(--color-background-primary);
+  color: var(--color-text-secondary);
+}
+
+.upload-zone:hover:not(.upload-zone--disabled) {
+  background-color: var(--color-background-secondary);
+  border-color: var(--color-primary);
+}
+
+.upload-zone:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.upload-zone--drag-over {
+  background-color: var(--color-background-secondary);
+  border-color: var(--color-primary);
+}
+
+.upload-zone--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.upload-zone__hint {
+  color: var(--color-text-secondary);
+}
+
+.upload-zone__error {
+  color: var(--color-primary);
+}

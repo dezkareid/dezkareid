@@ -1,0 +1,13 @@
+.like-button-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.like-button__count {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  user-select: none;
+}
