@@ -24,6 +24,7 @@ export function ExploreButton() {
         description: item.description ?? undefined,
         date_acquired: item.date_acquired ?? undefined,
         likes_count: item.likes_count,
+        catalog_items: item.catalog_items ?? undefined,
         lines: item.lines
           ? {
               id: item.lines.id,

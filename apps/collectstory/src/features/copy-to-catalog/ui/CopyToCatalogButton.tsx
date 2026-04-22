@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import { getSessionAndRole } from '@/lib/auth/role';
 import styles from './CopyToCatalogButton.module.css';
 
@@ -11,18 +12,20 @@ export async function CopyToCatalogButton({ itemId, catalogItemId }: CopyToCatal
   const session = await getSessionAndRole();
   if (!session || session.role !== 'admin') return null;
 
+  const t = await getTranslations('Common.profile.item.admin');
+
   return (
     <div className={styles['copy-to-catalog']}>
       {catalogItemId && (
         <p className={styles['copy-to-catalog__warning']} role="status">
-          Already linked to a catalog entry.
+          {t('already_linked')}
         </p>
       )}
       <Link
         href={`/admin/catalog-items/new?source_item_id=${itemId}`}
         className={styles['copy-to-catalog__link']}
       >
-        Copy to Catalog
+        {t('copy_to_catalog')}
       </Link>
     </div>
   );

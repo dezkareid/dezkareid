@@ -29,6 +29,7 @@ export type PublicItem = {
   description: string | undefined;
   date_acquired: string | undefined;
   likes_count: number;
+  catalog_items: { slug: string } | undefined;
   lines: {
     id: string;
     name: string;
@@ -51,7 +52,7 @@ export type PublicItemDetail = PublicItem & {
   franchise_id?: string;
   catalog_item_id?: string | null;
   franchises: { id: string; name: string; slug: string } | undefined;
-  // likes_count inherited from PublicItem
+  // likes_count and catalog_items inherited from PublicItem
 };
 
 // i18n note: when a `locale` parameter is added, it must be a named function argument
@@ -317,6 +318,7 @@ export async function getPublicItemsInCollection(
       description,
       date_acquired,
       likes_count,
+      catalog_items ( slug ),
       lines (
         id,
         name,
@@ -361,6 +363,7 @@ export async function getPublicItemBySlug(
       line_id,
       franchise_id,
       catalog_item_id,
+      catalog_items ( slug ),
       lines (
         id,
         name,
@@ -544,6 +547,7 @@ export async function getOwnerItemBySlug(
       line_id,
       franchise_id,
       catalog_item_id,
+      catalog_items ( slug ),
       lines (
         id,
         name,

@@ -8,4 +8,5 @@ export { ActionToggle } from './ActionToggle/index';
 export { LikeButton } from './LikeButton/index';
 export { Modal } from './Modal/index';
 export { VerifiedBadge } from './VerifiedBadge/index';
+export { Link } from './Link/index';
 export { ConsentBanner } from './ConsentBanner/index';

@@ -3,7 +3,6 @@ import type React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import {
-  use,
   Suspense,
 } from 'react';
 import { getTranslations } from 'next-intl/server';
@@ -14,9 +13,7 @@ import {
   getPublicItemBySlug,
   getOwnerCollectionBySlug,
   getOwnerItemBySlug,
-  getLinkedStores,
   type PublicItemDetail,
-  type LinkedStore,
 } from '@/lib/collections';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { generateCollectionItemSchema } from '@/lib/seo';
@@ -26,11 +23,9 @@ import { ItemImageSection } from './ItemImageSection';
 import { OwnerImageSection } from './_components/OwnerImageSection';
 import { LikeSection } from './_components/LikeSection';
 import { LikeButtonSkeleton } from './_components/LikeButtonSkeleton';
-import { createClient } from '@/lib/supabase/server';
 import { SocialShare } from '@/src/features/social-share';
 import { IHaveThisButton } from '@/src/features/copy-item';
-import { WhereToFindButton } from '@/src/features/where-to-find';
-import { WhereToBuy } from '@/src/features/where-to-buy';
+import { BuyButtonSuspense } from '@/src/features/where-to-buy';
 import { CopyToCatalogButton } from '@/src/features/copy-to-catalog';
 import styles from './page.module.css';
 
@@ -50,101 +45,62 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Properties): Promise<Metadata> {
-  const { username, collectionSlug, slug } = await params;
-  const t = await getTranslations('Common.profile.item.metadata');
+  const resolvedParameters = await params;
+  const { username, collectionSlug, slug } = resolvedParameters;
+  const t = await getTranslations('Common.profile.collection.metadata');
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 
-  // Intentionally uses public-only queries: private collections/items return {} here,
-  // producing no OG tags or canonical URL — preventing search engine indexing of private content.
-  const collectionResult = await getPublicCollectionBySlug(username, collectionSlug);
-  if (!collectionResult) return {};
+  const { getPublicCollectionBySlug } = await import('@/lib/collections');
+  const result = await getPublicCollectionBySlug(username, collectionSlug);
+  if (!result) return {};
 
-  const item = await getPublicItemBySlug(collectionResult.collection.id, slug, username, collectionSlug);
+  const { collection } = result;
+  const collectionsModule = await import('@/lib/collections');
+  const firstImage = await collectionsModule.getCollectionFirstImage(collection.id);
+  const cloudinaryModule = await import('@/lib/image/cloudinary');
+  const ogImage = (firstImage ? cloudinaryModule.getCloudinaryUrl(firstImage, 1200) : undefined) ?? `${baseUrl}/logo.png`;
+  const descriptionPrefix = collection.description ? ` — ${collection.description}` : '';
+  const canonicalUrl = `${baseUrl}/${username}/${collectionSlug}/${slug}`;
+
+  const item = await getPublicItemBySlug(
+    collection.id,
+    slug,
+    username,
+    collectionSlug,
+  );
+
   if (!item) return {};
 
-  const brand = item.lines?.brands?.name;
-  const line = item.lines?.name;
-  const collectionName = collectionResult.collection.name;
-
-  const description = item.description
-    ?? (brand && line
-      ? t('description', { itemName: item.name, line, brand, username, collectionName })
-      : t('description_fallback', { itemName: item.name, username, collectionName }));
-
   return {
-    title: t('title', { itemName: item.name, collectionName, username }),
-    description,
-    alternates: { canonical: `${baseUrl}/${username}/${collectionSlug}/${slug}` },
+    title: `${item.name} — ${collection.name} — Collectstory`,
+    description: item.description ?? t('description', { collectionName: collection.name, description: descriptionPrefix, username }),
+    alternates: { canonical: canonicalUrl },
     openGraph: {
-      title: t('title', { itemName: item.name, collectionName, username }),
-      description,
-      url: `${baseUrl}/${username}/${collectionSlug}/${slug}`,
-      images: item.image_url ? [{ url: item.image_url }] : [],
-      type: 'website',
+      title: `${item.name} — Collectstory`,
+      description: item.description ?? t('description', { collectionName: collection.name, description: descriptionPrefix, username }),
+      url: canonicalUrl,
+      type: 'article',
+      images: [{ url: ogImage, width: 1200, height: 630, alt: item.name }],
     },
   };
 }
 
-function resolveVariantLabel(item: PublicItemDetail): string | undefined {
-  if (!item.variant) return undefined;
-  const match = item.lines?.variants?.find(v => v.value === item.variant);
-  return match?.display_name ?? item.variant;
-}
-
-async function ItemMetaDetails({ item }: { item: PublicItemDetail }) {
-  const t = await getTranslations('Common.profile.item.meta');
-  const brand = item.lines?.brands?.name;
-  const line = item.lines?.name;
-  const category = item.lines?.categories?.name;
-  const franchise = item.franchises;
-  const variantLabel = resolveVariantLabel(item);
-
-  type MetaRow = { label: string; value: React.ReactNode };
-  const rowCandidates: Array<MetaRow | undefined> = [
-    brand ? { label: t('brand'), value: brand } : undefined,
-    line ? { label: t('line'), value: line } : undefined,
-    variantLabel ? { label: t('variant'), value: variantLabel } : undefined,
-    category ? { label: t('category'), value: category } : undefined,
-    franchise
-      ? {
-          label: t('franchise'),
-          value: (
-            <Link href={`/franchises/${franchise.slug}`} className={styles['item-page__meta-link']}>
-              {franchise.name}
-            </Link>
-          ),
-        }
-      : undefined,
-  ];
-  const rows = rowCandidates.filter((row): row is MetaRow => row !== undefined);
-
-  if (rows.length === 0) return;
-
-  return (
-    <dl className={styles['item-page__meta']}>
-      {rows.map(({ label, value }) => (
-        <div key={label} className={styles['item-page__meta-row']}>
-          <dt className={styles['item-page__meta-label']}>{label}</dt>
-          <dd className={styles['item-page__meta-value']}>{value}</dd>
-        </div>
-      ))}
-    </dl>
-  );
-}
+// ─── Components ──────────────────────────────────────────────────────────────
 
 function ItemTags({ item }: { item: PublicItemDetail }) {
-  const brand = item.lines?.brands?.name;
-  const line = item.lines?.name;
-  const category = item.lines?.categories?.name;
-  const franchise = item.franchises;
-  const variantLabel = resolveVariantLabel(item);
-
+  const franchise = Array.isArray(item.franchises) ? item.franchises[0] : item.franchises;
   return (
     <div className={styles['item-page__tags']}>
-      {brand && <span className={styles['item-page__tag']}>{brand}</span>}
-      {line && <span className={styles['item-page__tag--secondary']}>{line}</span>}
-      {variantLabel && <span className={styles['item-page__tag--secondary']}>{variantLabel}</span>}
-      {category && <span className={styles['item-page__tag--secondary']}>{category}</span>}
+      {item.lines?.name && (
+        <span className={styles['item-page__tag']}>
+          {item.lines.name}
+        </span>
+      )}
+      {item.variant && (
+        <span className={styles['item-page__tag--secondary']}>
+          {item.variant}
+        </span>
+      )}
       {franchise && (
         <Link href={`/franchises/${franchise.slug}`} className={styles['item-page__tag--franchise']}>
           {franchise.name}
@@ -154,44 +110,38 @@ function ItemTags({ item }: { item: PublicItemDetail }) {
   );
 }
 
-interface CatalogStore {
-  id: string;
-  name: string;
-  city: string | null;
-  country: string | null;
-  url: string | null;
-}
-
-async function getCatalogStoresForItem(catalogItemId: string): Promise<CatalogStore[]> {
-  'use cache';
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from('catalog_item_stores')
-    .select('stores ( id, name, city, country, url )')
-    .eq('catalog_item_id', catalogItemId);
-  return (data ?? []).flatMap((row: unknown) => {
-    const s = (row as { stores: CatalogStore | null }).stores;
-    return s ? [s] : [];
-  });
+async function ItemMetaDetails({ item }: { item: PublicItemDetail }) {
+  const t = await getTranslations('Common.profile.item.meta');
+  return (
+    <dl className={styles['item-page__meta']}>
+      {item.lines?.brands?.name && (
+        <div className={styles['item-page__meta-row']}>
+          <dt className={styles['item-page__meta-label']}>{t('brand')}</dt>
+          <dd className={styles['item-page__meta-value']}>{item.lines.brands.name}</dd>
+        </div>
+      )}
+      {item.lines?.categories?.name && (
+        <div className={styles['item-page__meta-row']}>
+          <dt className={styles['item-page__meta-label']}>{t('category')}</dt>
+          <dd className={styles['item-page__meta-value']}>{item.lines.categories.name}</dd>
+        </div>
+      )}
+    </dl>
+  );
 }
 
 async function ItemMeta({
   item,
   username,
   collectionSlug,
-  linkedStores,
-  catalogStores,
   locale,
 }: {
   item: PublicItemDetail;
   username: string;
   collectionSlug: string;
-  linkedStores: LinkedStore[];
-  catalogStores: CatalogStore[];
   locale: string;
 }) {
   const t = await getTranslations('Common.profile.item');
-  const showWhereToFind = linkedStores.length > 0;
   const isPublic = item.visibility === 'public';
 
   return (
@@ -223,6 +173,12 @@ async function ItemMeta({
         <p className={styles['item-page__description']}>{item.description}</p>
       )}
 
+      {item.catalog_item_id && (
+        <div className={styles['item-page__buy-button']}>
+          <BuyButtonSuspense catalogItemId={item.catalog_item_id} locale={locale} />
+        </div>
+      )}
+
       <IHaveThisButton item={item} />
 
       {item.date_acquired && (
@@ -236,17 +192,6 @@ async function ItemMeta({
           })}
         </time>
       )}
-
-      {showWhereToFind && (
-        <WhereToFindButton
-          itemId={item.id}
-          isOwner={false}
-          linkedStores={linkedStores}
-          initialLinks={[]}
-        />
-      )}
-
-      <WhereToBuy stores={catalogStores} />
 
       {/* Owner-only: edit button — dynamic server component, streams in via Suspense */}
       <Suspense fallback={undefined}>
@@ -364,13 +309,6 @@ async function ItemDetail({
   locale: string;
   isPrivate: boolean;
 }) {
-  const [linkedStores, catalogStores] = await Promise.all([
-    getLinkedStores(item.id),
-    item.catalog_item_id
-      ? getCatalogStoresForItem(item.catalog_item_id)
-      : Promise.resolve([]),
-  ]);
-
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
   // Structured data is only emitted for public items to avoid indexing private content.
   const schema = isPrivate
@@ -401,12 +339,11 @@ async function ItemDetail({
           />
         </Suspense>
       </ItemImageSection>
+
       <ItemMeta
         item={item}
         username={username}
         collectionSlug={collectionSlug}
-        linkedStores={linkedStores}
-        catalogStores={catalogStores}
         locale={locale}
       />
     </div>
@@ -422,17 +359,17 @@ async function BreadcrumbNav({
   collectionSlug: string;
   slug: string;
 }) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
-
-  // Pure cached path — use slug as label fallback for private collections/items.
   const collectionResult = await getPublicCollectionBySlug(username, collectionSlug);
-  const collectionName = collectionResult?.collection.name ?? collectionSlug;
+  const collectionName = collectionResult?.collection.name ?? '...';
+  const item = await getPublicItemBySlug(
+    collectionResult?.collection.id ?? '',
+    slug,
+    username,
+    collectionSlug,
+  );
+  const itemName = item?.name ?? '...';
 
-  const item = collectionResult
-    ? await getPublicItemBySlug(collectionResult.collection.id, slug, username, collectionSlug)
-    : undefined;
-  const itemName = item?.name ?? slug;
-
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
   const breadcrumbSchema = getBreadcrumbSchema([
     { name: `@${username}`, url: `${baseUrl}/${username}` },
     { name: collectionName, url: `${baseUrl}/${username}/${collectionSlug}` },
@@ -454,20 +391,25 @@ async function BreadcrumbNav({
   );
 }
 
-export default function ItemDetailPage({ params }: Properties) {
-  const { username, collectionSlug, slug, locale } = use(params);
+export default async function ItemPage({ params }: Properties) {
+  const { username, collectionSlug, slug, locale } = await params;
+
   return (
     <div className={styles['item-page']}>
-      {/*
-        BreadcrumbNav and ItemContent use only 'use cache' queries — rendered
-        statically in the prerender, visible to search engines in initial HTML.
+      <Suspense fallback={undefined}>
+        <BreadcrumbNav username={username} collectionSlug={collectionSlug} slug={slug} />
+      </Suspense>
 
-        OwnerPrivateItemGuard must stay in <Suspense> because it calls connection()
-        via getOwnerCollectionBySlug / getOwnerItemBySlug. It short-circuits
-        immediately when the public path already resolved the item.
-      */}
-      <BreadcrumbNav username={username} collectionSlug={collectionSlug} slug={slug} />
-      <ItemContent username={username} collectionSlug={collectionSlug} slug={slug} locale={locale} />
+      <Suspense fallback={undefined}>
+        <ItemContent
+          username={username}
+          collectionSlug={collectionSlug}
+          slug={slug}
+          locale={locale}
+        />
+      </Suspense>
+
+      {/* Dynamic portion: handles private visibility and 404s */}
       <Suspense fallback={undefined}>
         <OwnerPrivateItemGuard
           username={username}

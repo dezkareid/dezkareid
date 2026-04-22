@@ -33,6 +33,7 @@ function makeItem(id: string): PublicItem {
     description: undefined,
     date_acquired: undefined,
     likes_count: 0,
+    catalog_items: undefined,
     lines: undefined,
   };
 }

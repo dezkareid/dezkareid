@@ -536,6 +536,7 @@ export async function getCollectionItems(collectionId: string): Promise<{
   visibility: string;
   franchise_id: string | null;
   variant: string | null;
+  catalog_items: { slug: string } | null;
   lines: {
     id: string;
     name: string;
@@ -561,6 +562,7 @@ export async function getCollectionItems(collectionId: string): Promise<{
       visibility,
       franchise_id,
       variant,
+      catalog_items ( slug ),
       lines (
         id,
         name,
@@ -590,6 +592,7 @@ export type CollectionOwnerItem = {
   visibility: string;
   franchise_id: string | null;
   variant: string | null;
+  catalog_items: { slug: string } | null;
   lines: {
     id: string;
     name: string;
@@ -675,6 +678,7 @@ export async function getCollectionAuthData(
           .select(`
             id, name, slug, image_url, description, date_acquired,
             likes_count, visibility, franchise_id, variant,
+            catalog_items ( slug ),
             lines ( id, name, brands ( id, name ), categories ( name ), variants )
           `)
           .eq('collection_id', collectionId)

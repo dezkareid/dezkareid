@@ -87,6 +87,17 @@
         "status": {
           "acquired": "Acquired"
         },
+        "actions": {
+          "i_have_this": "I have this",
+          "i_have_this_modal_title": "I have this item",
+          "copy_to_my_collection": "Copy to my collection",
+          "loading_collections": "Loading collections...",
+          "edit_item": "Edit item"
+        },
+        "admin": {
+          "already_linked": "Already linked to a catalog entry.",
+          "copy_to_catalog": "Copy to Catalog"
+        },
         "share": "{itemName} from {collectionSlug} by {username} on Collectstory"
       }
     }
@@ -324,6 +335,23 @@
     "name": "Collectstory",
     "short_name": "Collectstory",
     "description": "Track and showcase your collectibles collection."
+  },
+  "Catalog": {
+    "buy_button": "I want to buy",
+    "stores": {
+      "title": "Available Stores",
+      "loading": "Loading stores...",
+      "visit_store": "Visit Store",
+      "buy_in_store": "Buy in {storeName}",
+      "empty": {
+        "title": "No stores found",
+        "description": "We couldn't find any stores currently carrying this item. Check back later or explore other catalog items."
+      },
+      "metadata": {
+        "title": "Buy {itemName} — Stores — Collectstory",
+        "description": "Find where to buy {itemName} collectible. List of stores and prices on Collectstory."
+      }
+    }
   },
   "StorePage": {
     "verified": "Verified",
