@@ -50,17 +50,11 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
   const t = await getTranslations('Common.profile.collection.metadata');
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 
-  const { getPublicCollectionBySlug } = await import('@/lib/collections');
+  const { getPublicCollectionBySlug, getPublicItemBySlug, getCollectionFirstImage } = await import('@/lib/collections');
   const result = await getPublicCollectionBySlug(username, collectionSlug);
   if (!result) return {};
 
   const { collection } = result;
-  const collectionsModule = await import('@/lib/collections');
-  const firstImage = await collectionsModule.getCollectionFirstImage(collection.id);
-  const cloudinaryModule = await import('@/lib/image/cloudinary');
-  const ogImage = (firstImage ? cloudinaryModule.getCloudinaryUrl(firstImage, 1200) : undefined) ?? `${baseUrl}/logo.png`;
-  const descriptionPrefix = collection.description ? ` — ${collection.description}` : '';
-  const canonicalUrl = `${baseUrl}/${username}/${collectionSlug}/${slug}`;
 
   const item = await getPublicItemBySlug(
     collection.id,
@@ -70,6 +64,14 @@ export async function generateMetadata({ params }: Properties): Promise<Metadata
   );
 
   if (!item) return {};
+
+  const cloudinaryModule = await import('@/lib/image/cloudinary');
+  // Prioritize item image, fallback to collection first image, then logo.
+  const imageSource = item.image_url || await getCollectionFirstImage(collection.id);
+  const ogImage = (imageSource ? (cloudinaryModule.getCloudinaryUrl(imageSource, 1200) ?? imageSource) : undefined) ?? `${baseUrl}/logo.png`;
+
+  const descriptionPrefix = collection.description ? ` — ${collection.description}` : '';
+  const canonicalUrl = `${baseUrl}/${username}/${collectionSlug}/${slug}`;
 
   return {
     title: `${item.name} — ${collection.name} — Collectstory`,
