@@ -1,3 +1,10 @@
+# [@dezkareid/components-v1.6.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.5.0...@dezkareid/components-v1.6.0) (2026-04-22)
+
+
+### Features
+
+* **design-system/components:** add polymorphic Link component ([8518185](https://github.com/dezkareid/dezkareid/commit/8518185d0720d034633dc8797d46267ff40142de))
+
 # [@dezkareid/components-v1.5.0](https://github.com/dezkareid/dezkareid/compare/@dezkareid/components-v1.4.1...@dezkareid/components-v1.5.0) (2026-04-13)
 
 
