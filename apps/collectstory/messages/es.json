@@ -87,6 +87,17 @@
         "status": {
           "acquired": "Adquirido el"
         },
+        "actions": {
+          "i_have_this": "Lo tengo",
+          "i_have_this_modal_title": "Tengo este artículo",
+          "copy_to_my_collection": "Copiar a mi colección",
+          "loading_collections": "Cargando colecciones...",
+          "edit_item": "Editar artículo"
+        },
+        "admin": {
+          "already_linked": "Ya vinculado a una entrada del catálogo.",
+          "copy_to_catalog": "Copiar al Catálogo"
+        },
         "share": "{itemName} de {collectionSlug} por {username} en Collectstory"
       }
     }
@@ -289,6 +300,23 @@
     "name": "Collectstory",
     "short_name": "Collectstory",
     "description": "Rastrea y muestra tu colección de coleccionables."
+  },
+  "Catalog": {
+    "buy_button": "Quiero comprar",
+    "stores": {
+      "title": "Tiendas Disponibles",
+      "loading": "Cargando tiendas...",
+      "visit_store": "Visitar Tienda",
+      "buy_in_store": "Comprar en {storeName}",
+      "empty": {
+        "title": "No se encontraron tiendas",
+        "description": "No pudimos encontrar ninguna tienda que tenga este artículo actualmente. Vuelve más tarde o explora otros artículos del catálogo."
+      },
+      "metadata": {
+        "title": "Comprar {itemName} — Tiendas — Collectstory",
+        "description": "Encuentra dónde comprar el coleccionable {itemName}. Lista de tiendas y precios en Collectstory."
+      }
+    }
   },
   "StorePage": {
     "verified": "Verificado",

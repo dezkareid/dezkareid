@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Button } from '@dezkareid/components/react';
 import { createClient } from '@/lib/supabase/client';
 import { useAnalytics } from '@/src/shared/lib/analytics/useAnalytics';
@@ -18,6 +19,7 @@ export function IHaveThisButton({ item }: Properties) {
   const router = useRouter();
   const pathname = usePathname();
   const { track } = useAnalytics();
+  const t = useTranslations('Common.profile.item.actions');
 
   const handleClick = async (event: React.MouseEvent) => {
     event.preventDefault();
@@ -49,7 +51,7 @@ export function IHaveThisButton({ item }: Properties) {
         onClick={handleClick}
       >
         <span className={styles.icon}>+</span>
-        I have this
+        {t('i_have_this')}
       </Button>
       {isModalOpen && (
         <CopyItemModal

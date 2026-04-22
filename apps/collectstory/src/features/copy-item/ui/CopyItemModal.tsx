@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 import { Modal } from '@dezkareid/components/react';
 import { AddItemForm, type InitialItemData } from '@/components/AddItemForm/AddItemForm';
 import { getUserCollections } from '@/app/[locale]/[username]/actions';
@@ -16,7 +17,8 @@ type Properties = {
 };
 
 function LoadingState() {
-  return <div className={styles.loading}>Loading collections...</div>;
+  const t = useTranslations('Common.profile.item.actions');
+  return <div className={styles.loading}>{t('loading_collections')}</div>;
 }
 
 function DefaultCollectionNotice() {
@@ -164,6 +166,7 @@ function CopyItemModalContent({
 }) {
   const { collections, selectedCollectionId, brands, franchises, loading } = data;
   const { handleSuccess, onCollectionChange } = actions;
+  const t = useTranslations('Common.profile.item.actions');
 
   const initialData = useMemo(
     () => resolveInitialData(item),
@@ -189,7 +192,7 @@ function CopyItemModalContent({
           initialData={initialData}
           onSuccess={handleSuccess}
           action={copyItemToCollection}
-          submitLabel="Copy to my collection"
+          submitLabel={t('copy_to_my_collection')}
         />
       </div>
     </>
@@ -199,9 +202,10 @@ function CopyItemModalContent({
 export function CopyItemModal({ item, onClose }: Properties) {
   const data = useCopyItemModalData();
   const actions = useCopyItemModalActions(onClose, data.setSelectedCollectionId);
+  const t = useTranslations('Common.profile.item.actions');
 
   return (
-    <Modal open onClose={onClose} title="I have this item">
+    <Modal open onClose={onClose} title={t('i_have_this_modal_title')}>
       <div className={styles.container}>
         <CopyItemModalContent item={item} data={data} actions={actions} />
       </div>

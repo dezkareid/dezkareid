@@ -18,6 +18,7 @@ describe('SEO Schema Utilities', () => {
     user_id: 'user-1',
     visibility: 'public',
     variant: 'Standard',
+    catalog_items: undefined,
     lines: {
       id: 'line-1',
       name: 'Cool Line',

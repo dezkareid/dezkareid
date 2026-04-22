@@ -6,11 +6,11 @@ import type { WithContext, Thing } from 'schema-dts';
 import { createAdminClient } from '@/lib/supabase/admin';
 import type { CatalogImage } from '@/lib/supabase/types';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
-import { WhereToBuy } from '@/src/features/where-to-buy';
+import { WhereToBuy, BuyButton } from '@/src/features/where-to-buy';
 import styles from './page.module.css';
 
 type Properties = {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; locale: string }>;
 };
 
 interface StoreRow {
@@ -127,7 +127,7 @@ async function fetchCatalogItem(slug: string) {
   return { item, stores };
 }
 
-async function CatalogItemContent({ slug }: { slug: string }) {
+async function CatalogItemContent({ slug, locale }: { slug: string; locale: string }) {
   const { item, stores } = await fetchCatalogItem(slug);
 
   const franchise = Array.isArray(item.franchises) ? item.franchises[0] : item.franchises;
@@ -195,6 +195,10 @@ async function CatalogItemContent({ slug }: { slug: string }) {
             <p className={styles.description}>{item.description}</p>
           )}
 
+          <div className={styles.actions}>
+            <BuyButton catalogSlug={item.slug} locale={locale} />
+          </div>
+
           {stores.length > 0 && (
             <div className={styles.stores}>
               <WhereToBuy stores={stores} />
@@ -207,11 +211,11 @@ async function CatalogItemContent({ slug }: { slug: string }) {
 }
 
 export default async function CatalogItemDetailPage({ params }: Properties) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   return (
     <div className={styles.page}>
       <Suspense fallback={undefined}>
-        <CatalogItemContent slug={slug} />
+        <CatalogItemContent slug={slug} locale={locale} />
       </Suspense>
     </div>
   );

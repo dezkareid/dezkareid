@@ -1,0 +1,25 @@
+.page {
+  max-width: var(--breakpoint-large-min);
+  margin: 0 auto;
+  min-height: 100vh;
+  background-color: var(--color-background-primary);
+}
+
+.container {
+  padding: 0 var(--spacing-24) var(--spacing-64);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-400);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-24);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+}

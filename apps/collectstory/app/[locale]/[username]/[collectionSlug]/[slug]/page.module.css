@@ -215,6 +215,10 @@
   line-height: var(--font-line-height-relaxed);
 }
 
+.item-page__buy-button {
+  margin-top: var(--spacing-8);
+}
+
 /* Skin */
 
 .item-page__name {

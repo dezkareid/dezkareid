@@ -1,4 +1,5 @@
 import { connection } from 'next/server';
+import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 
 type Properties = {
@@ -34,6 +35,7 @@ const buttonStyle: React.CSSProperties = {
  */
 export async function OwnerItemEditActions({ username, collectionSlug, itemId, userId }: Properties) {
   await connection();
+  const t = await getTranslations('Common.profile.item.actions');
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -45,7 +47,7 @@ export async function OwnerItemEditActions({ username, collectionSlug, itemId, u
         href={`/${username}/${collectionSlug}/items/${itemId}/edit`}
         style={buttonStyle}
       >
-        Edit item
+        {t('edit_item')}
       </a>
     </div>
   );

@@ -17,6 +17,7 @@ function makeItem(id: string, name = `Item ${id}`): CollectionOwnerItem {
     visibility: 'public',
     franchise_id: null,
     variant: null,
+    catalog_items: null,
     lines: null,
   };
 }
