@@ -1,7 +1,15 @@
 'use server';
 
+import { v2 as cloudinary } from 'cloudinary';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { getCloudinaryPublicId } from '@/lib/image/cloudinary';
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 async function getPhotoOwnerOrThrow(photoId: string, userId: string) {
   const supabase = await createClient();
@@ -33,6 +41,13 @@ export async function deleteSessionPhoto(
     .eq('user_id', user.id);
 
   if (error) return { error: 'Failed to delete photo. Please try again.' };
+
+  const publicId = getCloudinaryPublicId(photo.image_url);
+  if (publicId) {
+    await cloudinary.uploader.destroy(publicId).catch((error_) => {
+      console.error('[deleteSessionPhoto] Cloudinary destroy failed:', error_);
+    });
+  }
 
   revalidateTag(`session:${username}:${sessionSlug}`, 'max');
   revalidateTag(`session-photos:${photo.session_id}`, 'max');

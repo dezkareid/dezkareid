@@ -8,9 +8,10 @@ import { getSessionBySlug, getSessionPhotos, isSessionLikedByUser, type PublicSe
 import { getCloudinaryUrl } from '@/lib/image/cloudinary';
 import { DataSchema } from '@/src/shared/ui/DataSchema';
 import { SessionLikeButton } from '@/src/features/like-session';
-import { SessionExploreButton } from '@/src/features/explore-session';
-import { SessionPhotoGrid } from '@/src/features/session-photos';
+import { SessionExploreButton, SessionExploreButtonSkeleton } from '@/src/features/explore-session';
+import { SessionPhotoGrid, SessionPhotosProvider } from '@/src/features/session-photos';
 import { SessionActionsMenu } from '@/src/features/owner-session-actions';
+import { SocialShare } from '@/src/features/social-share';
 import { OwnerSessionSection } from './_components/OwnerSessionSection';
 import styles from './page.module.css';
 
@@ -91,7 +92,11 @@ async function SessionActionsAndPhotos({
   const canonicalUrl = `${baseUrl}/${username}/sessions/${sessionSlug}`;
 
   return (
-    <>
+    <SessionPhotosProvider
+      initialPhotos={sessionPhotos}
+      sessionName={session.name}
+      sessionId={session.id}
+    >
       {sessionPhotos.length > 0 && (
         <DataSchema
           schema={buildImageGallerySchema(session.name, sessionPhotos, canonicalUrl)}
@@ -108,13 +113,14 @@ async function SessionActionsAndPhotos({
           initialLiked={liked}
           isAuthenticated={!!user}
         />
-        {sessionPhotos.length > 0 && (
-          <SessionExploreButton
-            photos={sessionPhotos}
-            sessionName={session.name}
-            sessionId={session.id}
-          />
-        )}
+        <Suspense fallback={<SessionExploreButtonSkeleton />}>
+          <SessionExploreButton />
+        </Suspense>
+        <SocialShare
+          title={session.name}
+          baseUrl={canonicalUrl}
+          entityType="session"
+        />
       </div>
 
       {isOwner
@@ -123,7 +129,6 @@ async function SessionActionsAndPhotos({
               sessionId={session.id}
               username={username}
               sessionSlug={sessionSlug}
-              initialPhotos={sessionPhotos}
             />
           )
         : (sessionPhotos.length === 0
@@ -141,7 +146,7 @@ async function SessionActionsAndPhotos({
                   isOwner={false}
                 />
               ))}
-    </>
+    </SessionPhotosProvider>
   );
 }
 

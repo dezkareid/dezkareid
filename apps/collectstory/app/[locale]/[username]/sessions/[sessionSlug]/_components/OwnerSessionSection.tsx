@@ -1,20 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useSessionPhotos } from '@/src/features/session-photos';
 import { SessionPhotoGrid } from '@/src/features/session-photos';
 import { PhotoUploadZone } from '@/src/features/session-photos';
-import type { SessionPhoto } from '@/lib/sessions';
 import styles from './OwnerSessionSection.module.css';
 
 type Properties = {
   sessionId: string;
   username: string;
   sessionSlug: string;
-  initialPhotos: SessionPhoto[];
 };
 
-export function OwnerSessionSection({ sessionId, username, sessionSlug, initialPhotos }: Properties) {
-  const [photos, setPhotos] = useState<SessionPhoto[]>(initialPhotos);
+export function OwnerSessionSection({ sessionId, username, sessionSlug }: Properties) {
+  const { photos, addPhoto, setPhotos } = useSessionPhotos();
 
   return (
     <div className={styles['owner-section']}>
@@ -22,7 +20,7 @@ export function OwnerSessionSection({ sessionId, username, sessionSlug, initialP
         <PhotoUploadZone
           sessionId={sessionId}
           currentCount={photos.length}
-          onUploaded={photo => setPhotos(previous => [...previous, photo])}
+          onUploaded={addPhoto}
         />
       </div>
       <SessionPhotoGrid
@@ -31,6 +29,7 @@ export function OwnerSessionSection({ sessionId, username, sessionSlug, initialP
         sessionSlug={sessionSlug}
         initialPhotos={photos}
         isOwner
+        onPhotosChange={setPhotos}
       />
     </div>
   );

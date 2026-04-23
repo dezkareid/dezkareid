@@ -1,5 +1,25 @@
 # @dezkareid/collectstory
 
+## 1.3.0
+
+### Minor Changes
+
+- 9353ed6: Add Copy to Catalog admin action on collection item detail page and multi-image support for catalog items (up to 5 images with drag-to-reorder).
+- fb97bb0: Add Photo Sessions feature: `/{username}/sessions/` list and detail pages with photo upload, drag-and-drop reorder, and session likes
+
+### Patch Changes
+
+- Fix session photo bugs and improve photo management:
+
+  - Allow uploading multiple photos at once from the file picker
+  - Fix explore session button showing stale photos after upload by introducing `SessionPhotosContext` — a shared provider that keeps the photo list in sync across the actions bar and owner section
+  - Fix "Cannot update a component while rendering a different component" error on photo delete by making `SessionPhotoGrid` fully controlled (no internal state sync)
+  - Add share button to session detail page
+  - Fix Cloudinary images cropped to 480×360 by switching from `c_fill` to `c_limit` transformation
+  - Delete photo asset from Cloudinary when a session photo is deleted
+  - Increase session photo upload limit from 5 MB to 10 MB per image
+  - Fix image optimization falling back to original when WebP output is larger than input, instead of throwing a 500
+
 ## 1.2.2
 
 ### Patch Changes
