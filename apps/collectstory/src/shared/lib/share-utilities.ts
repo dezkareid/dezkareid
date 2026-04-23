@@ -1,5 +1,5 @@
 export type SocialPlatform = 'twitter' | 'facebook' | 'instagram' | 'linkedin' | 'direct';
-export type EntityType = 'profile' | 'collection' | 'item';
+export type EntityType = 'profile' | 'collection' | 'item' | 'session';
 
 /**
  * Appends UTM parameters to a URL for marketing analysis.

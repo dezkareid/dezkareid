@@ -5,7 +5,7 @@ import type { SessionPhoto } from '@/lib/sessions';
 import styles from './PhotoUploadZone.module.css';
 
 const ALLOWED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
-const MAX_FILE_BYTES = 5 * 1024 * 1024;
+const MAX_FILE_BYTES = 10 * 1024 * 1024;
 const MAX_PHOTOS = 20;
 
 type Properties = {
@@ -31,7 +31,7 @@ export function PhotoUploadZone({ sessionId, currentCount, onUploaded }: Propert
     }
 
     if (file.size > MAX_FILE_BYTES) {
-      setError('File too large. Maximum size is 5 MB.');
+      setError('File too large. Maximum size is 10 MB.');
       return;
     }
 
@@ -64,7 +64,9 @@ export function PhotoUploadZone({ sessionId, currentCount, onUploaded }: Propert
 
   const handleFiles = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
-    await uploadFile(files[0]);
+    for (const file of files) {
+      await uploadFile(file);
+    }
   };
 
   const handleDrop = async (event: React.DragEvent) => {
@@ -98,6 +100,7 @@ export function PhotoUploadZone({ sessionId, currentCount, onUploaded }: Propert
           ref={inputRef}
           type="file"
           accept="image/jpeg,image/png,image/webp"
+          multiple
           className={styles['upload-zone__input']}
           disabled={atLimit || uploading}
           onChange={event => handleFiles(event.target.files)}
@@ -119,7 +122,7 @@ export function PhotoUploadZone({ sessionId, currentCount, onUploaded }: Propert
                   <>
                     <span className={styles['upload-zone__icon']} aria-hidden="true">📤</span>
                     <p className={styles['upload-zone__label']}>Drop a photo here or click to upload</p>
-                    <p className={styles['upload-zone__hint']}>JPEG, PNG or WebP · max 5 MB</p>
+                    <p className={styles['upload-zone__hint']}>JPEG, PNG or WebP · max 10 MB</p>
                   </>
                 ))}
       </div>

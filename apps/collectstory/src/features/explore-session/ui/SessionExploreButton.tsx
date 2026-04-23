@@ -4,18 +4,13 @@ import { useState } from 'react';
 import { Button } from '@dezkareid/components/react';
 import { Shelves } from '@dezkareid/icons/react';
 import { useAnalytics } from '@/src/shared/lib/analytics/useAnalytics';
+import { useSessionPhotos } from '@/src/features/session-photos/model/SessionPhotosContext';
 import { SessionExplorerView } from './SessionExplorerView';
-import type { SessionPhoto } from '@/lib/sessions';
 
-type Properties = {
-  photos: SessionPhoto[];
-  sessionName: string;
-  sessionId: string;
-};
-
-export function SessionExploreButton({ photos, sessionName, sessionId }: Properties) {
+export function SessionExploreButton() {
   const [isOpen, setIsOpen] = useState(false);
   const { track } = useAnalytics();
+  const { photos, sessionName, sessionId } = useSessionPhotos();
 
   if (photos.length === 0) return null;
 

@@ -15,11 +15,20 @@ import {
   rectSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import Image from 'next/image';
-import { getCloudinaryUrl } from '@/lib/image/cloudinary';
+import { Image } from '@dezkareid/components/react';
 import { deleteSessionPhoto } from '@/app/[locale]/[username]/sessions/[sessionSlug]/actions';
+import { SessionPhotoStaticGrid } from './SessionPhotoStaticGrid';
 import type { SessionPhoto } from '@/lib/sessions';
 import styles from './SessionPhotoGrid.module.css';
+
+// Separate controlled component for owner grid to avoid lifting state into hooks
+type ControlledGridProperties = {
+  sessionId: string;
+  username: string;
+  sessionSlug: string;
+  photos: SessionPhoto[];
+  onPhotosChange: (photos: SessionPhoto[]) => void;
+};
 
 type SortablePhotoProperties = {
   photo: SessionPhoto;
@@ -51,15 +60,13 @@ function SortablePhoto({ photo, username, sessionSlug, onDelete }: SortablePhoto
     }
   };
 
-  const thumbUrl = getCloudinaryUrl(photo.image_url, 400) ?? photo.image_url;
-
   return (
     <div ref={setNodeRef} style={style} className={styles['photo-grid__item']} {...attributes}>
       <div className={styles['photo-grid__image-wrapper']} {...listeners}>
         <Image
-          src={thumbUrl}
+          src={photo.image_url}
           alt=""
-          fill
+          strategy="cloudinary"
           sizes="(max-width: 640px) 45vw, 200px"
           className={styles['photo-grid__image']}
         />
@@ -84,10 +91,10 @@ type Properties = {
   sessionSlug: string;
   initialPhotos: SessionPhoto[];
   isOwner: boolean;
+  onPhotosChange?: (photos: SessionPhoto[]) => void;
 };
 
-export function SessionPhotoGrid({ sessionId, username, sessionSlug, initialPhotos, isOwner }: Properties) {
-  const [photos, setPhotos] = useState<SessionPhoto[]>(initialPhotos);
+function OwnerPhotoGrid({ sessionId, username, sessionSlug, photos, onPhotosChange }: ControlledGridProperties) {
   const [mounted, setMounted] = useState(false);
   const reorderTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -95,10 +102,6 @@ export function SessionPhotoGrid({ sessionId, username, sessionSlug, initialPhot
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  useEffect(() => {
-    setPhotos(initialPhotos);
-  }, [initialPhotos]);
   /* eslint-enable @eslint-react/hooks-extra/no-direct-set-state-in-use-effect */
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
@@ -108,59 +111,43 @@ export function SessionPhotoGrid({ sessionId, username, sessionSlug, initialPhot
       const { active, over } = event;
       if (!over || active.id === over.id) return;
 
-      setPhotos((previous) => {
-        const oldIndex = previous.findIndex(p => p.id === active.id);
-        const newIndex = previous.findIndex(p => p.id === over.id);
-        if (oldIndex === -1 || newIndex === -1) return previous;
+      const oldIndex = photos.findIndex(p => p.id === active.id);
+      const newIndex = photos.findIndex(p => p.id === over.id);
+      if (oldIndex === -1 || newIndex === -1) return;
 
-        const reordered = [...previous];
-        const [moved] = reordered.splice(oldIndex, 1);
-        reordered.splice(newIndex, 0, moved);
+      const reordered = [...photos];
+      const [moved] = reordered.splice(oldIndex, 1);
+      reordered.splice(newIndex, 0, moved);
+      onPhotosChange(reordered);
 
-        // Debounced auto-save
-        clearTimeout(reorderTimerRef.current);
-        reorderTimerRef.current = setTimeout(async () => {
-          await fetch(`/api/sessions/${sessionId}/photos/reorder`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ orderedIds: reordered.map(p => p.id) }),
-          });
-        }, 300);
-
-        return reordered;
-      });
+      clearTimeout(reorderTimerRef.current);
+      reorderTimerRef.current = setTimeout(async () => {
+        await fetch(`/api/sessions/${sessionId}/photos/reorder`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderedIds: reordered.map(p => p.id) }),
+        });
+      }, 300);
     },
-    [sessionId],
+    [sessionId, photos, onPhotosChange],
   );
 
   const handleDelete = useCallback((id: string) => {
-    setPhotos(previous => previous.filter(p => p.id !== id));
-  }, []);
+    onPhotosChange(photos.filter(p => p.id !== id));
+  }, [photos, onPhotosChange]);
 
   const staticGrid = (
     <div className={styles['photo-grid']}>
-      {photos.map((photo) => {
-        const thumbUrl = getCloudinaryUrl(photo.image_url, 400) ?? photo.image_url;
-        return (
-          <div key={photo.id} className={styles['photo-grid__item']}>
-            <div className={styles['photo-grid__image-wrapper']}>
-              <Image
-                src={thumbUrl}
-                alt=""
-                fill
-                sizes="(max-width: 640px) 45vw, 200px"
-                className={styles['photo-grid__image']}
-              />
-            </div>
+      {photos.map(photo => (
+        <div key={photo.id} className={styles['photo-grid__item']}>
+          <div className={styles['photo-grid__image-wrapper']}>
+            <Image src={photo.image_url} alt="" strategy="cloudinary" sizes="(max-width: 640px) 45vw, 200px" className={styles['photo-grid__image']} />
           </div>
-        );
-      })}
+        </div>
+      ))}
     </div>
   );
 
-  if (!isOwner) return staticGrid;
-
-  // Render static grid on first paint to match server HTML, swap to DnD after mount
   if (!mounted) return staticGrid;
 
   return (
@@ -179,5 +166,21 @@ export function SessionPhotoGrid({ sessionId, username, sessionSlug, initialPhot
         </div>
       </SortableContext>
     </DndContext>
+  );
+}
+
+export function SessionPhotoGrid({ username, sessionSlug, initialPhotos, isOwner, sessionId, onPhotosChange }: Properties) {
+  if (!isOwner) {
+    return <SessionPhotoStaticGrid photos={initialPhotos} />;
+  }
+
+  return (
+    <OwnerPhotoGrid
+      sessionId={sessionId}
+      username={username}
+      sessionSlug={sessionSlug}
+      photos={initialPhotos}
+      onPhotosChange={onPhotosChange ?? (() => {})}
+    />
   );
 }
